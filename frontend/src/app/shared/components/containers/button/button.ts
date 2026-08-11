@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-button-component',
   imports: [],
-  templateUrl: '../views/button-component.html',
-  styleUrl: '../views/button-component.css',
+  templateUrl: '../../views/button/button.html',
+  styleUrl: '../../views/button/button.css',
 })
 export class Button {
   @Input() label: string = '';

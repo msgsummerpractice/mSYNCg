@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { UserList } from './features/admin/components/containers/user-list-component';
-import { EventList } from './features/user/components/containers/event-list-component';
+import { UserList } from './features/admin/components/containers/user-list';
+import { EventList } from './features/user/components/containers/event-list/event-list';
 
 export const routes: Routes = [
     {
