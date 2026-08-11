@@ -1,0 +1,9 @@
+mat-toolbar {
+    --mat-toolbar-container-background-color: #E2E2E2;
+    --mat-toolbar-background-color: #E2E2E2;
+    --mat-toolbar-container-text-color: #A01441;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
