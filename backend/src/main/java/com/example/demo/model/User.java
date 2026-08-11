@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -28,8 +29,9 @@ public class User {
     @Column(nullable = false, length = 100)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 100)
-    private String location;
+    private Location location;
 
     @Column(nullable = false)
     private Boolean status = true;
@@ -38,5 +40,5 @@ public class User {
     private byte[] image;
 
     @Column(nullable = false, length = 25)
-    private String role;
+    private UserRole role;
 }

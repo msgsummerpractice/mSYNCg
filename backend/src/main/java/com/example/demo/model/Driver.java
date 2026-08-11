@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "drivers")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Driver {

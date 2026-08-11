@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "check_in")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CheckIn {
@@ -16,13 +17,14 @@ public class CheckIn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
     @Column(name = "qr_code", nullable = false, length = 255)
     private String qrCode;
 
     @Column(nullable = false)
     private Long code;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Event event;
 }

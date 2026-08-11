@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "events")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
@@ -21,13 +22,14 @@ public class Event {
     private String name;
 
     @Column(nullable = false, length = 50)
-    private String status;
+    private EventStatus status;
 
     @Column(nullable = false, length = 50)
-    private String type;
+    private EventType type;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 100)
-    private String location;
+    private Location location;
 
     @Column(columnDefinition = "bytea")
     private byte[] image;
@@ -55,5 +57,6 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User createdBy;
 }
