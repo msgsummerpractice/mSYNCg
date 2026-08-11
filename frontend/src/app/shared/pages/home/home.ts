@@ -10,7 +10,4 @@ import { MatMenuModule } from '@angular/material/menu';
   imports: [MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule],
   templateUrl: './home.html',
 })
-export class HomePage {
-  readonly welcomeText = 'Welcome back, User';
-  readonly upcomingEventsText = 'My Upcoming Events';
-}
+export class HomePage {}
