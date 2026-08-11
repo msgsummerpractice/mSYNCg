@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageSwitcherView } from '../../views/language-swithcer/language-switcher.view';
+import type { Language } from '../../../../core/translation/supported-languages';
 import {
   SUPPORTED_LANGUAGES,
   SUPPORTED_LANGUAGE_CODES,
@@ -22,7 +23,7 @@ import {
 export class LanguageSwitcherContainer {
   private translate = inject(TranslateService);
 
-  languages = SUPPORTED_LANGUAGES;
+  languages: Language[] = SUPPORTED_LANGUAGES;
 
   currentLang: string = 'en';
 

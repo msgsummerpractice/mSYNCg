@@ -1,4 +1,5 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import type { Language } from '../../../../core/translation/supported-languages';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -10,10 +11,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './language-switcher.view.html',
 })
 export class LanguageSwitcherView {
-  @Input() languages: { code: string; label: string }[] = [];
+  @Input() languages: Language[] = [];
   @Input() currentLang: string = '';
 
-  @Output() languageChange = new EventEmitter<string>();
+  @Output() languageChange: EventEmitter<string> = new EventEmitter<string>();
 
   onSelectionChange(selectedLang: string): void {
     this.languageChange.emit(selectedLang);
