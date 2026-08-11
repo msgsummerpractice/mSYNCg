@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: '../views/button-component.html',
   styleUrl: '../views/button-component.css',
 })
-export class ButtonComponent {
+export class Button {
   @Input() label: string = '';
   @Input() route: string = '';
 

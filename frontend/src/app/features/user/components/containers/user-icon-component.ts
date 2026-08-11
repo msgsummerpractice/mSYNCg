@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: '../views/user-icon-component.html',
   styleUrl: '../views/user-icon-component.css',
 })
-export class UserIconComponent {}
+export class UserIcon {}
