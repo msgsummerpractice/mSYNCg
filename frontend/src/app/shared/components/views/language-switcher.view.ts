@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import type { Language } from '../../../../core/translation/supported-languages';
+import type { Language } from '../../../core/translation/supported-languages';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
