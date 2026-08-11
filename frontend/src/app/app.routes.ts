@@ -4,9 +4,8 @@ import { EventList } from './features/user/components/containers/event-list/even
 
 export const routes: Routes = [
     {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'app'
+      path: '',
+      component: HomePage,
     },
     {
         path: 'users',
