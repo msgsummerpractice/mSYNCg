@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageSwitcherView } from '../views/language-switcher.view';
 import type { Language } from '../../../core/translation/supported-languages';
@@ -22,7 +22,7 @@ export class LanguageSwitcherContainer {
 
   languages: Language[] = SUPPORTED_LANGUAGES;
 
-  currentLang = this.translate.currentLang;
+  currentLang: Signal<string | null> = this.translate.currentLang;
 
   onLanguageChange(selectedLang: string) {
     this.translate.use(selectedLang);

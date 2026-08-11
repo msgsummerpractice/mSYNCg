@@ -9,4 +9,4 @@ export const SUPPORTED_LANGUAGES: Language[] = [
   { code: 'de', label: 'Deutsch' },
 ];
 
-export const SUPPORTED_LANGUAGE_CODES = SUPPORTED_LANGUAGES.map((lang) => lang.code);
+export const SUPPORTED_LANGUAGE_CODES: string[] = SUPPORTED_LANGUAGES.map((lang) => lang.code);
