@@ -24,7 +24,7 @@ export class LanguageSwitcherContainer {
 
   languages = SUPPORTED_LANGUAGES;
 
-  currentLang: string;
+  currentLang: string = 'en';
 
   constructor() {
     this.translate.addLangs(SUPPORTED_LANGUAGE_CODES);
