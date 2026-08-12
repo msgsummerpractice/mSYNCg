@@ -1,0 +1,103 @@
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-lg">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
+      {{ 'USER_REGISTER.TITLE' | translate }}
+    </h1>
+
+    @if (errorMessage) {
+      <div class="bg-red-50 border border-red-500 text-red-700 p-4 mb-6 rounded-md text-sm">
+        <p>{{ errorMessage }}</p>
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="bg-green-50 border border-green-500 text-green-700 p-4 mb-6 rounded-md text-sm">
+        <p>{{ successMessage }}</p>
+      </div>
+    }
+
+    <app-generic-form-container
+      [formGroup]="formGroup"
+      [isLoading]="isLoading"
+      (formSubmit)="submitRegister.emit()"
+    >
+      <div class="flex gap-4 w-full">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_REGISTER.FIRST_NAME.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="firstName"
+            [placeholder]="'USER_REGISTER.FIRST_NAME.PLACEHOLDER' | translate"
+          />
+          @if (formGroup.get('firstName')?.hasError('required')) {
+            <mat-error>{{ 'USER_REGISTER.FIRST_NAME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_REGISTER.LAST_NAME.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="lastName"
+            [placeholder]="'USER_REGISTER.LAST_NAME.PLACEHOLDER' | translate"
+          />
+          @if (formGroup.get('lastName')?.hasError('required')) {
+            <mat-error>{{ 'USER_REGISTER.LAST_NAME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'USER_REGISTER.EMAIL.LABEL' | translate }}</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          [placeholder]="'USER_REGISTER.EMAIL.PLACEHOLDER' | translate"
+        />
+        @if (formGroup.get('email')?.hasError('required')) {
+          <mat-error>{{ 'USER_REGISTER.EMAIL.REQUIRED' | translate }}</mat-error>
+        }
+        @if (formGroup.get('email')?.hasError('email')) {
+          <mat-error>{{ 'USER_REGISTER.EMAIL.INVALID' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'USER_REGISTER.PASSWORD.LABEL' | translate }}</mat-label>
+        <input matInput type="password" formControlName="password" />
+        @if (formGroup.get('password')?.hasError('required')) {
+          <mat-error>{{ 'USER_REGISTER.PASSWORD.REQUIRED' | translate }}</mat-error>
+        }
+        @if (formGroup.get('password')?.hasError('minlength')) {
+          <mat-error>{{ 'USER_REGISTER.PASSWORD.MINLENGTH' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'USER_REGISTER.CONFIRM_PASSWORD.LABEL' | translate }}</mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="confirmPassword"
+          [errorStateMatcher]="mismatchMatcher"
+        />
+        @if (formGroup.hasError('passwordMismatch') && formGroup.get('confirmPassword')?.touched) {
+          <mat-error>{{ 'USER_REGISTER.CONFIRM_PASSWORD.MISMATCH' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'USER_REGISTER.LOCATION.LABEL' | translate }}</mat-label>
+        <mat-select formControlName="location">
+          @for (loc of locations; track loc) {
+            <mat-option [value]="loc">{{ loc }}</mat-option>
+          }
+        </mat-select>
+        @if (formGroup.get('location')?.hasError('required')) {
+          <mat-error>{{ 'USER_REGISTER.LOCATION.REQUIRED' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </app-generic-form-container>
+  </div>
+</main>

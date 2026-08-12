@@ -1,5 +1,37 @@
 {
   "BUTTONS": {
     "SUBMIT": "Trimite"
+  },
+  "USER_REGISTER": {
+    "TITLE": "Creează un cont",
+    "FIRST_NAME": {
+      "LABEL": "Prenume",
+      "PLACEHOLDER": "Ion",
+      "REQUIRED": "Prenumele este obligatoriu"
+    },
+    "LAST_NAME": {
+      "LABEL": "Nume de familie",
+      "PLACEHOLDER": "Popescu",
+      "REQUIRED": "Numele de familie este obligatoriu"
+    },
+    "EMAIL": {
+      "LABEL": "Adresă de email",
+      "PLACEHOLDER": "ion.popescu@exemplu.ro",
+      "REQUIRED": "Email-ul este obligatoriu",
+      "INVALID": "Introduceți o adresă de email validă"
+    },
+    "PASSWORD": {
+      "LABEL": "Parolă",
+      "REQUIRED": "Parola este obligatorie",
+      "MINLENGTH": "Parola trebuie să aibă cel puțin 8 caractere"
+    },
+    "CONFIRM_PASSWORD": {
+      "LABEL": "Confirmă parola",
+      "MISMATCH": "Parolele nu se potrivesc"
+    },
+    "LOCATION": {
+      "LABEL": "Locație",
+      "REQUIRED": "Vă rugăm să selectați o locație"
+    }
   }
 }
