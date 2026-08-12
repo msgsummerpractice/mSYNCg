@@ -27,9 +27,9 @@ public class Driver {
 
     @Override
     public boolean equals(Object o) {
+        Driver driver = (Driver) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Driver driver = (Driver) o;
         return java.util.Objects.equals(id, driver.id) && 
                java.util.Objects.equals(name, driver.name) && 
                java.util.Objects.equals(telephoneNr, driver.telephoneNr);

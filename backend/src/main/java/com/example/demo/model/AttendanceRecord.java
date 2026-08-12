@@ -38,9 +38,9 @@ public class AttendanceRecord {
 
     @Override
     public boolean equals(Object o) {
+        AttendanceRecord that = (AttendanceRecord) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AttendanceRecord that = (AttendanceRecord) o;
         return java.util.Objects.equals(id, that.id) && 
                java.util.Objects.equals(createdAt, that.createdAt);
     }

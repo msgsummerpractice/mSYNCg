@@ -35,9 +35,9 @@ public class CheckIn {
 
     @Override
     public boolean equals(Object o) {
+        CheckIn checkIn = (CheckIn) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckIn checkIn = (CheckIn) o;
         return java.util.Objects.equals(id, checkIn.id) && 
                java.util.Objects.equals(qrCode, checkIn.qrCode) && 
                java.util.Objects.equals(code, checkIn.code);

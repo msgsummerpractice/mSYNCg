@@ -69,9 +69,9 @@ public class Event {
 
     @Override
     public boolean equals(Object o) {
+        Event event = (Event) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
         return java.util.Objects.equals(id, event.id) && 
                java.util.Objects.equals(name, event.name) && 
                status == event.status && 

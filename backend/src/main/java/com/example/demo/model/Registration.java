@@ -60,9 +60,9 @@ public class Registration {
 
     @Override
     public boolean equals(Object o) {
+        Registration that = (Registration) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Registration that = (Registration) o;
         return java.util.Objects.equals(id, that.id) && 
                java.util.Objects.equals(status, that.status) && 
                java.util.Objects.equals(date, that.date) && 

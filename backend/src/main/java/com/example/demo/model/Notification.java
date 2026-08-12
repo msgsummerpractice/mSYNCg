@@ -41,9 +41,9 @@ public class Notification {
 
     @Override
     public boolean equals(Object o) {
+        Notification that = (Notification) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Notification that = (Notification) o;
         return java.util.Objects.equals(id, that.id) && 
                java.util.Objects.equals(startTime, that.startTime) && 
                java.util.Objects.equals(message, that.message);
