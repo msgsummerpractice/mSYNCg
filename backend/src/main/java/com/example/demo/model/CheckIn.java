@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 
+import java.util.Objects;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -35,17 +37,17 @@ public class CheckIn {
 
     @Override
     public boolean equals(Object o) {
-        CheckIn checkIn = (CheckIn) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return java.util.Objects.equals(id, checkIn.id) && 
-               java.util.Objects.equals(qrCode, checkIn.qrCode) && 
-               java.util.Objects.equals(code, checkIn.code);
+        CheckIn checkIn = (CheckIn) o;
+        return Objects.equals(id, checkIn.id) && 
+               Objects.equals(qrCode, checkIn.qrCode) && 
+               Objects.equals(code, checkIn.code);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, qrCode, code);
+        return Objects.hash(id, qrCode, code);
     }
 
     @Override

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -60,21 +61,21 @@ public class Registration {
 
     @Override
     public boolean equals(Object o) {
-        Registration that = (Registration) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return java.util.Objects.equals(id, that.id) && 
-               java.util.Objects.equals(status, that.status) && 
-               java.util.Objects.equals(date, that.date) && 
+        Registration that = (Registration) o;
+        return Objects.equals(id, that.id) && 
+               Objects.equals(status, that.status) && 
+               Objects.equals(date, that.date) && 
                foodPreference == that.foodPreference && 
-               java.util.Objects.equals(accommodationDays, that.accommodationDays) && 
-               java.util.Objects.equals(gdpr, that.gdpr) && 
-               java.util.Objects.equals(photoConsent, that.photoConsent);
+               Objects.equals(accommodationDays, that.accommodationDays) && 
+               Objects.equals(gdpr, that.gdpr) && 
+               Objects.equals(photoConsent, that.photoConsent);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, status, date, foodPreference, accommodationDays, gdpr, photoConsent);
+        return Objects.hash(id, status, date, foodPreference, accommodationDays, gdpr, photoConsent);
     }
 
     @Override

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -38,16 +39,16 @@ public class AttendanceRecord {
 
     @Override
     public boolean equals(Object o) {
-        AttendanceRecord that = (AttendanceRecord) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return java.util.Objects.equals(id, that.id) && 
-               java.util.Objects.equals(createdAt, that.createdAt);
+        AttendanceRecord that = (AttendanceRecord) o;
+        return Objects.equals(id, that.id) && 
+               Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, createdAt);
+        return Objects.hash(id, createdAt);
     }
 
     @Override

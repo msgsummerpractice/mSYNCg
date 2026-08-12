@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -47,24 +50,24 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        User user = (User) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return java.util.Objects.equals(id, user.id) && 
-               java.util.Objects.equals(firstName, user.firstName) && 
-               java.util.Objects.equals(lastName, user.lastName) && 
-               java.util.Objects.equals(email, user.email) && 
-               java.util.Objects.equals(password, user.password) && 
+        User user = (User) o;
+        return Objects.equals(id, user.id) && 
+               Objects.equals(firstName, user.firstName) && 
+               Objects.equals(lastName, user.lastName) && 
+               Objects.equals(email, user.email) && 
+               Objects.equals(password, user.password) && 
                location == user.location && 
-               java.util.Objects.equals(status, user.status) && 
+               Objects.equals(status, user.status) && 
                role == user.role &&
-               java.util.Arrays.equals(image, user.image);
+               Arrays.equals(image, user.image);
     }
 
     @Override
     public int hashCode() {
-        int result = java.util.Objects.hash(id, firstName, lastName, email, password, location, status, role);
-        result = 31 * result + java.util.Arrays.hashCode(image);
+        int result = Objects.hash(id, firstName, lastName, email, password, location, status, role);
+        result = 31 * result + Arrays.hashCode(image);
         return result;
     }
 

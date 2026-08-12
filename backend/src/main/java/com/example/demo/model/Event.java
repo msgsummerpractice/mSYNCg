@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -69,28 +71,28 @@ public class Event {
 
     @Override
     public boolean equals(Object o) {
-        Event event = (Event) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return java.util.Objects.equals(id, event.id) && 
-               java.util.Objects.equals(name, event.name) && 
+        Event event = (Event) o;
+        return Objects.equals(id, event.id) && 
+               Objects.equals(name, event.name) && 
                status == event.status && 
                type == event.type && 
                location == event.location && 
-               java.util.Arrays.equals(image, event.image) && 
-               java.util.Objects.equals(startTime, event.startTime) && 
-               java.util.Objects.equals(endTime, event.endTime) && 
-               java.util.Objects.equals(foodProvided, event.foodProvided) && 
-               java.util.Objects.equals(registrationStart, event.registrationStart) && 
-               java.util.Objects.equals(registrationEnd, event.registrationEnd) && 
-               java.util.Objects.equals(description, event.description) && 
-               java.util.Objects.equals(createdAt, event.createdAt);
+               Arrays.equals(image, event.image) && 
+               Objects.equals(startTime, event.startTime) && 
+               Objects.equals(endTime, event.endTime) && 
+               Objects.equals(foodProvided, event.foodProvided) && 
+               Objects.equals(registrationStart, event.registrationStart) && 
+               Objects.equals(registrationEnd, event.registrationEnd) && 
+               Objects.equals(description, event.description) && 
+               Objects.equals(createdAt, event.createdAt);
     }
 
     @Override
     public int hashCode() {
-        int result = java.util.Objects.hash(id, name, status, type, location, startTime, endTime, foodProvided, registrationStart, registrationEnd, description, createdAt);
-        result = 31 * result + java.util.Arrays.hashCode(image);
+        int result = Objects.hash(id, name, status, type, location, startTime, endTime, foodProvided, registrationStart, registrationEnd, description, createdAt);
+        result = 31 * result + Arrays.hashCode(image);
         return result;
     }
 

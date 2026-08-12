@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 
+import java.util.Objects;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -27,17 +29,17 @@ public class Driver {
 
     @Override
     public boolean equals(Object o) {
-        Driver driver = (Driver) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return java.util.Objects.equals(id, driver.id) && 
-               java.util.Objects.equals(name, driver.name) && 
-               java.util.Objects.equals(telephoneNr, driver.telephoneNr);
+        Driver driver = (Driver) o;
+        return Objects.equals(id, driver.id) && 
+               Objects.equals(name, driver.name) && 
+               Objects.equals(telephoneNr, driver.telephoneNr);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, name, telephoneNr);
+        return Objects.hash(id, name, telephoneNr);
     }
 
     @Override
