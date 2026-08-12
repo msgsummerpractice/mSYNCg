@@ -11,20 +11,18 @@ import com.example.demo.dto.response.UserResponse;
 import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         UserResponse userResponse = userService.createUser(userRequest);
-        
+
         return ResponseEntity.ok(userResponse);
     }
 }

@@ -5,5 +5,4 @@ import com.example.demo.dto.request.UserRequest;
 
 public interface ServiceInterface {
     UserResponse createUser(UserRequest user);
-
 }
