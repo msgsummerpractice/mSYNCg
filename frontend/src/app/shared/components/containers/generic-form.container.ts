@@ -16,6 +16,7 @@ import { GenericFormView } from '../views/generic-form/generic-form.view';
       [submitLabel]="(submitLabel$ | async) || 'Submit'"
       (formSubmit)="onFormSubmit()"
     >
+      <ng-content></ng-content>
     </app-generic-form-view>
   `,
 })
