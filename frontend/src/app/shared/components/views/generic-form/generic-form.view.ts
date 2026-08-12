@@ -3,7 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-generic-form',
+    selector: 'app-generic-form-view',
     standalone: true,
     imports: [ReactiveFormsModule, MatButtonModule],
     templateUrl: './generic-form.component.html',
