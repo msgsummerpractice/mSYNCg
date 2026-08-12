@@ -6,5 +6,3 @@ import { Component } from '@angular/core';
   template: `<p>user</p>`,
 })
 export class UserIconView {}
-
-

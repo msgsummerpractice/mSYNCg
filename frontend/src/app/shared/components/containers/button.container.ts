@@ -1,19 +1,17 @@
 import { Component, Input, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { ButtonView } from '../views/button.view';
+import { EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button-container',
   imports: [ButtonView],
-  template: `<app-button-view [label]="label" (handleClickEvent)="handleClick()"></app-button-view>`,
+  template: `<app-button-view [label]="label" (clickEvent)="handleClick()"></app-button-view>`,
 })
 export class Button {
   @Input() label: string = '';
-  @Input() route: string = '';
-  private router = inject(Router);
+  @Output() clickEvent = new EventEmitter<void>();
 
   handleClick(): void {
-    this.router.navigate([this.route]);
+    this.clickEvent.emit();
   }
-
 }
