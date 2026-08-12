@@ -1,0 +1,25 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+
+@Component({
+    selector: 'app-generic-form',
+    standalone: true,
+    imports: [ReactiveFormsModule, MatButtonModule],
+    templateUrl: './generic-form.component.html',
+})
+export class GenericFormComponent {
+    @Input({ required: true }) formGroup!: FormGroup;
+    @Input() submitLabel: string = 'Submit';
+    @Input() isLoading: boolean = false;
+
+    @Output() formSubmit = new EventEmitter<void>();
+
+    onSubmit(): void {
+        if (this.formGroup.valid) {
+            this.formSubmit.emit();
+        } else {
+            this.formGroup.markAllAsTouched();
+        }
+    }
+}
