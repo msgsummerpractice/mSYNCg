@@ -1,27 +1,25 @@
-import { Component, Input} from '@angular/core';
-import {NgStyle} from "@angular/common";
-import {MatIconModule} from "@angular/material/icon";
-import {CommonModule} from "@angular/common";
+import { Component, Input } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-icon-view',
   imports: [NgStyle, MatIconModule, CommonModule],
   template: `
-  <div class="user-icon-container">
-  <span>{{userName}}</span>   
-  <div class="user-icon" [ngStyle]="{'background-color': circleColor}">
-      <img *ngIf="!showInitials" [src]="userImage" />
+    <div class="user-icon-container">
+      <span>{{ userName }}</span>
+      <div class="user-icon" [ngStyle]="{ 'background-color': circleColor }">
+        <img *ngIf="userImage" [src]="userImage" />
 
-      <div *ngIf="showInitials" class="initials ">
-        <span>{{initials}}</span>
+        <div *ngIf="!userImage" class="initials ">
+          <span>{{ initials }}</span>
+        </div>
       </div>
     </div>
-
-</div>
-`,
-  styleUrl: '../views/user-icon.view.css',
+  `,
+  styleUrl: '../views/user-icon.view.scss',
 })
-
 export class UserIconView {
   @Input() userName: string = '';
   @Input() userImage?: string = '';
@@ -29,5 +27,4 @@ export class UserIconView {
   @Input() showInitials: boolean = false;
   @Input() initials: string = '';
   @Input() circleColor: string = '#000';
-
 }
