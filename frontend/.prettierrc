@@ -1,12 +1,10 @@
 {
   "printWidth": 100,
   "singleQuote": true,
-  "overrides": [
-    {
-      "files": "*.html",
-      "options": {
-        "parser": "angular"
-      }
-    }
-  ]
+  "endOfLine": "auto",
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "htmlWhitespaceSensitivity": "strict",
+  "semi": true,
+  "trailingComma": "es5"
 }
