@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { UserIcon } from "./shared/containers/user-icon-component";
+import { UserIcon } from "./shared/components/containers/user-icon.container";
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { CommonModule } from '@angular/common';

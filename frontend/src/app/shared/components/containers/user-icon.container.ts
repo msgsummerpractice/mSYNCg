@@ -2,12 +2,17 @@ import { Component, Input, OnInit } from '@angular/core';
 import {NgStyle} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 import {CommonModule} from "@angular/common";
+import { UserIconView } from '../views/user-icon.view';
 
 @Component({
-  selector: 'app-user-icon-component',
-  imports: [NgStyle, MatIconModule, CommonModule],
-  templateUrl: '../views/user-icon-component.html',
-  styleUrl: '../views/user-icon-component.css',
+  selector: 'app-user-icon-container',
+  imports: [NgStyle, MatIconModule, CommonModule, UserIconView],
+  template: `<app-user-icon-view 
+  [userName]="userName" 
+  [userImage]="userImage" 
+  [showInitials]="showInitials" 
+  [initials]="initials" 
+  [circleColor]="circleColor"></app-user-icon-view>`,
 })
 export class UserIcon implements OnInit {
 
@@ -37,7 +42,7 @@ export class UserIcon implements OnInit {
     this.circleColor = this.colors[randomIndex];
   }
   
-  getInitials(): string {
+  private getInitials(): string {
     if (!this.userName) {
       this.initials = '';
       return '';

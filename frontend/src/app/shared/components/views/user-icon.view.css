@@ -1,18 +1,9 @@
-.outer-circle {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    border-width: 3px;
-    background-color: transparent;
-    justify-content: center;
-    align-items: center;
-}
 .user-icon-container {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 3px;
+    border-radius: 50%;
 }
 .user-icon-container span{
     margin-right: 2px;
@@ -33,8 +24,11 @@
 }
 
 .user-icon-container .user-icon .initials {
-    font-size: 18px;
+    font-size: 15px;
     color: white;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
