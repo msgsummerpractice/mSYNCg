@@ -3,19 +3,14 @@ import { UserList } from './features/admin/components/containers/user-list.conta
 import { EventList } from './features/event/components/containers/event-list.container';
 
 export const routes: Routes = [
-
   { path: '', redirectTo: 'events', pathMatch: 'full' },
-  {
-    path: 'users',
-    component: UserList,
-  },
   {
     path: 'admin',
     children: [
-        {
-            path: 'users',
-            component: UserList,
-        }
+      {
+        path: 'users',
+        component: UserList,
+      },
     ],
   },
   {
