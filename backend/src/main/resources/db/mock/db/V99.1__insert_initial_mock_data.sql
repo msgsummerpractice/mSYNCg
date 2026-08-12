@@ -1,18 +1,18 @@
 INSERT INTO users (first_name, last_name, email, password, location, status, role) VALUES
-('Victor', 'Popescu', 'victor@example.com', 'hashed_password_123', 'Cluj-Napoca', true, 'ADMIN'),
-('Maria', 'Ionescu', 'maria@example.com', 'hashed_password_456', 'Bucuresti', true, 'PARTICIPANT');
+('Victor', 'Popescu', 'victor@example.com', 'hashed_password_123', 'CLUJ-NAPOCA', true, 'ADMIN'),
+('Maria', 'Ionescu', 'maria@example.com', 'hashed_password_456', 'TIMISOARA', true, 'PARTICIPANT');
 
 INSERT INTO drivers (name, telephone_nr) VALUES
 ('Vasile Soferu', '0740123456'),
 ('Mihai Viteazu', '0722987654');
 
 INSERT INTO events (name, status, type, location, start_time, end_time, food_provided, registration_start, registration_end, description, created_by) VALUES
-('Summer Tech Camp', 'ACTIVE', 'Workshop', 'Cluj-Napoca', '2026-08-20 10:00:00', '2026-08-22 18:00:00', true, '2026-08-01 00:00:00', '2026-08-15 23:59:59', 'Un workshop de vara despre tehnologie Java si React.', 1),
-('Teambuilding 2026', 'DRAFT', 'Teambuilding', 'Timisoara', '2026-09-10 14:00:00', '2026-09-12 12:00:00', true, '2026-08-20 00:00:00', '2026-09-01 23:59:59', 'Teambuilding anual pentru toata compania.', 1);
+('Summer Tech Camp', 'PUBLISHED', 'INTERNAL', 'CLUJ-NAPOCA', '2026-08-20 10:00:00', '2026-08-22 18:00:00', true, '2026-08-01 00:00:00', '2026-08-15 23:59:59', 'Un workshop de vara despre tehnologie Java si React.', 1),
+('Teambuilding 2026', 'DRAFT', 'LOCAL', 'TIMISOARA', '2026-09-10 14:00:00', '2026-09-12 12:00:00', true, '2026-08-20 00:00:00', '2026-09-01 23:59:59', 'Teambuilding anual pentru toata compania.', 1);
 
 INSERT INTO registrations (user_id, event_id, status, driver_id, food_preference, accommodation_days, gdpr, photo_consent) VALUES
-(2, 1, 'CONFIRMED', 1, 'Vegetarian', 2, true, true),
-(1, 2, 'PENDING', null, 'Normal', 2, true, false);
+(2, 1, 'COMPLETED', 1, 'VEGETARIAN', 2, true, true),
+(1, 2, 'PUBLISHED', null, 'NONE', 2, true, false);
 
 INSERT INTO check_in (event_id, qr_code, code) VALUES
 (1, 'QR_SUMMER_TECH_12345', 12345),
