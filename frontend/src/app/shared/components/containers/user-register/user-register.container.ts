@@ -11,12 +11,12 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { UserRegisterForm } from '../../../../core/user-register/user-register.model';
+import { UserRegisterForm } from '../../../../core/models/user-register.model';
 import { UserRegisterView } from '../../views/user-register-view/user-register.view';
-import { UserRegisterService } from '../../../../core/user-register/user-register-service';
+import { UserRegisterService } from '../../../../core/services/user-register-service';
 
 export const passwordMatchValidator: ValidatorFn = (
-  control: AbstractControl,
+  control: AbstractControl
 ): ValidationErrors | null => {
   const password = control.get('password');
   const confirmPassword = control.get('confirmPassword');
@@ -29,7 +29,7 @@ export class PasswordMismatchStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return !!(control?.touched && form?.hasError('passwordMismatch'));
   }
-};
+}
 
 @Component({
   selector: 'user-register-container',
@@ -64,7 +64,7 @@ export class UserRegisterContainer {
       confirmPassword: this._fb.control('', [Validators.required]),
       location: this._fb.control(null, [Validators.required]),
     },
-    { validators: passwordMatchValidator },
+    { validators: passwordMatchValidator }
   );
 
   handleRegisterSubmit(): void {
