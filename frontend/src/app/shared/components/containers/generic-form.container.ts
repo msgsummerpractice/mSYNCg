@@ -13,7 +13,7 @@ import { GenericFormView } from '../views/generic-form/generic-form.view';
     <app-generic-form-view
       [formGroup]="formGroup"
       [isLoading]="isLoading"
-      [submitLabel]="(submitLabel$ | async) || 'Submit'"
+      [submitLabel]="(submitLabel$ | async)"
       (formSubmit)="onFormSubmit()"
     >
       <ng-content></ng-content>
