@@ -1,5 +1,18 @@
-<div class="login-form-view">
-  <h2>Login</h2>
+<app-generic-form-view
+  [formGroup]="formGroup"
+  submitLabel="Login"
+  [isLoading]="isLoading"
+  (formSubmit)="formSubmit.emit()"
+>
+  <div>
+    <label for="email">Email</label>
 
-  <p>Generic form will go here.</p>
-</div>
+    <input id="email" type="email" [formControl]="$any(formGroup.controls['email'])" />
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+
+    <input id="password" type="password" [formControl]="$any(formGroup.controls['password'])" />
+  </div>
+</app-generic-form-view>

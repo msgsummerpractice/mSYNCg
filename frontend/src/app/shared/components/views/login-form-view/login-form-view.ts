@@ -1,12 +1,18 @@
-import { Component, output } from '@angular/core';
-import { LoginRequest } from '../../../../core/auth/auth-models';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { GenericFormView } from '../generic-form/generic-form.view';
 
 @Component({
   selector: 'app-login-form-view',
-  imports: [],
+  standalone: true,
+  imports: [ReactiveFormsModule, GenericFormView],
   templateUrl: './login-form-view.html',
   styleUrl: './login-form-view.css',
 })
 export class LoginFormViewComponent {
-  login = output<LoginRequest>();
+  @Input({ required: true }) formGroup!: FormGroup;
+  @Input() isLoading = false;
+
+  @Output() formSubmit = new EventEmitter<void>();
 }

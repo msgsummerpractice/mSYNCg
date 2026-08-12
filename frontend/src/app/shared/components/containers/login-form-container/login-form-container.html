@@ -1,1 +1,1 @@
-<app-login-form-view (login)="onLogin($event)" />
+<app-login-form-view [formGroup]="loginForm" [isLoading]="isLoading" (formSubmit)="onLogin()" />

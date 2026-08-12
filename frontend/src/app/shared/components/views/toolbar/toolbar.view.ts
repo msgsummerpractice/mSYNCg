@@ -26,6 +26,7 @@ interface NavItems {
       <img src="msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
     </button>
     <span class="example-spacer"></span>
+    <ng-content></ng-content>
     <app-button-container
       *ngFor="let item of navItems"
       [label]="item.label"
