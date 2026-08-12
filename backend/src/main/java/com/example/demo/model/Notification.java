@@ -1,10 +1,15 @@
-package  main.java.com.example.demo.model;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "notifications")
@@ -16,7 +21,7 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
@@ -33,4 +38,28 @@ public class Notification {
     @JoinColumn(name = "event_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Event event;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Notification that = (Notification) o;
+        return java.util.Objects.equals(id, that.id) && 
+               java.util.Objects.equals(startTime, that.startTime) && 
+               java.util.Objects.equals(message, that.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id, startTime, message);
+    }
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS check_in (
     id SERIAL PRIMARY KEY,
     event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     qr_code VARCHAR(255) NOT NULL,
-    code NUMERIC NOT NULL
+    code BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS attendance_record (

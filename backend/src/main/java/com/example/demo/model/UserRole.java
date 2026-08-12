@@ -1,4 +1,6 @@
-package main.java.com.example.demo.model;
+package com.example.demo.model;
+
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum UserRole {
     PARTICIPANT("Participant"),
