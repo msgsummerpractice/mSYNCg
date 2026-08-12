@@ -6,9 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
     selector: 'app-generic-form-view',
     standalone: true,
     imports: [ReactiveFormsModule, MatButtonModule],
-    templateUrl: './generic-form.component.html',
+    templateUrl: './generic-form.view.html',
 })
-export class GenericFormComponent {
+export class GenericFormView {
     @Input({ required: true }) formGroup!: FormGroup;
     @Input() submitLabel: string = 'Submit';
     @Input() isLoading: boolean = false;
