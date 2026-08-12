@@ -5,7 +5,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GenericFormContainer } from '../../../../shared/components/containers/generic-form.container';
-import { LocationEnum } from '../../../../core/models/user-register.model';
+import { LocationEnum } from '../../../../core/models/location.model';
+import { UserRegisterForm } from '../../../../core/models/user-register.model';
 
 @Component({
   selector: 'user-register-view',
@@ -20,7 +21,7 @@ import { LocationEnum } from '../../../../core/models/user-register.model';
   templateUrl: './user-register.view.html',
 })
 export class UserRegisterView {
-  @Input({ required: true }) formGroup!: FormGroup;
+  @Input({ required: true }) formGroup!: FormGroup<UserRegisterForm>;
   @Input() isLoading = false;
   @Input() errorMessage = '';
   @Input() successMessage = '';
@@ -28,5 +29,5 @@ export class UserRegisterView {
 
   @Output() submitRegister = new EventEmitter<void>();
 
-  locations = Object.values(LocationEnum);
+  readonly locations = Object.values(LocationEnum);
 }

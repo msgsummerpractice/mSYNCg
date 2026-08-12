@@ -2,36 +2,51 @@
   "BUTTONS": {
     "SUBMIT": "Send"
   },
-  "USER_REGISTER": {
-    "TITLE": "Create an Account",
-    "FIRST_NAME": {
-      "LABEL": "First Name",
-      "PLACEHOLDER": "John",
-      "REQUIRED": "First name is required"
+  "REGISTER": {
+    "USER": {
+      "TITLE": "Create an Account",
+      "FIRST_NAME": {
+        "LABEL": "First Name",
+        "PLACEHOLDER": "John",
+        "REQUIRED": "First name is required"
+      },
+      "LAST_NAME": {
+        "LABEL": "Last Name",
+        "PLACEHOLDER": "Doe",
+        "REQUIRED": "Last name is required"
+      },
+      "EMAIL": {
+        "LABEL": "Email Address",
+        "PLACEHOLDER": "john.doe@example.com",
+        "REQUIRED": "Email is required",
+        "INVALID": "Please enter a valid email address"
+      },
+      "PASSWORD": {
+        "LABEL": "Password",
+        "REQUIRED": "Password is required",
+        "MINLENGTH": "Password must be at least 8 characters long"
+      },
+      "CONFIRM_PASSWORD": {
+        "LABEL": "Confirm Password",
+        "MISMATCH": "Passwords do not match"
+      },
+      "LOCATION": {
+        "LABEL": "Location",
+        "REQUIRED": "Please select a location"
+      },
+      "MESSAGES": {
+        "REQUIRED": {
+          "LOCATION": "Please select a location."
+        },
+        "SUCCESS": {
+          "REGISTER": "Account created successfully! Redirecting..."
+        },
+        "ERROR": {
+          "REGISTER": "An error occurred during registration.",
+          "EMAIL_ALREADY_REGISTERED": "This email is already registered."
+        }
+      }
     },
-    "LAST_NAME": {
-      "LABEL": "Last Name",
-      "PLACEHOLDER": "Doe",
-      "REQUIRED": "Last name is required"
-    },
-    "EMAIL": {
-      "LABEL": "Email Address",
-      "PLACEHOLDER": "john.doe@example.com",
-      "REQUIRED": "Email is required",
-      "INVALID": "Please enter a valid email address"
-    },
-    "PASSWORD": {
-      "LABEL": "Password",
-      "REQUIRED": "Password is required",
-      "MINLENGTH": "Password must be at least 8 characters long"
-    },
-    "CONFIRM_PASSWORD": {
-      "LABEL": "Confirm Password",
-      "MISMATCH": "Passwords do not match"
-    },
-    "LOCATION": {
-      "LABEL": "Location",
-      "REQUIRED": "Please select a location"
-    }
+    "EVENT": {}
   }
 }

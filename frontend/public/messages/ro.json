@@ -2,36 +2,51 @@
   "BUTTONS": {
     "SUBMIT": "Trimite"
   },
-  "USER_REGISTER": {
-    "TITLE": "Creează un cont",
-    "FIRST_NAME": {
-      "LABEL": "Prenume",
-      "PLACEHOLDER": "Ion",
-      "REQUIRED": "Prenumele este obligatoriu"
+  "REGISTER": {
+    "USER": {
+      "TITLE": "Creează un cont",
+      "FIRST_NAME": {
+        "LABEL": "Prenume",
+        "PLACEHOLDER": "Ion",
+        "REQUIRED": "Prenumele este obligatoriu"
+      },
+      "LAST_NAME": {
+        "LABEL": "Nume de familie",
+        "PLACEHOLDER": "Popescu",
+        "REQUIRED": "Numele de familie este obligatoriu"
+      },
+      "EMAIL": {
+        "LABEL": "Adresă de email",
+        "PLACEHOLDER": "ion.popescu@exemplu.ro",
+        "REQUIRED": "Email-ul este obligatoriu",
+        "INVALID": "Introduceți o adresă de email validă"
+      },
+      "PASSWORD": {
+        "LABEL": "Parolă",
+        "REQUIRED": "Parola este obligatorie",
+        "MINLENGTH": "Parola trebuie să aibă cel puțin 8 caractere"
+      },
+      "CONFIRM_PASSWORD": {
+        "LABEL": "Confirmă parola",
+        "MISMATCH": "Parolele nu se potrivesc"
+      },
+      "LOCATION": {
+        "LABEL": "Locație",
+        "REQUIRED": "Vă rugăm să selectați o locație"
+      },
+      "MESSAGES": {
+        "REQUIRED": {
+          "LOCATION": "Vă rugăm să selectați o locație."
+        },
+        "SUCCESS": {
+          "REGISTER": "Cont creat cu succes! Redirecționare..."
+        },
+        "ERROR": {
+          "REGISTER": "A apărut o eroare în timpul înregistrării.",
+          "EMAIL_ALREADY_REGISTERED": "Această adresă de email este deja înregistrată."
+        }
+      }
     },
-    "LAST_NAME": {
-      "LABEL": "Nume de familie",
-      "PLACEHOLDER": "Popescu",
-      "REQUIRED": "Numele de familie este obligatoriu"
-    },
-    "EMAIL": {
-      "LABEL": "Adresă de email",
-      "PLACEHOLDER": "ion.popescu@exemplu.ro",
-      "REQUIRED": "Email-ul este obligatoriu",
-      "INVALID": "Introduceți o adresă de email validă"
-    },
-    "PASSWORD": {
-      "LABEL": "Parolă",
-      "REQUIRED": "Parola este obligatorie",
-      "MINLENGTH": "Parola trebuie să aibă cel puțin 8 caractere"
-    },
-    "CONFIRM_PASSWORD": {
-      "LABEL": "Confirmă parola",
-      "MISMATCH": "Parolele nu se potrivesc"
-    },
-    "LOCATION": {
-      "LABEL": "Locație",
-      "REQUIRED": "Vă rugăm să selectați o locație"
-    }
+    "EVENT": {}
   }
 }

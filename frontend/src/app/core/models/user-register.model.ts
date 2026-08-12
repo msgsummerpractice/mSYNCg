@@ -1,10 +1,6 @@
 import { FormControl } from '@angular/forms';
+import { LocationEnum } from './location.model';
 
-export enum LocationEnum {
-  CLUJ_NAPOCA = 'Cluj-Napoca',
-  TIMISOARA = 'Timișoara',
-  TARGU_MURES = 'Târgu Mureș'
-}
 
 export type UserRegisterForm = {
   firstName: FormControl<string>;
@@ -22,4 +18,15 @@ export interface UserRegisterRequest {
   password: string;
   location: LocationEnum;
   imageBase64?: string; 
+}
+
+export interface UserRegisterResponse {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  location: string;
+  status: boolean;
+  imageUrlString: string;
+  role: string;
 }
