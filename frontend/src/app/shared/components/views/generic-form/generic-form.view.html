@@ -1,0 +1,13 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="flex flex-col gap-5 w-full">
+  <ng-content></ng-content>
+
+  <button
+    type="submit"
+    [disabled]="isLoading"
+    mat-flat-button
+    color="primary"
+    class="w-full mt-4 py-6 text-lg"
+  >
+    {{ submitLabel }}
+  </button>
+</form>
