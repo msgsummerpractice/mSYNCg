@@ -1,0 +1,40 @@
+.outer-circle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    border-width: 3px;
+    background-color: transparent;
+    justify-content: center;
+    align-items: center;
+}
+.user-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+.user-icon-container span{
+    margin-right: 2px;
+}
+.user-icon-container .user-icon {
+    border-radius: 50%;
+    width: 33px;
+    height: 33px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-icon-container .user-icon img {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+}
+
+.user-icon-container .user-icon .initials {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
