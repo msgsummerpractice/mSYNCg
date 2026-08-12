@@ -23,6 +23,11 @@ export class LoginFormContainerComponent {
   });
 
   onLogin(): void {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
     const credentials: LoginRequest = this.loginForm.getRawValue();
 
     console.log(credentials);

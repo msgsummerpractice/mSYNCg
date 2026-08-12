@@ -8,11 +8,23 @@
     <label for="email">Email</label>
 
     <input id="email" type="email" [formControl]="$any(formGroup.controls['email'])" />
+
+    @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('required') )
+    {
+    <p>Email is required</p>
+    } @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('email') ) {
+    <p>Please enter a valid email</p>
+    }
   </div>
 
   <div>
     <label for="password">Password</label>
 
     <input id="password" type="password" [formControl]="$any(formGroup.controls['password'])" />
+
+    @if ( formGroup.controls['password'].touched &&
+    formGroup.controls['password'].hasError('required') ) {
+    <p>Password is required</p>
+    }
   </div>
 </app-generic-form-view>
