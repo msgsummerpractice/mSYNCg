@@ -1,0 +1,69 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    image BYTEA,
+    role VARCHAR(25) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS drivers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    telephone_nr VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS events (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    image BYTEA,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
+    food_provided BOOLEAN NOT NULL,
+    registration_start TIMESTAMP NOT NULL,
+    registration_end TIMESTAMP NOT NULL,
+    description VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS registrations (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    status VARCHAR(50),
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    driver_id INTEGER REFERENCES drivers(id) ON DELETE SET NULL,
+    food_preference VARCHAR(50),
+    accommodation_days INTEGER,
+    gdpr BOOLEAN NOT NULL,
+    photo_consent BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS check_in (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    qr_code VARCHAR(255) NOT NULL,
+    code BIGINT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS attendance_record (
+    id SERIAL PRIMARY KEY,
+    check_in_id INTEGER NOT NULL REFERENCES check_in(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    start_time TIMESTAMP NOT NULL,
+    message VARCHAR(255) NOT NULL
+);
