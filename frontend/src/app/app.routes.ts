@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { UserList } from './features/admin/components/containers/user-list.container';
-import { EventList } from './features/event/components/containers/event-list.container';
+import { UserListContainer } from './features/admin/components/containers/user-list.container';
+import { EventListContainer } from './features/event/components/containers/event-list.container';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'events', pathMatch: 'full' },
@@ -9,13 +9,13 @@ export const routes: Routes = [
     children: [
       {
         path: 'users',
-        component: UserList,
+        component: UserListContainer,
       },
     ],
   },
   {
     path: 'events',
-    component: EventList,
+    component: EventListContainer,
   },
   {
     path: '**',

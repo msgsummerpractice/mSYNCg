@@ -5,12 +5,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-toolbar-container',
   imports: [ToolbarView],
-  template: `<app-toolbar-view
-    (navigate)="navigate($event)"
-  ></app-toolbar-view>`,
+  template: `<app-toolbar-view (navigate)="navigate($event)"></app-toolbar-view>`,
   styleUrl: '../views/toolbar/toolbar.view.scss',
 })
-export class Toolbar {
+export class ToolbarContainer {
   private router = inject(Router);
 
   navigate(route: string): void {

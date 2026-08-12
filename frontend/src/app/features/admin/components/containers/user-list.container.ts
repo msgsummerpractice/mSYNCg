@@ -6,5 +6,4 @@ import { UserListView } from '../views/user-list.view';
   imports: [UserListView],
   template: '<app-user-list-view></app-user-list-view>',
 })
-export class UserList {
-}
+export class UserListContainer {}

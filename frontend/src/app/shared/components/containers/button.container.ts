@@ -7,7 +7,7 @@ import { EventEmitter, Output } from '@angular/core';
   imports: [ButtonView],
   template: `<app-button-view [label]="label" (clickEvent)="handleClick()"></app-button-view>`,
 })
-export class Button {
+export class ButtonContainer {
   @Input() label: string = '';
   @Output() clickEvent = new EventEmitter<void>();
 

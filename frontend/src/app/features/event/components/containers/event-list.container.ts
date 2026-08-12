@@ -5,5 +5,4 @@ import { EventListView } from '../views/event-list.view';
   imports: [EventListView],
   template: `<app-event-list-view></app-event-list-view>`,
 })
-export class EventList {
-}
+export class EventListContainer {}

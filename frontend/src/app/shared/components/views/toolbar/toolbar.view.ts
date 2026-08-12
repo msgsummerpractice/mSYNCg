@@ -1,9 +1,8 @@
 import { Component, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Button } from '../../containers/button.container';
+import { ButtonContainer } from '../../containers/button.container';
 import { UserIconView } from '../../../../features/user/components/views/user-icon.view';
 import { EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,7 +13,14 @@ interface NavItems {
 }
 @Component({
   selector: 'app-toolbar-view',
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, Button, UserIconView, CommonModule],
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    ButtonContainer,
+    UserIconView,
+    CommonModule,
+  ],
   template: `<mat-toolbar>
     <button class="text-white" aria-label="msg logo">
       <img src="msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
