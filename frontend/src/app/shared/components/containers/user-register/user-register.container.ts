@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { UserRegisterForm } from '../../../../core/models/user-register.model';
+import { UserRegisterForm, UserRegisterRequest } from '../../../../core/models/user-register.model';
 import { UserRegisterView } from '../../views/user-register-view/user-register.view';
 import { UserRegisterService } from '../../../../core/services/user-register-service';
 
@@ -76,11 +76,21 @@ export class UserRegisterContainer {
 
     const formValues = this.registerFormGroup.getRawValue();
 
-    this._registerService.register(formValues).subscribe({
+    if (formValues.location === null) {
+      this.isLoading.set(false);
+      this.errorMessage.set('Please select a location.');
+      return;
+    }
+
+    const payload: UserRegisterRequest = {
+      ...formValues,
+      location: formValues.location,
+    };
+
+    this._registerService.register(payload).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.successMessage.set('Account created successfully! Redirecting...');
-
         setTimeout(() => this._router.navigate(['/login']), 2000);
       },
       error: (err) => {

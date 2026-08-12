@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, delay, of, throwError } from 'rxjs';
+import { UserRegisterRequest } from '../models/user-register.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserRegisterService {
   
-  register(userData: any): Observable<any> {
+  register(userData:UserRegisterRequest): Observable<unknown> {
  
     
     if (userData.email === 'test@test.com') {
