@@ -1,3 +1,123 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+@layer utilities {
+  .bg-brand-primary { background-color: var(--color-primary); }
+  .text-brand-on-primary { color: var(--color-on-primary); }
+  .text-brand-on-primary-80 { color: color-mix(in srgb, var(--color-on-primary) 80%, transparent); }
+  .bg-brand-on-primary-20 { background-color: color-mix(in srgb, var(--color-on-primary) 20%, transparent); }
+  .border-brand-on-primary-70 { border-color: color-mix(in srgb, var(--color-on-primary) 70%, transparent); }
+  .border-brand-on-primary-90 { border-color: color-mix(in srgb, var(--color-on-primary) 90%, transparent); }
+
+  .bg-brand-secondary { background-color: var(--color-secondary); }
+  .text-brand-on-secondary { color: var(--color-on-secondary); }
+
+  .bg-brand-surface { background-color: var(--color-surface); }
+  .text-brand-on-surface { color: var(--color-on-surface); }
+
+  .bg-brand-muted { background-color: var(--color-muted); }
+  .text-brand-on-muted { color: var(--color-on-muted); }
+
+  .border-brand { border-color: var(--color-border); }
+  .ring-brand { --tw-ring-color: var(--color-border); }
+
+  .bg-brand-danger { background-color: var(--color-danger); }
+  .text-brand-on-danger { color: var(--color-on-danger); }
+
+  .bg-brand-success { background-color: var(--color-success); }
+  .text-brand-on-success { color: var(--color-on-success); }
+
+  .bg-brand-warning { background-color: var(--color-warning); }
+  .text-brand-on-warning { color: var(--color-on-warning); }
+}
+
+:root {
+  --color-primary: #a01441;
+  --color-on-primary: #ffffff;
+  --color-secondary: #f3d9e3;
+  --color-on-secondary: #3f1123;
+  --color-surface: #fff8fb;
+  --color-on-surface: #23161b;
+  --color-muted: #f7edf1;
+  --color-on-muted: #694553;
+  --color-border: #a01441;
+  --color-danger: #b3261e;
+  --color-on-danger: #ffffff;
+  --color-success: #1f7a3d;
+  --color-on-success: #ffffff;
+  --color-warning: #a05a00;
+  --color-on-warning: #ffffff;
+
+  /* Angular Material system color overrides */
+  --mat-sys-primary: var(--color-primary);
+  --mat-sys-on-primary: var(--color-on-primary);
+  --mat-sys-secondary: var(--color-secondary);
+  --mat-sys-on-secondary: var(--color-on-secondary);
+  --mat-sys-surface: var(--color-surface);
+  --mat-sys-on-surface: var(--color-on-surface);
+  --mat-sys-error: var(--color-danger);
+  --mat-sys-on-error: var(--color-on-danger);
+  --mat-sys-outline: var(--color-border);
+  --mat-sys-outline-variant: var(--color-border);
+  --mat-sys-surface-variant: var(--color-muted);
+  --mat-sys-on-surface-variant: var(--color-on-muted);
+}
+
+.dark {
+  --color-primary: #d04977;
+  --color-on-primary: #2b0b17;
+  --color-secondary: #52303d;
+  --color-on-secondary: #f9e9ef;
+  --color-surface: #181216;
+  --color-on-surface: #f7e9ef;
+  --color-muted: #241a1f;
+  --color-on-muted: #d7bec8;
+  --color-border: #d04977;
+  --color-danger: #ffb4ab;
+  --color-on-danger: #690005;
+  --color-success: #8fdaa5;
+  --color-on-success: #003916;
+  --color-warning: #ffb95c;
+  --color-on-warning: #3c2100;
+
+  /* Keep Material vars in sync in dark mode */
+  --mat-sys-primary: var(--color-primary);
+  --mat-sys-on-primary: var(--color-on-primary);
+  --mat-sys-secondary: var(--color-secondary);
+  --mat-sys-on-secondary: var(--color-on-secondary);
+  --mat-sys-surface: var(--color-surface);
+  --mat-sys-on-surface: var(--color-on-surface);
+  --mat-sys-error: var(--color-danger);
+  --mat-sys-on-error: var(--color-on-danger);
+  --mat-sys-outline: var(--color-border);
+  --mat-sys-outline-variant: var(--color-border);
+  --mat-sys-surface-variant: var(--color-muted);
+  --mat-sys-on-surface-variant: var(--color-on-muted);
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+/* Filled and raised Material buttons */
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button {
+  --mdc-filled-button-container-color: var(--color-primary);
+  --mdc-filled-button-label-text-color: var(--color-on-primary);
+}
+
+/* Outlined Material buttons */
+.mat-mdc-outlined-button {
+  --mdc-outlined-button-outline-color: var(--color-primary);
+  --mdc-outlined-button-label-text-color: var(--color-primary);
+}
+
+/* Material form field outline and focus colors */
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--color-primary);
+  --mdc-outlined-text-field-hover-outline-color: var(--color-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--color-primary);
+  --mdc-outlined-text-field-caret-color: var(--color-primary);
+}

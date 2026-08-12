@@ -6,7 +6,7 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
   template: `<button
     type="button"
     (click)="handleClick()"
-    class="ml-3 font-medium hover:text-white"
+    class="ml-3 font-medium hover:text-brand-on-primary"
     aria-label="events button"
     >{{ label }}</button
   >`,
