@@ -8,7 +8,7 @@
   "LOGIN": {
     "TITLE": "Autentificare",
     "EMAIL": "Email",
-    "EMAIL_PLACEHOLDER": "john.doe@example.com",
+    "EMAIL_PLACEHOLDER": "ion.popescu@exemplu.ro",
     "PASSWORD": "Parolă",
     "PASSWORD_PLACEHOLDER": "Introdu parola ta",
     "PASSWORD_MIN_LENGTH": "Parola trebuie să aibă cel puțin 8 caractere",
