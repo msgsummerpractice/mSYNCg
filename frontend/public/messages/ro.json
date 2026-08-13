@@ -23,7 +23,9 @@
     "TAGLINE": "Planifică. Organizează. Rămâi sincronizat.",
     "DESCRIPTION": "Organizează evenimente, gestionează participanții și păstrează totul sincronizat — într-un singur loc.",
     "SIGN_IN_TITLE": "Autentifică-te în contul tău",
-    "SIGN_IN_SUBTITLE": "Introdu datele de autentificare pentru a continua."
+    "SIGN_IN_SUBTITLE": "Introdu datele de autentificare pentru a continua.",
+    "LOGIN_SUCCESS": "Autentificare reușită!",
+    "LOGIN_ERROR": "Email sau parolă incorectă."
   },
   "REGISTER": {
     "USER": {

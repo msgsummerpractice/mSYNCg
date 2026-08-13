@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { LoginFormViewComponent } from '../views/login-form-view/login-form-view';
 import { LoginRequest } from '../../../core/auth/auth-models';
 import { AuthService } from '../../../core/auth/auth-service';
+import { ToastService } from '../../../core/services/toast.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login-form-container',
@@ -15,6 +17,8 @@ import { AuthService } from '../../../core/auth/auth-service';
 export class LoginFormContainerComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
+  private readonly translateService = inject(TranslateService);
 
   isLoading = false;
 

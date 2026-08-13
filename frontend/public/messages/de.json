@@ -23,7 +23,9 @@
     "TAGLINE": "Planen. Organisieren. Synchron bleiben.",
     "DESCRIPTION": "Organisieren Sie Veranstaltungen, verwalten Sie Teilnehmer und behalten Sie alles an einem Ort im Blick.",
     "SIGN_IN_TITLE": "Melden Sie sich bei Ihrem Konto an",
-    "SIGN_IN_SUBTITLE": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren."
+    "SIGN_IN_SUBTITLE": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren.",
+    "LOGIN_SUCCESS": "Anmeldung erfolgreich!",
+    "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort."
   },
   "REGISTER": {
     "USER": {
