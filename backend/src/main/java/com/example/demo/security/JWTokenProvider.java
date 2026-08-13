@@ -19,7 +19,9 @@ public class JWTokenProvider {
 
     @Value("${spring.jwt.secret}")
     private String jwtSecret;
-    private long jwtExpirationDate = 3600000;
+
+    @Value("${spring.jwt.expiration:3600000}")
+    private long jwtExpirationDate;
 
     public String generateToken(Authentication authentication) {
         String email = authentication.getName();
