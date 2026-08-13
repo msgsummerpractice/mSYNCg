@@ -3,15 +3,17 @@ import { Injectable, signal } from '@angular/core';
 export interface Toast {
   id: string;
   message: string;
-  type: 'success' | 'error';
+  type: ToastType;
   duration?: number;
 }
+
+type ToastType = 'success' | 'error';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  toasts = signal<Toast[]>([]);
+  readonly toasts = signal<Toast[]>([]);
   private toastIdCounter = 0;
 
   showSuccess(message: string, duration: number = 5000): void {
@@ -22,7 +24,7 @@ export class ToastService {
     this.addToast(message, 'error', duration);
   }
 
-  private addToast(message: string, type: 'success' | 'error', duration: number): void {
+  private addToast(message: string, type: ToastType, duration: number): void {
     const id = `toast-${++this.toastIdCounter}`;
     const toast: Toast = { id, message, type, duration };
 

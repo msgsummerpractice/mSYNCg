@@ -1,18 +1,18 @@
 <div class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
-      @for (toast of toasts(); track toast.id) {
-        <div
-          [class]="getToastClasses(toast.type)"
-          class="p-4 rounded-lg shadow-lg pointer-events-auto animate-slideIn"
-        >
-          <div class="flex items-center justify-between gap-4">
-            <p class="text-sm font-medium">{{ toast.message }}</p>
-            <button
-              (click)="closeToast(toast.id)"
-              class="text-lg font-bold leading-none hover:opacity-70 transition-opacity"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      }
+  @for (toast of toasts(); track toast.id) {
+  <div
+    [class]="getToastClasses(toast.type)"
+    class="p-4 rounded-lg shadow-lg pointer-events-auto animate-slideIn"
+  >
+    <div class="flex items-center justify-between gap-4">
+      <p class="text-sm font-medium">{{ toast.message }}</p>
+      <button
+        (click)="closeToast(toast.id)"
+        class="text-lg font-bold leading-none hover:opacity-70 transition-opacity"
+      >
+        ×
+      </button>
+    </div>
+  </div>
+  }
 </div>

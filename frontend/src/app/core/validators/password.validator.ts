@@ -1,4 +1,11 @@
-import { AbstractControl, FormControl, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export const passwordMatchValidator: ValidatorFn = (
@@ -14,4 +21,3 @@ export class PasswordMismatchStateMatcher implements ErrorStateMatcher {
     return !!(control?.touched && form?.hasError('passwordMismatch'));
   }
 }
-

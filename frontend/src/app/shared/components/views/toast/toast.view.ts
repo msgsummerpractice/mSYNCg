@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../../core/services/toast.service';
 
@@ -25,17 +25,13 @@ import { ToastService } from '../../../../core/services/toast.service';
   `,
 })
 export class ToastView {
-  private readonly toastService = inject(ToastService);
-  toasts = this.toastService.toasts;
+  @Input({ required: true }) toasts!: ReturnType<typeof Array>;
+  @Input() onClose!: (id: string) => void;
 
-  getToastClasses(type: 'success' | 'error'): string {
-    if (type === 'success') {
+  getToastClasses(ToastType: 'success' | 'error'): string {
+    if (ToastType === 'success') {
       return 'bg-green-50 border border-green-500 text-green-700';
     }
     return 'bg-red-50 border border-red-500 text-red-700';
-  }
-
-  closeToast(id: string): void {
-    this.toastService.removeToast(id);
   }
 }

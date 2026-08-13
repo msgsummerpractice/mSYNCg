@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ToastView } from '../views/toast/toast.view';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-toast-container',
@@ -7,4 +8,10 @@ import { ToastView } from '../views/toast/toast.view';
   imports: [ToastView],
   template: `<app-toast></app-toast>`,
 })
-export class ToastContainer {}
+export class ToastContainer {
+  protected readonly toastService = inject(ToastService);
+
+  closeToast(id: string): void {
+    this.toastService.removeToast(id);
+  }
+}
