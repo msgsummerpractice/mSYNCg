@@ -4,43 +4,50 @@
   [isLoading]="isLoading"
   (formSubmit)="formSubmit.emit()"
 >
-  <div class="mb-6">
-    <h1 class="text-2xl font-semibold"> {{ 'LOGIN.WELCOME' | translate }} </h1>
-
-    <p class="mt-2 text-sm text-gray-600"> {{ 'LOGIN.SUBTITLE' | translate }} </p>
-  </div>
   <div>
-    <div class="flex items-center gap-3">
-      <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
+    <h2 class="text-xl font-semibold text-gray-950"> {{ 'LOGIN.SIGN_IN_TITLE' | translate }} </h2>
 
-      <input id="email" type="email" [formControl]="$any(formGroup.controls['email'])" />
-    </div>
+    <p class="mt-1 text-sm text-gray-600"> {{ 'LOGIN.SIGN_IN_SUBTITLE' | translate }} </p>
+  </div>
+
+  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+    <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
+
+    <input id="email" matInput type="email" [formControl]="$any(formGroup.controls['email'])" />
 
     @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('required') )
     {
-    <p>{{ 'LOGIN.EMAIL_REQUIRED' | translate }}</p>
+    <mat-error>{{ 'LOGIN.EMAIL_REQUIRED' | translate }}</mat-error>
     } @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('email') ) {
-    <p>{{ 'LOGIN.EMAIL_INVALID' | translate }}</p>
+    <mat-error>{{ 'LOGIN.EMAIL_INVALID' | translate }}</mat-error>
     }
-  </div>
+  </mat-form-field>
 
-  <div>
-    <div class="flex items-center gap-3">
-      <label for="password" class="whitespace-nowrap"> {{ 'LOGIN.PASSWORD' | translate }} </label>
+  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+    <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
 
-      <input id="password" type="password" [formControl]="$any(formGroup.controls['password'])" />
-    </div>
+    <input
+      id="password"
+      matInput
+      type="password"
+      [formControl]="$any(formGroup.controls['password'])"
+    />
 
     @if ( formGroup.controls['password'].touched &&
     formGroup.controls['password'].hasError('required') ) {
-    <p>{{ 'LOGIN.PASSWORD_REQUIRED' | translate }}</p>
+    <mat-error>{{ 'LOGIN.PASSWORD_REQUIRED' | translate }}</mat-error>
     } @if ( formGroup.controls['password'].touched &&
     formGroup.controls['password'].hasError('minlength') ) {
-    <p>{{ 'LOGIN.PASSWORD_MIN_LENGTH' | translate }}</p>
+    <mat-error>{{ 'LOGIN.PASSWORD_MIN_LENGTH' | translate }}</mat-error>
     }
+  </mat-form-field>
+  <div class="mt-2 text-right">
+    <a routerLink="/forgot-password" class="text-sm font-medium text-[#A01441] hover:underline">
+      {{ 'LOGIN.FORGOT_PASSWORD' | translate }}
+    </a>
   </div>
 </app-generic-form-view>
-<div class="mt-6 text-center text-sm">
+<div class="mt-5 rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
   <span>{{ 'LOGIN.NO_ACCOUNT' | translate }}</span>
 
   <a routerLink="/register" class="ml-1 font-semibold text-[#A01441] hover:underline">

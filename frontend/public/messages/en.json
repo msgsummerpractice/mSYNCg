@@ -13,9 +13,14 @@
     "EMAIL_REQUIRED": "Email is required",
     "EMAIL_INVALID": "Please enter a valid email",
     "PASSWORD_REQUIRED": "Password is required",
-    "WELCOME": "Welcome to mSYNCg",
+    "WELCOME": "Welcome to mSYNCg !",
     "SUBTITLE": "Please enter your credentials to continue.",
     "NO_ACCOUNT": "Don't have an account yet?",
-    "REGISTER_NOW": "Register now!"
+    "REGISTER_NOW": "Register now!",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "TAGLINE": "Plan. Organize. Stay in sync.",
+    "DESCRIPTION": "Organize events, manage participants, and keep everything in sync — all in one place.",
+    "SIGN_IN_TITLE": "Sign in to your account",
+    "SIGN_IN_SUBTITLE": "Enter your credentials to continue."
   }
 }
