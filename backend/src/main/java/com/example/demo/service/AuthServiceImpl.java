@@ -9,7 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.LogInRequest;
-import com.example.demo.provider.JWTokenProvider;
+import com.example.demo.security.JWTokenProvider;
+import com.example.demo.security.UserDetailService;
 
 @Service
 public class AuthServiceImpl implements AuthService {

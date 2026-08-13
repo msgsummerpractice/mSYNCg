@@ -1,5 +1,5 @@
 
-package com.example.demo.provider;
+package com.example.demo.security;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

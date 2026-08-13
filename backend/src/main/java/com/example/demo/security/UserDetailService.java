@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.security;
 
 import java.util.Set;
 
@@ -29,7 +29,7 @@ public class UserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with email: " + username);
         }
 
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), Set.of(authority));
     }

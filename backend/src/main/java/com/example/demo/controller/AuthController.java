@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import lombok.extern.slf4j.Slf4j;
-
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LogInResponse> login(
-            @RequestBody LogInRequest logInRequest) {
+            @Valid @RequestBody LogInRequest logInRequest) {
 
         String token = authService.login(logInRequest);
         LogInResponse response = new LogInResponse();
