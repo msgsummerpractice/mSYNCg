@@ -10,10 +10,16 @@
     <p class="mt-1 text-sm text-gray-600"> {{ 'LOGIN.SIGN_IN_SUBTITLE' | translate }} </p>
   </div>
 
-  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic" floatLabel="always">
     <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
 
-    <input id="email" matInput type="email" [formControl]="$any(formGroup.controls['email'])" />
+    <input
+      id="email"
+      matInput
+      type="email"
+      [formControl]="$any(formGroup.controls['email'])"
+      [placeholder]="'LOGIN.EMAIL_PLACEHOLDER' | translate"
+    />
 
     @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('required') )
     {
@@ -23,7 +29,7 @@
     }
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic">
+  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic" floatLabel="always">
     <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
 
     <input
@@ -31,6 +37,7 @@
       matInput
       type="password"
       [formControl]="$any(formGroup.controls['password'])"
+      [placeholder]="'LOGIN.PASSWORD_PLACEHOLDER' | translate"
     />
 
     @if ( formGroup.controls['password'].touched &&

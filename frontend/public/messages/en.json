@@ -8,7 +8,9 @@
   "LOGIN": {
     "TITLE": "Login",
     "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "john.doe@example.com",
     "PASSWORD": "Password",
+    "PASSWORD_PLACEHOLDER": "Enter your password",
     "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters",
     "EMAIL_REQUIRED": "Email is required",
     "EMAIL_INVALID": "Please enter a valid email",
