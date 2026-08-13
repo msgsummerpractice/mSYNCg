@@ -13,7 +13,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserRegisterForm, UserRegisterRequest } from '../../../core/models/user-register.model';
-import { UserRegisterView } from '../views/user-register-view/user-register.view';
+import { UserRegisterView } from '../views/user-register/user-register.view';
 import { UserRegisterService } from '../../../core/services/user-register.service';
 import {
   passwordMatchValidator,
@@ -93,7 +93,7 @@ export class UserRegisterContainer {
           );
           setTimeout(() => this.router.navigate(['/login']), 2000);
         },
-        //To Do: update in order to adapt to HttpErrorResponse when connectiong FE to BE
+        //TODO: <update in order to adapt to HttpErrorResponse when connectiong FE to BE>
         error: (err) => {
           this.isLoading.set(false);
           const translatedError =

@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GenericFormContainer } from '../../../../shared/components/containers/generic-form.container';
+import { GenericFormContainer } from '../../containers/generic-form.container';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRegisterForm } from '../../../../core/models/user-register.model';
 

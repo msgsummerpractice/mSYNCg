@@ -7,7 +7,7 @@ import { UserRegisterRequest, UserRegisterResponse } from '../models/user-regist
 })
 export class UserRegisterService {
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
-    //To Do: Use http requests when connecting it to the BE
+    //TODO: <Use http requests when connecting it to the BE>
     const response: UserRegisterResponse = {
       id: Date.now(),
       firstName: userData.firstName,

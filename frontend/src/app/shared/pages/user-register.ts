@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserRegisterContainer } from '../../components/containers/user-register.container';
+import { UserRegisterContainer } from '../components/containers/user-register.container';
 
 @Component({
   selector: 'user-register-page',
