@@ -99,9 +99,9 @@ public class GlobalExceptionHandler {
     ) {
     }
 
-	@ExceptionHandler(LoginException.class)
+	@ExceptionHandler(UnathorizedException.class)
 	public ResponseEntity<ErrorResponse> handleLoginException(
-			LoginException exception,
+			UnathorizedException exception,
 			HttpServletRequest request
 	) {
 		ErrorResponse response = new ErrorResponse(

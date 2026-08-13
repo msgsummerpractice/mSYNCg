@@ -2,7 +2,7 @@
 package com.example.demo.service;
 
 import org.springframework.security.core.AuthenticationException;
-import com.example.demo.exceptions.LoginException;
+import com.example.demo.exceptions.UnathorizedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
             String token = jwtTokenProvider.generateToken(authentication);
             return token;
         } catch (AuthenticationException e) {
-            throw new LoginException("Invalid email or password");
+            throw new UnathorizedException("Invalid email or password");
         }
 
     }
