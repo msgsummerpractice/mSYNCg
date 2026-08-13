@@ -30,4 +30,5 @@ export class UserRegisterView {
   @Output() submitRegister = new EventEmitter<void>();
 
   readonly locations = Object.values(LocationEnum);
+  readonly loginRoute = '/login';
 }
