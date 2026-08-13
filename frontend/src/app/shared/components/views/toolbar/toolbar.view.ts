@@ -25,7 +25,7 @@ export interface NavItem {
   template: `
     <mat-toolbar>
       <button class="text-white" aria-label="msg logo">
-        <img src="msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
+        <img src="/msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
       </button>
 
       <span class="example-spacer"></span>
