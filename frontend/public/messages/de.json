@@ -43,7 +43,8 @@
         },
         "ERROR": {
           "REGISTER": "Bei der Registrierung ist ein Fehler aufgetreten.",
-          "EMAIL_ALREADY_REGISTERED": "Diese E-Mail-Adresse ist bereits registriert."
+          "EMAIL_ALREADY_REGISTERED": "Diese E-Mail-Adresse ist bereits registriert.",
+          "NETWORK": "Während der Verarbeitung Ihrer Anfrage ist ein Netzwerkfehler aufgetreten."
         }
       }
     },

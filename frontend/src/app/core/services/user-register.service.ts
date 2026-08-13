@@ -1,24 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, delay, of, throwError } from 'rxjs';
 import { UserRegisterRequest, UserRegisterResponse } from '../models/user-register.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserRegisterService {
+  private readonly _http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api/users';
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
-    //TODO: <Use http requests when connecting it to the BE>
-    const response: UserRegisterResponse = {
-      id: Date.now(),
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      location: userData.location,
-      status: true,
-      imageUrlString: userData.imageBase64 ?? '',
-      role: 'PARTICIPANT',
-    };
-
-    return of(response);
+    return this._http.post<UserRegisterResponse>(this.apiUrl, userData);
   }
 }
