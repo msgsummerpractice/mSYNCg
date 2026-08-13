@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
     <app-login-form-view [formGroup]="loginForm" [isLoading]="isLoading" (formSubmit)="onLogin()" />
   `,
 })
-export class LoginFormContainerComponent {
+export class LoginFormContainer {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(ToastService);
