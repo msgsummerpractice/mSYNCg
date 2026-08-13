@@ -5,6 +5,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { CommonModule } from '@angular/common';
 import { ToolbarContainer } from './shared/components/containers/toolbar.container';
+import { ToastContainer } from './shared/components/containers/toast.container';
 
 @Component({
   selector: 'app-root',
