@@ -2,9 +2,36 @@
   "BUTTONS": {
     "SUBMIT": "Trimite"
   },
+  "HOME": {
+    "WELCOME": "Bine ai venit la mSYNCg !"
+  },
+  "LOGIN": {
+    "TITLE": "Autentificare",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "ion.popescu@exemplu.ro",
+    "PASSWORD": "Parolă",
+    "PASSWORD_PLACEHOLDER": "Introdu parola ta",
+    "PASSWORD_MIN_LENGTH": "Parola trebuie să aibă cel puțin 8 caractere",
+    "EMAIL_REQUIRED": "Emailul este obligatoriu",
+    "EMAIL_INVALID": "Introdu o adresă de email validă",
+    "PASSWORD_REQUIRED": "Parola este obligatorie",
+    "WELCOME": "Bine ai venit la mSYNCg !",
+    "SUBTITLE": "Introdu datele de autentificare pentru a continua.",
+    "NO_ACCOUNT": "Nu ai încă un cont?",
+    "REGISTER_NOW": "Înregistrează-te acum!",
+    "FORGOT_PASSWORD": "Ai uitat parola?",
+    "TAGLINE": "Planifică. Organizează. Rămâi sincronizat.",
+    "DESCRIPTION": "Organizează evenimente, gestionează participanții și păstrează totul sincronizat — într-un singur loc.",
+    "SIGN_IN_TITLE": "Autentifică-te în contul tău",
+    "SIGN_IN_SUBTITLE": "Introdu datele de autentificare pentru a continua.",
+    "LOGIN_SUCCESS": "Autentificare reușită!",
+    "LOGIN_ERROR": "Email sau parolă incorectă."
+  },
   "REGISTER": {
     "USER": {
       "TITLE": "Creează un cont",
+      "ALREADY_HAVE_ACCOUNT": "Ai deja un cont?",
+      "LOGIN_NOW": "Autentifică-te",
       "FIRST_NAME": {
         "LABEL": "Prenume",
         "PLACEHOLDER": "Ion",

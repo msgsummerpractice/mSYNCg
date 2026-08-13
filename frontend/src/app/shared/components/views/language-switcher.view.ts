@@ -8,14 +8,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'app-language-switcher-view',
   imports: [CommonModule, MatSelectModule, MatFormFieldModule],
-  template: `<mat-form-field appearance="outline">
-    <mat-label>Language</mat-label>
-    <mat-select [value]="currentLang" (selectionChange)="onSelectionChange($event.value)">
-      <mat-option *ngFor="let lang of languages" [value]="lang.code">
-        {{ lang.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field> `,
+  template: `
+    <mat-form-field appearance="outline" class="!w-24" subscriptSizing="dynamic">
+      <mat-select
+        [value]="currentLang"
+        (selectionChange)="onSelectionChange($event.value)"
+        class="text-sm"
+      >
+        <mat-option *ngFor="let lang of languages" [value]="lang.code">
+          {{ lang.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  `,
 })
 export class LanguageSwitcherView {
   @Input() languages: Language[] = [];
