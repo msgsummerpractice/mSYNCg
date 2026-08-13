@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Toast, ToastService } from '../../../../core/services/toast.service';
 
 @Component({
-  selector: 'app-toast',
+  selector: 'app-toast-view',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './toast.view.html',
