@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TableColumn } from '../../../core/models/table.column.model';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'generic-cell-view',
   standalone: true,
-  imports: [CommonModule, MatSelectModule, MatFormFieldModule],
+  imports: [CommonModule, MatSelectModule, MatFormFieldModule, MatSlideToggleModule],
   template: `
     @switch (column.type) {
       @case ('dropdown') {
@@ -18,6 +19,11 @@ import { TableColumn } from '../../../core/models/table.column.model';
             }
           </mat-select>
         </mat-form-field>
+      }
+
+      @case ('switch') {
+        <mat-slide-toggle [checked]="!!displayValue" (change)="onSwitchChange($event.checked)">
+        </mat-slide-toggle>
       }
 
       @default {
@@ -48,6 +54,9 @@ export class GenericCellView<T> {
   }
 
   onSelectionChange(newValue: unknown): void {
+    this.valueChanged.emit({ row: this.row, key: this.column.key, newValue });
+  }
+  onSwitchChange(newValue: boolean): void {
     this.valueChanged.emit({ row: this.row, key: this.column.key, newValue });
   }
 }

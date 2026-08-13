@@ -1,4 +1,4 @@
-export type CellType = 'text' | 'dropdown';
+export type CellType = 'text' | 'dropdown' | 'switch';
 
 export interface TableColumn<T> {
   key: string;

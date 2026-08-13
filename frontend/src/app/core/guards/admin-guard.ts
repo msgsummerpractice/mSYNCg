@@ -6,6 +6,8 @@ export const adminGuard: CanActivateFn = () => {
 
   const userRole: string = 'PARTICIPANT'; // Replace with actual logic to get the user's role
 
+  return true; // Allow access to the route for all roles for now
+
   if (userRole === 'ADMIN') {
     return true;
   }

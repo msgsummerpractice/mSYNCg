@@ -2,7 +2,8 @@ import { Component, computed, signal, OnInit, inject } from '@angular/core';
 import { UserListView } from '../views/user-list.view';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
-import type { User } from '../../../../core/models/user.model';
+import { User } from '../../../../core/models/user.model';
+import { MOCK_USERS } from '../../../../core/models/user.mocks';
 
 @Component({
   selector: 'app-user-list-container',
@@ -13,16 +14,21 @@ import type { User } from '../../../../core/models/user.model';
       [columns]="tableColumns"
       [roles]="roles()"
       [locations]="locations()"
-      (searchChange)="searchQuery.set($event)"
-      (roleChange)="selectedRole.set($event)"
-      (locationChange)="selectedLocation.set($event)"
+      [selectedRoles]="selectedRoles()"
+      [selectedLocations]="selectedLocations()"
+      [selectedStatuses]="selectedStatuses()"
+      (nameSearchChange)="nameQuery.set($event)"
+      (emailSearchChange)="emailQuery.set($event)"
+      (roleChange)="selectedRoles.set($event)"
+      (locationChange)="selectedLocations.set($event)"
+      (statusChange)="selectedStatuses.set($event)"
       (cellAction)="onCellChange($event)"
     >
     </app-user-list-view>
   `,
 })
-export class UserListContainer {
-  private userService = inject(AdminService);
+export class UserListContainer implements OnInit {
+  private adminService = inject(AdminService);
 
   tableColumns: TableColumn<User>[] = [
     {
@@ -32,47 +38,73 @@ export class UserListContainer {
       valueGetter: (user) => `${user.firstName} ${user.lastName}`,
     },
     {
+      key: 'email',
+      label: 'Email',
+      type: 'text',
+    },
+    {
       key: 'role',
       label: 'User Role',
       type: 'dropdown',
-      options: ['Admin', 'Manager', 'Employee'],
+      options: ['ADMIN', 'HR_USER', 'PARTICIPANT', 'MARKETING_ORGANIZER'],
     },
     {
       key: 'location',
       label: 'Location',
       type: 'text',
     },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'switch',
+    },
   ];
 
   allUsers = signal<User[]>([]);
-  roles = signal<string[]>(['Admin', 'Manager', 'Employee']);
-  locations = signal<string[]>(['București', 'Cluj-Napoca', 'Timișoara']);
+  roles = signal<string[]>(['ADMIN', 'HR_USER', 'PARTICIPANT', 'MARKETING_ORGANIZER']);
+  locations = signal<string[]>(['TARGU-MURES', 'CLUJ-NAPOCA', 'TIMISOARA']);
 
-  searchQuery = signal<string>('');
-  selectedRole = signal<string | null>(null);
-  selectedLocation = signal<string | null>(null);
+  nameQuery = signal<string>('');
+  emailQuery = signal<string>('');
+
+  selectedRoles = signal<string[]>([]);
+  selectedLocations = signal<string[]>([]);
+  selectedStatuses = signal<string[]>([]);
 
   filteredUsers = computed(() => {
-    const query = this.searchQuery().toLowerCase().trim();
-    const role = this.selectedRole();
-    const location = this.selectedLocation();
+    const searchName = this.nameQuery().toLowerCase().trim();
+    const searchEmail = this.emailQuery().toLowerCase().trim();
+
+    const activeRoles = this.selectedRoles();
+    const activeLocations = this.selectedLocations();
+    const activeStatuses = this.selectedStatuses();
 
     return this.allUsers().filter((user) => {
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const reverseName = `${user.lastName} ${user.firstName}`.toLowerCase();
+      const matchesName =
+        searchName === '' || fullName.includes(searchName) || reverseName.includes(searchName);
 
-      const matchesSearch = fullName.includes(query);
-      const matchesRole = role ? user.role === role : true;
-      const matchesLocation = location ? user.location === location : true;
+      const email = (user.email || '').toLowerCase();
+      const matchesEmail = searchEmail === '' || email.includes(searchEmail);
 
-      return matchesSearch && matchesRole && matchesLocation;
+      const matchesRole = activeRoles.length === 0 || activeRoles.includes(user.role);
+      const matchesLocation =
+        activeLocations.length === 0 || activeLocations.includes(user.location);
+
+      const userStatus = (user as any).status || 'inactive';
+      const matchesStatus = activeStatuses.length === 0 || activeStatuses.includes(userStatus);
+
+      return matchesName && matchesEmail && matchesRole && matchesLocation && matchesStatus;
     });
   });
 
   ngOnInit() {
-    this.userService.getAllUsers().subscribe({
-      next: (users) => this.allUsers.set(users),
-      error: (err) => console.error('Failed to load users', err),
-    });
+    // this.adminService.getAllUsers().subscribe({
+    //   next: (users) => this.allUsers.set(users),
+    //   error: (err) => console.error('Failed to load users', err),
+    // });
+    this.allUsers.set(MOCK_USERS);
   }
 
   onCellChange(event: { row: User; key: string; newValue: unknown }) {}

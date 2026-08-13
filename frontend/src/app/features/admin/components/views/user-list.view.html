@@ -1,7 +1,54 @@
 <div class="filters-container">
   <mat-form-field appearance="outline">
-    <mat-label>Search Name</mat-label>
-    <input matInput (input)="onSearch($event)" placeholder="Search..." />
+    <mat-label>Nume complet</mat-label>
+    <input
+      matInput
+      (input)="nameSearchChange.emit($any($event.target).value)"
+      placeholder="Cauta nume..."
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      (input)="emailSearchChange.emit($any($event.target).value)"
+      placeholder="Cauta email..."
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Roluri</mat-label>
+    <mat-select multiple [value]="selectedRoles" (selectionChange)="roleChange.emit($event.value)">
+      @for (role of roles; track role) {
+      <mat-option [value]="role">{{ role }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Locații</mat-label>
+    <mat-select
+      multiple
+      [value]="selectedLocations"
+      (selectionChange)="locationChange.emit($event.value)"
+    >
+      @for (loc of locations; track loc) {
+      <mat-option [value]="loc">{{ loc }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select
+      multiple
+      [value]="selectedStatuses"
+      (selectionChange)="statusChange.emit($event.value)"
+    >
+      <mat-option value="active">Activ</mat-option>
+      <mat-option value="inactive">Inactiv</mat-option>
+    </mat-select>
   </mat-form-field>
 </div>
 

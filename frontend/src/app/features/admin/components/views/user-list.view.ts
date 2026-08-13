@@ -27,9 +27,16 @@ export class UserListView {
   @Input() roles: string[] = [];
   @Input() locations: string[] = [];
 
-  @Output() searchChange = new EventEmitter<string>();
-  @Output() roleChange = new EventEmitter<string | null>();
-  @Output() locationChange = new EventEmitter<string | null>();
+  @Input() selectedRoles: string[] = [];
+  @Input() selectedLocations: string[] = [];
+  @Input() selectedStatuses: string[] = [];
+
+  @Output() nameSearchChange = new EventEmitter<string>();
+  @Output() emailSearchChange = new EventEmitter<string>();
+
+  @Output() roleChange = new EventEmitter<string[]>();
+  @Output() locationChange = new EventEmitter<string[]>();
+  @Output() statusChange = new EventEmitter<string[]>();
 
   @Output() cellAction = new EventEmitter<{ row: User; key: string; newValue: unknown }>();
 
@@ -37,8 +44,13 @@ export class UserListView {
     return this.columns.map((col) => col.key);
   }
 
-  onSearch(event: Event) {
+  onNameSearch(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    this.searchChange.emit(value);
+    this.nameSearchChange.emit(value);
+  }
+
+  onEmailSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.emailSearchChange.emit(value);
   }
 }
