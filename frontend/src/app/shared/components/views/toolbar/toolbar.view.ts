@@ -1,9 +1,9 @@
-import { Component, Output } from '@angular/core';
+import { Component, Output, Input } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonContainer } from '../../containers/button.container';
-import { UserIconView } from '../../../../features/user/components/views/user-icon.view';
+import { UserIconContainer } from '../../containers/user-icon.container';
 import { EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -18,7 +18,7 @@ interface NavItems {
     MatButtonModule,
     MatIconModule,
     ButtonContainer,
-    UserIconView,
+    UserIconContainer,
     CommonModule,
   ],
   template: `<mat-toolbar>
@@ -31,12 +31,13 @@ interface NavItems {
       [label]="item.label"
       (clickEvent)="navigate.emit(item.route)"
     ></app-button-container>
-    <app-user-icon-view></app-user-icon-view>
+    <app-user-icon-container [userImage]="'icon-7797704_1280.png'" [userName]="userName"></app-user-icon-container>
   </mat-toolbar>`,
   styleUrl: '../../views/toolbar/toolbar.view.scss',
 })
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
+  @Input() userName: string = '';
 
   navItems: NavItems[] = [
     { label: 'Events', route: '/events' },
