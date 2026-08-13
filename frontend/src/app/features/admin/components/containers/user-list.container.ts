@@ -69,7 +69,7 @@ export class UserListContainer implements OnInit {
 
   selectedRoles = signal<string[]>([]);
   selectedLocations = signal<string[]>([]);
-  selectedStatuses = signal<string[]>([]);
+  selectedStatuses = signal<boolean[]>([]);
 
   filteredUsers: Signal<User[]> = computed((): User[] => {
     const searchName: string = this.nameQuery().toLowerCase().trim();
@@ -77,7 +77,7 @@ export class UserListContainer implements OnInit {
 
     const activeRoles: string[] = this.selectedRoles();
     const activeLocations: string[] = this.selectedLocations();
-    const activeStatuses: string[] = this.selectedStatuses();
+    const activeStatuses: boolean[] = this.selectedStatuses();
 
     return this.allUsers().filter((user) => {
       const fullName: string = `${user.firstName} ${user.lastName}`.toLowerCase();
@@ -92,7 +92,7 @@ export class UserListContainer implements OnInit {
       const matchesLocation: boolean =
         activeLocations.length === 0 || activeLocations.includes(user.location);
 
-      const userStatus = (user as any).status || 'inactive';
+      const userStatus = (user as any).status;
       const matchesStatus: boolean =
         activeStatuses.length === 0 || activeStatuses.includes(userStatus);
 

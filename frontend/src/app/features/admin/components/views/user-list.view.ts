@@ -29,14 +29,14 @@ export class UserListView {
 
   @Input() selectedRoles: string[] = [];
   @Input() selectedLocations: string[] = [];
-  @Input() selectedStatuses: string[] = [];
+  @Input() selectedStatuses: boolean[] = [];
 
   @Output() nameSearchChange = new EventEmitter<string>();
   @Output() emailSearchChange = new EventEmitter<string>();
 
   @Output() roleChange = new EventEmitter<string[]>();
   @Output() locationChange = new EventEmitter<string[]>();
-  @Output() statusChange = new EventEmitter<string[]>();
+  @Output() statusChange = new EventEmitter<boolean[]>();
 
   @Output() cellAction = new EventEmitter<{ row: User; key: string; newValue: unknown }>();
 

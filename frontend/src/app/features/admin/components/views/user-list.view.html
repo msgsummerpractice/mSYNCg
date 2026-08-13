@@ -46,8 +46,8 @@
       [value]="selectedStatuses"
       (selectionChange)="statusChange.emit($event.value)"
     >
-      <mat-option value="active">Activ</mat-option>
-      <mat-option value="inactive">Inactiv</mat-option>
+      <mat-option [value]="true">Activ</mat-option>
+      <mat-option [value]="false">Inactiv</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
