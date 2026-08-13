@@ -44,12 +44,12 @@ export class UserListView {
     return this.columns.map((col) => col.key);
   }
 
-  onNameSearch(event: Event) {
+  onNameSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.nameSearchChange.emit(value);
   }
 
-  onEmailSearch(event: Event) {
+  onEmailSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.emailSearchChange.emit(value);
   }

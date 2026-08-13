@@ -7,9 +7,9 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AdminService {
-  private http = inject(HttpClient);
+  private http: HttpClient = inject(HttpClient);
 
-  private apiUrl = '';
+  private apiUrl: string = '';
 
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);

@@ -1,4 +1,4 @@
-import { Component, computed, signal, OnInit, inject } from '@angular/core';
+import { Component, computed, signal, OnInit, inject, Signal } from '@angular/core';
 import { UserListView } from '../views/user-list.view';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
@@ -71,35 +71,36 @@ export class UserListContainer implements OnInit {
   selectedLocations = signal<string[]>([]);
   selectedStatuses = signal<string[]>([]);
 
-  filteredUsers = computed(() => {
-    const searchName = this.nameQuery().toLowerCase().trim();
-    const searchEmail = this.emailQuery().toLowerCase().trim();
+  filteredUsers: Signal<User[]> = computed((): User[] => {
+    const searchName: string = this.nameQuery().toLowerCase().trim();
+    const searchEmail: string = this.emailQuery().toLowerCase().trim();
 
-    const activeRoles = this.selectedRoles();
-    const activeLocations = this.selectedLocations();
-    const activeStatuses = this.selectedStatuses();
+    const activeRoles: string[] = this.selectedRoles();
+    const activeLocations: string[] = this.selectedLocations();
+    const activeStatuses: string[] = this.selectedStatuses();
 
     return this.allUsers().filter((user) => {
-      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-      const reverseName = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const matchesName =
+      const fullName: string = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const reverseName: string = `${user.lastName} ${user.firstName}`.toLowerCase();
+      const matchesName: boolean =
         searchName === '' || fullName.includes(searchName) || reverseName.includes(searchName);
 
-      const email = (user.email || '').toLowerCase();
-      const matchesEmail = searchEmail === '' || email.includes(searchEmail);
+      const email: string = (user.email || '').toLowerCase();
+      const matchesEmail: boolean = searchEmail === '' || email.includes(searchEmail);
 
-      const matchesRole = activeRoles.length === 0 || activeRoles.includes(user.role);
-      const matchesLocation =
+      const matchesRole: boolean = activeRoles.length === 0 || activeRoles.includes(user.role);
+      const matchesLocation: boolean =
         activeLocations.length === 0 || activeLocations.includes(user.location);
 
       const userStatus = (user as any).status || 'inactive';
-      const matchesStatus = activeStatuses.length === 0 || activeStatuses.includes(userStatus);
+      const matchesStatus: boolean =
+        activeStatuses.length === 0 || activeStatuses.includes(userStatus);
 
       return matchesName && matchesEmail && matchesRole && matchesLocation && matchesStatus;
     });
   });
 
-  ngOnInit() {
+  ngOnInit(): void {
     // this.adminService.getAllUsers().subscribe({
     //   next: (users) => this.allUsers.set(users),
     //   error: (err) => console.error('Failed to load users', err),
@@ -107,5 +108,5 @@ export class UserListContainer implements OnInit {
     this.allUsers.set(MOCK_USERS);
   }
 
-  onCellChange(event: { row: User; key: string; newValue: unknown }) {}
+  onCellChange(event: { row: User; key: string; newValue: unknown }): void {}
 }
