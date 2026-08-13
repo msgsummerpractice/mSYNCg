@@ -4,6 +4,8 @@ import { UserListContainer } from './features/admin/components/containers/user-l
 import { EventListContainer } from './features/event/components/containers/event-list.container';
 import { HomePageComponent } from './shared/pages/home/home-page';
 import { MainLayoutComponent } from './shared/pages/main-layout/main-layout';
+import UserRegisterComponent from './shared/pages/user-register';
+
 export const routes: Routes = [
   {
     path: '',
@@ -37,12 +39,13 @@ export const routes: Routes = [
     path: 'events',
     component: EventListContainer,
   },
-  /*{ to be implemented for UserRegisterComponent 
-    path: 'register',
-    component: UserRegisterComponent,
-  },*/
   {
     path: '**',
     redirectTo: '',
+    pathMatch: 'full',
+  },
+  {
+    path: 'register',
+    component: UserRegisterComponent,
   },
 ];

@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class GenericFormView {
   @Input({ required: true }) formGroup!: FormGroup;
-  @Input() submitLabel: string = '';
+  @Input() submitLabel: string | null = null;
   @Input() isLoading: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();
