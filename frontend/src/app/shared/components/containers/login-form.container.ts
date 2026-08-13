@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { LoginFormViewComponent } from '../views/login-form-view/login-form.view';
+import { LoginFormView } from '../views/login-form/login-form.view';
 import { LoginRequest } from '../../../core/models/user-login.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-login-form-container',
   standalone: true,
-  imports: [LoginFormViewComponent],
+  imports: [LoginFormView],
   template: `
     <app-login-form-view [formGroup]="loginForm" [isLoading]="isLoading" (formSubmit)="onLogin()" />
   `,

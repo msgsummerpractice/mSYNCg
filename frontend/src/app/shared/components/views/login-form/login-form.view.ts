@@ -16,9 +16,9 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
   ],
-  templateUrl: './login-form-view.html',
+  templateUrl: './login-form.view.html',
 })
-export class LoginFormViewComponent {
+export class LoginFormView {
   @Input({ required: true }) formGroup!: FormGroup;
   @Input() isLoading = false;
 
