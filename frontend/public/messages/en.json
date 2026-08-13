@@ -26,6 +26,8 @@
   "REGISTER": {
     "USER": {
       "TITLE": "Create an Account",
+      "ALREADY_HAVE_ACCOUNT": "Already have an account?",
+      "LOGIN_NOW": "Sign in",
       "FIRST_NAME": {
         "LABEL": "First Name",
         "PLACEHOLDER": "John",

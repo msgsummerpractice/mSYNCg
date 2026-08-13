@@ -26,6 +26,8 @@
   "REGISTER": {
     "USER": {
       "TITLE": "Konto erstellen",
+      "ALREADY_HAVE_ACCOUNT": "Haben Sie bereits ein Konto?",
+      "LOGIN_NOW": "Jetzt anmelden",
       "FIRST_NAME": {
         "LABEL": "Vorname",
         "PLACEHOLDER": "Johann",

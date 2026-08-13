@@ -26,6 +26,8 @@
   "REGISTER": {
     "USER": {
       "TITLE": "Creează un cont",
+      "ALREADY_HAVE_ACCOUNT": "Ai deja un cont?",
+      "LOGIN_NOW": "Autentifică-te",
       "FIRST_NAME": {
         "LABEL": "Prenume",
         "PLACEHOLDER": "Ion",
