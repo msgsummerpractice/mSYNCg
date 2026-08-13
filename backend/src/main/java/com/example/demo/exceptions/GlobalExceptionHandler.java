@@ -98,4 +98,21 @@ public class GlobalExceptionHandler {
 	    List<FieldValidationError> fieldErrors
     ) {
     }
+
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity<ErrorResponse> handleLoginException(
+			LoginException exception,
+			HttpServletRequest request
+	) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.UNAUTHORIZED.value(),
+				"Unauthorized",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of()
+		);
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+	}
 }

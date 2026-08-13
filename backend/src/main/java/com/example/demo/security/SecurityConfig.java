@@ -15,20 +15,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
     private final JWTokenProvider jwtTokenProvider;
-
-    public SecurityConfig(UserDetailsService userDetailsService,
-            JWTokenProvider jwtTokenProvider) {
-        this.userDetailsService = userDetailsService;
-
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -61,7 +58,7 @@ public class SecurityConfig {
         return new JWTAuthenticationFilter(jwtTokenProvider, userDetailsService);
     }
 
-       @Bean
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:8080");
@@ -69,7 +66,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(false);
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
-        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
