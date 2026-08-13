@@ -12,40 +12,48 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
+
+  // Public routes
   {
     path: 'login',
     component: LoginPage,
   },
   {
-    path: 'admin',
-    children: [
-      {
-        path: 'users',
-        component: UserListContainer,
-      },
-    ],
+    path: 'register',
+    component: UserRegisterPage,
   },
+
+  // Application layout
   {
     path: '',
     component: MainLayoutPage,
     children: [
       {
-        path: 'home',
-        component: HomePage,
+        path: 'events',
+        children: [
+          {
+            path: '',
+            redirectTo: 'home',
+            pathMatch: 'full',
+          },
+          {
+            path: 'home',
+            component: HomePage,
+          },
+        ],
+      },
+      {
+        path: 'admin',
+        children: [
+          // admin routes here
+        ],
       },
     ],
   },
-  {
-    path: 'events',
-    component: EventListContainer,
-  },
-  {
-    path: 'register',
-    component: UserRegisterPage,
-  },
+
+  // Fallback
   {
     path: '**',
     redirectTo: '',
-    pathMatch: 'full',
   },
 ];
