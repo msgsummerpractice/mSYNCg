@@ -6,13 +6,14 @@ import { LanguageSwitcherContainer } from './language-switcher.container';
 @Component({
   selector: 'app-toolbar-container',
   imports: [ToolbarView, LanguageSwitcherContainer],
-  template: `<app-toolbar-view (navigate)="navigate($event)"
+  template: `<app-toolbar-view [userName]="userName" (navigate)="navigate($event)"
     ><app-language-switcher></app-language-switcher
   ></app-toolbar-view>`,
   styleUrl: '../views/toolbar/toolbar.view.scss',
 })
 export class ToolbarContainer {
   private router = inject(Router);
+  userName: string = 'Test User';
 
   navItems: NavItem[] = [
     { label: 'Events', route: '/events' },

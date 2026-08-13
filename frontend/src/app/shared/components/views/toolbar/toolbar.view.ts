@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Output, Input } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
-
 import { ButtonContainer } from '../../containers/button.container';
+import { UserIconContainer } from '../../containers/user-icon.container';
+import { EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { UserIconView } from '../../../../features/user/components/views/user-icon.view';
 
 export interface NavItem {
@@ -19,40 +20,30 @@ export interface NavItem {
     MatButtonModule,
     MatIconModule,
     ButtonContainer,
-    UserIconView,
+    UserIconContainer,
     CommonModule,
   ],
-  template: `
-    <mat-toolbar>
-      <button class="text-white" aria-label="msg logo">
-        <img src="/msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
-      </button>
-
-      <span class="example-spacer"></span>
-
-      <ng-content></ng-content>
-
-      @if (showNavigation) {
-        <app-button-container
-          *ngFor="let item of navItems"
-          [label]="item.label"
-          (clickEvent)="navigate.emit(item.route)"
-        ></app-button-container>
-      }
-
-      @if (showUserIcon) {
-        <app-user-icon-view></app-user-icon-view>
-      }
-    </mat-toolbar>
-  `,
-  styleUrl: '../../views/toolbar/toolbar.view.scss',
+  template: `<mat-toolbar class="bg-brand-primary text-brand-on-primary font-ui">
+    <button
+      class="ml-3 px-3 py-2 font-medium text-brand-on-primary font-ui cursor-pointer"
+      aria-label="msg logo"
+    >
+      <img src="{{ logoUrl }}" alt="msg logo" class="ml-3 h-18 w-18 brightness-0 invert" />
+    </button>
+    <span class="flex-1"></span>
+    <app-button-container
+      *ngFor="let item of navItems"
+      [label]="item.label"
+      (clickEvent)="navigate.emit(item.route)"
+    ></app-button-container>
+    <app-user-icon-container [userImage]="iconUrl" [userName]="userName"></app-user-icon-container>
+  </mat-toolbar>`,
 })
 export class ToolbarView {
-  @Input() showNavigation = true;
-  @Input() showUserIcon = true;
-  @Input() navItems: NavItem[] = [];
-
   @Output() navigate = new EventEmitter<string>();
+  @Input() userName: string = '';
+  readonly iconUrl: string = '/assets/icons/user-icon.png';
+  readonly logoUrl: string = '/assets/icons/msg_logo_color.svg';
 
   handleEventClick(route: string): void {
     this.navigate.emit(route);

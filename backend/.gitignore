@@ -33,3 +33,6 @@ build/
 .vscode/
 
 .env
+
+./frontend/node_modules
+./frontend/settings.json
