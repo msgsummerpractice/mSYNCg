@@ -1,0 +1,63 @@
+<app-generic-form-view
+  [formGroup]="formGroup"
+  [submitLabel]="'LOGIN.TITLE' | translate"
+  [isLoading]="isLoading"
+  (formSubmit)="formSubmit.emit()"
+>
+  <div>
+    <h2 class="text-xl font-semibold text-gray-950"> {{ 'LOGIN.SIGN_IN_TITLE' | translate }} </h2>
+
+    <p class="mt-1 text-sm text-gray-600"> {{ 'LOGIN.SIGN_IN_SUBTITLE' | translate }} </p>
+  </div>
+
+  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic" floatLabel="always">
+    <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
+
+    <input
+      id="email"
+      matInput
+      type="email"
+      [formControl]="$any(formGroup.controls['email'])"
+      [placeholder]="'LOGIN.EMAIL_PLACEHOLDER' | translate"
+    />
+
+    @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('required') )
+    {
+    <mat-error>{{ 'LOGIN.EMAIL_REQUIRED' | translate }}</mat-error>
+    } @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('email') ) {
+    <mat-error>{{ 'LOGIN.EMAIL_INVALID' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic" floatLabel="always">
+    <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
+
+    <input
+      id="password"
+      matInput
+      type="password"
+      [formControl]="$any(formGroup.controls['password'])"
+      [placeholder]="'LOGIN.PASSWORD_PLACEHOLDER' | translate"
+    />
+
+    @if ( formGroup.controls['password'].touched &&
+    formGroup.controls['password'].hasError('required') ) {
+    <mat-error>{{ 'LOGIN.PASSWORD_REQUIRED' | translate }}</mat-error>
+    } @if ( formGroup.controls['password'].touched &&
+    formGroup.controls['password'].hasError('minlength') ) {
+    <mat-error>{{ 'LOGIN.PASSWORD_MIN_LENGTH' | translate }}</mat-error>
+    }
+  </mat-form-field>
+  <div class="mt-2 text-right">
+    <a routerLink="/forgot-password" class="text-sm font-medium text-[#A01441] hover:underline">
+      {{ 'LOGIN.FORGOT_PASSWORD' | translate }}
+    </a>
+  </div>
+</app-generic-form-view>
+<div class="mt-5 rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
+  <span>{{ 'LOGIN.NO_ACCOUNT' | translate }}</span>
+
+  <a routerLink="/register" class="ml-1 font-semibold text-[#A01441] hover:underline">
+    {{ 'LOGIN.REGISTER_NOW' | translate }}
+  </a>
+</div>

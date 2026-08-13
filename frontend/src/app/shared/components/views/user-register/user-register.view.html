@@ -85,5 +85,12 @@
         }
       </mat-form-field>
     </app-generic-form-container>
+    <div class="mt-5 rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
+      <span>{{ 'REGISTER.USER.ALREADY_HAVE_ACCOUNT' | translate }}</span>
+
+      <a [routerLink]="loginRoute" class="ml-1 font-semibold text-[#A01441] hover:underline">
+        {{ 'REGISTER.USER.LOGIN_NOW' | translate }}
+      </a>
+    </div>
   </div>
 </main>
