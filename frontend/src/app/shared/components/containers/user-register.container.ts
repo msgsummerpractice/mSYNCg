@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserRegisterForm, UserRegisterRequest } from '../../../core/models/user-register.model';
 import { UserRegisterView } from '../views/user-register/user-register.view';
-import { UserRegisterService } from '../../../core/services/user-register.service';
+import { AuthService as UserRegisterService } from '../../../core/services/auth.service';
 import {
   passwordMatchValidator,
   PasswordMismatchStateMatcher,
