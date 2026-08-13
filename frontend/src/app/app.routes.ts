@@ -40,12 +40,12 @@ export const routes: Routes = [
     component: EventListContainer,
   },
   {
+    path: 'register',
+    component: UserRegisterComponent,
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',
-  },
-  {
-    path: 'register',
-    component: UserRegisterComponent,
   },
 ];
