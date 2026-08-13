@@ -6,7 +6,8 @@ import { HomePageComponent } from './shared/pages/home/home-page';
 export const routes: Routes = [
   {
     path: '',
-    component: HomePageComponent,
+    redirectTo: 'login',
+    pathMatch: 'full',
   },
   {
     path: 'login',
@@ -22,9 +23,17 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'home',
+    component: HomePageComponent,
+  },
+  {
     path: 'events',
     component: EventListContainer,
   },
+  /*{ to be implemented for UserRegisterComponent 
+    path: 'register',
+    component: UserRegisterComponent,
+  },*/
   {
     path: '**',
     redirectTo: '',

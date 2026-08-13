@@ -12,6 +12,10 @@
     "PASSWORD_MIN_LENGTH": "Parola trebuie să aibă cel puțin 8 caractere",
     "EMAIL_REQUIRED": "Emailul este obligatoriu",
     "EMAIL_INVALID": "Introdu o adresă de email validă",
-    "PASSWORD_REQUIRED": "Parola este obligatorie"
+    "PASSWORD_REQUIRED": "Parola este obligatorie",
+    "WELCOME": "Bine ai venit la mSYNCg",
+    "SUBTITLE": "Introdu datele de autentificare pentru a continua.",
+    "NO_ACCOUNT": "Nu ai încă un cont?",
+    "REGISTER_NOW": "Înregistrează-te acum!"
   }
 }

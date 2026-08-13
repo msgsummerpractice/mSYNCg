@@ -12,6 +12,10 @@
     "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters",
     "EMAIL_REQUIRED": "Email is required",
     "EMAIL_INVALID": "Please enter a valid email",
-    "PASSWORD_REQUIRED": "Password is required"
+    "PASSWORD_REQUIRED": "Password is required",
+    "WELCOME": "Welcome to mSYNCg",
+    "SUBTITLE": "Please enter your credentials to continue.",
+    "NO_ACCOUNT": "Don't have an account yet?",
+    "REGISTER_NOW": "Register now!"
   }
 }
