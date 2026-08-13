@@ -6,7 +6,9 @@ import { ToastService } from '../../../core/services/toast.service';
   selector: 'app-toast-container',
   standalone: true,
   imports: [ToastView],
-  template: `<app-toast></app-toast>`,
+  template: `
+    <app-toast [toasts]="toastService.toasts()" (closeToast)="closeToast($event)"></app-toast>
+  `,
 })
 export class ToastContainer {
   protected readonly toastService = inject(ToastService);

@@ -1,6 +1,6 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToastService } from '../../../../core/services/toast.service';
+import { Toast, ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -25,13 +25,18 @@ import { ToastService } from '../../../../core/services/toast.service';
   `,
 })
 export class ToastView {
-  @Input({ required: true }) toasts!: ReturnType<typeof Array>;
-  @Input() onClose!: (id: string) => void;
+  @Input({ required: true }) toasts!: Toast[];
+  @Output() closeToast = new EventEmitter<string>();
 
-  getToastClasses(ToastType: 'success' | 'error'): string {
-    if (ToastType === 'success') {
+  getToastClasses(toastType: Toast['type']): string {
+    if (toastType === 'success') {
       return 'bg-green-50 border border-green-500 text-green-700';
     }
     return 'bg-red-50 border border-red-500 text-red-700';
   }
+
+  onCloseClick(id: string): void {
+    this.closeToast.emit(id);
+  }
+
 }
