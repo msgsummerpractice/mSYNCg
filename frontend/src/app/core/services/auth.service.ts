@@ -9,10 +9,12 @@ import { UserRegisterRequest, UserRegisterResponse } from '../models/user-regist
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly apiUrl = '/api/auth';
+
   constructor(private readonly http: HttpClient) {}
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/auth/login', credentials);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
 
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
