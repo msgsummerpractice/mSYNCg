@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { GenericFormView } from '../generic-form/generic-form.view';
 
 @Component({
   selector: 'app-login-form-view',
-  standalone: true,
-  imports: [ReactiveFormsModule, GenericFormView],
+  imports: [ReactiveFormsModule, GenericFormView, TranslatePipe],
   templateUrl: './login-form-view.html',
   styleUrl: './login-form-view.css',
 })

@@ -1,30 +1,37 @@
 <app-generic-form-view
   [formGroup]="formGroup"
-  submitLabel="Login"
+  [submitLabel]="'LOGIN.TITLE' | translate"
   [isLoading]="isLoading"
   (formSubmit)="formSubmit.emit()"
 >
   <div>
-    <label for="email">Email</label>
+    <div class="flex items-center gap-3">
+      <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
 
-    <input id="email" type="email" [formControl]="$any(formGroup.controls['email'])" />
+      <input id="email" type="email" [formControl]="$any(formGroup.controls['email'])" />
+    </div>
 
     @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('required') )
     {
-    <p>Email is required</p>
+    <p>{{ 'LOGIN.EMAIL_REQUIRED' | translate }}</p>
     } @if ( formGroup.controls['email'].touched && formGroup.controls['email'].hasError('email') ) {
-    <p>Please enter a valid email</p>
+    <p>{{ 'LOGIN.EMAIL_INVALID' | translate }}</p>
     }
   </div>
 
   <div>
-    <label for="password">Password</label>
+    <div class="flex items-center gap-3">
+      <label for="password" class="whitespace-nowrap"> {{ 'LOGIN.PASSWORD' | translate }} </label>
 
-    <input id="password" type="password" [formControl]="$any(formGroup.controls['password'])" />
+      <input id="password" type="password" [formControl]="$any(formGroup.controls['password'])" />
+    </div>
 
     @if ( formGroup.controls['password'].touched &&
     formGroup.controls['password'].hasError('required') ) {
-    <p>Password is required</p>
+    <p>{{ 'LOGIN.PASSWORD_REQUIRED' | translate }}</p>
+    } @if ( formGroup.controls['password'].touched &&
+    formGroup.controls['password'].hasError('minlength') ) {
+    <p>{{ 'LOGIN.PASSWORD_MIN_LENGTH' | translate }}</p>
     }
   </div>
 </app-generic-form-view>

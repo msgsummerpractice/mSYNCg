@@ -4,5 +4,14 @@
   },
   "HOME": {
     "WELCOME": "Willkommen bei mSYNCg !"
+  },
+  "LOGIN": {
+    "TITLE": "Anmelden",
+    "EMAIL": "E-Mail",
+    "PASSWORD": "Passwort",
+    "PASSWORD_MIN_LENGTH": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "EMAIL_REQUIRED": "E-Mail ist erforderlich",
+    "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "PASSWORD_REQUIRED": "Passwort ist erforderlich"
   }
 }
