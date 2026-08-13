@@ -9,7 +9,7 @@ import { ToastContainer } from './shared/components/containers/toast.container';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, UserIconContainer, MatIconModule, MatToolbarModule, CommonModule, ToolbarContainer],
+  imports: [RouterOutlet, UserIconContainer, MatIconModule, MatToolbarModule, CommonModule, ToolbarContainer, ToastContainer],
   templateUrl: './app.html',
 })
 
