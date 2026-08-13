@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { UserIconView } from '../views/user-icon.view';
+import { UserIconView } from '../views/user-icon/user-icon.view';
 
 @Component({
   selector: 'app-user-icon-container',
@@ -27,7 +27,6 @@ export class UserIconContainer implements OnInit {
   ngOnInit() {
     if (!this.userImage) {
       this.showInitials = true;
-      this.getInitials();
     }
 
     const randomIndex: number = Math.floor(Math.random() * this.colors.length);

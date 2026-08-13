@@ -10,7 +10,6 @@ import { ToolbarContainer } from './shared/components/containers/toolbar.contain
   selector: 'app-root',
   imports: [RouterOutlet, UserIconContainer, MatIconModule, MatToolbarModule, CommonModule, ToolbarContainer],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
 })
 
 export class App {

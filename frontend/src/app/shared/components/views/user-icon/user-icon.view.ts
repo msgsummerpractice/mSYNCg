@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-  styleUrl: '../views/user-icon.view.scss',
+  styleUrl: '../user-icon/user-icon.view.scss',
 })
 export class UserIconView {
   @Input() userName: string = '';
