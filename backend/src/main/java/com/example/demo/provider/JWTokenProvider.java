@@ -1,15 +1,13 @@
 
 package com.example.demo.provider;
 
-
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import java.security.Key;
-import java.security.SecureRandom;
 import java.util.Date;
-import java.util.Base64;
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.Authentication;
@@ -18,39 +16,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class JWTokenProvider {
 
-    private String jwtSecret = generateSecretKey();
+    @Value("${spring.jwt.secret}")
+    private String jwtSecret;
     private long jwtExpirationDate = 3600000;
 
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+        String email = authentication.getName();
+        String roles = authentication.getAuthorities().toString();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationDate);
 
         String token = Jwts.builder()
-                .subject(username)
+                .subject(email)
+                .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(expiryDate)
                 .signWith(key())
                 .compact();
 
         return token;
-    }
-
-    public String generateSecretKey() {
-        // length means (32 bytes are required for 256-bit key)
-        int length = 32;
-
-        // Create a secure random generator
-        SecureRandom secureRandom = new SecureRandom();
-
-        // Create a byte array to hold the random bytes
-        byte[] keyBytes = new byte[length];
-
-        // Generate the random bytes
-        secureRandom.nextBytes(keyBytes);
-
-        // Encode the key in Base64 format for easier storage and usage
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(keyBytes);
     }
 
     private Key key() {
@@ -80,4 +64,3 @@ public class JWTokenProvider {
 
     }
 }
-
