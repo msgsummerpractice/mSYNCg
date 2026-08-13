@@ -4,16 +4,6 @@
       {{ 'REGISTER.USER.TITLE' | translate }}
     </h1>
 
-    @if (errorMessage) {
-    <div class="bg-red-50 border border-red-500 text-red-700 p-4 mb-6 rounded-md text-sm">
-      <p>{{ errorMessage }}</p>
-    </div>
-    } @if (successMessage) {
-    <div class="bg-green-50 border border-green-500 text-green-700 p-4 mb-6 rounded-md text-sm">
-      <p>{{ successMessage }}</p>
-    </div>
-    }
-
     <app-generic-form-container
       [formGroup]="formGroup"
       [isLoading]="isLoading"

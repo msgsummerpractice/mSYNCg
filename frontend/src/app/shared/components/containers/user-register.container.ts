@@ -20,6 +20,7 @@ import {
   PasswordMismatchStateMatcher,
 } from '../../../core/validators/password.validator';
 import { LocationEnum } from '../../../core/models/location.model';
+import { ToastService } from '../../../core/services/toast.service';
 import { finalize } from 'rxjs/internal/operators/finalize';
 
 @Component({
@@ -29,8 +30,6 @@ import { finalize } from 'rxjs/internal/operators/finalize';
   template: `<user-register-view
     [formGroup]="registerFormGroup"
     [isLoading]="isLoading()"
-    [errorMessage]="errorMessage()"
-    [successMessage]="successMessage()"
     [mismatchMatcher]="mismatchMatcher"
     (submitRegister)="handleRegisterSubmit()"
   >
@@ -41,6 +40,7 @@ export class UserRegisterContainer {
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
   private readonly registerService = inject(UserRegisterService);
+  private readonly toastService = inject(ToastService);
   readonly mismatchMatcher = new PasswordMismatchStateMatcher();
 
   isLoading = signal<boolean>(false);
@@ -63,14 +63,13 @@ export class UserRegisterContainer {
     if (this.registerFormGroup.invalid) return;
 
     this.isLoading.set(true);
-    this.errorMessage.set('');
-    this.successMessage.set('');
 
     const formValues = this.registerFormGroup.getRawValue();
 
     if (formValues.location === null) {
       this.isLoading.set(false);
-      this.errorMessage.set(this.translate.instant('REGISTER.USER.MESSAGES.REQUIRED.LOCATION'));
+      const errorMsg = this.translate.instant('REGISTER.USER.MESSAGES.REQUIRED.LOCATION');
+      this.toastService.showError(errorMsg);
       return;
     }
 
@@ -88,10 +87,9 @@ export class UserRegisterContainer {
       .subscribe({
         next: () => {
           this.isLoading.set(false);
-          this.successMessage.set(
-            this.translate.instant('REGISTER.USER.MESSAGES.SUCCESS.REGISTER')
-          );
-          setTimeout(() => this.router.navigate(['/login']), 2000);
+          const successMsg = this.translate.instant('REGISTER.USER.MESSAGES.SUCCESS.REGISTER');
+          this.toastService.showSuccess(successMsg, 5000);
+          this.router.navigate(['/login']);
         },
         //TODO: <update in order to adapt to HttpErrorResponse when connectiong FE to BE>
         error: (err) => {

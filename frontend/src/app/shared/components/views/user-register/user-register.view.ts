@@ -23,8 +23,6 @@ import { UserRegisterForm } from '../../../../core/models/user-register.model';
 export class UserRegisterView {
   @Input({ required: true }) formGroup!: FormGroup<UserRegisterForm>;
   @Input() isLoading = false;
-  @Input() errorMessage = '';
-  @Input() successMessage = '';
   @Input() mismatchMatcher!: ErrorStateMatcher;
 
   @Output() submitRegister = new EventEmitter<void>();
