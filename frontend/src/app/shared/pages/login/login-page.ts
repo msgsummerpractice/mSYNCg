@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoginFormContainer } from '../../components/containers/login-form-container';
+import { LoginFormContainer } from '../../components/containers/login-form.container';
 import { ToolbarView } from '../../components/views/toolbar/toolbar.view';
 import { LanguageSwitcherContainer } from '../../components/containers/language-switcher.container';
 import { TranslatePipe } from '@ngx-translate/core';

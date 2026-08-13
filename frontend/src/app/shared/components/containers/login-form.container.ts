@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { LoginFormViewComponent } from '../views/login-form-view/login-form-view';
+import { LoginFormViewComponent } from '../views/login-form-view/login-form.view';
 import { LoginRequest } from '../../../core/models/user-login.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';

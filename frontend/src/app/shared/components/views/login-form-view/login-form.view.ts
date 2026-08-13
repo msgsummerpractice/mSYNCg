@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
   ],
   templateUrl: './login-form-view.html',
-  styleUrl: './login-form-view.css',
+  styleUrl: './login-form.view.css',
 })
 export class LoginFormViewComponent {
   @Input({ required: true }) formGroup!: FormGroup;
