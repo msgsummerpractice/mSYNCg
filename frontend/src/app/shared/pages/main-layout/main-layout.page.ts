@@ -6,6 +6,6 @@ import { ToolbarContainer } from '../../components/containers/toolbar.container'
   selector: 'app-main-layout',
   standalone: true,
   imports: [RouterOutlet, ToolbarContainer],
-  templateUrl: './main-layout.html',
+  templateUrl: './main-layout.page.html',
 })
-export class MainLayoutComponent {}
+export class MainLayoutPage {}

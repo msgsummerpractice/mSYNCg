@@ -8,6 +8,6 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-login-page',
   standalone: true,
   imports: [LoginFormContainer, ToolbarView, LanguageSwitcherContainer, TranslatePipe],
-  templateUrl: './login-page.html',
+  templateUrl: './login.page.html',
 })
-export class LoginPageComponent {}
+export class LoginPage {}

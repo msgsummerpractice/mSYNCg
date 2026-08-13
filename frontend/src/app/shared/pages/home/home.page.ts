@@ -9,6 +9,6 @@ import { MatDividerModule } from '@angular/material/divider';
   selector: 'app-home-page',
   standalone: true,
   imports: [MatCardModule, MatButtonModule, MatDividerModule, TranslatePipe],
-  templateUrl: './home-page.html',
+  templateUrl: './home.page.html',
 })
-export class HomePageComponent {}
+export class HomePage {}

@@ -15,4 +15,4 @@ import { ToolbarView } from '../components/views/toolbar/toolbar.view';
     <user-register-container></user-register-container>
   `,
 })
-export default class UserRegisterComponent {}
+export default class UserRegisterPage {}
