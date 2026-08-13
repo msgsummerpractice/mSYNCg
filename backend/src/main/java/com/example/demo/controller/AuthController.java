@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import com.example.demo.dto.request.LogInRequest;
 import com.example.demo.dto.response.LogInResponse;
 import com.example.demo.service.AuthService;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
@@ -23,7 +23,7 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<LogInResponse> login(
             @RequestBody LogInRequest logInRequest) {
