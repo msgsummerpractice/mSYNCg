@@ -15,9 +15,11 @@ import com.example.demo.provider.JWTokenProvider;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
+    private final UserDetailService userDetailService;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserDetailService userDetailService) {
         this.authenticationManager = authenticationManager;
+        this.userDetailService = userDetailService;
     }
 
     @Autowired
@@ -27,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     public String login(LogInRequest logInRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(logInRequest.getEmail(), logInRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(userDetailService.loadUserByUsername(logInRequest.getEmail()), logInRequest.getPassword(), userDetailService.loadUserByUsername(logInRequest.getEmail()).getAuthorities()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);

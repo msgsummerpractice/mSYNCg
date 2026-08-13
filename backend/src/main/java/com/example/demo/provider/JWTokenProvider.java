@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,13 +23,16 @@ public class JWTokenProvider {
 
     public String generateToken(Authentication authentication) {
         String email = authentication.getName();
-        String roles = authentication.getAuthorities().toString();
+        String role = authentication.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("");
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationDate);
 
         String token = Jwts.builder()
                 .subject(email)
-                .claim("roles", roles)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(expiryDate)
                 .signWith(key())
