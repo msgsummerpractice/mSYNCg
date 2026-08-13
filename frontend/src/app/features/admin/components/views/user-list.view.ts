@@ -1,8 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
+import { TableColumn } from '../../../../core/models/table.column.model';
+import { User } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-user-list-view',
-  imports: [],
-  template: `<p>user-list-component works!</p>`,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    GenericCellView,
+  ],
+  templateUrl: './user-list.view.html',
 })
-export class UserListView {}
+export class UserListView {
+  @Input() users: User[] = [];
+  @Input() columns: TableColumn<User>[] = [];
+
+  @Input() roles: string[] = [];
+  @Input() locations: string[] = [];
+
+  @Output() searchChange = new EventEmitter<string>();
+  @Output() roleChange = new EventEmitter<string | null>();
+  @Output() locationChange = new EventEmitter<string | null>();
+
+  @Output() cellAction = new EventEmitter<{ row: User; key: string; newValue: unknown }>();
+
+  get displayedColumnKeys(): string[] {
+    return this.columns.map((col) => col.key);
+  }
+
+  onSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchChange.emit(value);
+  }
+}
