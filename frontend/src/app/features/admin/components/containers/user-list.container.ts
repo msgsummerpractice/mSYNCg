@@ -46,7 +46,7 @@ export class UserListContainer implements OnInit {
       key: 'role',
       label: 'User Role',
       type: 'dropdown',
-      options: ['ADMIN', 'HR_USER', 'PARTICIPANT', 'MARKETING_ORGANIZER'],
+      options: ['Admin', 'HR User', 'Participant', 'Marketing Organizer'],
     },
     {
       key: 'location',
@@ -61,8 +61,8 @@ export class UserListContainer implements OnInit {
   ];
 
   allUsers = signal<User[]>([]);
-  roles = signal<string[]>(['ADMIN', 'HR_USER', 'PARTICIPANT', 'MARKETING_ORGANIZER']);
-  locations = signal<string[]>(['TARGU-MURES', 'CLUJ-NAPOCA', 'TIMISOARA']);
+  roles = signal<string[]>(['Admin', 'HR User', 'Participant', 'Marketing Organizer']);
+  locations = signal<string[]>(['Targu Mures', 'Cluj-Napoca', 'Timisoara']);
 
   nameQuery = signal<string>('');
   emailQuery = signal<string>('');
