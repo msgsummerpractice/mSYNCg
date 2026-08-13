@@ -26,7 +26,6 @@ export class LoginFormContainer {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
-
   onLogin(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -35,6 +34,6 @@ export class LoginFormContainer {
 
     const credentials: LoginRequest = this.loginForm.getRawValue();
 
-    console.log(credentials);
+    this.authService.login(credentials).subscribe();
   }
 }
