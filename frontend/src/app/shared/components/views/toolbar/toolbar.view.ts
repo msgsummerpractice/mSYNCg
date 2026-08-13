@@ -26,7 +26,11 @@ interface NavItems {
       class="ml-3 px-3 py-2 font-medium text-brand-on-primary font-ui cursor-pointer"
       aria-label="msg logo"
     >
-      <img src="msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
+      <img
+        src="/assets/icons/msg_logo_color.svg"
+        alt="msg logo"
+        class="ml-3 h-18 w-18 brightness-0 invert"
+      />
     </button>
     <span class="flex-1"></span>
     <app-button-container
@@ -34,15 +38,13 @@ interface NavItems {
       [label]="item.label"
       (clickEvent)="navigate.emit(item.route)"
     ></app-button-container>
-    <app-user-icon-container
-      [userImage]="'icon-7797704_1280.png'"
-      [userName]="userName"
-    ></app-user-icon-container>
+    <app-user-icon-container [userImage]="iconUrl" [userName]="userName"></app-user-icon-container>
   </mat-toolbar>`,
 })
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
   @Input() userName: string = '';
+  readonly iconUrl: string = '/assets/icons/user-icon.png';
 
   navItems: NavItems[] = [
     { label: 'Events', route: '/events' },
