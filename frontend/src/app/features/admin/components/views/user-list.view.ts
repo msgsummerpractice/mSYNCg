@@ -10,6 +10,7 @@ import { ButtonContainer } from '../../../../shared/components/containers/button
 import { TranslatePipe } from '@ngx-translate/core';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { User } from '../../../../core/models/user.model';
+import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
 
 @Component({
   selector: 'app-user-list-view',
@@ -23,6 +24,7 @@ import { User } from '../../../../core/models/user.model';
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
+    ToolbarContainer,
   ],
   templateUrl: './user-list.view.html',
 })

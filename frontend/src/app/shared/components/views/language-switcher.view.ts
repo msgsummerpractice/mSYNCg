@@ -9,11 +9,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-language-switcher-view',
   imports: [CommonModule, MatSelectModule, MatFormFieldModule],
   template: `
-    <mat-form-field appearance="outline" class="!w-24" subscriptSizing="dynamic">
+    <mat-form-field
+      appearance="outline"
+      class="!w-24 [--mat-sys-on-surface:var(--color-on-primary)] [--mat-sys-on-surface-variant:var(--color-on-primary)]"
+      subscriptSizing="dynamic"
+    >
       <mat-select
         [value]="currentLang"
         (selectionChange)="onSelectionChange($event.value)"
         class="text-sm"
+        panelClass="language-switcher-panel"
       >
         <mat-option *ngFor="let lang of languages" [value]="lang.code">
           {{ lang.label }}

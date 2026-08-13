@@ -332,3 +332,21 @@ mat-toolbar {
   background-color: var(--color-primary) !important;
   color: var(--color-on-primary) !important;
 }
+
+/* Language switcher dropdown panel styling */
+.language-switcher-panel {
+  background-color: #ffffff !important;
+}
+
+.language-switcher-panel .mat-mdc-option {
+  --mat-option-label-text-color: #000000 !important;
+}
+
+.language-switcher-panel .mat-mdc-option:hover {
+  background-color: #f0f0f0;
+}
+
+.language-switcher-panel .mat-mdc-option.mat-selected {
+  background-color: #e0e0e0;
+  --mat-option-label-text-color: #000000 !important;
+}
