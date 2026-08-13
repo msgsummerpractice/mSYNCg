@@ -21,19 +21,24 @@ interface NavItems {
     UserIconContainer,
     CommonModule,
   ],
-  template: `<mat-toolbar>
-    <button class="text-brand-on-primary" aria-label="msg logo">
+  template: `<mat-toolbar class="bg-brand-primary text-brand-on-primary font-ui">
+    <button
+      class="ml-3 px-3 py-2 font-medium text-brand-on-primary font-ui cursor-pointer"
+      aria-label="msg logo"
+    >
       <img src="msg_logo_color.svg" alt="msg logo" class="ml-3 h-18 w-18" />
     </button>
-    <span class="example-spacer"></span>
+    <span class="flex-1"></span>
     <app-button-container
       *ngFor="let item of navItems"
       [label]="item.label"
       (clickEvent)="navigate.emit(item.route)"
     ></app-button-container>
-    <app-user-icon-container [userImage]="'icon-7797704_1280.png'" [userName]="userName"></app-user-icon-container>
+    <app-user-icon-container
+      [userImage]="'icon-7797704_1280.png'"
+      [userName]="userName"
+    ></app-user-icon-container>
   </mat-toolbar>`,
-  styleUrl: '../../views/toolbar/toolbar.view.scss',
 })
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();

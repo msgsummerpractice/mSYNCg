@@ -250,7 +250,9 @@ body {
   direction: ltr;
 }
 
-/* Material Toolbar with Oxanium font */
+/* Material Toolbar with Oxanium font and brand colors */
 mat-toolbar {
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-ui) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-on-primary) !important;
 }

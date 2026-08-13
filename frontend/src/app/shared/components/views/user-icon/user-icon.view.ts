@@ -7,12 +7,14 @@ import { CommonModule } from '@angular/common';
   selector: 'app-user-icon-view',
   imports: [NgStyle, MatIconModule, CommonModule],
   template: `
-    <div class="user-icon-container">
-      <span>{{ userName }}</span>
-      <div class="user-icon" [ngStyle]="{ 'background-color': circleColor }">
-        <img *ngIf="userImage" [src]="userImage" />
-
-        <div *ngIf="!userImage" class="initials ">
+    <div class="flex items-center justify-center gap-0.75 ml-6">
+      <span class="mr-0.5 text-sm font-base text-brand-on-primary">{{ userName }}</span>
+      <div
+        class="rounded-full w-8 h-8 flex justify-center items-center"
+        [ngStyle]="{ 'background-color': circleColor }"
+      >
+        <img *ngIf="userImage" [src]="userImage" class="w-6 h-6 rounded-full" />
+        <div *ngIf="!userImage" class="text-sm text-white font-bold flex items-center text-center">
           <span>{{ initials }}</span>
         </div>
       </div>
