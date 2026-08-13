@@ -48,5 +48,42 @@
       }
     },
     "EVENT": {}
+  },
+  "USER_LIST": {
+    "FILTER_TITLE": "Filtrează utilizatorii",
+    "FIELDS": {
+      "FULL_NAME": "Nume complet",
+      "FULL_NAME_PLACEHOLDER": "Caută nume...",
+      "EMAIL": "Email",
+      "EMAIL_PLACEHOLDER": "Caută email...",
+      "ROLES": "Roluri",
+      "LOCATIONS": "Locații",
+      "STATUS": "Status"
+    },
+    "STATUS": {
+      "ACTIVE": "Activ",
+      "INACTIVE": "Inactiv"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Resetează filtrele"
+    },
+    "TABLE": {
+      "FULL_NAME": "Nume complet",
+      "EMAIL": "Email",
+      "USER_ROLE": "Rol utilizator",
+      "LOCATION": "Locație",
+      "STATUS": "Status"
+    },
+    "ROLES": {
+      "ADMIN": "Administrator",
+      "HR_USER": "Utilizator HR",
+      "PARTICIPANT": "Participant",
+      "MARKETING_ORGANIZER": "Organizator Marketing"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Târgu Mureș",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timișoara"
+    }
   }
 }

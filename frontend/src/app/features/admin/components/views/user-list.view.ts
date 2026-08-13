@@ -4,7 +4,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
+import { ButtonContainer } from '../../../../shared/components/containers/button.container';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { User } from '../../../../core/models/user.model';
 
@@ -16,11 +19,27 @@ import { User } from '../../../../core/models/user.model';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatPaginatorModule,
     GenericCellView,
+    ButtonContainer,
+    TranslatePipe,
   ],
   templateUrl: './user-list.view.html',
 })
 export class UserListView {
+  private readonly roleLabelKeys: Record<string, string> = {
+    Admin: 'USER_LIST.ROLES.ADMIN',
+    'HR User': 'USER_LIST.ROLES.HR_USER',
+    Participant: 'USER_LIST.ROLES.PARTICIPANT',
+    'Marketing Organizer': 'USER_LIST.ROLES.MARKETING_ORGANIZER',
+  };
+
+  private readonly locationLabelKeys: Record<string, string> = {
+    'Targu Mures': 'USER_LIST.LOCATIONS.TARGU_MURES',
+    'Cluj-Napoca': 'USER_LIST.LOCATIONS.CLUJ_NAPOCA',
+    Timisoara: 'USER_LIST.LOCATIONS.TIMISOARA',
+  };
+
   @Input() users: User[] = [];
   @Input() columns: TableColumn<User>[] = [];
 
@@ -30,6 +49,12 @@ export class UserListView {
   @Input() selectedRoles: string[] = [];
   @Input() selectedLocations: string[] = [];
   @Input() selectedStatuses: boolean[] = [];
+  @Input() nameQuery = '';
+  @Input() emailQuery = '';
+  @Input() totalItems = 0;
+  @Input() pageIndex = 0;
+  @Input() pageSize = 10;
+  @Input() pageSizeOptions: number[] = [10, 20, 50];
 
   @Output() nameSearchChange = new EventEmitter<string>();
   @Output() emailSearchChange = new EventEmitter<string>();
@@ -37,8 +62,14 @@ export class UserListView {
   @Output() roleChange = new EventEmitter<string[]>();
   @Output() locationChange = new EventEmitter<string[]>();
   @Output() statusChange = new EventEmitter<boolean[]>();
+  @Output() resetFilters = new EventEmitter<void>();
+  @Output() pageChange = new EventEmitter<PageEvent>();
 
   @Output() cellAction = new EventEmitter<{ row: User; key: string; newValue: unknown }>();
+
+  get resolvedTotalItems(): number {
+    return this.totalItems > 0 ? this.totalItems : this.users.length;
+  }
 
   get displayedColumnKeys(): string[] {
     return this.columns.map((col) => col.key);
@@ -52,5 +83,13 @@ export class UserListView {
   onEmailSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.emailSearchChange.emit(value);
+  }
+
+  getRoleLabelKey(role: string): string {
+    return this.roleLabelKeys[role] ?? role;
+  }
+
+  getLocationLabelKey(location: string): string {
+    return this.locationLabelKeys[location] ?? location;
   }
 }

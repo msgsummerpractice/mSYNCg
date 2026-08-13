@@ -12,7 +12,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   template: `
     @switch (column.type) {
       @case ('dropdown') {
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="cell-dropdown">
+        <mat-form-field
+          appearance="outline"
+          subscriptSizing="dynamic"
+          class="w-full min-w-[120px] ![--mdc-outlined-text-field-outline-color:transparent] ![--mdc-outlined-text-field-hover-outline-color:transparent] ![--mdc-outlined-text-field-focus-outline-color:transparent] ![--mat-sys-outline:transparent] ![--mat-sys-outline-variant:transparent] [&_.mdc-notched-outline__leading]:!border-transparent [&_.mdc-notched-outline__notch]:!border-transparent [&_.mdc-notched-outline__trailing]:!border-transparent"
+        >
           <mat-select [value]="displayValue" (selectionChange)="onSelectionChange($event.value)">
             @for (option of column.options; track option) {
               <mat-option [value]="option">{{ option }}</mat-option>
@@ -31,14 +35,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
       }
     }
   `,
-  styles: [
-    `
-      .cell-dropdown {
-        width: 100%;
-        min-width: 120px;
-      }
-    `,
-  ],
+  styles: [],
 })
 export class GenericCellView<T> {
   @Input({ required: true }) column!: TableColumn<T>;

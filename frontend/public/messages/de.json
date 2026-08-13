@@ -48,5 +48,42 @@
       }
     },
     "EVENT": {}
+  },
+  "USER_LIST": {
+    "FILTER_TITLE": "Benutzer filtern",
+    "FIELDS": {
+      "FULL_NAME": "Vollständiger Name",
+      "FULL_NAME_PLACEHOLDER": "Namen suchen...",
+      "EMAIL": "E-Mail",
+      "EMAIL_PLACEHOLDER": "E-Mail suchen...",
+      "ROLES": "Rollen",
+      "LOCATIONS": "Standorte",
+      "STATUS": "Status"
+    },
+    "STATUS": {
+      "ACTIVE": "Aktiv",
+      "INACTIVE": "Inaktiv"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Filter zurücksetzen"
+    },
+    "TABLE": {
+      "FULL_NAME": "Vollständiger Name",
+      "EMAIL": "E-Mail",
+      "USER_ROLE": "Benutzerrolle",
+      "LOCATION": "Standort",
+      "STATUS": "Status"
+    },
+    "ROLES": {
+      "ADMIN": "Administrator",
+      "HR_USER": "HR-Benutzer",
+      "PARTICIPANT": "Teilnehmer",
+      "MARKETING_ORGANIZER": "Marketing-Organisator"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Targu Mures",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timisoara"
+    }
   }
 }
