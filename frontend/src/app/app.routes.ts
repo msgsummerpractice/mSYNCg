@@ -3,6 +3,7 @@ import { LoginPageComponent } from './shared/pages/login/login-page';
 import { UserListContainer } from './features/admin/components/containers/user-list.container';
 import { EventListContainer } from './features/event/components/containers/event-list.container';
 import { HomePageComponent } from './shared/pages/home/home-page';
+import { MainLayoutComponent } from './shared/pages/main-layout/main-layout';
 export const routes: Routes = [
   {
     path: '',
@@ -23,8 +24,14 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'home',
-    component: HomePageComponent,
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: 'home',
+        component: HomePageComponent,
+      },
+    ],
   },
   {
     path: 'events',

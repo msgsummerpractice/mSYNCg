@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonContainer } from '../../containers/button.container';
 import { UserIconView } from '../../../../features/user/components/views/user-icon.view';
 
-interface NavItems {
+export interface NavItem {
   label: string;
   route: string;
 }
@@ -50,13 +50,9 @@ interface NavItems {
 export class ToolbarView {
   @Input() showNavigation = true;
   @Input() showUserIcon = true;
+  @Input() navItems: NavItem[] = [];
 
   @Output() navigate = new EventEmitter<string>();
-
-  navItems: NavItems[] = [
-    { label: 'Events', route: '/events' },
-    { label: 'User', route: '/users' },
-  ];
 
   handleEventClick(route: string): void {
     this.navigate.emit(route);

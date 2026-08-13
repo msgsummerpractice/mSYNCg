@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ToolbarView } from '../views/toolbar/toolbar.view';
+import { ToolbarView, NavItem } from '../views/toolbar/toolbar.view';
 import { Router } from '@angular/router';
 import { LanguageSwitcherContainer } from './language-switcher.container';
 
@@ -13,6 +13,11 @@ import { LanguageSwitcherContainer } from './language-switcher.container';
 })
 export class ToolbarContainer {
   private router = inject(Router);
+
+  navItems: NavItem[] = [
+    { label: 'Events', route: '/events' },
+    { label: 'User', route: '/admin/users' },
+  ];
 
   navigate(route: string): void {
     this.router.navigate([route]);
