@@ -1,4 +1,5 @@
-import { Component, computed, signal, inject } from '@angular/core';
+import { Component, computed, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime, switchMap } from 'rxjs/operators';
@@ -7,6 +8,8 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
 import { UserFilterParams } from '../../../../core/models/user-filters.model';
+import { UserRole, USER_ROLE_DISPLAY_VALUES } from '../../../../core/constants/role.constant';
+import { UserLocation } from '../../../../core/constants/location.constant';
 
 @Component({
   selector: 'app-user-list-container',
@@ -20,13 +23,15 @@ import { UserFilterParams } from '../../../../core/models/user-filters.model';
       [selectedRoles]="selectedRoles()"
       [selectedLocations]="selectedLocations()"
       [selectedStatuses]="selectedStatuses()"
-      [nameQuery]="nameQuery()"
+      [firstNameQuery]="firstNameQuery()"
+      [lastNameQuery]="lastNameQuery()"
       [emailQuery]="emailQuery()"
       [totalItems]="totalFilteredItems()"
       [pageIndex]="pageIndex()"
       [pageSize]="pageSize()"
       [pageSizeOptions]="pageSizeOptions"
-      (nameSearchChange)="onNameSearchChange($event)"
+      (firstNameSearchChange)="onFirstNameSearchChange($event)"
+      (lastNameSearchChange)="onLastNameSearchChange($event)"
       (emailSearchChange)="onEmailSearchChange($event)"
       (roleChange)="onRoleChange($event)"
       (locationChange)="onLocationChange($event)"
@@ -43,10 +48,14 @@ export class UserListContainer {
 
   tableColumns: TableColumn<User>[] = [
     {
-      key: 'fullName',
-      label: 'USER_LIST.TABLE.FULL_NAME',
+      key: 'firstName',
+      label: 'USER_LIST.TABLE.FIRST_NAME',
       type: 'text',
-      valueGetter: (user) => `${user.firstName} ${user.lastName}`,
+    },
+    {
+      key: 'lastName',
+      label: 'USER_LIST.TABLE.LAST_NAME',
+      type: 'text',
     },
     {
       key: 'email',
@@ -57,7 +66,7 @@ export class UserListContainer {
       key: 'role',
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
-      options: ['Admin', 'HR User', 'Participant', 'Marketing Organizer'],
+      options: Object.values(USER_ROLE_DISPLAY_VALUES),
     },
     {
       key: 'location',
@@ -71,14 +80,24 @@ export class UserListContainer {
     },
   ];
 
-  roles = signal<string[]>(['Admin', 'HR User', 'Participant', 'Marketing Organizer']);
-  locations = signal<string[]>(['Targu Mures', 'Cluj-Napoca', 'Timisoara']);
+  roles = signal<UserRole[]>([
+    UserRole.ADMIN,
+    UserRole.HR_USER,
+    UserRole.PARTICIPANT,
+    UserRole.MARKETING_ORGANIZER,
+  ]);
+  locations = signal<UserLocation[]>([
+    UserLocation.TARGU_MURES,
+    UserLocation.CLUJ_NAPOCA,
+    UserLocation.TIMISOARA,
+  ]);
 
-  nameQuery = signal<string>('');
+  firstNameQuery = signal<string>('');
+  lastNameQuery = signal<string>('');
   emailQuery = signal<string>('');
 
-  selectedRoles = signal<string[]>([]);
-  selectedLocations = signal<string[]>([]);
+  selectedRoles = signal<UserRole[]>([]);
+  selectedLocations = signal<UserLocation[]>([]);
   selectedStatuses = signal<boolean[]>([]);
 
   pageIndex = signal<number>(0);
@@ -88,7 +107,8 @@ export class UserListContainer {
   totalFilteredItems = signal<number>(0);
 
   private filterParams = computed<UserFilterParams>(() => ({
-    name: this.nameQuery().trim(),
+    firstName: this.firstNameQuery().trim(),
+    lastName: this.lastNameQuery().trim(),
     email: this.emailQuery().trim(),
     roles: this.selectedRoles(),
     locations: this.selectedLocations(),
@@ -98,9 +118,13 @@ export class UserListContainer {
   }));
 
   constructor() {
+    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+      return;
+    }
+
     toObservable(this.filterParams)
       .pipe(
-        debounceTime(2000),
+        debounceTime(750),
         switchMap((params) => this.adminService.getUsers(params)),
         takeUntilDestroyed()
       )
@@ -113,8 +137,13 @@ export class UserListContainer {
       });
   }
 
-  onNameSearchChange(value: string): void {
-    this.nameQuery.set(value);
+  onFirstNameSearchChange(value: string): void {
+    this.firstNameQuery.set(value);
+    this.pageIndex.set(0);
+  }
+
+  onLastNameSearchChange(value: string): void {
+    this.lastNameQuery.set(value);
     this.pageIndex.set(0);
   }
 
@@ -123,12 +152,12 @@ export class UserListContainer {
     this.pageIndex.set(0);
   }
 
-  onRoleChange(value: string[]): void {
+  onRoleChange(value: UserRole[]): void {
     this.selectedRoles.set(value);
     this.pageIndex.set(0);
   }
 
-  onLocationChange(value: string[]): void {
+  onLocationChange(value: UserLocation[]): void {
     this.selectedLocations.set(value);
     this.pageIndex.set(0);
   }
@@ -139,7 +168,8 @@ export class UserListContainer {
   }
 
   onResetFilters(): void {
-    this.nameQuery.set('');
+    this.firstNameQuery.set('');
+    this.lastNameQuery.set('');
     this.emailQuery.set('');
     this.selectedRoles.set([]);
     this.selectedLocations.set([]);

@@ -1,0 +1,5 @@
+export enum UserLocation {
+  CLUJ_NAPOCA = 'CLUJ_NAPOCA',
+  TARGU_MURES = 'TARGU_MURES',
+  TIMISOARA = 'TIMISOARA',
+}

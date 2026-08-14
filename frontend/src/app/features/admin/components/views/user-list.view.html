@@ -9,12 +9,22 @@
 
     <div class="flex flex-col gap-3">
       <mat-form-field class="w-full" appearance="outline">
-        <mat-label>{{ 'USER_LIST.FIELDS.FULL_NAME' | translate }}</mat-label>
+        <mat-label>{{ 'USER_LIST.FIELDS.FIRST_NAME' | translate }}</mat-label>
         <input
           matInput
-          [value]="nameQuery"
-          (input)="nameSearchChange.emit($any($event.target).value)"
-          [placeholder]="'USER_LIST.FIELDS.FULL_NAME_PLACEHOLDER' | translate"
+          [value]="firstNameQuery"
+          (input)="firstNameSearchChange.emit($any($event.target).value)"
+          [placeholder]="'USER_LIST.FIELDS.FIRST_NAME_PLACEHOLDER' | translate"
+        />
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>{{ 'USER_LIST.FIELDS.LAST_NAME' | translate }}</mat-label>
+        <input
+          matInput
+          [value]="lastNameQuery"
+          (input)="lastNameSearchChange.emit($any($event.target).value)"
+          [placeholder]="'USER_LIST.FIELDS.LAST_NAME_PLACEHOLDER' | translate"
         />
       </mat-form-field>
 

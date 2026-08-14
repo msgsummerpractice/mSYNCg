@@ -80,8 +80,10 @@
   "USER_LIST": {
     "FILTER_TITLE": "Filtrează utilizatorii",
     "FIELDS": {
-      "FULL_NAME": "Nume complet",
-      "FULL_NAME_PLACEHOLDER": "Caută nume...",
+      "FIRST_NAME": "Prenume",
+      "FIRST_NAME_PLACEHOLDER": "Caută prenume...",
+      "LAST_NAME": "Nume",
+      "LAST_NAME_PLACEHOLDER": "Caută nume...",
       "EMAIL": "Email",
       "EMAIL_PLACEHOLDER": "Caută email...",
       "ROLES": "Roluri",
@@ -96,7 +98,8 @@
       "RESET_FILTERS": "Resetează filtrele"
     },
     "TABLE": {
-      "FULL_NAME": "Nume complet",
+      "FIRST_NAME": "Prenume",
+      "LAST_NAME": "Nume",
       "EMAIL": "Email",
       "USER_ROLE": "Rol utilizator",
       "LOCATION": "Locație",

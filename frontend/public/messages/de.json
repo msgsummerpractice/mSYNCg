@@ -80,8 +80,10 @@
   "USER_LIST": {
     "FILTER_TITLE": "Benutzer filtern",
     "FIELDS": {
-      "FULL_NAME": "Vollständiger Name",
-      "FULL_NAME_PLACEHOLDER": "Namen suchen...",
+      "FIRST_NAME": "Vorname",
+      "FIRST_NAME_PLACEHOLDER": "Vornamen suchen...",
+      "LAST_NAME": "Nachname",
+      "LAST_NAME_PLACEHOLDER": "Nachnamen suchen...",
       "EMAIL": "E-Mail",
       "EMAIL_PLACEHOLDER": "E-Mail suchen...",
       "ROLES": "Rollen",
@@ -96,7 +98,8 @@
       "RESET_FILTERS": "Filter zurücksetzen"
     },
     "TABLE": {
-      "FULL_NAME": "Vollständiger Name",
+      "FIRST_NAME": "Vorname",
+      "LAST_NAME": "Nachname",
       "EMAIL": "E-Mail",
       "USER_ROLE": "Benutzerrolle",
       "LOCATION": "Standort",

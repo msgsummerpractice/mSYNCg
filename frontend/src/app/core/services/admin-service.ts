@@ -12,11 +12,12 @@ import { environment } from '../../../environments/environment';
 export class AdminService {
   private http: HttpClient = inject(HttpClient);
 
-  private readonly apiUrl = `${environment.apiUrl}`;
+  private readonly apiUrl = `${environment.apiUrl}/users`;
 
   getUsers(filters: UserFilterParams): Observable<Page<User>> {
     let params = new HttpParams().set('page', filters.page).set('size', filters.size);
-    if (filters.name) params = params.set('name', filters.name);
+    if (filters.firstName) params = params.set('firstName', filters.firstName);
+    if (filters.lastName) params = params.set('lastName', filters.lastName);
     if (filters.email) params = params.set('email', filters.email);
 
     filters.roles.forEach((role) => {

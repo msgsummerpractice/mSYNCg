@@ -1,8 +1,12 @@
+import { UserRole } from '../constants/role.constant';
+import { UserLocation } from '../constants/location.constant';
+
 export interface UserFilterParams {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  roles: string[];
-  locations: string[];
+  roles: UserRole[];
+  locations: UserLocation[];
   statuses: boolean[];
   page: number;
   size: number;
