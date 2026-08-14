@@ -43,7 +43,7 @@ export class LoginFormContainer {
         next: (response) => {
           localStorage.setItem('accessToken', response.accessToken);
           this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
-          this.router.navigate(['/home']);
+          this.router.navigate(['/events/home']);
         },
         error: () => {
           this.toastService.showError(this.translateService.instant('LOGIN.LOGIN_ERROR'));
