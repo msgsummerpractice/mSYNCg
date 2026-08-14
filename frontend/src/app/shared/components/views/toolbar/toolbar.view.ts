@@ -41,7 +41,7 @@ interface NavItems {
       </ng-container>
       <app-user-icon-container
         *ngIf="showUserIcon"
-        [userImage]="iconUrl"
+        [userImage]=""
         [userName]="userName"
       ></app-user-icon-container>
     </div>
