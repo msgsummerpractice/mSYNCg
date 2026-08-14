@@ -31,7 +31,6 @@ interface NavItems {
     </button>
     <span class="flex-1"></span>
     <div class="flex items-center gap-2">
-      <ng-content select="app-language-switcher"></ng-content>
       <ng-container *ngIf="showNavigation">
         <app-button-container
           *ngFor="let item of navItems"
@@ -39,6 +38,7 @@ interface NavItems {
           (clickEvent)="navigate.emit(item.route)"
         ></app-button-container>
       </ng-container>
+      <ng-content select="app-language-switcher"></ng-content>
       <app-user-icon-container
         *ngIf="showUserIcon"
         [userImage]="iconUrl"
