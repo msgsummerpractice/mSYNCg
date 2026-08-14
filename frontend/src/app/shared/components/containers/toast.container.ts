@@ -7,7 +7,10 @@ import { ToastService } from '../../../core/services/toast.service';
   standalone: true,
   imports: [ToastView],
   template: `
-    <app-toast-view [toasts]="toastService.toasts()" (closeToast)="closeToast($event)"></app-toast-view>
+    <app-toast-view
+      [toasts]="toastService.toasts()"
+      (closeToast)="closeToast($event)"
+    ></app-toast-view>
   `,
 })
 export class ToastContainer {
