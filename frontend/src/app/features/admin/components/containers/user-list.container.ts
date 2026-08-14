@@ -1,10 +1,12 @@
-import { Component, computed, signal, OnInit, inject, Signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
+import { debounceTime, switchMap } from 'rxjs/operators';
 import { UserListView } from '../views/user-list.view';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
-import { MOCK_USERS } from '../../../../core/models/user.mocks';
+import { UserFilterParams } from '../../../../core/models/user-filters.model';
 
 @Component({
   selector: 'app-user-list-container',
@@ -36,7 +38,7 @@ import { MOCK_USERS } from '../../../../core/models/user.mocks';
     </app-user-list-view>
   `,
 })
-export class UserListContainer implements OnInit {
+export class UserListContainer {
   private adminService = inject(AdminService);
 
   tableColumns: TableColumn<User>[] = [
@@ -69,7 +71,6 @@ export class UserListContainer implements OnInit {
     },
   ];
 
-  allUsers = signal<User[]>([]);
   roles = signal<string[]>(['Admin', 'HR User', 'Participant', 'Marketing Organizer']);
   locations = signal<string[]>(['Targu Mures', 'Cluj-Napoca', 'Timisoara']);
 
@@ -83,50 +84,33 @@ export class UserListContainer implements OnInit {
   pageIndex = signal<number>(0);
   pageSize = signal<number>(10);
   pageSizeOptions: number[] = [10, 20, 50];
+  pagedUsers = signal<User[]>([]);
+  totalFilteredItems = signal<number>(0);
 
-  filteredUsers: Signal<User[]> = computed((): User[] => {
-    const searchName: string = this.nameQuery().toLowerCase().trim();
-    const searchEmail: string = this.emailQuery().toLowerCase().trim();
+  private filterParams = computed<UserFilterParams>(() => ({
+    name: this.nameQuery().trim(),
+    email: this.emailQuery().trim(),
+    roles: this.selectedRoles(),
+    locations: this.selectedLocations(),
+    statuses: this.selectedStatuses(),
+    page: this.pageIndex(),
+    size: this.pageSize(),
+  }));
 
-    const activeRoles: string[] = this.selectedRoles();
-    const activeLocations: string[] = this.selectedLocations();
-    const activeStatuses: boolean[] = this.selectedStatuses();
-
-    return this.allUsers().filter((user) => {
-      const fullName: string = `${user.firstName} ${user.lastName}`.toLowerCase();
-      const reverseName: string = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const matchesName: boolean =
-        searchName === '' || fullName.includes(searchName) || reverseName.includes(searchName);
-
-      const email: string = (user.email || '').toLowerCase();
-      const matchesEmail: boolean = searchEmail === '' || email.includes(searchEmail);
-
-      const matchesRole: boolean = activeRoles.length === 0 || activeRoles.includes(user.role);
-      const matchesLocation: boolean =
-        activeLocations.length === 0 || activeLocations.includes(user.location);
-
-      const userStatus = (user as any).status;
-      const matchesStatus: boolean =
-        activeStatuses.length === 0 || activeStatuses.includes(userStatus);
-
-      return matchesName && matchesEmail && matchesRole && matchesLocation && matchesStatus;
-    });
-  });
-
-  totalFilteredItems: Signal<number> = computed((): number => this.filteredUsers().length);
-
-  pagedUsers: Signal<User[]> = computed((): User[] => {
-    const start: number = this.pageIndex() * this.pageSize();
-    const end: number = start + this.pageSize();
-    return this.filteredUsers().slice(start, end);
-  });
-
-  ngOnInit(): void {
-    // this.adminService.getAllUsers().subscribe({
-    //   next: (users) => this.allUsers.set(users),
-    //   error: (err) => console.error('Failed to load users', err),
-    // });
-    this.allUsers.set(MOCK_USERS);
+  constructor() {
+    toObservable(this.filterParams)
+      .pipe(
+        debounceTime(2000),
+        switchMap((params) => this.adminService.getUsers(params)),
+        takeUntilDestroyed()
+      )
+      .subscribe({
+        next: (response) => {
+          this.pagedUsers.set(response.content);
+          this.totalFilteredItems.set(response.totalElements);
+        },
+        error: (err) => console.error('Failed to load users', err),
+      });
   }
 
   onNameSearchChange(value: string): void {
