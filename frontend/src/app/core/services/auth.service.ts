@@ -10,15 +10,15 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = `${environment.apiUrl}/users`;
+  private readonly apiUrl = `${environment.apiUrl}`;
 
   constructor(private readonly http: HttpClient) {}
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials);
   }
 
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
-    return this.http.post<UserRegisterResponse>(this.apiUrl, userData);
+    return this.http.post<UserRegisterResponse>(`${this.apiUrl}/users`, userData);
   }
 }
