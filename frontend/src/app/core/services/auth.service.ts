@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/user-login.model';
 import { UserRegisterRequest, UserRegisterResponse } from '../models/user-register.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -18,18 +18,6 @@ export class AuthService {
   }
 
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
-    // TODO: Use HTTP request when connecting registration to the backend
-    const response: UserRegisterResponse = {
-      id: Date.now(),
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      location: userData.location,
-      status: true,
-      imageUrlString: userData.imageBase64 ?? '',
-      role: 'PARTICIPANT',
-    };
-
-    return of(response);
+    return this.http.post<UserRegisterResponse>(this.apiUrl, userData);
   }
 }

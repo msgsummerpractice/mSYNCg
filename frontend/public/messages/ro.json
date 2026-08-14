@@ -70,7 +70,8 @@
         },
         "ERROR": {
           "REGISTER": "A apărut o eroare în timpul înregistrării.",
-          "EMAIL_ALREADY_REGISTERED": "Această adresă de email este deja înregistrată."
+          "EMAIL_ALREADY_REGISTERED": "Această adresă de email este deja înregistrată.",
+          "NETWORK": "A apărut o eroare de rețea în timp ce procesam solicitarea dumneavoastră."
         }
       }
     },
