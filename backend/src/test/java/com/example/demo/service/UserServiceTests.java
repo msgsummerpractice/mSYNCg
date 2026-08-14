@@ -1,24 +1,31 @@
-package com.example.demo;
+package com.example.demo.service;
 
 import com.example.demo.dto.request.UserRequest;
+import com.example.demo.dto.response.UserListResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.model.Location;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -27,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -124,6 +133,63 @@ public class UserServiceTests {
 		assertEquals(UserRole.PARTICIPANT, role);
 		verify(modelMapper).map(request, User.class);
 		verify(modelMapper).map(mappedUser, UserResponse.class);
+	}
+
+	@Test
+	void getUsersWhenUsersExistReturnsMappedPage() {
+		User user = new User();
+		UserListResponse listResponse = new UserListResponse();
+		listResponse.setId(1);
+		listResponse.setEmail("ada@example.com");
+		Pageable pageable = PageRequest.of(0, 20);
+		Page<User> usersPage = new PageImpl<>(List.of(user), pageable, 1);
+
+		when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable))).thenReturn(usersPage);
+		when(modelMapper.map(user, UserListResponse.class)).thenReturn(listResponse);
+
+		Page<UserListResponse> result = userService.getUsers(null, pageable);
+
+		assertEquals(1, result.getTotalElements());
+		assertEquals(listResponse, result.getContent().get(0));
+		assertEquals(pageable, result.getPageable());
+		verify(modelMapper).map(user, UserListResponse.class);
+	}
+
+	@Test
+	void getUsersWhenNoUsersMatchReturnsEmptyPageWithoutMapping() {
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		Page<UserListResponse> result = userService.getUsers(null, pageable);
+
+		assertTrue(result.getContent().isEmpty());
+		assertEquals(0, result.getTotalElements());
+		verify(modelMapper, never()).map(any(User.class), eq(UserListResponse.class));
+	}
+
+	@Test
+	void getUsersPassesSpecificationAndPageableToRepository() {
+		@SuppressWarnings("unchecked")
+		Specification<User> spec = mock(Specification.class);
+		Pageable pageable = PageRequest.of(2, 5);
+
+		when(userRepository.findAll(spec, pageable)).thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		userService.getUsers(spec, pageable);
+
+		verify(userRepository).findAll(spec, pageable);
+	}
+
+	@Test
+	void getUsersWhenRepositoryFailsPropagatesException() {
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable)))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+		assertThrows(DataAccessResourceFailureException.class, () -> userService.getUsers(null, pageable));
 	}
 
 	private UserRequest buildValidRequest() {

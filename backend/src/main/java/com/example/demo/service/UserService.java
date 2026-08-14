@@ -7,8 +7,12 @@ import lombok.RequiredArgsConstructor;
 import com.example.demo.exceptions.ValidationException;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.jpa.domain.Specification;
 
+import com.example.demo.dto.response.UserListResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
@@ -38,6 +42,13 @@ public class UserService implements ServiceInterface {
         userRepository.save(newUser);
 
         return modelMapper.map(newUser, UserResponse.class);
+    }
+
+    @Override
+    public Page<UserListResponse> getUsers(Specification<User> spec, Pageable pageable) {
+        Page<User> usersPage = userRepository.findAll(spec,pageable);
+
+        return usersPage.map(user -> modelMapper.map(user, UserListResponse.class));
     }
 
 }
