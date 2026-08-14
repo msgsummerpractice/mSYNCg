@@ -22,6 +22,7 @@ import {
 import { LocationEnum } from '../../../core/models/location.model';
 import { ToastService } from '../../../core/services/toast.service';
 import { finalize } from 'rxjs/internal/operators/finalize';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'user-register-container',
@@ -59,6 +60,42 @@ export class UserRegisterContainer {
     { validators: passwordMatchValidator }
   );
 
+  private extractBackendErrorMessage(err: unknown): string {
+    const fallback = this.translate.instant('REGISTER.USER.MESSAGES.ERROR.REGISTER');
+
+    if (!(err instanceof HttpErrorResponse)) {
+      return fallback;
+    }
+
+    if (err.status === 0) {
+      return this.translate.instant('REGISTER.USER.MESSAGES.ERROR.NETWORK');
+    }
+
+    const payload = err.error;
+
+    if (typeof payload === 'string' && payload.trim().length > 0) {
+      return payload;
+    }
+
+    if (payload && typeof payload === 'object') {
+      const body = payload as BackendErrorResponse;
+
+      if (Array.isArray(body.fieldErrors) && body.fieldErrors.length > 0) {
+        return body.fieldErrors.map((f) => `${f.field}: ${f.reason}`).join(' | ');
+      }
+
+      if (typeof body.message === 'string' && body.message.trim().length > 0) {
+        return body.message;
+      }
+    }
+
+    if (typeof err.message === 'string' && err.message.trim().length > 0) {
+      return err.message;
+    }
+
+    return fallback;
+  }
+
   handleRegisterSubmit(): void {
     if (this.registerFormGroup.invalid) return;
 
@@ -91,14 +128,10 @@ export class UserRegisterContainer {
           this.toastService.showSuccess(successMsg, 5000);
           this.router.navigate(['/login']);
         },
-        //TODO: <update in order to adapt to HttpErrorResponse when connectiong FE to BE>
-        error: (err) => {
-          this.isLoading.set(false);
-          const translatedError =
-            typeof err?.error === 'string'
-              ? this.translate.instant(err.error)
-              : this.translate.instant('REGISTER.USER.MESSAGES.ERROR.REGISTER');
-          this.errorMessage.set(translatedError);
+        error: (err: unknown) => {
+          const message = this.extractBackendErrorMessage(err);
+          this.errorMessage.set(message);
+          this.toastService.showError(message, 7000);
         },
       });
   }

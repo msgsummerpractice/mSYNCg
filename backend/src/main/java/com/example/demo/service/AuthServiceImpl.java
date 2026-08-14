@@ -4,7 +4,6 @@ package com.example.demo.service;
 import org.springframework.security.core.AuthenticationException;
 import com.example.demo.exceptions.UnathorizedException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +23,8 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailService userDetailService;
 
-    @Autowired
-    private JWTokenProvider jwtTokenProvider;
+    private final JWTokenProvider jwtTokenProvider;
+
 
     @Override
     public String login(LogInRequest logInRequest) {
