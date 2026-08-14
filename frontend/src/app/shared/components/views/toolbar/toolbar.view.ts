@@ -22,16 +22,19 @@ interface NavItems {
     CommonModule,
   ],
   standalone: true,
-  template: `<mat-toolbar class="bg-brand-primary text-brand-on-primary font-ui">
+  template: `<mat-toolbar
+    class="flex h-auto min-h-14 flex-nowrap overflow-x-auto bg-brand-primary px-2 py-2 text-brand-on-primary font-ui sm:px-4"
+  >
     <button
-      class="ml-3 px-3 py-2 font-medium text-brand-on-primary font-ui cursor-pointer"
+      class="shrink-0 px-1 py-1 font-medium text-brand-on-primary font-ui cursor-pointer sm:px-3 sm:py-2"
       aria-label="msg logo"
     >
-      <img src="{{ logoUrl }}" alt="msg logo" class="ml-3 h-18 w-18 brightness-0 invert" />
+      <img src="{{ logoUrl }}" alt="msg logo" class="h-8 w-8 brightness-0 invert sm:h-10 sm:w-10" />
     </button>
-    <span class="flex-1"></span>
-    <div class="flex items-center gap-2">
-      <ng-content select="app-language-switcher"></ng-content>
+    <span class="min-w-2 flex-1"></span>
+    <div
+      class="ml-auto flex shrink-0 flex-nowrap items-center gap-1 sm:gap-2 [&_app-button-container_button]:!ml-0"
+    >
       <ng-container *ngIf="showNavigation">
         <app-button-container
           *ngFor="let item of navItems"
@@ -39,6 +42,7 @@ interface NavItems {
           (clickEvent)="navigate.emit(item.route)"
         ></app-button-container>
       </ng-container>
+      <ng-content select="app-language-switcher"></ng-content>
       <app-user-icon-container
         *ngIf="showUserIcon"
         [userImage]=""

@@ -7,14 +7,22 @@ import { CommonModule } from '@angular/common';
   selector: 'app-user-icon-view',
   imports: [NgStyle, MatIconModule, CommonModule],
   template: `
-    <div class="flex items-center justify-center gap-0.75 ml-6">
-      <span class="mr-0.5 text-sm font-base text-brand-on-primary">{{ userName }}</span>
+    <div class="ml-1 flex min-w-0 items-center justify-center gap-1 sm:ml-6 sm:gap-2">
+      <span
+        class="max-w-24 truncate text-xs font-base text-brand-on-primary sm:mr-0.5 sm:max-w-40 sm:text-sm"
+      >
+        {{ userName }}
+      </span>
       <div
-        class="rounded-full w-8 h-8 flex justify-center items-center"
+        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-8 sm:w-8"
         [ngStyle]="{ 'background-color': circleColor }"
       >
-        <img *ngIf="userImage" [src]="userImage" class="w-6 h-6 rounded-full" />
-        <div *ngIf="!userImage" class="text-sm text-white font-bold flex items-center text-center">
+        <img *ngIf="userImage" [src]="userImage" class="h-5 w-5 rounded-full sm:h-6 sm:w-6" />
+        <div
+          *ngIf="!userImage"
+          class="flex items-center text-center text-xs font-bold sm:text-sm"
+          [ngStyle]="{ color: textColor }"
+        >
           <span>{{ initials }}</span>
         </div>
       </div>
@@ -28,4 +36,5 @@ export class UserIconView {
   @Input() showInitials: boolean = false;
   @Input() initials: string = '';
   @Input() circleColor: string = '#000';
+  @Input() textColor: string = '#fff';
 }
