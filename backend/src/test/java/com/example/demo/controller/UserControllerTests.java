@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.UserRequest;
-import com.example.demo.dto.response.UserListResponse;
 import com.example.demo.dto.response.UserResponse;
+import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.exceptions.GlobalExceptionHandler;
 import com.example.demo.exceptions.ValidationException;
+import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.model.Location;
-import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
 import com.example.demo.service.UserService;
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
@@ -21,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,7 +50,6 @@ public class UserControllerTests {
 
 	private MockMvc mockMvc;
 
-	// Location/UserRole serialize through @JsonValue display names, not enum constant names.
 	private static final String CLUJ_NAPOCA_JSON = Location.CLUJ_NAPOCA.getDisplayValue();
 
 	@BeforeEach
@@ -151,9 +149,9 @@ public class UserControllerTests {
 
 	@Test
 	void getUsersWhenNoFiltersReturnsPageOfUsers() throws Exception {
-		Page<UserListResponse> page = new PageImpl<>(List.of(buildListResponse()), PageRequest.of(0, 20), 1);
+		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-		when(userService.getUsers(any(), any(Pageable.class))).thenReturn(page);
+		when(userService.getUsers(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
 
 		mockMvc.perform(get("/api/users"))
 				.andExpect(status().isOk())
@@ -165,7 +163,7 @@ public class UserControllerTests {
 
 	@Test
 	void getUsersWhenNoResultsReturnsEmptyPage() throws Exception {
-		when(userService.getUsers(any(), any(Pageable.class)))
+		when(userService.getUsers(any(UserSpec.class), any(Pageable.class)))
 				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
 		mockMvc.perform(get("/api/users").param("firstName", "Nobody"))
@@ -176,7 +174,7 @@ public class UserControllerTests {
 
 	@Test
 	void getUsersWhenPaginationParamsProvidedForwardsPageableToService() throws Exception {
-		when(userService.getUsers(any(), any(Pageable.class)))
+		when(userService.getUsers(any(UserSpec.class), any(Pageable.class)))
 				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
 
 		mockMvc.perform(get("/api/users")
@@ -185,17 +183,17 @@ public class UserControllerTests {
 				.andExpect(status().isOk());
 
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-		verify(userService).getUsers(any(), pageableCaptor.capture());
+		verify(userService).getUsers(any(UserSpec.class), pageableCaptor.capture());
 
 		assertEquals(2, pageableCaptor.getValue().getPageNumber());
 		assertEquals(5, pageableCaptor.getValue().getPageSize());
 	}
 
 	@Test
-	void getUsersWhenFiltersProvidedBuildsSpecification() throws Exception {
-		Page<UserListResponse> page = new PageImpl<>(List.of(buildListResponse()), PageRequest.of(0, 20), 1);
+	void getUsersWhenFiltersProvidedResolvesUserSpec() throws Exception {
+		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-		when(userService.getUsers(any(), any(Pageable.class))).thenReturn(page);
+		when(userService.getUsers(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
 
 		mockMvc.perform(get("/api/users")
 				.param("firstName", "Ada")
@@ -204,8 +202,7 @@ public class UserControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.content[0].firstName").value("Ada"));
 
-		@SuppressWarnings("unchecked")
-		ArgumentCaptor<Specification<User>> specCaptor = ArgumentCaptor.forClass(Specification.class);
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
 		verify(userService).getUsers(specCaptor.capture(), any(Pageable.class));
 
 		assertNotNull(specCaptor.getValue());
@@ -213,7 +210,7 @@ public class UserControllerTests {
 
 	@Test
 	void getUsersWhenServiceThrowsUnexpectedExceptionReturnsInternalServerError() throws Exception {
-		when(userService.getUsers(any(), any(Pageable.class)))
+		when(userService.getUsers(any(UserSpec.class), any(Pageable.class)))
 				.thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(get("/api/users"))
@@ -237,8 +234,8 @@ public class UserControllerTests {
 				""".formatted(firstName, lastName, email, password, location);
 	}
 
-	private UserListResponse buildListResponse() {
-		return new UserListResponse(1, "Ada", "Lovelace", "ada@example.com",
+	private UserViewResponse buildViewResponse() {
+		return new UserViewResponse(1, "Ada", "Lovelace", "ada@example.com",
 				UserRole.PARTICIPANT, Location.CLUJ_NAPOCA, true);
 	}
 }

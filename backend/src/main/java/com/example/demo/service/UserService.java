@@ -5,14 +5,15 @@ import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import com.example.demo.exceptions.ValidationException;
+import com.example.demo.filtering.users.UserSpec;
+
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.data.jpa.domain.Specification;
 
-import com.example.demo.dto.response.UserListResponse;
+import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
@@ -45,10 +46,10 @@ public class UserService implements ServiceInterface {
     }
 
     @Override
-    public Page<UserListResponse> getUsers(Specification<User> spec, Pageable pageable) {
+    public Page<UserViewResponse> getUsers(UserSpec spec, Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(spec,pageable);
 
-        return usersPage.map(user -> modelMapper.map(user, UserListResponse.class));
+        return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
 }

@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.UserRequest;
-import com.example.demo.dto.response.UserListResponse;
 import com.example.demo.dto.response.UserResponse;
+import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.exceptions.ValidationException;
+import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.model.Location;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
@@ -11,7 +12,6 @@ import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.dao.DataAccessResourceFailureException;
 
@@ -35,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -138,58 +138,77 @@ public class UserServiceTests {
 	@Test
 	void getUsersWhenUsersExistReturnsMappedPage() {
 		User user = new User();
-		UserListResponse listResponse = new UserListResponse();
-		listResponse.setId(1);
-		listResponse.setEmail("ada@example.com");
+		UserViewResponse viewResponse = new UserViewResponse();
+		viewResponse.setId(1);
+		viewResponse.setEmail("ada@example.com");
+		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 		Page<User> usersPage = new PageImpl<>(List.of(user), pageable, 1);
 
-		when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable))).thenReturn(usersPage);
-		when(modelMapper.map(user, UserListResponse.class)).thenReturn(listResponse);
+		when(userRepository.findAll(spec, pageable)).thenReturn(usersPage);
+		when(modelMapper.map(user, UserViewResponse.class)).thenReturn(viewResponse);
 
-		Page<UserListResponse> result = userService.getUsers(null, pageable);
+		Page<UserViewResponse> result = userService.getUsers(spec, pageable);
 
 		assertEquals(1, result.getTotalElements());
-		assertEquals(listResponse, result.getContent().get(0));
+		assertEquals(viewResponse, result.getContent().get(0));
 		assertEquals(pageable, result.getPageable());
-		verify(modelMapper).map(user, UserListResponse.class);
+		verify(modelMapper).map(user, UserViewResponse.class);
 	}
 
 	@Test
 	void getUsersWhenNoUsersMatchReturnsEmptyPageWithoutMapping() {
+		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
-		when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable)))
-				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+		when(userRepository.findAll(spec, pageable)).thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<UserListResponse> result = userService.getUsers(null, pageable);
+		Page<UserViewResponse> result = userService.getUsers(spec, pageable);
 
 		assertTrue(result.getContent().isEmpty());
 		assertEquals(0, result.getTotalElements());
-		verify(modelMapper, never()).map(any(User.class), eq(UserListResponse.class));
+		verify(modelMapper, never()).map(any(User.class), eq(UserViewResponse.class));
 	}
 
 	@Test
-	void getUsersPassesSpecificationAndPageableToRepository() {
-		@SuppressWarnings("unchecked")
-		Specification<User> spec = mock(Specification.class);
+	void getUsersPassesUserSpecAndPageableToRepository() {
+		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(2, 5);
 
 		when(userRepository.findAll(spec, pageable)).thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
 		userService.getUsers(spec, pageable);
 
-		verify(userRepository).findAll(spec, pageable);
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		verify(userRepository).findAll(specCaptor.capture(), pageableCaptor.capture());
+
+		assertEquals(spec, specCaptor.getValue());
+		assertEquals(pageable, pageableCaptor.getValue());
+	}
+
+	@Test
+	void getUsersWhenSpecIsNullQueriesRepositoryWithoutFilters() {
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userRepository.findAll((UserSpec) isNull(), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		Page<UserViewResponse> result = userService.getUsers(null, pageable);
+
+		assertTrue(result.getContent().isEmpty());
+		verify(userRepository).findAll((UserSpec) isNull(), eq(pageable));
 	}
 
 	@Test
 	void getUsersWhenRepositoryFailsPropagatesException() {
+		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
-		when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable)))
+		when(userRepository.findAll(spec, pageable))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class, () -> userService.getUsers(null, pageable));
+		assertThrows(DataAccessResourceFailureException.class, () -> userService.getUsers(spec, pageable));
 	}
 
 	private UserRequest buildValidRequest() {
