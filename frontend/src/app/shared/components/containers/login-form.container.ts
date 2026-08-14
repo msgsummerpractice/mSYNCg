@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { LoginFormView } from '../views/login-form/login-form.view';
 import { LoginRequest } from '../../../core/models/user-login.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
 import { ToastService } from '../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -19,6 +21,7 @@ export class LoginFormContainer {
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(ToastService);
   private readonly translateService = inject(TranslateService);
+  private readonly router = inject(Router);
 
   isLoading = false;
 
@@ -31,9 +34,20 @@ export class LoginFormContainer {
       this.loginForm.markAllAsTouched();
       return;
     }
+    this.isLoading = true;
 
-    const credentials: LoginRequest = this.loginForm.getRawValue();
-
-    this.authService.login(credentials).subscribe();
+    this.authService
+      .login(this.loginForm.getRawValue())
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (response) => {
+          localStorage.setItem('accessToken', response.accessToken);
+          this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          this.toastService.showError(this.translateService.instant('LOGIN.LOGIN_ERROR'));
+        },
+      });
   }
 }

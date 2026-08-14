@@ -9,7 +9,7 @@ import { UserRegisterRequest, UserRegisterResponse } from '../models/user-regist
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = '/api/auth';
+  private readonly apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private readonly http: HttpClient) {}
 

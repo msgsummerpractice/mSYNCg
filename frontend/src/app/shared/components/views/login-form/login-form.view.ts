@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 export class LoginFormView {
   @Input({ required: true }) formGroup!: FormGroup;
   @Input() isLoading = false;
+  
 
   @Output() formSubmit = new EventEmitter<void>();
 }
