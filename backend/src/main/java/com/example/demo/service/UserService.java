@@ -52,4 +52,29 @@ public class UserService implements ServiceInterface {
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
+    public UserResponse updateUserRole(Integer id, UserRole userRole) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setRole(userRole);
+
+        User updatedUser = userRepository.save(user);
+
+        return modelMapper.map(updatedUser, UserResponse.class);
+}
+
+    public UserResponse updateUserStatus(Integer id, Boolean status) {
+
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(status);
+
+        User updatedUser = userRepository.save(user);
+
+        return modelMapper.map(updatedUser, UserResponse.class);
+}
+
+
+
 }
