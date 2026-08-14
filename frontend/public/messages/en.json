@@ -70,7 +70,8 @@
         },
         "ERROR": {
           "REGISTER": "An error occurred during registration.",
-          "EMAIL_ALREADY_REGISTERED": "This email is already registered."
+          "EMAIL_ALREADY_REGISTERED": "This email is already registered.",
+          "NETWORK": "An network error occurred while we were processing your request."
         }
       }
     },
