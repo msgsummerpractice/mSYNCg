@@ -44,7 +44,14 @@ interface NavItems {
         [userImage]="iconUrl"
         [userName]="userName"
       ></app-user-icon-container>
-      <button mat-button class="text-brand-on-primary" (click)="logout.emit()"> Logout </button>
+      <button
+        *ngIf="showLogoutButton"
+        mat-button
+        class="text-brand-on-primary"
+        (click)="logout.emit()"
+      >
+        Logout
+      </button>
     </div>
   </mat-toolbar>`,
 })
@@ -55,6 +62,7 @@ export class ToolbarView {
   userName: string = '';
   @Input() showNavigation: boolean = true;
   @Input() showUserIcon: boolean = true;
+  @Input() showLogoutButton: boolean = false;
   readonly iconUrl: string = '/assets/icons/user-icon.png';
   readonly logoUrl: string = '/assets/icons/msg_logo_color.svg';
 
