@@ -5,6 +5,7 @@ import { EventListContainer } from './features/event/components/containers/event
 import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutPage,
+    canActivate: [authGuard],
     children: [
       {
         path: 'events',

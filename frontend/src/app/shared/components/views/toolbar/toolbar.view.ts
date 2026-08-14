@@ -44,12 +44,15 @@ interface NavItems {
         [userImage]="iconUrl"
         [userName]="userName"
       ></app-user-icon-container>
+      <button mat-button class="text-brand-on-primary" (click)="logout.emit()"> Logout </button>
     </div>
   </mat-toolbar>`,
 })
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
-  @Input() userName: string = '';
+  @Output() logout = new EventEmitter<void>();
+  @Input()
+  userName: string = '';
   @Input() showNavigation: boolean = true;
   @Input() showUserIcon: boolean = true;
   readonly iconUrl: string = '/assets/icons/user-icon.png';
