@@ -89,10 +89,34 @@
         "LABEL": "Startdatum",
         "REQUIRED": "Startdatum ist erforderlich"
       },
+      "START_TIME": {
+        "LABEL": "Startzeit",
+        "REQUIRED": "Startzeit ist erforderlich"
+      },
       "END_DATE": {
         "LABEL": "Enddatum",
         "REQUIRED": "Enddatum ist erforderlich",
         "INVALID_RANGE": "Das Enddatum muss nach dem Startdatum liegen"
+      },
+      "END_TIME": {
+        "LABEL": "Endzeit",
+        "REQUIRED": "Endzeit ist erforderlich"
+      },
+      "REGISTRATION_START_DATE": {
+        "LABEL": "Reg.-Start",
+        "REQUIRED": "Startdatum der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_START_TIME": {
+        "LABEL": "Startzeit",
+        "REQUIRED": "Startzeit der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_END_DATE": {
+        "LABEL": "Reg.-Ende",
+        "REQUIRED": "Enddatum der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_END_TIME": {
+        "LABEL": "Endzeit",
+        "REQUIRED": "Endzeit der Registrierung ist erforderlich"
       },
       "TYPE": {
         "LABEL": "Typ",

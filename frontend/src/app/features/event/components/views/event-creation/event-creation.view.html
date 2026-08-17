@@ -25,10 +25,15 @@
         }
       </mat-form-field>
 
-      <div class="flex gap-4 w-full">
+      <div class="flex flex-col gap-4 w-full sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.START_DATE.LABEL' | translate }}</mat-label>
-          <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" />
+          <input
+            matInput
+            class="pr-10"
+            [matDatepicker]="startDatePicker"
+            formControlName="startDate"
+          />
           <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #startDatePicker></mat-datepicker>
           @if (formGroup.controls.startDate.hasError('required')) {
@@ -37,14 +42,117 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.START_TIME.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            class="pr-10"
+            [matTimepicker]="startTimePicker"
+            formControlName="startTime"
+          />
+          <mat-timepicker-toggle matIconSuffix [for]="startTimePicker"></mat-timepicker-toggle>
+          <mat-timepicker #startTimePicker></mat-timepicker>
+          @if (formGroup.controls.startTime.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.START_TIME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col gap-4 w-full sm:flex-row">
+        <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.END_DATE.LABEL' | translate }}</mat-label>
-          <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" />
+          <input matInput class="pr-10" [matDatepicker]="endDatePicker" formControlName="endDate" />
           <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #endDatePicker></mat-datepicker>
           @if (formGroup.controls.endDate.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.END_DATE.REQUIRED' | translate }}</mat-error>
           } @if (formGroup.hasError('invalidDateRange')) {
           <mat-error>{{ 'REGISTER.EVENT.END_DATE.INVALID_RANGE' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.END_TIME.LABEL' | translate }}</mat-label>
+          <input matInput class="pr-10" [matTimepicker]="endTimePicker" formControlName="endTime" />
+          <mat-timepicker-toggle matIconSuffix [for]="endTimePicker"></mat-timepicker-toggle>
+          <mat-timepicker #endTimePicker></mat-timepicker>
+          @if (formGroup.controls.endTime.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.END_TIME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col gap-4 w-full sm:flex-row">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_START_DATE.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            class="pr-10"
+            [matDatepicker]="registrationStartDatePicker"
+            formControlName="registrationStartDate"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="registrationStartDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #registrationStartDatePicker></mat-datepicker>
+          @if (formGroup.controls.registrationStartDate.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_START_DATE.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_START_TIME.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            class="pr-10"
+            [matTimepicker]="registrationStartTimePicker"
+            formControlName="registrationStartTime"
+          />
+          <mat-timepicker-toggle
+            matIconSuffix
+            [for]="registrationStartTimePicker"
+          ></mat-timepicker-toggle>
+          <mat-timepicker #registrationStartTimePicker></mat-timepicker>
+          @if (formGroup.controls.registrationStartTime.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_START_TIME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col gap-4 w-full sm:flex-row">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_END_DATE.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            class="pr-10"
+            [matDatepicker]="registrationEndDatePicker"
+            formControlName="registrationEndDate"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="registrationEndDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #registrationEndDatePicker></mat-datepicker>
+          @if (formGroup.controls.registrationEndDate.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_END_DATE.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_END_TIME.LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            class="pr-10"
+            [matTimepicker]="registrationEndTimePicker"
+            formControlName="registrationEndTime"
+          />
+          <mat-timepicker-toggle
+            matIconSuffix
+            [for]="registrationEndTimePicker"
+          ></mat-timepicker-toggle>
+          <mat-timepicker #registrationEndTimePicker></mat-timepicker>
+          @if (formGroup.controls.registrationEndTime.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_END_TIME.REQUIRED' | translate }}</mat-error>
           }
         </mat-form-field>
       </div>

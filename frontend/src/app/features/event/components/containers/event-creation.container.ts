@@ -56,7 +56,13 @@ export class EventCreationContainer {
       title: this.fb.control('', Validators.required),
       description: this.fb.control('', Validators.required),
       startDate: this.fb.control<Date | null>(null, Validators.required),
+      startTime: this.fb.control<Date | null>(null, Validators.required),
       endDate: this.fb.control<Date | null>(null, Validators.required),
+      endTime: this.fb.control<Date | null>(null, Validators.required),
+      registrationStartDate: this.fb.control<Date | null>(null, Validators.required),
+      registrationStartTime: this.fb.control<Date | null>(null, Validators.required),
+      registrationEndDate: this.fb.control<Date | null>(null, Validators.required),
+      registrationEndTime: this.fb.control<Date | null>(null, Validators.required),
       type: this.fb.control<EventTypeEnum | null>(null, Validators.required),
       location: this.fb.control<LocationEnum | null>(null),
       foodProvided: this.fb.control<FoodProvidedEnum | null>(null),
@@ -98,14 +104,19 @@ export class EventCreationContainer {
     }
 
     const payload: EventDraftRequest = {
-      title: value.title,
+      name: value.title,
       description: value.description,
-      startDate: this.formatDate(value.startDate),
-      endDate: this.formatDate(value.endDate),
+      startTime: this.formatDateTime(value.startDate, value.startTime),
+      endTime: this.formatDateTime(value.endDate, value.endTime),
+      registrationStart: this.formatDateTime(
+        value.registrationStartDate,
+        value.registrationStartTime
+      ),
+      registrationEnd: this.formatDateTime(value.registrationEndDate, value.registrationEndTime),
       type: value.type,
       location: value.location,
-      foodProvided: value.foodProvided,
-      posterBase64: this.posterBase64,
+      foodProvided: value.foodProvided === FoodProvidedEnum.YES,
+      image: this.posterBase64,
       status: EventStatusEnum.DRAFT,
     };
 
@@ -181,15 +192,17 @@ export class EventCreationContainer {
     return acceptedTypes.includes(file.type) && file.size <= maxSizeInBytes;
   }
 
-  private formatDate(date: Date | null): string {
-    if (date === null) {
+  private formatDateTime(date: Date | null, time: Date | null): string {
+    if (date === null || time === null) {
       return '';
     }
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(time.getHours()).padStart(2, '0');
+    const minutes = String(time.getMinutes()).padStart(2, '0');
 
-    return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}T${hours}:${minutes}:00`;
   }
 }

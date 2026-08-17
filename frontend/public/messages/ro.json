@@ -89,10 +89,34 @@
         "LABEL": "Data de început",
         "REQUIRED": "Data de început este obligatorie"
       },
+      "START_TIME": {
+        "LABEL": "Ora de început",
+        "REQUIRED": "Ora de început este obligatorie"
+      },
       "END_DATE": {
         "LABEL": "Data de sfârșit",
         "REQUIRED": "Data de sfârșit este obligatorie",
         "INVALID_RANGE": "Data de sfârșit trebuie să fie după data de început"
+      },
+      "END_TIME": {
+        "LABEL": "Ora de sfârșit",
+        "REQUIRED": "Ora de sfârșit este obligatorie"
+      },
+      "REGISTRATION_START_DATE": {
+        "LABEL": "Start înscriere",
+        "REQUIRED": "Data de început a înregistrării este obligatorie"
+      },
+      "REGISTRATION_START_TIME": {
+        "LABEL": "Ora de start",
+        "REQUIRED": "Ora de început a înregistrării este obligatorie"
+      },
+      "REGISTRATION_END_DATE": {
+        "LABEL": "Final înscriere",
+        "REQUIRED": "Data de sfârșit a înregistrării este obligatorie"
+      },
+      "REGISTRATION_END_TIME": {
+        "LABEL": "Ora de final",
+        "REQUIRED": "Ora de sfârșit a înregistrării este obligatorie"
       },
       "TYPE": {
         "LABEL": "Tip",
