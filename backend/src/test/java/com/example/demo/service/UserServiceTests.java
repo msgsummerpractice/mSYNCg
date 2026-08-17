@@ -25,6 +25,7 @@ import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -226,4 +227,80 @@ public class UserServiceTests {
 		field.setAccessible(true);
 		return field.get(target);
 	}
+
+	@Test
+void updateUserRoleWhenUserExistsUpdatesRoleAndReturnsResponse() {
+    User user = new User();
+    user.setId(1);
+    user.setRole(UserRole.PARTICIPANT);
+
+    UserResponse mappedResponse = new UserResponse();
+
+    when(userRepository.findById(1)).thenReturn(Optional.of(user));
+    when(userRepository.save(user)).thenReturn(user);
+    when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
+
+    UserResponse response = userService.updateUserRole(1, UserRole.ADMIN);
+
+    assertNotNull(response);
+    assertEquals(UserRole.ADMIN, user.getRole());
+
+    verify(userRepository).findById(1);
+    verify(userRepository).save(user);
+    verify(modelMapper).map(user, UserResponse.class);
+}
+
+@Test
+void updateUserRoleWhenUserDoesNotExistThrowsException() {
+    when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+    RuntimeException exception = assertThrows(
+            RuntimeException.class,
+            () -> userService.updateUserRole(99, UserRole.ADMIN)
+    );
+
+    assertEquals("User not found", exception.getMessage());
+
+    verify(userRepository).findById(99);
+    verify(userRepository, never()).save(any(User.class));
+    verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
+}
+
+@Test
+void updateUserStatusWhenUserExistsUpdatesStatusAndReturnsResponse() {
+    User user = new User();
+    user.setId(1);
+    user.setStatus(true);
+
+    UserResponse mappedResponse = new UserResponse();
+
+    when(userRepository.findById(1)).thenReturn(Optional.of(user));
+    when(userRepository.save(user)).thenReturn(user);
+    when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
+
+    UserResponse response = userService.updateUserStatus(1, false);
+
+    assertNotNull(response);
+    assertEquals(Boolean.FALSE, user.getStatus());
+
+    verify(userRepository).findById(1);
+    verify(userRepository).save(user);
+    verify(modelMapper).map(user, UserResponse.class);
+}
+
+@Test
+void updateUserStatusWhenUserDoesNotExistThrowsException() {
+    when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+    RuntimeException exception = assertThrows(
+            RuntimeException.class,
+            () -> userService.updateUserStatus(99, false)
+    );
+
+    assertEquals("User not found", exception.getMessage());
+
+    verify(userRepository).findById(99);
+    verify(userRepository, never()).save(any(User.class));
+    verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
+}
 }
