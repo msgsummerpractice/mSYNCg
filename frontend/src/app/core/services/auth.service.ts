@@ -116,7 +116,7 @@ export class AuthService {
   }
 
   validateSession(): Observable<boolean> {
-    return this.http.get<void>(`${this.apiUrl}/auth/validate`).pipe(
+    return this.http.get<void>(`${this.apiUrl}/auth/me`).pipe(
       map(() => true),
       catchError(() => of(false))
     );
