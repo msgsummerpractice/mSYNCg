@@ -16,10 +16,36 @@
     "SUCCESS": "User role updated successfully",
     "FAILURE": "Unable to update user role",
     "ADMIN_CHANGE_ERROR": "Changing the role of an Admin user is not allowed."
+  "HOME": {
+    "WELCOME": "Welcome to mSYNCg !"
+  },
+  "LOGIN": {
+    "TITLE": "Login",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "john.doe@example.com",
+    "PASSWORD": "Password",
+    "PASSWORD_PLACEHOLDER": "Enter your password",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Please enter a valid email",
+    "PASSWORD_REQUIRED": "Password is required",
+    "WELCOME": "Welcome to mSYNCg !",
+    "SUBTITLE": "Please enter your credentials to continue.",
+    "NO_ACCOUNT": "Don't have an account yet?",
+    "REGISTER_NOW": "Register now!",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "TAGLINE": "Plan. Organize. Stay in sync.",
+    "DESCRIPTION": "Organize events, manage participants, and keep everything in sync — all in one place.",
+    "SIGN_IN_TITLE": "Sign in to your account",
+    "SIGN_IN_SUBTITLE": "Enter your credentials to continue.",
+    "LOGIN_SUCCESS": "Login successful!",
+    "LOGIN_ERROR": "Invalid email or password."
   },
   "REGISTER": {
     "USER": {
       "TITLE": "Create an Account",
+      "ALREADY_HAVE_ACCOUNT": "Already have an account?",
+      "LOGIN_NOW": "Sign in",
       "FIRST_NAME": {
         "LABEL": "First Name",
         "PLACEHOLDER": "John",
@@ -58,7 +84,8 @@
         },
         "ERROR": {
           "REGISTER": "An error occurred during registration.",
-          "EMAIL_ALREADY_REGISTERED": "This email is already registered."
+          "EMAIL_ALREADY_REGISTERED": "This email is already registered.",
+          "NETWORK": "An network error occurred while we were processing your request."
         }
       }
     },

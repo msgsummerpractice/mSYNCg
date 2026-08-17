@@ -38,5 +38,4 @@ export class ToastView {
   onCloseClick(id: string): void {
     this.closeToast.emit(id);
   }
-
 }

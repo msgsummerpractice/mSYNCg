@@ -16,10 +16,36 @@
     "SUCCESS": "Benutzerrolle erfolgreich aktualisiert",
     "FAILURE": "Benutzerrolle konnte nicht aktualisiert werden",
     "ADMIN_CHANGE_ERROR": "Die Änderung der Rolle eines Admin-Benutzers ist nicht erlaubt."
+  "HOME": {
+    "WELCOME": "Willkommen bei mSYNCg !"
+  },
+  "LOGIN": {
+    "TITLE": "Anmelden",
+    "EMAIL": "E-Mail",
+    "EMAIL_PLACEHOLDER": "johann.mueller@beispiel.de",
+    "PASSWORD": "Passwort",
+    "PASSWORD_PLACEHOLDER": "Geben Sie Ihr Passwort ein",
+    "PASSWORD_MIN_LENGTH": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "EMAIL_REQUIRED": "E-Mail ist erforderlich",
+    "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "PASSWORD_REQUIRED": "Passwort ist erforderlich",
+    "WELCOME": "Willkommen bei mSYNCg !",
+    "SUBTITLE": "Bitte geben Sie Ihre Anmeldedaten ein, um fortzufahren.",
+    "NO_ACCOUNT": "Noch kein Konto?",
+    "REGISTER_NOW": "Jetzt registrieren!",
+    "FORGOT_PASSWORD": "Passwort vergessen?",
+    "TAGLINE": "Planen. Organisieren. Synchron bleiben.",
+    "DESCRIPTION": "Organisieren Sie Veranstaltungen, verwalten Sie Teilnehmer und behalten Sie alles an einem Ort im Blick.",
+    "SIGN_IN_TITLE": "Melden Sie sich bei Ihrem Konto an",
+    "SIGN_IN_SUBTITLE": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren.",
+    "LOGIN_SUCCESS": "Anmeldung erfolgreich!",
+    "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort."
   },
   "REGISTER": {
     "USER": {
       "TITLE": "Konto erstellen",
+      "ALREADY_HAVE_ACCOUNT": "Haben Sie bereits ein Konto?",
+      "LOGIN_NOW": "Jetzt anmelden",
       "FIRST_NAME": {
         "LABEL": "Vorname",
         "PLACEHOLDER": "Johann",
@@ -58,7 +84,8 @@
         },
         "ERROR": {
           "REGISTER": "Bei der Registrierung ist ein Fehler aufgetreten.",
-          "EMAIL_ALREADY_REGISTERED": "Diese E-Mail-Adresse ist bereits registriert."
+          "EMAIL_ALREADY_REGISTERED": "Diese E-Mail-Adresse ist bereits registriert.",
+          "NETWORK": "Während der Verarbeitung Ihrer Anfrage ist ein Netzwerkfehler aufgetreten."
         }
       }
     },

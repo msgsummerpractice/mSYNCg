@@ -7,6 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { GenericFormContainer } from '../../containers/generic-form.container';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRegisterForm } from '../../../../core/models/user-register.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'user-register-view',
@@ -17,6 +18,7 @@ import { UserRegisterForm } from '../../../../core/models/user-register.model';
     MatSelectModule,
     GenericFormContainer,
     TranslatePipe,
+    RouterLink,
   ],
   templateUrl: './user-register.view.html',
 })
@@ -28,4 +30,5 @@ export class UserRegisterView {
   @Output() submitRegister = new EventEmitter<void>();
 
   readonly locations = Object.values(LocationEnum);
+  readonly loginRoute = '/login';
 }

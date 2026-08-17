@@ -21,6 +21,7 @@ interface NavItems {
     UserIconContainer,
     CommonModule,
   ],
+  standalone: true,
   template: `<mat-toolbar class="bg-brand-primary text-brand-on-primary font-ui">
     <button
       class="ml-3 px-3 py-2 font-medium text-brand-on-primary font-ui cursor-pointer"
@@ -29,17 +30,28 @@ interface NavItems {
       <img src="{{ logoUrl }}" alt="msg logo" class="ml-3 h-18 w-18 brightness-0 invert" />
     </button>
     <span class="flex-1"></span>
-    <app-button-container
-      *ngFor="let item of navItems"
-      [label]="item.label"
-      (clickEvent)="navigate.emit(item.route)"
-    ></app-button-container>
-    <app-user-icon-container [userImage]="iconUrl" [userName]="userName"></app-user-icon-container>
+    <div class="flex items-center gap-2">
+      <ng-content select="app-language-switcher"></ng-content>
+      <ng-container *ngIf="showNavigation">
+        <app-button-container
+          *ngFor="let item of navItems"
+          [label]="item.label"
+          (clickEvent)="navigate.emit(item.route)"
+        ></app-button-container>
+      </ng-container>
+      <app-user-icon-container
+        *ngIf="showUserIcon"
+        [userImage]="iconUrl"
+        [userName]="userName"
+      ></app-user-icon-container>
+    </div>
   </mat-toolbar>`,
 })
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
   @Input() userName: string = '';
+  @Input() showNavigation: boolean = true;
+  @Input() showUserIcon: boolean = true;
   readonly iconUrl: string = '/assets/icons/user-icon.png';
   readonly logoUrl: string = '/assets/icons/msg_logo_color.svg';
 
