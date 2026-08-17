@@ -21,14 +21,14 @@ import com.example.demo.dto.request.UserRequest;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements ServiceInterface {
+public class UserService implements ServiceInterface<UserRequest, UserResponse, UserViewResponse, UserSpec> {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse createUser(UserRequest user) {
+    public UserResponse create(UserRequest user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException("email", "Email address is already in use.");
@@ -46,7 +46,7 @@ public class UserService implements ServiceInterface {
     }
 
     @Override
-    public Page<UserViewResponse> getUsers(UserSpec spec, Pageable pageable) {
+    public Page<UserViewResponse> getAll(UserSpec spec, Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(spec,pageable);
 
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));

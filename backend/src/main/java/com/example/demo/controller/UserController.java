@@ -31,7 +31,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
-        UserResponse userResponse = userService.createUser(userRequest);
+        UserResponse userResponse = userService.create(userRequest);
 
         return ResponseEntity.ok(userResponse);
     }
@@ -40,7 +40,7 @@ public class UserController {
     public ResponseEntity<Page<UserViewResponse>> getUsers(
         UserSpec userSpec,
         Pageable pageable) {
-            Page<UserViewResponse> response = userService.getUsers(userSpec, pageable);
+            Page<UserViewResponse> response = userService.getAll(userSpec, pageable);
             return ResponseEntity.ok(response);
         }
     
