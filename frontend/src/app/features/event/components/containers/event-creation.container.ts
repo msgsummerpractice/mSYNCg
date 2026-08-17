@@ -1,26 +1,16 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import {
-  AbstractControl,
-  NonNullableFormBuilder,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, NonNullableFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/services/toast.service';
 import { EventService } from '../../../../core/services/event.service';
-import {
-  EventDraftRequest,
-  EventForm,
-  EventStatusEnum,
-  FoodProvidedEnum,
-} from '../../../../core/models/event.model';
-import { EventTypeEnum } from '../../../../core/models/event-type.model';
+import { EventDraftRequest, EventForm, EventStatusEnum } from '../../../../core/models/event.model';
+import { EventTypeEnum } from '../../../../core/models/event.model';
 import { EventCreationView } from '../views/event-creation/event-creation.view';
 import { LocationEnum } from '../../../../core/models/location.model';
-import { dateRangeValidator } from '../../../../core/validators/date-range.validatior';
+import { eventDateTimeRangeValidator } from '../../../../core/validators/time-range.validatior';
+import { formatDateTime } from '../../../../core/utils/date.util';
 
 @Component({
   selector: 'app-event-creation-container',
@@ -34,6 +24,7 @@ import { dateRangeValidator } from '../../../../core/validators/date-range.valid
       [posterName]="posterName()"
       (posterSelected)="handlePosterSelected($event)"
       (submitEvent)="handleEventSubmit()"
+      (invalidSubmit)="handleInvalidForm()"
     />
   `,
 })
@@ -50,6 +41,8 @@ export class EventCreationContainer {
 
   private eventId: number | null = null;
   private posterBase64: string | null = null;
+  private readonly booleanRequiredValidator: ValidatorFn = (control) =>
+    control.value === null || control.value === undefined ? { required: true } : null;
 
   protected readonly eventFormGroup = this.fb.group<EventForm>(
     {
@@ -65,15 +58,32 @@ export class EventCreationContainer {
       registrationEndTime: this.fb.control<Date | null>(null, Validators.required),
       type: this.fb.control<EventTypeEnum | null>(null, Validators.required),
       location: this.fb.control<LocationEnum | null>(null),
-      foodProvided: this.fb.control<FoodProvidedEnum | null>(null),
+      isFoodProvided: this.fb.control<boolean | null>(null),
     },
-    { validators: dateRangeValidator }
+    { validators: eventDateTimeRangeValidator }
   );
 
   constructor() {
     this.eventFormGroup.controls.type.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((type) => this.configureFieldsForType(type));
+
+    this.markEndControlTouchedWhenStartSelected(
+      this.eventFormGroup.controls.startDate,
+      this.eventFormGroup.controls.endDate
+    );
+    this.markEndControlTouchedWhenStartSelected(
+      this.eventFormGroup.controls.startTime,
+      this.eventFormGroup.controls.endTime
+    );
+    this.markEndControlTouchedWhenStartSelected(
+      this.eventFormGroup.controls.registrationStartDate,
+      this.eventFormGroup.controls.registrationEndDate
+    );
+    this.markEndControlTouchedWhenStartSelected(
+      this.eventFormGroup.controls.registrationStartTime,
+      this.eventFormGroup.controls.registrationEndTime
+    );
   }
 
   handlePosterSelected(file: File): void {
@@ -106,16 +116,16 @@ export class EventCreationContainer {
     const payload: EventDraftRequest = {
       name: value.title,
       description: value.description,
-      startTime: this.formatDateTime(value.startDate, value.startTime),
-      endTime: this.formatDateTime(value.endDate, value.endTime),
-      registrationStart: this.formatDateTime(
+      startTime: formatDateTime(value.startDate, value.startTime),
+      endTime: formatDateTime(value.endDate, value.endTime),
+      registrationStart: formatDateTime(
         value.registrationStartDate,
         value.registrationStartTime
       ),
-      registrationEnd: this.formatDateTime(value.registrationEndDate, value.registrationEndTime),
+      registrationEnd: formatDateTime(value.registrationEndDate, value.registrationEndTime),
       type: value.type,
       location: value.location,
-      foodProvided: value.foodProvided === FoodProvidedEnum.YES,
+      foodProvided: value.isFoodProvided ?? false,
       image: this.posterBase64,
       status: EventStatusEnum.DRAFT,
     };
@@ -140,49 +150,125 @@ export class EventCreationContainer {
     });
   }
 
-  private configureFieldsForType(type: EventTypeEnum | null): void {
+  handleInvalidForm(): void {
+    const errorKey = this.getFirstInvalidErrorKey();
+
+    if (errorKey !== null) {
+      this.toastService.showError(this.translate.instant(errorKey));
+    }
+  }
+
+ private configureFieldsForType(type: EventTypeEnum | null): void {
     this.selectedType.set(type);
 
     const location = this.eventFormGroup.controls.location;
-    const foodProvided = this.eventFormGroup.controls.foodProvided;
+    const isFoodProvided = this.eventFormGroup.controls.isFoodProvided;
 
     location.clearValidators();
-    foodProvided.clearValidators();
+    isFoodProvided.clearValidators();
 
-    if (type === EventTypeEnum.INTERNAL) {
-      location.setValue(LocationEnum.ALL, { emitEvent: false });
-      location.disable({ emitEvent: false });
-      foodProvided.enable({ emitEvent: false });
-      foodProvided.setValidators(Validators.required);
-    } else if (type === EventTypeEnum.LOCAL) {
-      location.enable({ emitEvent: false });
-
-      if (location.value === LocationEnum.ALL) {
-        location.setValue(null, { emitEvent: false });
-      }
-
-      location.setValidators(Validators.required);
-      foodProvided.enable({ emitEvent: false });
-      foodProvided.setValidators(Validators.required);
-    } else if (type === EventTypeEnum.EXTERNAL) {
-      location.enable({ emitEvent: false });
-
-      if (location.value === LocationEnum.ALL) {
-        location.setValue(null, { emitEvent: false });
-      }
-
-      location.setValidators(Validators.required);
-      foodProvided.reset(null, { emitEvent: false });
-      foodProvided.disable({ emitEvent: false });
-    } else {
-      location.reset(null, { emitEvent: false });
-      foodProvided.reset(null, { emitEvent: false });
-      location.enable({ emitEvent: false });
-      foodProvided.disable({ emitEvent: false });
+    switch (type) {
+      case EventTypeEnum.INTERNAL:
+        this.configureInternalType(location, isFoodProvided);
+        break;
+      case EventTypeEnum.LOCAL:
+        this.configureLocalType(location, isFoodProvided);
+        break;
+      case EventTypeEnum.EXTERNAL:
+        this.configureExternalType(location, isFoodProvided);
+        break;
+      default:
+        this.configureDefaultType(location, isFoodProvided);
+        break;
     }
 
     location.updateValueAndValidity({ emitEvent: false });
-    foodProvided.updateValueAndValidity({ emitEvent: false });
+    isFoodProvided.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private configureInternalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
+    location.setValue(LocationEnum.ALL, { emitEvent: false });
+    location.disable({ emitEvent: false });
+    isFoodProvided.enable({ emitEvent: false });
+    isFoodProvided.setValidators(this.booleanRequiredValidator);
+  }
+
+  private configureLocalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
+    location.enable({ emitEvent: false });
+    
+    if (location.value === LocationEnum.ALL) {
+      location.setValue(null, { emitEvent: false });
+    }
+
+    location.setValidators(Validators.required);
+    isFoodProvided.enable({ emitEvent: false });
+    isFoodProvided.setValidators(this.booleanRequiredValidator);
+  }
+
+  private configureExternalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
+    location.enable({ emitEvent: false });
+    
+    if (location.value === LocationEnum.ALL) {
+      location.setValue(null, { emitEvent: false });
+    }
+
+    location.setValidators(Validators.required);
+    isFoodProvided.reset(null, { emitEvent: false });
+    isFoodProvided.disable({ emitEvent: false });
+  }
+
+  private configureDefaultType(location: AbstractControl, isFoodProvided: AbstractControl): void {
+    location.reset(null, { emitEvent: false });
+    isFoodProvided.reset(null, { emitEvent: false });
+    location.enable({ emitEvent: false });
+    isFoodProvided.disable({ emitEvent: false });
+  }
+
+  private markEndControlTouchedWhenStartSelected(
+    startControl: AbstractControl,
+    endControl: AbstractControl
+  ): void {
+    startControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
+      if (value !== null) {
+        endControl.markAsTouched();
+      }
+    });
+  }
+
+  private getFirstInvalidErrorKey(): string | null {
+    if (this.eventFormGroup.hasError('invalidDateRange')) {
+      return 'REGISTER.EVENT.END_DATE.INVALID_RANGE';
+    }
+
+    if (this.eventFormGroup.hasError('invalidRegistrationDateRange')) {
+      return 'REGISTER.EVENT.END_DATE.INVALID_RANGE';
+    }
+
+    const requiredErrorKeys: Record<string, string> = {
+      title: 'REGISTER.EVENT.EVENT_TITLE.REQUIRED',
+      description: 'REGISTER.EVENT.DESCRIPTION.REQUIRED',
+      startDate: 'REGISTER.EVENT.START_DATE.REQUIRED',
+      startTime: 'REGISTER.EVENT.START_TIME.REQUIRED',
+      endDate: 'REGISTER.EVENT.END_DATE.REQUIRED',
+      endTime: 'REGISTER.EVENT.END_TIME.REQUIRED',
+      registrationStartDate: 'REGISTER.EVENT.REGISTRATION_START_DATE.REQUIRED',
+      registrationStartTime: 'REGISTER.EVENT.REGISTRATION_START_TIME.REQUIRED',
+      registrationEndDate: 'REGISTER.EVENT.REGISTRATION_END_DATE.REQUIRED',
+      registrationEndTime: 'REGISTER.EVENT.REGISTRATION_END_TIME.REQUIRED',
+      type: 'REGISTER.EVENT.TYPE.REQUIRED',
+      location: 'REGISTER.EVENT.LOCATION.REQUIRED',
+      isFoodProvided: 'REGISTER.EVENT.FOOD_PROVIDED.REQUIRED',
+    };
+
+    for (const controlName of Object.keys(requiredErrorKeys)) {
+      const control = this.eventFormGroup.controls[controlName as keyof EventForm];
+
+      if (control.hasError('required')) {
+        return requiredErrorKeys[controlName];
+      }
+    }
+
+    return null;
   }
 
   private isValidPoster(file: File): boolean {
@@ -192,17 +278,4 @@ export class EventCreationContainer {
     return acceptedTypes.includes(file.type) && file.size <= maxSizeInBytes;
   }
 
-  private formatDateTime(date: Date | null, time: Date | null): string {
-    if (date === null || time === null) {
-      return '';
-    }
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(time.getHours()).padStart(2, '0');
-    const minutes = String(time.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:00`;
-  }
 }

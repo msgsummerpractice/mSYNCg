@@ -55,7 +55,7 @@ export const routes: Routes = [
   path: 'events/create',
   loadComponent: () =>
     import('./features/event/pages/event-creation.page').then(
-      (page) => page.default
+      ({ EventCreationPage }) => EventCreationPage
     ),
   },
 

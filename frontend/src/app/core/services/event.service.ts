@@ -8,15 +8,15 @@ import { EventDraftRequest, EventResponse } from '../models/event.model';
   providedIn: 'root',
 })
 export class EventService {
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = `${environment.apiUrl}/events`;
 
   constructor(private readonly http: HttpClient) {}
 
   createDraft(event: EventDraftRequest): Observable<EventResponse> {
-    return this.http.post<EventResponse>(`${this.apiUrl}/events`, event);
+    return this.http.post<EventResponse>(`${this.apiUrl}`, event);
   }
 
   updateDraft(id: number, event: EventDraftRequest): Observable<EventResponse> {
-    return this.http.put<EventResponse>(`${this.apiUrl}/events/${id}`, event);
+    return this.http.put<EventResponse>(`${this.apiUrl}/${id}`, event);
   }
 }

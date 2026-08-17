@@ -6,12 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { ErrorStateMatcher, provideNativeDateAdapter } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { EventForm, FoodProvidedEnum } from '../../../../../core/models/event.model';
-import { EventTypeEnum } from '../../../../../core/models/event-type.model';
+import { EventForm, EventTypeEnum } from '../../../../../core/models/event.model';
 import { GenericFormContainer } from '../../../../../shared/components/containers/generic-form.container';
-import { LocationEnum } from '../../../../../core/models/location.model';
+import { AVAILABLE_LOCATIONS, LocationEnum } from '../../../../../core/models/location.model';
 
 @Component({
   selector: 'app-event-creation-view',
@@ -37,12 +36,18 @@ export class EventCreationView {
   @Input() posterName: string | null = null;
 
   @Output() submitEvent = new EventEmitter<void>();
+  @Output() invalidSubmit = new EventEmitter<void>();
   @Output() posterSelected = new EventEmitter<File>();
 
-  readonly eventTypes = EventTypeEnum;
-  readonly types = Object.values(EventTypeEnum);
-  readonly locations = [LocationEnum.CLUJ_NAPOCA, LocationEnum.TIMISOARA, LocationEnum.TARGU_MURES];
-  readonly foodOptions = Object.values(FoodProvidedEnum);
+  readonly eventTypeEnum = EventTypeEnum;
+  readonly eventTypes = Object.values(EventTypeEnum);
+  readonly locations = AVAILABLE_LOCATIONS;
+  readonly eventRangeErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.parent?.hasError('invalidDateRange'),
+  };
+  readonly registrationRangeErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.parent?.hasError('invalidRegistrationDateRange'),
+  };
 
   onPosterSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

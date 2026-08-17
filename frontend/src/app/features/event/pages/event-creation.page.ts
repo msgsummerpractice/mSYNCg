@@ -14,4 +14,4 @@ import { ToolbarView } from '../../../shared/components/views/toolbar/toolbar.vi
     <app-event-creation-container></app-event-creation-container>
   `,
 })
-export default class EventCreationPage {}
+export  class EventCreationPage {}

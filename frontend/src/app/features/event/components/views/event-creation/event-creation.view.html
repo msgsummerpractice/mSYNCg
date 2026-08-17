@@ -8,6 +8,7 @@
       [formGroup]="formGroup"
       [isLoading]="isLoading"
       (formSubmit)="submitEvent.emit()"
+      (invalidSubmit)="invalidSubmit.emit()"
     >
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>{{ 'REGISTER.EVENT.EVENT_TITLE.LABEL' | translate }}</mat-label>
@@ -60,7 +61,13 @@
       <div class="flex flex-col gap-4 w-full sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.END_DATE.LABEL' | translate }}</mat-label>
-          <input matInput class="pr-10" [matDatepicker]="endDatePicker" formControlName="endDate" />
+          <input
+            matInput
+            class="pr-10"
+            [matDatepicker]="endDatePicker"
+            [errorStateMatcher]="eventRangeErrorStateMatcher"
+            formControlName="endDate"
+          />
           <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #endDatePicker></mat-datepicker>
           @if (formGroup.controls.endDate.hasError('required')) {
@@ -126,6 +133,7 @@
             matInput
             class="pr-10"
             [matDatepicker]="registrationEndDatePicker"
+            [errorStateMatcher]="registrationRangeErrorStateMatcher"
             formControlName="registrationEndDate"
           />
           <mat-datepicker-toggle
@@ -135,6 +143,8 @@
           <mat-datepicker #registrationEndDatePicker></mat-datepicker>
           @if (formGroup.controls.registrationEndDate.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_END_DATE.REQUIRED' | translate }}</mat-error>
+          } @if (formGroup.hasError('invalidRegistrationDateRange')) {
+          <mat-error>{{ 'REGISTER.EVENT.END_DATE.INVALID_RANGE' | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -160,7 +170,7 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>{{ 'REGISTER.EVENT.TYPE.LABEL' | translate }}</mat-label>
         <mat-select formControlName="type">
-          @for (type of types; track type) {
+          @for (type of eventTypes; track type) {
           <mat-option [value]="type">{{ type }}</mat-option>
           }
         </mat-select>
@@ -173,7 +183,7 @@
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>{{ 'REGISTER.EVENT.LOCATION.LABEL' | translate }}</mat-label>
         <mat-select formControlName="location">
-          @if (selectedType === eventTypes.INTERNAL) {
+          @if (selectedType === eventTypeEnum.INTERNAL) {
           <mat-option value="ALL">ALL</mat-option>
           } @else { @for (location of locations; track location) {
           <mat-option [value]="location">{{ location }}</mat-option>
@@ -183,17 +193,18 @@
         <mat-error>{{ 'REGISTER.EVENT.LOCATION.REQUIRED' | translate }}</mat-error>
         }
       </mat-form-field>
-      } @if ( selectedType === eventTypes.LOCAL || selectedType === eventTypes.INTERNAL ) {
+      } @if ( selectedType === eventTypeEnum.LOCAL || selectedType === eventTypeEnum.INTERNAL ) {
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>{{ 'REGISTER.EVENT.FOOD_PROVIDED.LABEL' | translate }}</mat-label>
-        <mat-select formControlName="foodProvided">
-          @for (option of foodOptions; track option) {
-          <mat-option [value]="option">
-            {{ 'REGISTER.EVENT.FOOD_PROVIDED.' + option | translate }}
-          </mat-option>
-          }
+        <mat-select formControlName="isFoodProvided">
+          <mat-option [value]="true"
+            >{{ 'REGISTER.EVENT.FOOD_PROVIDED.YES' | translate }}</mat-option
+          >
+          <mat-option [value]="false"
+            >{{ 'REGISTER.EVENT.FOOD_PROVIDED.NO' | translate }}</mat-option
+          >
         </mat-select>
-        @if (formGroup.controls.foodProvided.hasError('required')) {
+        @if (formGroup.controls.isFoodProvided.hasError('required')) {
         <mat-error> {{ 'REGISTER.EVENT.FOOD_PROVIDED.REQUIRED' | translate }} </mat-error>
         }
       </mat-form-field>

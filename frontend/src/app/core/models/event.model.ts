@@ -1,11 +1,13 @@
 import { FormControl } from '@angular/forms';
-import { EventTypeEnum } from './event-type.model';
 import { LocationEnum } from './location.model';
 
-export enum FoodProvidedEnum {
-  YES = 'YES',
-  NO = 'NO',
+export enum EventTypeEnum {
+  INTERNAL = 'INTERNAL',
+  EXTERNAL = 'EXTERNAL',
+  LOCAL = 'LOCAL',
 }
+
+
 
 export enum EventStatusEnum {
   DRAFT = 'DRAFT',
@@ -26,7 +28,7 @@ export type EventForm = {
   registrationEndTime: FormControl<Date | null>;
   type: FormControl<EventTypeEnum | null>;
   location: FormControl<LocationEnum | null>;
-  foodProvided: FormControl<FoodProvidedEnum | null>;
+  isFoodProvided: FormControl<boolean | null>;
 };
 
 export interface EventDraftRequest {
