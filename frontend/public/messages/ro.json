@@ -75,6 +75,51 @@
         }
       }
     },
-    "EVENT": {}
+    "EVENT": {
+      "TITLE": "Creează ciornă eveniment",
+      "EVENT_TITLE": {
+        "LABEL": "Titlu",
+        "REQUIRED": "Titlul este obligatoriu"
+      },
+      "DESCRIPTION": {
+        "LABEL": "Descriere",
+        "REQUIRED": "Descrierea este obligatorie"
+      },
+      "START_DATE": {
+        "LABEL": "Data de început",
+        "REQUIRED": "Data de început este obligatorie"
+      },
+      "END_DATE": {
+        "LABEL": "Data de sfârșit",
+        "REQUIRED": "Data de sfârșit este obligatorie",
+        "INVALID_RANGE": "Data de sfârșit trebuie să fie după data de început"
+      },
+      "TYPE": {
+        "LABEL": "Tip",
+        "REQUIRED": "Te rugăm să selectezi un tip de eveniment"
+      },
+      "LOCATION": {
+        "LABEL": "Locație",
+        "REQUIRED": "Te rugăm să selectezi o locație"
+      },
+      "FOOD_PROVIDED": {
+        "LABEL": "Mâncare asigurată",
+        "YES": "Da",
+        "NO": "Nu",
+        "REQUIRED": "Te rugăm să selectezi dacă este asigurată mâncarea"
+      },
+      "POSTER": {
+        "UPLOAD": "Încarcă poster",
+        "INVALID": "Posterul trebuie să fie o imagine JPEG sau PNG de cel mult 5 MB"
+      },
+      "MESSAGES": {
+        "SUCCESS": {
+          "SAVE": "Ciorna evenimentului a fost salvată cu succes."
+        },
+        "ERROR": {
+          "SAVE": "Nu s-a putut salva ciorna evenimentului."
+        }
+      }
+    }
   }
 }

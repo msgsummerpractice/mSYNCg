@@ -1,0 +1,113 @@
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-lg">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
+      {{ 'REGISTER.EVENT.TITLE' | translate }}
+    </h1>
+
+    <app-generic-form-container
+      [formGroup]="formGroup"
+      [isLoading]="isLoading"
+      (formSubmit)="submitEvent.emit()"
+    >
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'REGISTER.EVENT.EVENT_TITLE.LABEL' | translate }}</mat-label>
+        <input matInput formControlName="title" />
+        @if (formGroup.controls.title.hasError('required')) {
+        <mat-error>{{ 'REGISTER.EVENT.EVENT_TITLE.REQUIRED' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'REGISTER.EVENT.DESCRIPTION.LABEL' | translate }}</mat-label>
+        <textarea matInput formControlName="description" rows="4"></textarea>
+        @if (formGroup.controls.description.hasError('required')) {
+        <mat-error>{{ 'REGISTER.EVENT.DESCRIPTION.REQUIRED' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex gap-4 w-full">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.START_DATE.LABEL' | translate }}</mat-label>
+          <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+          @if (formGroup.controls.startDate.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.START_DATE.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER.EVENT.END_DATE.LABEL' | translate }}</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          @if (formGroup.controls.endDate.hasError('required')) {
+          <mat-error>{{ 'REGISTER.EVENT.END_DATE.REQUIRED' | translate }}</mat-error>
+          } @if (formGroup.hasError('invalidDateRange')) {
+          <mat-error>{{ 'REGISTER.EVENT.END_DATE.INVALID_RANGE' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'REGISTER.EVENT.TYPE.LABEL' | translate }}</mat-label>
+        <mat-select formControlName="type">
+          @for (type of types; track type) {
+          <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+        @if (formGroup.controls.type.hasError('required')) {
+        <mat-error>{{ 'REGISTER.EVENT.TYPE.REQUIRED' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (selectedType !== null) {
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'REGISTER.EVENT.LOCATION.LABEL' | translate }}</mat-label>
+        <mat-select formControlName="location">
+          @if (selectedType === eventTypes.INTERNAL) {
+          <mat-option value="ALL">ALL</mat-option>
+          } @else { @for (location of locations; track location) {
+          <mat-option [value]="location">{{ location }}</mat-option>
+          } }
+        </mat-select>
+        @if (formGroup.controls.location.hasError('required')) {
+        <mat-error>{{ 'REGISTER.EVENT.LOCATION.REQUIRED' | translate }}</mat-error>
+        }
+      </mat-form-field>
+      } @if ( selectedType === eventTypes.LOCAL || selectedType === eventTypes.INTERNAL ) {
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ 'REGISTER.EVENT.FOOD_PROVIDED.LABEL' | translate }}</mat-label>
+        <mat-select formControlName="foodProvided">
+          @for (option of foodOptions; track option) {
+          <mat-option [value]="option">
+            {{ 'REGISTER.EVENT.FOOD_PROVIDED.' + option | translate }}
+          </mat-option>
+          }
+        </mat-select>
+        @if (formGroup.controls.foodProvided.hasError('required')) {
+        <mat-error> {{ 'REGISTER.EVENT.FOOD_PROVIDED.REQUIRED' | translate }} </mat-error>
+        }
+      </mat-form-field>
+      }
+
+      <input
+        #posterInput
+        type="file"
+        accept="image/jpeg,image/png"
+        hidden
+        (change)="onPosterSelected($event)"
+      />
+
+      <button type="button" mat-stroked-button class="w-full py-5" (click)="posterInput.click()">
+        {{ 'REGISTER.EVENT.POSTER.UPLOAD' | translate }}
+      </button>
+
+      @if (posterName) {
+      <div class="rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
+        {{ posterName }}
+      </div>
+      }
+    </app-generic-form-container>
+  </div>
+</main>
