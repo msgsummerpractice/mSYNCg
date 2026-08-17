@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +35,10 @@ public class AuthController {
         LogInResponse response = new LogInResponse();
         response.setAccessToken(token);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<Void> validateToken() {
+    return ResponseEntity.ok().build();
     }
 }

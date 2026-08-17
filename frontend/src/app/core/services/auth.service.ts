@@ -2,8 +2,8 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/user-login.model';
 import { UserRegisterRequest, UserRegisterResponse } from '../models/user-register.model';
@@ -113,5 +113,12 @@ export class AuthService {
     }
 
     return !this.isTokenExpired();
+  }
+
+  validateSession(): Observable<boolean> {
+    return this.http.get<void>(`${this.apiUrl}/auth/validate`).pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
   }
 }
