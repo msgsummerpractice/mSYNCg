@@ -10,6 +10,8 @@ import { User } from '../../../../core/models/user.model';
 import { UserFilterParams } from '../../../../core/models/user-filters.model';
 import { UserRole, USER_ROLE_DISPLAY_VALUES } from '../../../../core/constants/role.constant';
 import { UserLocation } from '../../../../core/constants/location.constant';
+import { ToastService } from '../../../../core/services/toast.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-list-container',
@@ -19,6 +21,8 @@ import { UserLocation } from '../../../../core/constants/location.constant';
 export class UserListContainer {
   private adminService = inject(AdminService);
   private destroyRef = inject(DestroyRef);
+  private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
   tableColumns: TableColumn<User>[] = [
     {
@@ -124,7 +128,7 @@ export class UserListContainer {
           this.pagedUsers.set(response.content);
           this.totalFilteredItems.set(response.totalElements);
         },
-        error: (err) => console.error('Failed to load users', err),
+        error: (err) => this.handleLoadError(err),
       });
   }
 
@@ -197,7 +201,12 @@ export class UserListContainer {
           this.pagedUsers.set(response.content);
           this.totalFilteredItems.set(response.totalElements);
         },
-        error: (err) => console.error('Failed to load users', err),
+        error: (err) => this.handleLoadError(err),
       });
+  }
+
+  private handleLoadError(error: unknown): void {
+    console.error('Failed to load users', error);
+    this.toastService.showError(this.translateService.instant('USER_LIST.LOAD_ERROR'));
   }
 }

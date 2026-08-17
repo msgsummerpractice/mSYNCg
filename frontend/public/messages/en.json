@@ -79,6 +79,7 @@
   },
   "USER_LIST": {
     "FILTER_TITLE": "Filter users",
+    "LOAD_ERROR": "Users could not be loaded. Please try again.",
     "FIELDS": {
       "FIRST_NAME": "First name",
       "FIRST_NAME_PLACEHOLDER": "Search first name...",

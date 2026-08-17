@@ -79,6 +79,7 @@
   },
   "USER_LIST": {
     "FILTER_TITLE": "Filtrează utilizatorii",
+    "LOAD_ERROR": "Utilizatorii nu au putut fi încărcați. Încearcă din nou.",
     "FIELDS": {
       "FIRST_NAME": "Prenume",
       "FIRST_NAME_PLACEHOLDER": "Caută prenume...",
