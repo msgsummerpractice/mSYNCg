@@ -290,17 +290,19 @@ void updateUserStatusWhenUserExistsUpdatesStatusAndReturnsResponse() {
 
 @Test
 void updateUserStatusWhenUserDoesNotExistThrowsException() {
-    when(userRepository.findById(99)).thenReturn(Optional.empty());
+	when(userRepository.findById(99)).thenReturn(Optional.empty());
 
-    RuntimeException exception = assertThrows(
-            RuntimeException.class,
-            () -> userService.updateUserStatus(99, false)
-    );
+	RuntimeException exception = assertThrows(
+			RuntimeException.class,
+			() -> userService.updateUserStatus(99, false)
+	);
 
-    assertEquals("User not found", exception.getMessage());
+	assertEquals("User not found", exception.getMessage());
 
-    verify(userRepository).findById(99);
-    verify(userRepository, never()).save(any(User.class));
-    verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
+	verify(userRepository).findById(99);
+	verify(userRepository, never()).save(any(User.class));
+	verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
 }
+
+
 }

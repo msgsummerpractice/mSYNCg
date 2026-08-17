@@ -38,27 +38,6 @@ public class UserController {
         Pageable pageable) {
             Page<UserViewResponse> response = userService.getUsers(userSpec, pageable);
             return ResponseEntity.ok(response);
-        }
-
-    @PatchMapping("/{id}/role")
-    public ResponseEntity<UserResponse> updateUserRole(
-        @PathVariable Integer id,
-        @Valid @RequestBody UpdateUserRoleRequest request) {
-
-        UserResponse userResponse = userService.updateUserRole(id, request.getUserRole());
-
-        return ResponseEntity.ok(userResponse);
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<UserResponse> updateUserStatus(
-        @PathVariable Integer id,
-        @Valid @RequestBody UpdateUserStatusRequest request) {
-
-        UserResponse userResponse =
-            userService.updateUserStatus(id, request.getStatus());
-
-        return ResponseEntity.ok(userResponse);
-    }
+        }    
 }
     
