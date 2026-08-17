@@ -4,7 +4,7 @@ import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.exceptions.CannotChangeOwnRoleException;
-import com.example.demo.exceptions.UserNotFoundException;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.model.Location;
@@ -41,6 +41,8 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +61,7 @@ public class UserServiceTests {
 	private UserService userService;
 
 	@Test
-	void createUserWhenEmailAlreadyExistsThrowsValidationException() {
+	void createUser_whenEmailAlreadyExists_throwsValidationException() {
 		UserRequest request = buildValidRequest();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
@@ -71,7 +73,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUserWhenPasswordIsNullSavesUserWithNullEncodedPassword() throws Exception {
+	void createUser_whenPasswordIsNull_savesUserWithNullEncodedPassword() throws Exception {
 		UserRequest request = buildValidRequest();
 		request.setPassword(null);
 		User mappedUser = new User();
@@ -96,7 +98,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUserWhenRepositorySaveFailsPropagatesException() {
+	void createUser_whenRepositorySaveFails_propagatesException() {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
@@ -109,7 +111,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUserWhenValidInputEncodesPasswordAndSetsDefaults() throws Exception {
+	void createUser_whenValidInput_encodesPasswordAndSetsDefaults() throws Exception {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		UserResponse mappedResponse = new UserResponse();
@@ -139,7 +141,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenUsersExistReturnsMappedPage() {
+	void getUsers_whenUsersExist_returnsMappedPage() {
 		User user = new User();
 		UserViewResponse viewResponse = new UserViewResponse();
 		viewResponse.setId(1);
@@ -160,7 +162,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenNoUsersMatchReturnsEmptyPageWithoutMapping() {
+	void getUsers_whenNoUsersMatch_returnsEmptyPageWithoutMapping() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -174,7 +176,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersPassesUserSpecAndPageableToRepository() {
+	void getUsers_passesUserSpec_andPageableToRepository() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(2, 5);
 
@@ -191,7 +193,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenSpecIsNullQueriesRepositoryWithoutFilters() {
+	void getUsers_whenSpecIsNull_queriesRepositoryWithoutFilters() {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(userRepository.findAll((UserSpec) isNull(), eq(pageable)))
@@ -204,7 +206,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenRepositoryFailsPropagatesException() {
+	void getUsers_whenRepositoryFails_propagatesException() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -231,110 +233,131 @@ public class UserServiceTests {
 	}
 
 	@Test
-		void updateUserRoleWhenUserExistsUpdatesRoleAndReturnsResponse() {
-			User user = new User();
-			user.setId(1);
-			user.setEmail("user@example.com");
-			user.setRole(UserRole.PARTICIPANT);
+	void updateUserRole_whenUserExists_updatesRoleAndReturnsResponse() {
+		User user = new User();
+		user.setId(1);
+		user.setEmail("user@example.com");
+		user.setRole(UserRole.PARTICIPANT);
 
-			UserResponse mappedResponse = new UserResponse();
+		User authenticatedUser = new User();
+		authenticatedUser.setId(2);
+		authenticatedUser.setEmail("authenticated@example.com");
+		authenticatedUser.setRole(UserRole.ADMIN);
 
-			when(userRepository.findById(1)).thenReturn(Optional.of(user));
-			when(userRepository.save(user)).thenReturn(user);
-			when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
+		UserResponse mappedResponse = new UserResponse();
 
-			UserResponse response =
-					userService.updateUserRole(
-							1,
-							UserRole.ADMIN,
-							"authenticated@example.com"
-					);
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.findByEmail("authenticated@example.com"))
+				.thenReturn(authenticatedUser);
+		when(userRepository.save(user)).thenReturn(user);
+		when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
 
-			assertNotNull(response);
-			assertEquals(UserRole.ADMIN, user.getRole());
+		UserResponse response =
+				userService.updateUserRole(
+						1,
+						UserRole.ADMIN,
+						"authenticated@example.com"
+				);
 
-			verify(userRepository).findById(1);
-			verify(userRepository).save(user);
-			verify(modelMapper).map(user, UserResponse.class);
-}
+		assertNotNull(response);
+		assertEquals(UserRole.ADMIN, user.getRole());
+
+		verify(userRepository).findById(1);
+		verify(userRepository).findByEmail("authenticated@example.com");
+		verify(userRepository).save(user);
+		verify(modelMapper).map(user, UserResponse.class);
+	}
 
 	@Test
-		void updateUserRoleWhenUserDoesNotExistThrowsException() {
+	void updateUserRole_whenUserDoesNotExist_throwsException() {
 			when(userRepository.findById(99)).thenReturn(Optional.empty());
 
-			UserNotFoundException exception = assertThrows(
-					UserNotFoundException.class,
+			NotFoundException exception = assertThrows(
+					NotFoundException.class,
 					() -> userService.updateUserRole(99, UserRole.ADMIN, "authenticated@example.com")
 			);
 
 			assertEquals("User with id 99 not found", exception.getMessage());
 
 			verify(userRepository).findById(99);
-			verify(userRepository, never()).save(any(User.class));
-			verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
+			verifyNoMoreInteractions(userRepository);
+			verifyNoInteractions(modelMapper);
 	}
 
-@Test
-void updateUserStatusWhenUserExistsUpdatesStatusAndReturnsResponse() {
-    User user = new User();
-    user.setId(1);
-    user.setStatus(true);
+	@Test
+	void updateUserStatus_whenUserExists_updatesStatusAndReturnsResponse() {
+		User user = new User();
+		user.setId(1);
+		user.setStatus(true);
 
-    UserResponse mappedResponse = new UserResponse();
+		UserResponse mappedResponse = new UserResponse();
 
-    when(userRepository.findById(1)).thenReturn(Optional.of(user));
-    when(userRepository.save(user)).thenReturn(user);
-    when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.save(user)).thenReturn(user);
+		when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
 
-    UserResponse response = userService.updateUserStatus(1, false);
+		UserResponse response = userService.updateUserStatus(1, false);
 
-    assertNotNull(response);
-    assertEquals(Boolean.FALSE, user.getStatus());
+		assertNotNull(response);
+		assertEquals(Boolean.FALSE, user.getStatus());
 
-    verify(userRepository).findById(1);
-    verify(userRepository).save(user);
-    verify(modelMapper).map(user, UserResponse.class);
-}
-
-@Test
-void updateUserStatusWhenUserDoesNotExistThrowsException() {
-	when(userRepository.findById(99)).thenReturn(Optional.empty());
-
-	UserNotFoundException exception = assertThrows(
-			UserNotFoundException.class,
-			() -> userService.updateUserStatus(99, false)
-	);
-
-	assertEquals("User with id 99 not found", exception.getMessage());
-
-	verify(userRepository).findById(99);
-	verify(userRepository, never()).save(any(User.class));
-	verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
-}
+		verify(userRepository).findById(1);
+		verify(userRepository).save(user);
+		verify(modelMapper).map(user, UserResponse.class);
+	}
 
 	@Test
-		void updateUserRoleWhenAdminChangesOwnRoleThrowsException() {
-				User user = new User();
-				user.setId(1);
-				user.setEmail("admin@example.com");
-				user.setRole(UserRole.ADMIN);
+	void updateUserStatus_whenUserDoesNotExist_throwsException() {
+		when(userRepository.findById(99)).thenReturn(Optional.empty());
 
-				when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		NotFoundException exception = assertThrows(
+				NotFoundException.class,
+				() -> userService.updateUserStatus(99, false)
+		);
 
-				CannotChangeOwnRoleException exception = assertThrows(
-						CannotChangeOwnRoleException.class,
-						() -> userService.updateUserRole(
-								1,
-								UserRole.PARTICIPANT,
-								"admin@example.com"
-						)
-				);
+		assertEquals("User with id 99 not found", exception.getMessage());
 
-				assertEquals("Admin cannot change their own role.", exception.getMessage());
+		verify(userRepository).findById(99);
+		verifyNoMoreInteractions(userRepository);
+		verifyNoInteractions(modelMapper);		
+	}
 
-				verify(userRepository).findById(1);
-				verify(userRepository, never()).save(any(User.class));
-				verify(modelMapper, never()).map(any(User.class), eq(UserResponse.class));
+	@Test
+	void updateUserRole_whenAdminChangesOwnRole_throwsException() {
+		User user = new User();
+		user.setId(1);
+		user.setEmail("admin@example.com");
+		user.setRole(UserRole.ADMIN);
+
+		User authenticatedUser = new User();
+		authenticatedUser.setId(1);
+		authenticatedUser.setEmail("admin@example.com");
+		authenticatedUser.setRole(UserRole.ADMIN);
+
+		when(userRepository.findById(1))
+				.thenReturn(Optional.of(user));
+
+		when(userRepository.findByEmail("admin@example.com"))
+				.thenReturn(authenticatedUser);
+
+		CannotChangeOwnRoleException exception = assertThrows(
+				CannotChangeOwnRoleException.class,
+				() -> userService.updateUserRole(
+						1,
+						UserRole.PARTICIPANT,
+						"admin@example.com"
+				)
+		);
+
+		assertEquals(
+				"Admin cannot change their own role.",
+				exception.getMessage()
+		);
+
+		verify(userRepository).findById(1);
+		verify(userRepository).findByEmail("admin@example.com");
+		verify(userRepository, never()).save(user);
+		verify(modelMapper, never()).map(user, UserResponse.class);
 	}
 
 

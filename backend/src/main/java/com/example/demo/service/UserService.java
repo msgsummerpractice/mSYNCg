@@ -5,7 +5,7 @@ import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import com.example.demo.exceptions.CannotChangeOwnRoleException;
-import com.example.demo.exceptions.UserNotFoundException;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.filtering.users.UserSpec;
 
@@ -54,11 +54,14 @@ public class UserService implements ServiceInterface {
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
-    public UserResponse updateUserRole(Integer id,UserRole userRole,String authenticatedEmail) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public UserResponse updateUserRole( Integer id, UserRole userRole,String authenticatedEmail) {
 
-        if (user.getEmail().equals(authenticatedEmail)) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User", id));
+
+        User authenticatedUser = userRepository.findByEmail(authenticatedEmail);
+
+        if (user.getId().equals(authenticatedUser.getId())) {
             throw new CannotChangeOwnRoleException();
         }
 
@@ -72,14 +75,14 @@ public class UserService implements ServiceInterface {
     public UserResponse updateUserStatus(Integer id, Boolean status) {
 
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
+            .orElseThrow(() -> new NotFoundException("User", id));
 
         user.setStatus(status);
 
         User updatedUser = userRepository.save(user);
 
         return modelMapper.map(updatedUser, UserResponse.class);
-}
+    }
 
 
 
