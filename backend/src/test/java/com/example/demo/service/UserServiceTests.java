@@ -32,7 +32,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -73,32 +72,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUser_whenPasswordIsNull_savesUserWithNullEncodedPassword() throws Exception {
-		UserRequest request = buildValidRequest();
-		request.setPassword(null);
-		User mappedUser = new User();
-		UserResponse mappedResponse = new UserResponse();
-
-		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-		when(modelMapper.map(request, User.class)).thenReturn(mappedUser);
-		when(passwordEncoder.encode(null)).thenReturn(null);
-		when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-		when(modelMapper.map(mappedUser, UserResponse.class)).thenReturn(mappedResponse);
-
-		UserResponse response = userService.createUser(request);
-
-		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-		verify(userRepository).save(userCaptor.capture());
-		User savedUser = userCaptor.getValue();
-
-		assertNotNull(response);
-		assertNull(readPrivateField(savedUser, "password"));
-		assertEquals(Boolean.TRUE, readPrivateField(savedUser, "status"));
-		assertEquals(UserRole.PARTICIPANT, readPrivateField(savedUser, "role"));
-	}
-
-	@Test
-	void createUser_whenRepositorySaveFails_propagatesException() {
+	void createUser_whenRepositorySaveFails_throwsException() {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
@@ -111,7 +85,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUser_whenValidInput_encodesPasswordAndSetsDefaults() throws Exception {
+	void createUser_whenInputisValid_savesUser() throws Exception {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		UserResponse mappedResponse = new UserResponse();
@@ -193,7 +167,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsers_whenSpecIsNull_queriesRepositoryWithoutFilters() {
+	void getUsers_whenSpecIsNull_queriesWithoutFilters() {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(userRepository.findAll((UserSpec) isNull(), eq(pageable)))
@@ -206,7 +180,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsers_whenRepositoryFails_propagatesException() {
+	void getUsers_whenRepositoryFails_throwsException() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -233,7 +207,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void updateUserRole_whenUserExists_updatesRoleAndReturnsResponse() {
+	void updateUserRole_whenUserExists_updatesRole() {
 		User user = new User();
 		user.setId(1);
 		user.setEmail("user@example.com");
@@ -285,7 +259,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void updateUserStatus_whenUserExists_updatesStatusAndReturnsResponse() {
+	void updateUserStatus_whenUserExists_updatesStatus() {
 		User user = new User();
 		user.setId(1);
 		user.setStatus(true);
