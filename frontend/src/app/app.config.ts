@@ -12,6 +12,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { CustomTranslateLoader } from './core/translation/custom-translate.loader';
 import { initializeTranslation } from './core/translation/translation.initializer';
+import { initializeAuth } from './core/auth/auth.initializer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withInterceptors([httpInterceptor])),
+    provideAppInitializer(initializeAuth),
     provideAppInitializer(initializeTranslation),
     provideTranslateService({
       loader: {

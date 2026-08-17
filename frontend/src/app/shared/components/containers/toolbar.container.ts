@@ -1,5 +1,4 @@
 import { Component, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { ToolbarView } from '../views/toolbar/toolbar.view';
 import { Router } from '@angular/router';
 import { LanguageSwitcherContainer } from './language-switcher.container';
@@ -27,14 +26,9 @@ export class ToolbarContainer {
   }
 
   get isLoggedIn(): boolean {
-    if (!isPlatformBrowser(this.platformId)) {
-      return false;
-    }
-
-    const hasToken = localStorage.getItem('accessToken') !== null;
     const isLoginPage = this.router.url === '/login';
 
-    return hasToken && !isLoginPage;
+    return this.authService.hasToken() && !isLoginPage;
   }
 
   logout(): void {
