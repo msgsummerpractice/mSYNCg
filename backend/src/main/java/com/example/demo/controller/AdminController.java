@@ -9,6 +9,7 @@ import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UserViewResponse>> getUsers(
             UserSpec userSpec,
             Pageable pageable) {
@@ -33,6 +35,7 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateUserRole(
         @PathVariable Integer id,
         @Valid @RequestBody UpdateUserRoleRequest request,
@@ -49,6 +52,7 @@ public class AdminController {
 }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateUserStatus(
             @PathVariable Integer id,
             @Valid @RequestBody UpdateUserStatusRequest request) {
