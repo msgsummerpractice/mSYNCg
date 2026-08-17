@@ -98,4 +98,20 @@ export class AuthService {
       return null;
     }
   }
+
+  hasValidSession(): boolean {
+    const token = this.getToken();
+
+    if (!token) {
+      return false;
+    }
+
+    const payload = this.decodeToken(token);
+
+    if (!payload) {
+      return false;
+    }
+
+    return !this.isTokenExpired();
+  }
 }

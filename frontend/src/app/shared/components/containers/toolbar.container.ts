@@ -18,7 +18,6 @@ import { AuthService } from '../../../core/services/auth.service';
 export class ToolbarContainer {
   private router = inject(Router);
   private readonly authService = inject(AuthService);
-  private readonly platformId = inject(PLATFORM_ID);
   userName: string = 'Test User';
 
   navigate(route: string): void {
@@ -26,9 +25,7 @@ export class ToolbarContainer {
   }
 
   get isLoggedIn(): boolean {
-    const isLoginPage = this.router.url === '/login';
-
-    return this.authService.hasToken() && !isLoginPage;
+    return this.authService.hasValidSession();
   }
 
   logout(): void {

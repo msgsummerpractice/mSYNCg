@@ -12,7 +12,7 @@ export const authGuard: CanActivateFn = () => {
     return true;
   }
 
-  if (authService.hasToken() && !authService.isTokenExpired()) {
+  if (authService.hasValidSession()) {
     return true;
   }
 

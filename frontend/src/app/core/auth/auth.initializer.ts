@@ -6,13 +6,11 @@ export function initializeAuth(): void {
   const platformId = inject(PLATFORM_ID);
   const authService = inject(AuthService);
 
-  // Only run on browser (not during SSR)
   if (!isPlatformBrowser(platformId)) {
     return;
   }
 
-  // Check if token exists and is expired
-  if (authService.hasToken() && authService.isTokenExpired()) {
+  if (authService.hasToken() && !authService.hasValidSession()) {
     authService.logout();
   }
 }
