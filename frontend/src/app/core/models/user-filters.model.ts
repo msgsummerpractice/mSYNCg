@@ -8,6 +8,6 @@ export interface UserFilterParams {
   roles: UserRole[];
   locations: UserLocation[];
   statuses: boolean[];
-  page: number;
-  size: number;
+  pageId: number;
+  pageSize: number;
 }

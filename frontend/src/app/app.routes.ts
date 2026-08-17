@@ -23,10 +23,6 @@ export const routes: Routes = [
     component: EventListContainer,
   },
   {
-    path: 'events',
-    redirectTo: 'events',
-  },
-  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',

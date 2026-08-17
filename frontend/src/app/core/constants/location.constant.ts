@@ -3,3 +3,9 @@ export enum UserLocation {
   TARGU_MURES = 'TARGU_MURES',
   TIMISOARA = 'TIMISOARA',
 }
+
+export const USER_LOCATION_TRANSLATION_KEYS: Record<UserLocation, string> = {
+  [UserLocation.TARGU_MURES]: 'USER_LIST.LOCATIONS.TARGU_MURES',
+  [UserLocation.CLUJ_NAPOCA]: 'USER_LIST.LOCATIONS.CLUJ_NAPOCA',
+  [UserLocation.TIMISOARA]: 'USER_LIST.LOCATIONS.TIMISOARA',
+};

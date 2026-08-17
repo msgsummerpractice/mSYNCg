@@ -1,8 +1,8 @@
-import { Component, computed, signal, inject, PLATFORM_ID } from '@angular/core';
+import { Component, computed, signal, inject, PLATFORM_ID, DestroyRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
 import { UserListView } from '../views/user-list.view';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
@@ -14,37 +14,11 @@ import { UserLocation } from '../../../../core/constants/location.constant';
 @Component({
   selector: 'app-user-list-container',
   imports: [UserListView],
-  template: `
-    <app-user-list-view
-      [users]="pagedUsers()"
-      [columns]="tableColumns"
-      [roles]="roles()"
-      [locations]="locations()"
-      [selectedRoles]="selectedRoles()"
-      [selectedLocations]="selectedLocations()"
-      [selectedStatuses]="selectedStatuses()"
-      [firstNameQuery]="firstNameQuery()"
-      [lastNameQuery]="lastNameQuery()"
-      [emailQuery]="emailQuery()"
-      [totalItems]="totalFilteredItems()"
-      [pageIndex]="pageIndex()"
-      [pageSize]="pageSize()"
-      [pageSizeOptions]="pageSizeOptions"
-      (firstNameSearchChange)="onFirstNameSearchChange($event)"
-      (lastNameSearchChange)="onLastNameSearchChange($event)"
-      (emailSearchChange)="onEmailSearchChange($event)"
-      (roleChange)="onRoleChange($event)"
-      (locationChange)="onLocationChange($event)"
-      (statusChange)="onStatusChange($event)"
-      (resetFilters)="onResetFilters()"
-      (pageChange)="onPageChange($event)"
-      (cellAction)="onCellChange($event)"
-    >
-    </app-user-list-view>
-  `,
+  templateUrl: 'user-list.container.html',
 })
 export class UserListContainer {
   private adminService = inject(AdminService);
+  private destroyRef = inject(DestroyRef);
 
   tableColumns: TableColumn<User>[] = [
     {
@@ -105,6 +79,7 @@ export class UserListContainer {
   pageSizeOptions: number[] = [10, 20, 50];
   pagedUsers = signal<User[]>([]);
   totalFilteredItems = signal<number>(0);
+  isLoading = signal<boolean>(false);
 
   private filterParams = computed<UserFilterParams>(() => ({
     firstName: this.firstNameQuery().trim(),
@@ -113,8 +88,17 @@ export class UserListContainer {
     roles: this.selectedRoles(),
     locations: this.selectedLocations(),
     statuses: this.selectedStatuses(),
-    page: this.pageIndex(),
-    size: this.pageSize(),
+    pageId: this.pageIndex(),
+    pageSize: this.pageSize(),
+  }));
+
+  private searchParams = computed(() => ({
+    firstName: this.firstNameQuery().trim(),
+    lastName: this.lastNameQuery().trim(),
+    email: this.emailQuery().trim(),
+    roles: this.selectedRoles(),
+    locations: this.selectedLocations(),
+    statuses: this.selectedStatuses(),
   }));
 
   constructor() {
@@ -122,10 +106,17 @@ export class UserListContainer {
       return;
     }
 
-    toObservable(this.filterParams)
+    this.isLoading.set(true);
+
+    toObservable(this.searchParams)
       .pipe(
         debounceTime(750),
-        switchMap((params) => this.adminService.getUsers(params)),
+        tap(() => this.isLoading.set(true)),
+        switchMap(() =>
+          this.adminService
+            .getUsers(this.filterParams())
+            .pipe(finalize(() => this.isLoading.set(false)))
+        ),
         takeUntilDestroyed()
       )
       .subscribe({
@@ -138,36 +129,43 @@ export class UserListContainer {
   }
 
   onFirstNameSearchChange(value: string): void {
+    this.isLoading.set(true);
     this.firstNameQuery.set(value);
     this.pageIndex.set(0);
   }
 
   onLastNameSearchChange(value: string): void {
+    this.isLoading.set(true);
     this.lastNameQuery.set(value);
     this.pageIndex.set(0);
   }
 
   onEmailSearchChange(value: string): void {
+    this.isLoading.set(true);
     this.emailQuery.set(value);
     this.pageIndex.set(0);
   }
 
   onRoleChange(value: UserRole[]): void {
+    this.isLoading.set(true);
     this.selectedRoles.set(value);
     this.pageIndex.set(0);
   }
 
   onLocationChange(value: UserLocation[]): void {
+    this.isLoading.set(true);
     this.selectedLocations.set(value);
     this.pageIndex.set(0);
   }
 
   onStatusChange(value: boolean[]): void {
+    this.isLoading.set(true);
     this.selectedStatuses.set(value);
     this.pageIndex.set(0);
   }
 
   onResetFilters(): void {
+    this.isLoading.set(true);
     this.firstNameQuery.set('');
     this.lastNameQuery.set('');
     this.emailQuery.set('');
@@ -178,9 +176,28 @@ export class UserListContainer {
   }
 
   onPageChange(event: PageEvent): void {
+    this.isLoading.set(true);
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
+    this.loadUsers();
   }
 
-  onCellChange(event: { row: User; key: string; newValue: unknown }): void {}
+  onCellChange(event: { row: User; key: string; newValue: unknown }): void {
+    //TODO: Implement cell change logic, e.g., send an update request to the server
+  }
+
+  private loadUsers(): void {
+    this.isLoading.set(true);
+    this.adminService
+      .getUsers(this.filterParams())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.pagedUsers.set(response.content);
+          this.totalFilteredItems.set(response.totalElements);
+        },
+        error: (err) => console.error('Failed to load users', err),
+      });
+  }
 }

@@ -5,14 +5,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { User } from '../../../../core/models/user.model';
 import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
-import { UserRole } from '../../../../core/constants/role.constant';
-import { UserLocation } from '../../../../core/constants/location.constant';
+import { UserRole, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
+import {
+  UserLocation,
+  USER_LOCATION_TRANSLATION_KEYS,
+} from '../../../../core/constants/location.constant';
 
 @Component({
   selector: 'app-user-list-view',
@@ -23,6 +27,7 @@ import { UserLocation } from '../../../../core/constants/location.constant';
     MatInputModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
@@ -31,19 +36,6 @@ import { UserLocation } from '../../../../core/constants/location.constant';
   templateUrl: './user-list.view.html',
 })
 export class UserListView {
-  private readonly roleLabelKeys: Record<UserRole, string> = {
-    [UserRole.ADMIN]: 'USER_LIST.ROLES.ADMIN',
-    [UserRole.HR_USER]: 'USER_LIST.ROLES.HR_USER',
-    [UserRole.PARTICIPANT]: 'USER_LIST.ROLES.PARTICIPANT',
-    [UserRole.MARKETING_ORGANIZER]: 'USER_LIST.ROLES.MARKETING_ORGANIZER',
-  };
-
-  private readonly locationLabelKeys: Record<UserLocation, string> = {
-    [UserLocation.TARGU_MURES]: 'USER_LIST.LOCATIONS.TARGU_MURES',
-    [UserLocation.CLUJ_NAPOCA]: 'USER_LIST.LOCATIONS.CLUJ_NAPOCA',
-    [UserLocation.TIMISOARA]: 'USER_LIST.LOCATIONS.TIMISOARA',
-  };
-
   @Input() users: User[] = [];
   @Input() columns: TableColumn<User>[] = [];
 
@@ -56,10 +48,11 @@ export class UserListView {
   @Input() firstNameQuery = '';
   @Input() lastNameQuery = '';
   @Input() emailQuery = '';
-  @Input() totalItems = 0;
+  @Input({ required: true }) totalItems!: number;
   @Input() pageIndex = 0;
   @Input() pageSize = 10;
   @Input() pageSizeOptions: number[] = [10, 20, 50];
+  @Input() isLoading = false;
 
   @Output() firstNameSearchChange = new EventEmitter<string>();
   @Output() lastNameSearchChange = new EventEmitter<string>();
@@ -97,10 +90,10 @@ export class UserListView {
   }
 
   getRoleLabelKey(role: UserRole): string {
-    return this.roleLabelKeys[role] ?? role;
+    return USER_ROLE_TRANSLATION_KEYS[role] ?? role;
   }
 
   getLocationLabelKey(location: UserLocation): string {
-    return this.locationLabelKeys[location] ?? location;
+    return USER_LOCATION_TRANSLATION_KEYS[location] ?? location;
   }
 }

@@ -15,7 +15,7 @@ export class AdminService {
   private readonly apiUrl = `${environment.apiUrl}/users`;
 
   getUsers(filters: UserFilterParams): Observable<Page<User>> {
-    let params = new HttpParams().set('page', filters.page).set('size', filters.size);
+    let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
     if (filters.firstName) params = params.set('firstName', filters.firstName);
     if (filters.lastName) params = params.set('lastName', filters.lastName);
     if (filters.email) params = params.set('email', filters.email);

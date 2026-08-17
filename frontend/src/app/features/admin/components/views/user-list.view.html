@@ -89,8 +89,23 @@
   </aside>
 
   <section class="min-w-0">
-    <div class="overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8">
-      <table mat-table [dataSource]="users" class="min-w-[48rem] w-full">
+    <div
+      class="relative overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8"
+      [attr.aria-busy]="isLoading"
+    >
+      @if (isLoading) {
+      <div class="absolute inset-0 z-10 flex items-center justify-center bg-brand-surface/70">
+        <mat-spinner diameter="48" aria-label="Loading users"></mat-spinner>
+      </div>
+      }
+
+      <table
+        mat-table
+        [dataSource]="users"
+        class="min-w-[48rem] w-full transition-[filter,opacity] duration-200"
+        [class.opacity-40]="isLoading"
+        [class.grayscale]="isLoading"
+      >
         @for (col of columns; track col.key) {
         <ng-container [matColumnDef]="col.key">
           <th mat-header-cell *matHeaderCellDef> {{ col.label | translate }} </th>

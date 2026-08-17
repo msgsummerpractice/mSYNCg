@@ -1,8 +1,11 @@
+import { UserRole } from '../constants/role.constant';
+import { UserLocation } from '../constants/location.constant';
+
 export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  location: 'Cluj-Napoca' | 'Targu Mures' | 'Timisoara';
-  role: 'Admin' | 'Marketing Organizer' | 'Participant' | 'HR User';
+  location: UserLocation;
+  role: UserRole;
   status: boolean;
 }

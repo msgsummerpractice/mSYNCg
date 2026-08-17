@@ -1,25 +1,48 @@
-import { CanActivateFn, RedirectCommand, Router } from '@angular/router';
-import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { UserRole } from '../constants/role.constant';
 
 export const adminGuard: CanActivateFn = () => {
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
 
-  const userRole: string = 'PARTICIPANT'; // Replace with actual logic to get the user's role
-
-  return true; // Allow access to the route for all roles for now
-
-  if (userRole === 'ADMIN') {
+  if (!isPlatformBrowser(platformId)) {
     return true;
   }
 
-  switch (userRole) {
-    case 'MARKETING_ORGANIZER':
-      return router.createUrlTree(['events']);
-    case 'PARTICIPANT':
-      return router.createUrlTree(['events']);
-    case 'HR_USER':
-      return router.createUrlTree(['events']);
-    default:
-      return router.createUrlTree(['login']);
+  const accessToken =
+    typeof localStorage === 'undefined' ? null : localStorage.getItem('accessToken');
+  const userRole = getRoleFromToken(accessToken);
+
+  if (userRole === UserRole.ADMIN) {
+    return true;
   }
+
+  return router.createUrlTree(['/events']);
 };
+
+function getRoleFromToken(accessToken: string | null): UserRole | null {
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const payload = accessToken.split('.')[1];
+    if (!payload) {
+      return null;
+    }
+
+    const base64Payload = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const paddedPayload = base64Payload.padEnd(
+      base64Payload.length + ((4 - (base64Payload.length % 4)) % 4),
+      '='
+    );
+    const decodedPayload = JSON.parse(atob(paddedPayload));
+    const role = decodedPayload.role?.replace(/^ROLE_/, '');
+
+    return Object.values(UserRole).includes(role) ? role : null;
+  } catch {
+    return null;
+  }
+}
