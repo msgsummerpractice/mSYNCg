@@ -5,10 +5,16 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
 import { MOCK_USERS } from '../../../../core/models/user.mocks';
+import { UserRole } from '../../../../core/constants/role.constant';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
+import { ToastService } from '../../../../core/services/toast.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastContainer } from '../../../../shared/components/containers/toast.container';
 
 @Component({
   selector: 'app-user-list-container',
-  imports: [UserListView],
+  imports: [UserListView, ToastContainer],
   template: `
     <app-user-list-view
       [users]="pagedUsers()"
@@ -34,10 +40,14 @@ import { MOCK_USERS } from '../../../../core/models/user.mocks';
       (cellAction)="onCellChange($event)"
     >
     </app-user-list-view>
+    <app-toast-container></app-toast-container>
   `,
 })
 export class UserListContainer implements OnInit {
-  private adminService = inject(AdminService);
+  private readonly adminService = inject(AdminService);
+  private readonly dialog = inject(MatDialog);
+  private readonly toastService = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   tableColumns: TableColumn<User>[] = [
     {
@@ -55,7 +65,12 @@ export class UserListContainer implements OnInit {
       key: 'role',
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
-      options: ['Admin', 'HR User', 'Participant', 'Marketing Organizer'],
+      options: [
+        UserRole.ADMIN,
+        UserRole.HR_USER,
+        UserRole.PARTICIPANT,
+        UserRole.MARKETING_ORGANIZER,
+      ],
     },
     {
       key: 'location',
@@ -70,13 +85,18 @@ export class UserListContainer implements OnInit {
   ];
 
   allUsers = signal<User[]>([]);
-  roles = signal<string[]>(['Admin', 'HR User', 'Participant', 'Marketing Organizer']);
+  roles = signal<UserRole[]>([
+    UserRole.ADMIN,
+    UserRole.HR_USER,
+    UserRole.PARTICIPANT,
+    UserRole.MARKETING_ORGANIZER,
+  ]);
   locations = signal<string[]>(['Targu Mures', 'Cluj-Napoca', 'Timisoara']);
 
   nameQuery = signal<string>('');
   emailQuery = signal<string>('');
 
-  selectedRoles = signal<string[]>([]);
+  selectedRoles = signal<UserRole[]>([]);
   selectedLocations = signal<string[]>([]);
   selectedStatuses = signal<boolean[]>([]);
 
@@ -88,7 +108,7 @@ export class UserListContainer implements OnInit {
     const searchName: string = this.nameQuery().toLowerCase().trim();
     const searchEmail: string = this.emailQuery().toLowerCase().trim();
 
-    const activeRoles: string[] = this.selectedRoles();
+    const activeRoles: UserRole[] = this.selectedRoles();
     const activeLocations: string[] = this.selectedLocations();
     const activeStatuses: boolean[] = this.selectedStatuses();
 
@@ -139,7 +159,7 @@ export class UserListContainer implements OnInit {
     this.pageIndex.set(0);
   }
 
-  onRoleChange(value: string[]): void {
+  onRoleChange(value: UserRole[]): void {
     this.selectedRoles.set(value);
     this.pageIndex.set(0);
   }
@@ -168,5 +188,85 @@ export class UserListContainer implements OnInit {
     this.pageSize.set(event.pageSize);
   }
 
-  onCellChange(event: { row: User; key: string; newValue: unknown }): void {}
+  updateUserRole(userId: string, newRole: UserRole): void {
+    this.allUsers.update((users) => {
+      return users.map((user) => (user.email === userId ? { ...user, role: newRole } : user));
+    });
+  }
+
+  updateUserStatus(userId: string, newStatus: boolean): void {
+    this.allUsers.update((users) => {
+      return users.map((user) => (user.email === userId ? { ...user, status: newStatus } : user));
+    });
+  }
+
+  onCellChange(event: { row: User; key: string; oldValue: unknown; newValue: unknown }): void {
+    const oldRole = event.oldValue as UserRole;
+    const oldStatus = event.oldValue as boolean;
+
+    let isRoleChange = null;
+
+    if (event.key === 'role' && oldRole === UserRole.ADMIN) {
+      const errorMsg = this.translate.instant('ROLE_UPDATE.ADMIN_CHANGE_ERROR');
+      this.toastService.showError(errorMsg);
+      this.updateUserRole(event.row.email, oldRole);
+      return;
+    } else {
+      isRoleChange =
+        event.key === 'role' && Object.values(UserRole).includes(event.newValue as UserRole);
+    }
+
+    const isStatusChange = event.key === 'status' && typeof event.newValue === 'boolean';
+
+    if (!isRoleChange && !isStatusChange) return;
+
+    this.dialog
+      .open(ConfirmationDialogView, {
+        data: { message: this.translate.instant('CONFIRMATION_DIALOG.MESSAGE') },
+        disableClose: true,
+        width: '70 px',
+        maxWidth: '100px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          if (event.key === 'role') {
+            this.updateUserRole(event.row.email, oldRole);
+          } else if (event.key === 'status') {
+            this.updateUserStatus(event.row.email, oldStatus);
+          }
+          return;
+        }
+
+        if (isRoleChange) {
+          this.adminService.updateUserRole(event.row.email, event.newValue as UserRole).subscribe({
+            next: () => {
+              this.updateUserRole(event.row.email, event.newValue as UserRole);
+              const successMsg = this.translate.instant('ROLE_UPDATE.SUCCESS');
+              this.toastService.showSuccess(successMsg, 5000);
+            },
+            error: () => {
+              this.updateUserRole(event.row.email, oldRole);
+              const errorMsg = this.translate.instant('ROLE_UPDATE.FAILURE');
+              this.toastService.showError(errorMsg);
+            },
+          });
+          return;
+        }
+
+        if (isStatusChange) {
+          this.adminService.updateUserStatus(event.row.email, event.newValue as boolean).subscribe({
+            next: () => {
+              const successMsg = this.translate.instant('STATUS_UPDATE.SUCCESS');
+              this.updateUserStatus(event.row.email, event.newValue as boolean);
+              this.toastService.showSuccess(successMsg, 5000);
+            },
+            error: () => {
+              const errorMsg = this.translate.instant('STATUS_UPDATE.FAILURE');
+              this.toastService.showError(errorMsg);
+            },
+          });
+        }
+      });
+  }
 }

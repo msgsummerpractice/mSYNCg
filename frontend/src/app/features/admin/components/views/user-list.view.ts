@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { UserRole } from '../../../../core/constants/role.constant';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,11 +28,11 @@ import { User } from '../../../../core/models/user.model';
   templateUrl: './user-list.view.html',
 })
 export class UserListView {
-  private readonly roleLabelKeys: Record<string, string> = {
-    Admin: 'USER_LIST.ROLES.ADMIN',
-    'HR User': 'USER_LIST.ROLES.HR_USER',
-    Participant: 'USER_LIST.ROLES.PARTICIPANT',
-    'Marketing Organizer': 'USER_LIST.ROLES.MARKETING_ORGANIZER',
+  private readonly roleLabelKeys: Record<UserRole, string> = {
+    [UserRole.ADMIN]: 'USER_LIST.ROLES.ADMIN',
+    [UserRole.HR_USER]: 'USER_LIST.ROLES.HR_USER',
+    [UserRole.PARTICIPANT]: 'USER_LIST.ROLES.PARTICIPANT',
+    [UserRole.MARKETING_ORGANIZER]: 'USER_LIST.ROLES.MARKETING_ORGANIZER',
   };
 
   private readonly locationLabelKeys: Record<string, string> = {
@@ -43,10 +44,10 @@ export class UserListView {
   @Input() users: User[] = [];
   @Input() columns: TableColumn<User>[] = [];
 
-  @Input() roles: string[] = [];
+  @Input() roles: UserRole[] = [];
   @Input() locations: string[] = [];
 
-  @Input() selectedRoles: string[] = [];
+  @Input() selectedRoles: UserRole[] = [];
   @Input() selectedLocations: string[] = [];
   @Input() selectedStatuses: boolean[] = [];
   @Input() nameQuery = '';
@@ -59,13 +60,13 @@ export class UserListView {
   @Output() nameSearchChange = new EventEmitter<string>();
   @Output() emailSearchChange = new EventEmitter<string>();
 
-  @Output() roleChange = new EventEmitter<string[]>();
+  @Output() roleChange = new EventEmitter<UserRole[]>();
   @Output() locationChange = new EventEmitter<string[]>();
   @Output() statusChange = new EventEmitter<boolean[]>();
   @Output() resetFilters = new EventEmitter<void>();
   @Output() pageChange = new EventEmitter<PageEvent>();
 
-  @Output() cellAction = new EventEmitter<{ row: User; key: string; newValue: unknown }>();
+  @Output() cellAction = new EventEmitter<{ row: User; key: string; oldValue: unknown; newValue: unknown }>();
 
   get resolvedTotalItems(): number {
     return this.totalItems > 0 ? this.totalItems : this.users.length;
@@ -85,7 +86,7 @@ export class UserListView {
     this.emailSearchChange.emit(value);
   }
 
-  getRoleLabelKey(role: string): string {
+  getRoleLabelKey(role: UserRole): string {
     return this.roleLabelKeys[role] ?? role;
   }
 

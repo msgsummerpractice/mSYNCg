@@ -41,7 +41,7 @@ export class GenericCellView<T> {
   @Input({ required: true }) column!: TableColumn<T>;
   @Input({ required: true }) row!: T;
 
-  @Output() valueChanged = new EventEmitter<{ row: T; key: string; newValue: unknown }>();
+  @Output() valueChanged = new EventEmitter<{ row: T; key: string; oldValue: unknown; newValue: unknown }>();
 
   get displayValue(): unknown {
     if (this.column.valueGetter) {
@@ -51,9 +51,9 @@ export class GenericCellView<T> {
   }
 
   onSelectionChange(newValue: unknown): void {
-    this.valueChanged.emit({ row: this.row, key: this.column.key, newValue });
+    this.valueChanged.emit({ row: this.row, key: this.column.key, oldValue: this.displayValue, newValue });
   }
   onSwitchChange(newValue: boolean): void {
-    this.valueChanged.emit({ row: this.row, key: this.column.key, newValue });
+    this.valueChanged.emit({ row: this.row, key: this.column.key, oldValue: this.displayValue, newValue });
   }
 }

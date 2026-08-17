@@ -2,6 +2,21 @@
   "BUTTONS": {
     "SUBMIT": "Send"
   },
+  "CONFIRMATION_DIALOG": {
+    "TITLE": "Confirmation",
+    "MESSAGE": "Are you sure you want to proceed?",
+    "CONFIRM_BUTTON": "Yes",
+    "CANCEL_BUTTON": "No"
+  },
+  "STATUS_UPDATE": {
+    "SUCCESS": "User status updated successfully",
+    "FAILURE": "Unable to update user status"
+  },
+  "ROLE_UPDATE": {
+    "SUCCESS": "User role updated successfully",
+    "FAILURE": "Unable to update user role",
+    "ADMIN_CHANGE_ERROR": "Changing the role of an Admin user is not allowed."
+  },
   "REGISTER": {
     "USER": {
       "TITLE": "Create an Account",
