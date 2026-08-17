@@ -7,6 +7,7 @@ import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,14 +34,19 @@ public class AdminController {
 
     @PatchMapping("/{id}/role")
     public ResponseEntity<UserResponse> updateUserRole(
-            @PathVariable Integer id,
-            @Valid @RequestBody UpdateUserRoleRequest request) {
+        @PathVariable Integer id,
+        @Valid @RequestBody UpdateUserRoleRequest request,
+        Authentication authentication) {
 
-        UserResponse userResponse =
-                userService.updateUserRole(id, request.getUserRole());
+    UserResponse userResponse =
+            userService.updateUserRole(
+                    id,
+                    request.getUserRole(),
+                    authentication.getName()
+            );
 
-        return ResponseEntity.ok(userResponse);
-    }
+    return ResponseEntity.ok(userResponse);
+}
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<UserResponse> updateUserStatus(

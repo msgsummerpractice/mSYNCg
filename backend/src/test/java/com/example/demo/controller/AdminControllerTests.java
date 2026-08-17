@@ -1,10 +1,10 @@
 package com.example.demo.controller;
-
-import com.example.demo.dto.request.UpdateUserRoleRequest;
-import com.example.demo.dto.request.UpdateUserStatusRequest;
+import org.springframework.security.core.Authentication;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.UserViewResponse;
+import com.example.demo.exceptions.CannotChangeOwnRoleException;
 import com.example.demo.exceptions.GlobalExceptionHandler;
+import com.example.demo.exceptions.UserNotFoundException;
 import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.model.Location;
 import com.example.demo.model.UserRole;
@@ -53,6 +53,9 @@ public class AdminControllerTests {
 
     private MockMvc mockMvc;
 
+    @Mock
+    private Authentication authentication;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(adminController)
@@ -65,7 +68,7 @@ public class AdminControllerTests {
     }
 
     @Test
-        void getUsersReturnsPageOfUsers() throws Exception {
+    void getUsersReturnsPageOfUsers() throws Exception {
             UserViewResponse user = new UserViewResponse(
                 1,
                 "Ada",
@@ -92,34 +95,45 @@ public class AdminControllerTests {
     }
 
     @Test
-        void updateUserRoleReturnsOkWithUpdatedUser() throws Exception {
-            UserResponse response = new UserResponse(
-                3,
-                "Ada",
-                "Lovelace",
-                "ada@example.com",
-                Location.CLUJ_NAPOCA.name(),
-                true,
-                null,
-                UserRole.ADMIN.name()
-        );
+    void updateUserRoleReturnsOkWithUpdatedUser() throws Exception {
+                UserResponse response = new UserResponse(
+                        3,
+                        "Ada",
+                        "Lovelace",
+                        "ada@example.com",
+                        Location.CLUJ_NAPOCA.name(),
+                        true,
+                        null,
+                        UserRole.ADMIN.name()
+                );
 
-        when(userService.updateUserRole(3, UserRole.ADMIN))
-                .thenReturn(response);
+                when(authentication.getName())
+                        .thenReturn("authenticated@example.com");
 
-        mockMvc.perform(patch("/api/admin/users/3/role")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                        "userRole": "Admin"
-                        }
-                        """))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(3))
-                .andExpect(jsonPath("$.role").value(UserRole.ADMIN.name()));
+                when(userService.updateUserRole(
+                        3,
+                        UserRole.ADMIN,
+                        "authenticated@example.com"
+                )).thenReturn(response);
 
-        verify(userService).updateUserRole(3, UserRole.ADMIN);
-    }   
+                mockMvc.perform(patch("/api/admin/users/3/role")
+                        .principal(authentication)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "userRole": "Admin"
+                                }
+                                """))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").value(3))
+                        .andExpect(jsonPath("$.role").value(UserRole.ADMIN.name()));
+
+                verify(userService).updateUserRole(
+                        3,
+                        UserRole.ADMIN,
+                        "authenticated@example.com"
+                );
+    }
 
     @Test
     void updateUserStatusReturnsOkWithUpdatedUser() throws Exception {
@@ -150,4 +164,84 @@ public class AdminControllerTests {
 
         verify(userService).updateUserStatus(3, false);
     }
+
+    @Test
+    void updateUserRoleWhenUserDoesNotExistReturnsNotFound() throws Exception {
+            when(authentication.getName())
+                    .thenReturn("authenticated@example.com");
+
+            when(userService.updateUserRole(
+                    99,
+                    UserRole.ADMIN,
+                    "authenticated@example.com"
+            )).thenThrow(new UserNotFoundException(99));
+
+            mockMvc.perform(patch("/api/admin/users/99/role")
+                    .principal(authentication)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                            {
+                            "userRole": "Admin"
+                            }
+                            """))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.error").value("Not Found"))
+                    .andExpect(jsonPath("$.message").value("User with id 99 not found"));
+
+            verify(userService).updateUserRole(
+                    99,
+                    UserRole.ADMIN,
+                    "authenticated@example.com"
+            );
+    }
+    @Test
+    void updateUserStatusWhenUserDoesNotExistReturnsNotFound() throws Exception {
+                when(userService.updateUserStatus(99, false))
+                    .thenThrow(new UserNotFoundException(99));
+
+            mockMvc.perform(patch("/api/admin/users/99/status")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                            {
+                            "status": false
+                            }
+                            """))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.error").value("Not Found"))
+                    .andExpect(jsonPath("$.message").value("User with id 99 not found"));
+
+            verify(userService).updateUserStatus(99, false);
+    }
+
+    @Test
+    void updateUserRoleWhenAdminChangesOwnRoleReturnsBadRequest() throws Exception {
+        when(authentication.getName())
+                .thenReturn("admin@example.com");
+
+        when(userService.updateUserRole(
+                3,
+                UserRole.PARTICIPANT,
+                "admin@example.com"
+        )).thenThrow(new CannotChangeOwnRoleException());
+
+        mockMvc.perform(patch("/api/admin/users/3/role")
+                .principal(authentication)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "userRole": "Participant"
+                        }
+                        """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Admin cannot change their own role."));
+
+        verify(userService).updateUserRole(
+                3,
+                UserRole.PARTICIPANT,
+                "admin@example.com"
+        );
+    }   
+
+
 }

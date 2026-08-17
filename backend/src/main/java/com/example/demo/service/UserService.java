@@ -4,6 +4,8 @@ import com.example.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import com.example.demo.exceptions.CannotChangeOwnRoleException;
+import com.example.demo.exceptions.UserNotFoundException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.filtering.users.UserSpec;
 
@@ -52,21 +54,25 @@ public class UserService implements ServiceInterface {
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
-    public UserResponse updateUserRole(Integer id, UserRole userRole) {
+    public UserResponse updateUserRole(Integer id,UserRole userRole,String authenticatedEmail) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (user.getEmail().equals(authenticatedEmail)) {
+            throw new CannotChangeOwnRoleException();
+        }
 
         user.setRole(userRole);
 
         User updatedUser = userRepository.save(user);
 
         return modelMapper.map(updatedUser, UserResponse.class);
-}
+    }
 
     public UserResponse updateUserStatus(Integer id, Boolean status) {
 
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException(id));
 
         user.setStatus(status);
 
