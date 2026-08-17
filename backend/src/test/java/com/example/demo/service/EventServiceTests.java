@@ -43,7 +43,7 @@ public class EventServiceTests {
 	private EventService eventService;
 
 	@Test
-	void getEventsWhenEventsExistReturnsMappedPage() {
+	void getEvents_WhenEventsExist_ReturnsMappedPage() {
 		Event event = new Event();
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(1);
@@ -64,7 +64,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEventsWhenNoEventsMatchReturnsEmptyPageWithoutMapping() {
+	void getEvents_WhenNoEventsMatch_ReturnsEmptyPageWithoutMapping() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -79,7 +79,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEventsPassesEventSpecAndPageableToRepository() {
+	void getEvents_WhenCalledWithSpecAndPageable_PassesThemToRepository() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(2, 5);
 
@@ -97,7 +97,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEventsWhenSpecIsNullQueriesRepositoryWithoutFilters() {
+	void getEvents_WhenSpecIsNull_QueriesRepositoryWithoutFilters() {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
@@ -110,7 +110,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEventsWhenRepositoryFailsPropagatesException() {
+	void getEvents_WhenRepositoryFails_PropagatesException() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 

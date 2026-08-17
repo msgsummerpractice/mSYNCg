@@ -56,7 +56,7 @@ public class EventControllerTests {
     }
 
     @Test
-    void getEventsWhenNoFiltersReturnsPageOfEvents() throws Exception {
+    void getEvents_WhenNoFilters_ReturnsPageOfEvents() throws Exception {
 	Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 	when(eventService.getAll(any(EventSpec.class), any(Pageable.class))).thenReturn(page);
@@ -70,7 +70,7 @@ public class EventControllerTests {
     }
 
     @Test
-    void getEventsWhenNoResultsReturnsEmptyPage() throws Exception {
+    void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
 	when(eventService.getAll(any(EventSpec.class), any(Pageable.class)))
 		.thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
@@ -81,7 +81,7 @@ public class EventControllerTests {
     }
 
     @Test
-    void getEventsWhenPaginationParamsProvidedForwardsPageableToService() throws Exception {
+    void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
 	when(eventService.getAll(any(EventSpec.class), any(Pageable.class)))
 		.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
 
@@ -98,7 +98,7 @@ public class EventControllerTests {
     }
 
     @Test
-    void getEventsWhenFiltersProvidedResolvesEventSpec() throws Exception {
+    void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
 	Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 	when(eventService.getAll(any(EventSpec.class), any(Pageable.class))).thenReturn(page);
@@ -116,7 +116,7 @@ public class EventControllerTests {
     }
 
     @Test
-    void getEventsWhenServiceThrowsUnexpectedExceptionReturnsInternalServerError() throws Exception {
+    void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
 	when(eventService.getAll(any(EventSpec.class), any(Pageable.class)))
 		.thenThrow(new RuntimeException("Database unavailable"));
 
