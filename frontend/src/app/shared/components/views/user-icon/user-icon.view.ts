@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-user-icon-view',
   imports: [NgStyle, MatIconModule, CommonModule],
   template: `
-    <div class="ml-1 flex min-w-0 items-center justify-center gap-1 sm:ml-6 sm:gap-2">
+    <div class="flex min-w-0 items-center justify-center gap-1 sm:gap-2">
       <span
         class="max-w-24 truncate text-xs font-base text-brand-on-primary sm:mr-0.5 sm:max-w-40 sm:text-sm"
       >
