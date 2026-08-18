@@ -76,13 +76,6 @@
       }
     },
     "EVENT": {
-      "CARD": {
-        "START_DATE": "Startdatum",
-        "END_DATE": "Enddatum",
-        "REGISTRATION_START": "Anmeldung ab",
-        "REGISTRATION_END": "Anmeldeschluss",
-        "FOOD_PROVIDED": "Verpflegung inklusive"
-      },
       "TITLE": "Veranstaltungsentwurf erstellen",
       "EVENT_TITLE": {
         "LABEL": "Titel",
@@ -151,6 +144,15 @@
           "SAVE": "Der Veranstaltungsentwurf konnte nicht gespeichert werden."
         }
       }
+    }
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Start date",
+      "END_DATE": "End date",
+      "REGISTRATION_START": "Registration opens",
+      "REGISTRATION_END": "Registration closes",
+      "FOOD_PROVIDED": "Food provided"
     }
   }
 }

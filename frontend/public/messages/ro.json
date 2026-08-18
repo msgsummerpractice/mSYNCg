@@ -76,13 +76,6 @@
       }
     },
     "EVENT": {
-      "CARD": {
-        "START_DATE": "Data de început",
-        "END_DATE": "Data de sfârșit",
-        "REGISTRATION_START": "Începerea înscrierilor",
-        "REGISTRATION_END": "Închiderea înscrierilor",
-        "FOOD_PROVIDED": "Masă inclusă"
-      },
       "TITLE": "Creează ciornă eveniment",
       "EVENT_TITLE": {
         "LABEL": "Titlu",
@@ -151,6 +144,15 @@
           "SAVE": "Nu s-a putut salva ciorna evenimentului."
         }
       }
+    }
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Data de început",
+      "END_DATE": "Data de sfârșit",
+      "REGISTRATION_START": "Începerea înscrierilor",
+      "REGISTRATION_END": "Închiderea înscrierilor",
+      "FOOD_PROVIDED": "Masă inclusă"
     }
   }
 }
