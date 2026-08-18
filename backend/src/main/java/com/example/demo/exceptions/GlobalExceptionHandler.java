@@ -78,6 +78,23 @@ public class GlobalExceptionHandler {
 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(CannotChangeOwnRoleException.class)
+    public ResponseEntity<ErrorResponse> handleCannotChangeOwnRoleException(
+	    CannotChangeOwnRoleException exception,
+	    HttpServletRequest request
+    ) {
+	ErrorResponse response = new ErrorResponse(
+		Instant.now(),
+		HttpStatus.BAD_REQUEST.value(),
+		"Bad Request",
+		exception.getMessage(),
+		request.getRequestURI(),
+		List.of()
+	);
+
+	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
 	    Exception exception,
