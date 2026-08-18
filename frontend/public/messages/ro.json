@@ -76,5 +76,15 @@
       }
     },
     "EVENT": {}
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Data de început",
+      "END_DATE": "Data de sfârșit",
+      "REGISTRATION_START": "Începerea înscrierilor",
+      "REGISTRATION_END": "Închiderea înscrierilor",
+      "FOOD_PROVIDED": "Masă inclusă",
+      "FOOD_NOT_PROVIDED": "Fără masă"
+    }
   }
 }

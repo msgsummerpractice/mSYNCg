@@ -76,5 +76,15 @@
       }
     },
     "EVENT": {}
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Startdatum",
+      "END_DATE": "Enddatum",
+      "REGISTRATION_START": "Anmeldung ab",
+      "REGISTRATION_END": "Anmeldeschluss",
+      "FOOD_PROVIDED": "Verpflegung inklusive",
+      "FOOD_NOT_PROVIDED": "Keine Verpflegung"
+    }
   }
 }

@@ -76,5 +76,15 @@
       }
     },
     "EVENT": {}
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Start date",
+      "END_DATE": "End date",
+      "REGISTRATION_START": "Registration opens",
+      "REGISTRATION_END": "Registration closes",
+      "FOOD_PROVIDED": "Food provided",
+      "FOOD_NOT_PROVIDED": "No food provided"
+    }
   }
 }

@@ -5,6 +5,7 @@ import { EventListContainer } from './features/event/components/containers/event
 import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
+import { EventCardContainer } from './features/event/components/containers/event-card.container';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'register',
     component: UserRegisterPage,
+  },
+  {
+    path: 'eventcard',
+    component: EventCardContainer,
   },
 
   // Application layout
