@@ -75,6 +75,75 @@
         }
       }
     },
-    "EVENT": {}
+    "EVENT": {
+      "TITLE": "Veranstaltungsentwurf erstellen",
+      "EVENT_TITLE": {
+        "LABEL": "Titel",
+        "REQUIRED": "Titel ist erforderlich"
+      },
+      "DESCRIPTION": {
+        "LABEL": "Beschreibung",
+        "REQUIRED": "Beschreibung ist erforderlich"
+      },
+      "START_DATE": {
+        "LABEL": "Startdatum",
+        "REQUIRED": "Startdatum ist erforderlich"
+      },
+      "START_TIME": {
+        "LABEL": "Startzeit",
+        "REQUIRED": "Startzeit ist erforderlich"
+      },
+      "END_DATE": {
+        "LABEL": "Enddatum",
+        "REQUIRED": "Enddatum ist erforderlich",
+        "INVALID_RANGE": "Das Enddatum muss nach dem Startdatum liegen"
+      },
+      "END_TIME": {
+        "LABEL": "Endzeit",
+        "REQUIRED": "Endzeit ist erforderlich"
+      },
+      "REGISTRATION_START_DATE": {
+        "LABEL": "Reg.-Start",
+        "REQUIRED": "Startdatum der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_START_TIME": {
+        "LABEL": "Startzeit",
+        "REQUIRED": "Startzeit der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_END_DATE": {
+        "LABEL": "Reg.-Ende",
+        "REQUIRED": "Enddatum der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_END_TIME": {
+        "LABEL": "Endzeit",
+        "REQUIRED": "Endzeit der Registrierung ist erforderlich"
+      },
+      "TYPE": {
+        "LABEL": "Typ",
+        "REQUIRED": "Bitte wählen Sie einen Veranstaltungstyp aus"
+      },
+      "LOCATION": {
+        "LABEL": "Ort",
+        "REQUIRED": "Bitte wählen Sie einen Ort aus"
+      },
+      "FOOD_PROVIDED": {
+        "LABEL": "Verpflegung inklusive",
+        "YES": "Ja",
+        "NO": "Nein",
+        "REQUIRED": "Bitte geben Sie an, ob Verpflegung bereitgestellt wird"
+      },
+      "POSTER": {
+        "UPLOAD": "Poster hochladen",
+        "INVALID": "Das Poster muss ein JPEG- oder PNG-Bild sein und darf nicht größer als 5 MB sein"
+      },
+      "MESSAGES": {
+        "SUCCESS": {
+          "SAVE": "Veranstaltungsentwurf erfolgreich gespeichert."
+        },
+        "ERROR": {
+          "SAVE": "Der Veranstaltungsentwurf konnte nicht gespeichert werden."
+        }
+      }
+    }
   }
 }
