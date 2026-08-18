@@ -76,5 +76,30 @@
       }
     },
     "EVENT": {}
+  },
+  "EVENT_LIST": {
+    "FILTER_TITLE": "Veranstaltungen filtern",
+    "FIELDS": {
+      "NAME": "Veranstaltungsname",
+      "NAME_PLACEHOLDER": "Nach Veranstaltungsname suchen",
+      "TYPE": "Veranstaltungstyp",
+      "STATUS": "Status",
+      "LOCATION": "Standort",
+      "START_TIME": "Startzeit",
+      "START_TIME_PLACEHOLDER": "Datum und Uhrzeit auswählen"
+    },
+    "TABLE": {
+      "NAME": "Name",
+      "DATE": "Datum",
+      "STATUS": "Status",
+      "TYPE": "Typ",
+      "LOCATION": "Standort",
+      "ACTIONS": "Aktionen"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Filter zurücksetzen",
+      "VIEW": "Anzeigen"
+    },
+    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
   }
 }

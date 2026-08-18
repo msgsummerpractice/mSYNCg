@@ -1,0 +1,59 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TableColumn } from '../../../core/models/table.column.model';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
+@Component({
+  selector: 'generic-cell-view',
+  standalone: true,
+  imports: [CommonModule, MatSelectModule, MatFormFieldModule, MatSlideToggleModule],
+  template: `
+    @switch (column.type) {
+      @case ('dropdown') {
+        <mat-form-field
+          appearance="outline"
+          subscriptSizing="dynamic"
+          class="w-full min-w-[120px] ![--mdc-outlined-text-field-outline-color:transparent] ![--mdc-outlined-text-field-hover-outline-color:transparent] ![--mdc-outlined-text-field-focus-outline-color:transparent] ![--mat-sys-outline:transparent] ![--mat-sys-outline-variant:transparent] [&_.mdc-notched-outline__leading]:!border-transparent [&_.mdc-notched-outline__notch]:!border-transparent [&_.mdc-notched-outline__trailing]:!border-transparent"
+        >
+          <mat-select [value]="displayValue" (selectionChange)="onSelectionChange($event.value)">
+            @for (option of column.options; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      @case ('switch') {
+        <mat-slide-toggle [checked]="!!displayValue" (change)="onSwitchChange($event.checked)">
+        </mat-slide-toggle>
+      }
+
+      @default {
+        <span>{{ displayValue }}</span>
+      }
+    }
+  `,
+  styles: [],
+})
+export class GenericCellView<T> {
+  @Input({ required: true }) column!: TableColumn<T>;
+  @Input({ required: true }) row!: T;
+
+  @Output() valueChanged = new EventEmitter<{ row: T; key: string; newValue: unknown }>();
+
+  get displayValue(): unknown {
+    if (this.column.valueGetter) {
+      return this.column.valueGetter(this.row);
+    }
+    return (this.row as Record<string, unknown>)[this.column.key];
+  }
+
+  onSelectionChange(newValue: unknown): void {
+    this.valueChanged.emit({ row: this.row, key: this.column.key, newValue });
+  }
+  onSwitchChange(newValue: boolean): void {
+    this.valueChanged.emit({ row: this.row, key: this.column.key, newValue });
+  }
+}

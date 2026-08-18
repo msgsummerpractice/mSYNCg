@@ -1,0 +1,144 @@
+<div class="grid grid-cols-1 items-start gap-4 p-4 lg:grid-cols-[20rem_minmax(0,1fr)]">
+  <aside
+    class="self-start rounded-xl bg-[var(--color-on-primary)] p-4 text-[var(--color-primary)] shadow-lg [--mat-sys-on-surface:var(--color-primary)] [--mat-sys-on-surface-variant:var(--color-primary)] [--mat-sys-primary:var(--color-primary)] [--mdc-outlined-text-field-outline-color:var(--color-primary)] [--mdc-outlined-text-field-hover-outline-color:var(--color-primary)] [--mdc-outlined-text-field-focus-outline-color:var(--color-primary)] [--mdc-outlined-text-field-caret-color:var(--color-primary)] [--mdc-outlined-text-field-input-text-color:var(--color-primary)] [--mdc-outlined-text-field-label-text-color:var(--color-primary)] [--mdc-outlined-text-field-focus-label-text-color:var(--color-primary)] [--mat-select-enabled-trigger-text-color:var(--color-primary)] [--mat-select-enabled-arrow-color:var(--color-primary)] [&_.mat-mdc-input-element]:!text-[var(--color-primary)] [&_.mdc-floating-label]:!text-[var(--color-primary)] [&_.mat-mdc-select-value-text]:!text-[var(--color-primary)] [&_.mat-mdc-select-arrow]:!text-[var(--color-primary)] [&_input:focus]:!outline-none"
+  >
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-lg font-semibold"> {{ 'EVENT_LIST.FILTER_TITLE' | translate }} </h2>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label> {{ 'EVENT_LIST.FIELDS.NAME' | translate }} </mat-label>
+
+        <input
+          matInput
+          [value]="nameQuery"
+          (input)="nameSearchChange.emit($any($event.target).value)"
+          [placeholder]="'EVENT_LIST.FIELDS.NAME_PLACEHOLDER' | translate"
+        />
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label> {{ 'EVENT_LIST.FIELDS.TYPE' | translate }} </mat-label>
+
+        <mat-select
+          multiple
+          [value]="selectedTypes"
+          (selectionChange)="typeChange.emit($event.value)"
+        >
+          @for (type of types; track type) {
+          <mat-option [value]="type"> {{ type }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label> {{ 'EVENT_LIST.FIELDS.STATUS' | translate }} </mat-label>
+
+        <mat-select
+          multiple
+          [value]="selectedStatuses"
+          (selectionChange)="statusChange.emit($event.value)"
+        >
+          @for (status of statuses; track status) {
+          <mat-option [value]="status"> {{ status }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label> {{ 'EVENT_LIST.FIELDS.LOCATION' | translate }} </mat-label>
+
+        <mat-select
+          multiple
+          [value]="selectedLocations"
+          (selectionChange)="locationChange.emit($event.value)"
+        >
+          @for (location of locations; track location) {
+          <mat-option [value]="location"> {{ location }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label> {{ 'EVENT_LIST.FIELDS.START_TIME' | translate }} </mat-label>
+
+        <input
+          matInput
+          type="datetime-local"
+          [value]="startTimeQuery"
+          (input)="startTimeChange.emit($any($event.target).value)"
+        />
+      </mat-form-field>
+
+      <div class="mt-4 flex justify-end">
+        <app-button-container
+          [label]="'EVENT_LIST.BUTTONS.RESET_FILTERS' | translate"
+          (clickEvent)="resetFilters.emit()"
+        ></app-button-container>
+      </div>
+    </div>
+  </aside>
+
+  <section class="min-w-0">
+    <div
+      class="relative overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8"
+      [attr.aria-busy]="isLoading"
+    >
+      @if (isLoading) {
+      <div class="absolute inset-0 z-10 flex items-center justify-center bg-brand-surface/70">
+        <mat-spinner diameter="48" aria-label="Loading events"></mat-spinner>
+      </div>
+      }
+
+      <table
+        mat-table
+        [dataSource]="events"
+        class="min-w-[48rem] w-full transition-[filter,opacity] duration-200"
+        [class.opacity-40]="isLoading"
+        [class.grayscale]="isLoading"
+      >
+        @for (col of columns; track col.key) {
+
+        <ng-container [matColumnDef]="col.key">
+          <th mat-header-cell *matHeaderCellDef> {{ col.label | translate }} </th>
+
+          <td mat-cell *matCellDef="let row">
+            <generic-cell-view [column]="col" [row]="row"> </generic-cell-view>
+          </td>
+        </ng-container>
+
+        }
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> {{ 'EVENT_LIST.TABLE.ACTIONS' | translate }} </th>
+
+          <td mat-cell *matCellDef="let event">
+            <app-button-container
+              variant="primary"
+              [label]="'EVENT_LIST.BUTTONS.VIEW' | translate"
+              (clickEvent)="viewEvent.emit(event.id)"
+            ></app-button-container>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumnKeys;"></tr>
+      </table>
+    </div>
+
+    <div class="mt-2 flex justify-center">
+      <mat-paginator
+        class="!w-auto rounded-xl bg-brand-surface"
+        [length]="resolvedTotalItems"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
+        (page)="pageChange.emit($event)"
+      >
+      </mat-paginator>
+    </div>
+  </section>
+</div>

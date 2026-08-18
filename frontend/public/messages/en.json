@@ -76,5 +76,30 @@
       }
     },
     "EVENT": {}
+  },
+  "EVENT_LIST": {
+    "FILTER_TITLE": "Filter events",
+    "FIELDS": {
+      "NAME": "Event name",
+      "NAME_PLACEHOLDER": "Search by event name",
+      "TYPE": "Event type",
+      "STATUS": "Status",
+      "LOCATION": "Location",
+      "START_TIME": "Start time",
+      "START_TIME_PLACEHOLDER": "Select date and time"
+    },
+    "TABLE": {
+      "NAME": "Name",
+      "DATE": "Date",
+      "STATUS": "Status",
+      "TYPE": "Type",
+      "LOCATION": "Location",
+      "ACTIONS": "Actions"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Reset filters",
+      "VIEW": "View"
+    },
+    "LOAD_ERROR": "Failed to load events."
   }
 }
