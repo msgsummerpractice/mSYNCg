@@ -20,7 +20,7 @@ Bring your laptop, your questions and your ideas — everything else is taken ca
   endDate: new Date('2026-09-12T18:30:00'),
   registrationStart: new Date('2026-08-01T00:00:00'),
   registrationEnd: new Date('2026-09-05T23:59:00'),
-  foodProvided: true,
+  foodProvided: false,
 };
 
 export const MOCK_EVENTS: AppEvent[] = [

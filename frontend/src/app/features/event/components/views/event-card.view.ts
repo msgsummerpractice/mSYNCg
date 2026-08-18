@@ -44,9 +44,9 @@ import { Event as AppEvent } from '../../../../core/models/event.model';
             />
           </div>
 
-          <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
+          <div class="min-h-0 min-w-0 flex-1 overflow-y-auto pt-4">
             <mat-card-header class="!block !p-6 !pb-2">
-              <mat-card-title class="font-ui text-2xl font-semibold text-brand-on-surface">
+              <mat-card-title class="font-ui text-2xl  font-semibold text-brand-on-surface">
                 {{ ev.name }}
               </mat-card-title>
               <mat-card-subtitle class="mt-1 !flex items-center gap-2 text-brand-on-muted">
@@ -77,14 +77,6 @@ import { Event as AppEvent } from '../../../../core/models/event.model';
                   </mat-chip>
                 </mat-chip-set>
               </div>
-
-              <p
-                class="font-base text-base leading-relaxed whitespace-pre-line text-brand-on-surface"
-              >
-                {{ ev.description }}
-              </p>
-
-              <mat-divider class="!my-5"></mat-divider>
 
               <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
@@ -120,6 +112,13 @@ import { Event as AppEvent } from '../../../../core/models/event.model';
                   </dd>
                 </div>
               </dl>
+
+              <mat-divider class="!my-5"></mat-divider>
+              <p
+                class="font-base text-base leading-relaxed whitespace-pre-line text-brand-on-surface"
+              >
+                {{ ev.description }}
+              </p>
             </mat-card-content>
           </div>
         </mat-card>
