@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.GlobalExceptionHandler;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
@@ -27,8 +29,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,7 +58,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenNoFilters_ReturnsPageOfEvents() throws Exception {
+	void getEvents_whenNoFilters_returnsPageOfEvents() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -75,7 +77,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
+	void getEvents_whenNoResults_returnsEmptyPage() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -126,7 +128,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+	void getEvents_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -143,5 +145,72 @@ public class EventControllerTests {
 	private EventViewResponse buildViewResponse() {
 		return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
 				EventType.EXTERNAL, Location.CLUJ_NAPOCA);
+	}
+
+	@Test
+	void getEventDetails_whenEventExists_returnsEventDetails() throws Exception {
+		EventDetailsResponse details = buildDetailsResponse();
+		details.setImage("AQIDBA==");
+
+		when(eventService.getById(1)).thenReturn(details);
+
+		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Team event"))
+				.andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()))
+				.andExpect(jsonPath("$.type").value(EventType.EXTERNAL.name()))
+				.andExpect(jsonPath("$.location").value("Cluj-Napoca"))
+				.andExpect(jsonPath("$.image").value("AQIDBA=="));
+
+		verify(eventService).getById(1);
+	}
+
+	@Test
+	void getEventDetails_whenEventHasNoImage_returnsNullImage() throws Exception {
+		when(eventService.getById(1)).thenReturn(buildDetailsResponse());
+
+		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.image").doesNotExist());
+	}
+
+	@Test
+	void getEventDetails_whenEventDoesNotExist_returnsNotFound() throws Exception {
+		when(eventService.getById(99)).thenThrow(new NotFoundException("Event with id 99 was not found."));
+
+		mockMvc.perform(get("/api/events/99"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("Event with id 99 was not found."));
+	}
+
+	@Test
+	void getEventDetails_whenIdIsNotANumber_returnsInternalServerError() throws Exception {
+		mockMvc.perform(get("/api/events/abc"))
+				.andExpect(status().isInternalServerError());
+
+		verifyNoInteractions(eventService);
+	}
+
+	@Test
+	void getEventDetails_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+		when(eventService.getById(1)).thenThrow(new RuntimeException("Database unavailable"));
+
+		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+	}
+
+	private EventDetailsResponse buildDetailsResponse() {
+		EventDetailsResponse details = new EventDetailsResponse();
+		details.setId(1);
+		details.setName("Team event");
+		details.setStatus(EventStatus.PUBLISHED);
+		details.setType(EventType.EXTERNAL);
+		details.setLocation(Location.CLUJ_NAPOCA);
+		details.setFoodProvided(true);
+		details.setDescription("Yearly team gathering");
+		return details;
 	}
 }
