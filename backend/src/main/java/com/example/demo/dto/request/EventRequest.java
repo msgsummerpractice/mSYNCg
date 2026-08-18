@@ -25,6 +25,7 @@ public class EventRequest {
     @NotNull(message = "Event type is required")
     private EventType eventType;
 
+    @NotNull(message = "Event location is required")
     private Location eventLocation;
 
     @NotNull(message = "Event start time is required")
@@ -45,6 +46,7 @@ public class EventRequest {
     private LocalDateTime registrationEndTime;
 
     @MaxFileSize(value = 5000000, message = "Poster file size exceeds the maximum limit of 5MB.")
-    @ImageType(allowedTypes = { "image/jpeg", "image/png" }, message = "Invalid poster image type. Allowed types are JPEG and PNG.")
+    @ImageType(allowedTypes = { "image/jpeg",
+            "image/png" }, message = "Invalid poster image type. Allowed types are JPEG and PNG.")
     private byte[] poster;
 }

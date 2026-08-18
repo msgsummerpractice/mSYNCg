@@ -64,7 +64,7 @@ public class EventServiceTests {
     }
 
     @Test
-    void createEventWhenTypeIsLocalSetsLocationAndFoodProvided() {
+    void createEvent_WhenTypeIsLocal_SetsLocationAndFoodProvided() {
         EventRequest request = buildValidRequest(EventType.LOCAL);
         EventResponse mappedResponse = new EventResponse(1L, "DRAFT");
         User creator = new User();
@@ -91,7 +91,7 @@ public class EventServiceTests {
     }
 
     @Test
-    void createEventWhenTypeIsInternalForcesLocationAllAndKeepsFoodProvided() {
+    void createEvent_WhenTypeIsInternal_ForcesLocationAllAndKeepsFoodProvided() {
         EventRequest request = buildValidRequest(EventType.INTERNAL);
         request.setEventLocation(Location.TIMISOARA);
         request.setFoodProvided(false);
@@ -114,7 +114,7 @@ public class EventServiceTests {
     }
 
     @Test
-    void createEventWhenTypeIsExternalSetsLocationAndLeavesFoodProvidedNull() {
+    void createEvent_WhenTypeIsExternal_SetsLocationAndLeavesFoodProvidedNull() {
         EventRequest request = buildValidRequest(EventType.EXTERNAL);
         EventResponse mappedResponse = new EventResponse(3L, "DRAFT");
 
@@ -135,7 +135,7 @@ public class EventServiceTests {
     }
 
     @Test
-    void createEventWhenUserIsMissingSavesEventWithNullCreator() {
+    void createEvent_WhenUserIsMissing_SavesEventWithNullCreator() {
         EventRequest request = buildValidRequest(EventType.LOCAL);
         EventResponse mappedResponse = new EventResponse(4L, "DRAFT");
 
@@ -153,7 +153,7 @@ public class EventServiceTests {
     }
 
     @Test
-    void createEventWhenRepositorySaveFailsPropagatesException() {
+    void createEvent_WhenRepositorySaveFails_PropagatesException() {
         EventRequest request = buildValidRequest(EventType.LOCAL);
 
         SecurityContextHolder.getContext()

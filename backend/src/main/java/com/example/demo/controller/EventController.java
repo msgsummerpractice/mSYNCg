@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.example.demo.filtering.events.EventSpec;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +29,11 @@ public class EventController {
 
     private final EventService eventService;
 
+    @PreAuthorize("hasRole('HR_MANAGER') or hasRole('MARKETING_ORGANIZER') or hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest) {
         EventResponse eventResponse = eventService.create(eventRequest);
+        eventResponse.setStatus("Draft");
         return ResponseEntity.ok(eventResponse);
     }
 
