@@ -1,4 +1,4 @@
-import { Event as AppEvent, EventStatus, EventType } from '../models/event.model';
+import { Event as AppEvent, EventStatusEnum, EventTypeEnum } from '../models/event.model';
 import { LocationEnum } from '../models/location.model';
 
 const POSTER_PLACEHOLDER =
@@ -12,8 +12,8 @@ export const MOCK_EVENT: AppEvent = {
 The morning is dedicated to product and engineering deep dives, while the afternoon focuses on hands-on workshops where you can build alongside our teams. We close the day with an informal get-together on the terrace.
 
 Bring your laptop, your questions and your ideas — everything else is taken care of.`,
-  type: EventType.INTERNAL,
-  status: EventStatus.PUBLISHED,
+  type: EventTypeEnum.INTERNAL,
+  status: EventStatusEnum.PUBLISHED,
   imageBase64: POSTER_PLACEHOLDER,
   location: LocationEnum.CLUJ_NAPOCA,
   startDate: new Date('2026-09-12T09:00:00'),
@@ -31,8 +31,8 @@ export const MOCK_EVENTS: AppEvent[] = [
     name: 'Open Source Meetup',
     description:
       'An evening meetup for everyone interested in open source. Short lightning talks, plenty of discussion and a relaxed atmosphere.',
-    type: EventType.EXTERNAL,
-    status: EventStatus.DRAFT,
+    type: EventTypeEnum.EXTERNAL,
+    status: EventStatusEnum.DRAFT,
     location: LocationEnum.TIMISOARA,
     startDate: new Date('2026-10-03T18:00:00'),
     endDate: new Date('2026-10-03T21:00:00'),
