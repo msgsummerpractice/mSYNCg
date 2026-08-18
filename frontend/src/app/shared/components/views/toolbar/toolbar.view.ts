@@ -31,7 +31,6 @@ interface NavItems {
     </button>
     <span class="flex-1"></span>
     <div class="flex items-center gap-2">
-      <ng-content select="app-language-switcher"></ng-content>
       <ng-container *ngIf="showNavigation">
         <app-button-container
           *ngFor="let item of navItems"
@@ -39,19 +38,31 @@ interface NavItems {
           (clickEvent)="navigate.emit(item.route)"
         ></app-button-container>
       </ng-container>
+      <ng-content select="app-language-switcher"></ng-content>
       <app-user-icon-container
         *ngIf="showUserIcon"
         [userImage]="iconUrl"
         [userName]="userName"
       ></app-user-icon-container>
+      <button
+        *ngIf="showLogoutButton"
+        mat-button
+        class="text-brand-on-primary"
+        (click)="logout.emit()"
+      >
+        Logout
+      </button>
     </div>
   </mat-toolbar>`,
 })
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
-  @Input() userName: string = '';
+  @Output() logout = new EventEmitter<void>();
+  @Input()
+  userName: string = '';
   @Input() showNavigation: boolean = true;
   @Input() showUserIcon: boolean = true;
+  @Input() showLogoutButton: boolean = false;
   readonly iconUrl: string = '/assets/icons/user-icon.png';
   readonly logoUrl: string = '/assets/icons/msg_logo_color.svg';
 

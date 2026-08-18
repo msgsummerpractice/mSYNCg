@@ -6,6 +6,7 @@ import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
 import { EventCardContainer } from './features/event/components/containers/event-card.container';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutPage,
+    canActivate: [authGuard],
     children: [
       {
         path: 'events',
@@ -54,6 +56,14 @@ export const routes: Routes = [
         ],
       },
     ],
+  },
+
+  {
+    path: 'events/create',
+    loadComponent: () =>
+      import('./features/event/pages/event-creation.page').then(
+        ({ EventCreationPage }) => EventCreationPage
+      ),
   },
 
   // Fallback

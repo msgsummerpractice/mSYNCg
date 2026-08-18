@@ -20,8 +20,8 @@
     "NO_ACCOUNT": "Noch kein Konto?",
     "REGISTER_NOW": "Jetzt registrieren!",
     "FORGOT_PASSWORD": "Passwort vergessen?",
-    "TAGLINE": "Planen. Organisieren. Synchron bleiben.",
-    "DESCRIPTION": "Organisieren Sie Veranstaltungen, verwalten Sie Teilnehmer und behalten Sie alles an einem Ort im Blick.",
+    "TAGLINE": "Bei .msg bleiben wir in SYNC.",
+    "DESCRIPTION": "Bleib bei deinen Events auf dem Laufenden, bleib verbunden und genieße jeden Moment.",
     "SIGN_IN_TITLE": "Melden Sie sich bei Ihrem Konto an",
     "SIGN_IN_SUBTITLE": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren.",
     "LOGIN_SUCCESS": "Anmeldung erfolgreich!",
@@ -75,16 +75,82 @@
         }
       }
     },
-    "EVENT": {}
-  },
-  "EVENT": {
-    "CARD": {
-      "START_DATE": "Startdatum",
-      "END_DATE": "Enddatum",
-      "REGISTRATION_START": "Anmeldung ab",
-      "REGISTRATION_END": "Anmeldeschluss",
-      "FOOD_PROVIDED": "Verpflegung inklusive",
-      "FOOD_NOT_PROVIDED": "Keine Verpflegung"
+    "EVENT": {
+      "CARD": {
+        "START_DATE": "Startdatum",
+        "END_DATE": "Enddatum",
+        "REGISTRATION_START": "Anmeldung ab",
+        "REGISTRATION_END": "Anmeldeschluss",
+        "FOOD_PROVIDED": "Verpflegung inklusive"
+      },
+      "TITLE": "Veranstaltungsentwurf erstellen",
+      "EVENT_TITLE": {
+        "LABEL": "Titel",
+        "REQUIRED": "Titel ist erforderlich"
+      },
+      "DESCRIPTION": {
+        "LABEL": "Beschreibung",
+        "REQUIRED": "Beschreibung ist erforderlich"
+      },
+      "START_DATE": {
+        "LABEL": "Startdatum",
+        "REQUIRED": "Startdatum ist erforderlich"
+      },
+      "START_TIME": {
+        "LABEL": "Startzeit",
+        "REQUIRED": "Startzeit ist erforderlich"
+      },
+      "END_DATE": {
+        "LABEL": "Enddatum",
+        "REQUIRED": "Enddatum ist erforderlich",
+        "INVALID_RANGE": "Das Enddatum muss nach dem Startdatum liegen"
+      },
+      "END_TIME": {
+        "LABEL": "Endzeit",
+        "REQUIRED": "Endzeit ist erforderlich"
+      },
+      "REGISTRATION_START_DATE": {
+        "LABEL": "Reg.-Start",
+        "REQUIRED": "Startdatum der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_START_TIME": {
+        "LABEL": "Startzeit",
+        "REQUIRED": "Startzeit der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_END_DATE": {
+        "LABEL": "Reg.-Ende",
+        "REQUIRED": "Enddatum der Registrierung ist erforderlich"
+      },
+      "REGISTRATION_END_TIME": {
+        "LABEL": "Endzeit",
+        "REQUIRED": "Endzeit der Registrierung ist erforderlich"
+      },
+      "TYPE": {
+        "LABEL": "Typ",
+        "REQUIRED": "Bitte wählen Sie einen Veranstaltungstyp aus"
+      },
+      "LOCATION": {
+        "LABEL": "Ort",
+        "REQUIRED": "Bitte wählen Sie einen Ort aus"
+      },
+      "FOOD_PROVIDED": {
+        "LABEL": "Verpflegung inklusive",
+        "YES": "Ja",
+        "NO": "Nein",
+        "REQUIRED": "Bitte geben Sie an, ob Verpflegung bereitgestellt wird"
+      },
+      "POSTER": {
+        "UPLOAD": "Poster hochladen",
+        "INVALID": "Das Poster muss ein JPEG- oder PNG-Bild sein und darf nicht größer als 5 MB sein"
+      },
+      "MESSAGES": {
+        "SUCCESS": {
+          "SAVE": "Veranstaltungsentwurf erfolgreich gespeichert."
+        },
+        "ERROR": {
+          "SAVE": "Der Veranstaltungsentwurf konnte nicht gespeichert werden."
+        }
+      }
     }
   }
 }

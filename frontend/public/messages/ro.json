@@ -20,8 +20,8 @@
     "NO_ACCOUNT": "Nu ai încă un cont?",
     "REGISTER_NOW": "Înregistrează-te acum!",
     "FORGOT_PASSWORD": "Ai uitat parola?",
-    "TAGLINE": "Planifică. Organizează. Rămâi sincronizat.",
-    "DESCRIPTION": "Organizează evenimente, gestionează participanții și păstrează totul sincronizat — într-un singur loc.",
+    "TAGLINE": "La .msg, rămânem în SYNC.",
+    "DESCRIPTION": "Fii la curent cu evenimentele tale, rămâi conectat și bucură-te de fiecare moment.",
     "SIGN_IN_TITLE": "Autentifică-te în contul tău",
     "SIGN_IN_SUBTITLE": "Introdu datele de autentificare pentru a continua.",
     "LOGIN_SUCCESS": "Autentificare reușită!",
@@ -75,16 +75,82 @@
         }
       }
     },
-    "EVENT": {}
-  },
-  "EVENT": {
-    "CARD": {
-      "START_DATE": "Data de început",
-      "END_DATE": "Data de sfârșit",
-      "REGISTRATION_START": "Începerea înscrierilor",
-      "REGISTRATION_END": "Închiderea înscrierilor",
-      "FOOD_PROVIDED": "Masă inclusă",
-      "FOOD_NOT_PROVIDED": "Fără masă"
+    "EVENT": {
+      "CARD": {
+        "START_DATE": "Data de început",
+        "END_DATE": "Data de sfârșit",
+        "REGISTRATION_START": "Începerea înscrierilor",
+        "REGISTRATION_END": "Închiderea înscrierilor",
+        "FOOD_PROVIDED": "Masă inclusă"
+      },
+      "TITLE": "Creează ciornă eveniment",
+      "EVENT_TITLE": {
+        "LABEL": "Titlu",
+        "REQUIRED": "Titlul este obligatoriu"
+      },
+      "DESCRIPTION": {
+        "LABEL": "Descriere",
+        "REQUIRED": "Descrierea este obligatorie"
+      },
+      "START_DATE": {
+        "LABEL": "Data de început",
+        "REQUIRED": "Data de început este obligatorie"
+      },
+      "START_TIME": {
+        "LABEL": "Ora de început",
+        "REQUIRED": "Ora de început este obligatorie"
+      },
+      "END_DATE": {
+        "LABEL": "Data de sfârșit",
+        "REQUIRED": "Data de sfârșit este obligatorie",
+        "INVALID_RANGE": "Data de sfârșit trebuie să fie după data de început"
+      },
+      "END_TIME": {
+        "LABEL": "Ora de sfârșit",
+        "REQUIRED": "Ora de sfârșit este obligatorie"
+      },
+      "REGISTRATION_START_DATE": {
+        "LABEL": "Start înscriere",
+        "REQUIRED": "Data de început a înregistrării este obligatorie"
+      },
+      "REGISTRATION_START_TIME": {
+        "LABEL": "Ora de start",
+        "REQUIRED": "Ora de început a înregistrării este obligatorie"
+      },
+      "REGISTRATION_END_DATE": {
+        "LABEL": "Final înscriere",
+        "REQUIRED": "Data de sfârșit a înregistrării este obligatorie"
+      },
+      "REGISTRATION_END_TIME": {
+        "LABEL": "Ora de final",
+        "REQUIRED": "Ora de sfârșit a înregistrării este obligatorie"
+      },
+      "TYPE": {
+        "LABEL": "Tip",
+        "REQUIRED": "Te rugăm să selectezi un tip de eveniment"
+      },
+      "LOCATION": {
+        "LABEL": "Locație",
+        "REQUIRED": "Te rugăm să selectezi o locație"
+      },
+      "FOOD_PROVIDED": {
+        "LABEL": "Mâncare asigurată",
+        "YES": "Da",
+        "NO": "Nu",
+        "REQUIRED": "Te rugăm să selectezi dacă este asigurată mâncarea"
+      },
+      "POSTER": {
+        "UPLOAD": "Încarcă poster",
+        "INVALID": "Posterul trebuie să fie o imagine JPEG sau PNG de cel mult 5 MB"
+      },
+      "MESSAGES": {
+        "SUCCESS": {
+          "SAVE": "Ciorna evenimentului a fost salvată cu succes."
+        },
+        "ERROR": {
+          "SAVE": "Nu s-a putut salva ciorna evenimentului."
+        }
+      }
     }
   }
 }
