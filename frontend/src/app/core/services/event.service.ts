@@ -2,9 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { Event, PageResponse } from '../models/event.model';
+import { Event, EventDraftRequest, EventResponse, PageResponse } from '../models/event.model';
 import { EventFilterParams } from '../models/event-filter.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +38,13 @@ export class EventService {
     });
 
     return this.http.get<PageResponse<Event>>(this.apiUrl, { params });
+  }
+
+  createDraft(event: EventDraftRequest): Observable<EventResponse> {
+    return this.http.post<EventResponse>(`${this.apiUrl}`, event);
+  }
+
+  updateDraft(id: number, event: EventDraftRequest): Observable<EventResponse> {
+    return this.http.put<EventResponse>(`${this.apiUrl}/${id}`, event);
   }
 }
