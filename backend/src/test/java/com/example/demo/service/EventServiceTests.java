@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.dto.request.EventRequest;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
 import com.example.demo.repository.EventRepository;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -117,5 +119,98 @@ public class EventServiceTests {
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable));
+	}
+
+	@Test
+	void updateEvent_WhenEventExists_UpdatesAndReturnsMappedResponse() {
+		Integer eventId = 1;
+		Event existingEvent = new Event();
+		existingEvent.setId(eventId);
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Updated Event");
+		Event mappedEvent = new Event();
+		Event savedEvent = new Event();
+		savedEvent.setId(eventId);
+		EventViewResponse viewResponse = new EventViewResponse();
+		viewResponse.setId(eventId);
+		viewResponse.setName("Updated Event");
+
+		when(eventRepository.findById(eventId)).thenReturn(java.util.Optional.of(existingEvent));
+		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
+		when(eventRepository.save(mappedEvent)).thenReturn(savedEvent);
+		when(modelMapper.map(savedEvent, EventViewResponse.class)).thenReturn(viewResponse);
+
+		EventViewResponse result = eventService.updateEvent(eventId, eventRequest);
+
+		assertEquals(viewResponse, result);
+		verify(eventRepository).findById(eventId);
+		verify(modelMapper).map(eventRequest, Event.class);
+		verify(eventRepository).save(mappedEvent);
+		verify(modelMapper).map(savedEvent, EventViewResponse.class);
+	}
+
+	@Test
+	void updateEvent_WhenEventNotFound_ThrowsException() {
+		Integer eventId = 999;
+		EventRequest eventRequest = new EventRequest();
+
+		when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
+
+		assertThrows(RuntimeException.class, () -> eventService.updateEvent(eventId, eventRequest));
+		verify(eventRepository).findById(eventId);
+		verifyNoInteractions(modelMapper);
+	}
+
+	@Test
+	void updateEvent_WhenImageBase64Provided_DecodesAndSaves() {
+		Integer eventId = 1;
+		Event existingEvent = new Event();
+		existingEvent.setId(eventId);
+		String imageBase64 = "aGVsbG8gd29ybGQ=";
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Event with image");
+		eventRequest.setImageBase64(imageBase64);
+		Event mappedEvent = new Event();
+		Event savedEvent = new Event();
+		savedEvent.setId(eventId);
+		EventViewResponse viewResponse = new EventViewResponse();
+		viewResponse.setId(eventId);
+
+		when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
+		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
+		when(eventRepository.save(mappedEvent)).thenReturn(savedEvent);
+		when(modelMapper.map(savedEvent, EventViewResponse.class)).thenReturn(viewResponse);
+
+		EventViewResponse result = eventService.updateEvent(eventId, eventRequest);
+
+		assertEquals(viewResponse, result);
+		verify(eventRepository).findById(eventId);
+		verify(eventRepository).save(mappedEvent);
+	}
+
+	@Test
+	void updateEvent_WhenNoImageProvided_SavesWithoutImage() {
+		Integer eventId = 1;
+		Event existingEvent = new Event();
+		existingEvent.setId(eventId);
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Event without image");
+		eventRequest.setImageBase64(null);
+		Event mappedEvent = new Event();
+		Event savedEvent = new Event();
+		savedEvent.setId(eventId);
+		EventViewResponse viewResponse = new EventViewResponse();
+		viewResponse.setId(eventId);
+
+		when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
+		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
+		when(eventRepository.save(mappedEvent)).thenReturn(savedEvent);
+		when(modelMapper.map(savedEvent, EventViewResponse.class)).thenReturn(viewResponse);
+
+		EventViewResponse result = eventService.updateEvent(eventId, eventRequest);
+
+		assertEquals(viewResponse, result);
+		verify(eventRepository).findById(eventId);
+		verify(eventRepository).save(mappedEvent);
 	}
 }

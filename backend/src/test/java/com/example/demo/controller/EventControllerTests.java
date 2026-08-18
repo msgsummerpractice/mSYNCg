@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.dto.request.EventRequest;
 import com.example.demo.exceptions.GlobalExceptionHandler;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.EventStatus;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -27,10 +30,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -138,6 +141,84 @@ public class EventControllerTests {
 
 		assertNotNull(specCaptor.getValue());
 		assertNotNull(pageableCaptor.getValue());
+	}
+
+	@Test
+	void updateEvent_WhenValidRequest_ReturnsUpdatedEvent() throws Exception {
+		Integer eventId = 1;
+		EventViewResponse updatedResponse = buildViewResponse();
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Updated Team event");
+
+		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Team event"))
+				.andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
+	@Test
+	void updateEvent_WhenEventNotFound_ReturnsInternalServerError() throws Exception {
+		Integer eventId = 999;
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Nonexistent event");
+
+		when(eventService.updateEvent(eventId, eventRequest))
+				.thenThrow(new RuntimeException("Event not found with id: " + eventId));
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
+	@Test
+	void updateEvent_WhenImageBase64Provided_UpdatesAndReturnsEvent() throws Exception {
+		Integer eventId = 1;
+		String imageBase64 = "aGVsbG8gd29ybGQ=";
+		EventViewResponse updatedResponse = buildViewResponse();
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Event with image");
+		eventRequest.setImageBase64(imageBase64);
+
+		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Team event"));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
+	@Test
+	void updateEvent_WhenNoImageProvided_UpdatesWithoutImage() throws Exception {
+		Integer eventId = 1;
+		EventViewResponse updatedResponse = buildViewResponse();
+		EventRequest eventRequest = new EventRequest();
+		eventRequest.setName("Event without image");
+		eventRequest.setImageBase64(null);
+
+		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
 	}
 
 	private EventViewResponse buildViewResponse() {
