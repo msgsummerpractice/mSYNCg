@@ -115,4 +115,21 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
 	}
+
+	@ExceptionHandler(MissingLocationException.class)
+	public ResponseEntity<ErrorResponse> handleMissingLocationException(
+			MissingLocationException exception,
+			HttpServletRequest request
+	) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of()
+		);
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 }
