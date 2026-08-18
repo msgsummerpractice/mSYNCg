@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { EventCardView } from '../views/event-card.view';
+import { EventCardView } from '../views/event-card/event-card.view';
 import { Event as AppEvent } from '../../../../core/models/event.model';
 import { MOCK_EVENT } from '../../../../core/mocks/event.mock';
 
