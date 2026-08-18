@@ -64,11 +64,36 @@ public class UserServiceTests {
 		UserRequest request = buildValidRequest();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
-		ValidationException ex = assertThrows(ValidationException.class, () -> userService.createUser(request));
+		ValidationException ex = assertThrows(ValidationException.class, () -> userService.create(request));
 
 		assertEquals("email", ex.getField());
 		assertEquals("Email address is already in use.", ex.getReason());
 		verify(userRepository, never()).save(any(User.class));
+	}
+
+	@Test
+	void createUser_whenPasswordIsNull_savesUserWithNullEncodedPassword() throws Exception {
+		UserRequest request = buildValidRequest();
+		request.setPassword(null);
+		User mappedUser = new User();
+		UserResponse mappedResponse = new UserResponse();
+
+		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
+		when(modelMapper.map(request, User.class)).thenReturn(mappedUser);
+		when(passwordEncoder.encode(null)).thenReturn(null);
+		when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+		when(modelMapper.map(mappedUser, UserResponse.class)).thenReturn(mappedResponse);
+
+		UserResponse response = userService.create(request);
+
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+		verify(userRepository).save(userCaptor.capture());
+		User savedUser = userCaptor.getValue();
+
+		assertNotNull(response);
+		assertNull(readPrivateField(savedUser, "password"));
+		assertEquals(Boolean.TRUE, readPrivateField(savedUser, "status"));
+		assertEquals(UserRole.PARTICIPANT, readPrivateField(savedUser, "role"));
 	}
 
 	@Test
@@ -81,7 +106,7 @@ public class UserServiceTests {
 		when(userRepository.save(any(User.class)))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class, () -> userService.createUser(request));
+		assertThrows(DataAccessResourceFailureException.class, () -> userService.create(request));
 	}
 
 	@Test
@@ -95,7 +120,7 @@ public class UserServiceTests {
 		when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 		when(modelMapper.map(mappedUser, UserResponse.class)).thenReturn(mappedResponse);
 
-		UserResponse response = userService.createUser(request);
+		UserResponse response = userService.create(request);
 
 		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 		verify(userRepository).save(userCaptor.capture());
@@ -127,7 +152,7 @@ public class UserServiceTests {
 		when(userRepository.findAll(spec, pageable)).thenReturn(usersPage);
 		when(modelMapper.map(user, UserViewResponse.class)).thenReturn(viewResponse);
 
-		Page<UserViewResponse> result = userService.getUsers(spec, pageable);
+		Page<UserViewResponse> result = userService.getAll(spec, pageable);
 
 		assertEquals(1, result.getTotalElements());
 		assertEquals(viewResponse, result.getContent().get(0));
@@ -142,7 +167,7 @@ public class UserServiceTests {
 
 		when(userRepository.findAll(spec, pageable)).thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<UserViewResponse> result = userService.getUsers(spec, pageable);
+		Page<UserViewResponse> result = userService.getAll(spec, pageable);
 
 		assertTrue(result.getContent().isEmpty());
 		assertEquals(0, result.getTotalElements());
@@ -156,7 +181,7 @@ public class UserServiceTests {
 
 		when(userRepository.findAll(spec, pageable)).thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		userService.getUsers(spec, pageable);
+		userService.getAll(spec, pageable);
 
 		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
@@ -173,7 +198,7 @@ public class UserServiceTests {
 		when(userRepository.findAll((UserSpec) isNull(), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<UserViewResponse> result = userService.getUsers(null, pageable);
+		Page<UserViewResponse> result = userService.getAll(null, pageable);
 
 		assertTrue(result.getContent().isEmpty());
 		verify(userRepository).findAll((UserSpec) isNull(), eq(pageable));
@@ -187,7 +212,7 @@ public class UserServiceTests {
 		when(userRepository.findAll(spec, pageable))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class, () -> userService.getUsers(spec, pageable));
+		assertThrows(DataAccessResourceFailureException.class, () -> userService.getAll(spec, pageable));
 	}
 
 	private UserRequest buildValidRequest() {
