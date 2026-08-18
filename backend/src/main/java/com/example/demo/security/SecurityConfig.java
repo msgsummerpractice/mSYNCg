@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,JWTAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
@@ -31,11 +32,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/events/{id}").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults());
-
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class
+);
         return http.build();
     }
 
@@ -60,4 +63,12 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter(
+            JWTokenProvider jwtTokenProvider,
+            UserDetailService userDetailService) {
+
+        return new JWTAuthenticationFilter(jwtTokenProvider, userDetailService);
+}
 }
