@@ -1,4 +1,3 @@
-//Used only for testing should be delted and replaced with actual data from backend
 import { UserLocation } from '../constants/location.constant';
 import { UserRole } from '../constants/role.constant';
 import { User } from '../models/user.model';
