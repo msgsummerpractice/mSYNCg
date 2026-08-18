@@ -2,18 +2,7 @@ import { Event as AppEvent, EventStatus, EventType } from '../models/event.model
 import { LocationEnum } from '../models/location.model';
 
 const POSTER_PLACEHOLDER =
-  'data:image/svg+xml;base64,' +
-  btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#a01441"/>
-      <stop offset="100%" stop-color="#3f1123"/>
-    </linearGradient>
-  </defs>
-  <rect width="800" height="450" fill="url(#g)"/>
-  <text x="50%" y="50%" fill="#ffffff" font-family="sans-serif" font-size="48" font-weight="600"
-        text-anchor="middle" dominant-baseline="middle">mSYNCg Summer Summit</text>
-</svg>`);
+  'https://tse1.mm.bing.net/th/id/OIP.2Vf2Ci2rhp2H5LKUlRlojgHaKe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3';
 
 export const MOCK_EVENT: AppEvent = {
   id: 1,

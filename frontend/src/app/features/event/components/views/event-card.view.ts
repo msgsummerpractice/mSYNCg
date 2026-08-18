@@ -26,15 +26,25 @@ import { Event as AppEvent } from '../../../../core/models/event.model';
       >
         <mat-card
           appearance="raised"
-          class="flex h-[94vh] w-[94vw] flex-col overflow-hidden rounded-2xl shadow-2xl"
+          class="flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl lg:!flex-row"
         >
-          <div class="min-h-0 flex-1 overflow-y-auto">
+          <div
+            class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-muted sm:h-72 lg:h-full lg:w-2/5 lg:max-w-lg"
+          >
+            <img
+              [src]="posterSrc()"
+              alt=""
+              aria-hidden="true"
+              class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl lg:hidden"
+            />
             <img
               [src]="posterSrc()"
               [alt]="ev.name"
-              class="h-[38vh] w-full bg-brand-muted object-cover"
+              class="relative h-full w-full object-contain lg:object-cover"
             />
+          </div>
 
+          <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
             <mat-card-header class="!block !p-6 !pb-2">
               <mat-card-title class="font-ui text-2xl font-semibold text-brand-on-surface">
                 {{ ev.name }}
@@ -76,7 +86,7 @@ import { Event as AppEvent } from '../../../../core/models/event.model';
 
               <mat-divider class="!my-5"></mat-divider>
 
-              <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <dt class="text-xs font-medium tracking-wide text-brand-on-muted uppercase">
                     {{ 'EVENT.CARD.START_DATE' | translate }}
@@ -126,6 +136,6 @@ export class EventCardView {
 
   readonly posterSrc = computed(() => {
     const image = this.event()?.imageBase64 ?? '';
-    return image.startsWith('data:') ? image : `data:image/*;base64,${image}`;
+    return /^(data:|https?:\/\/|\/)/.test(image) ? image : `data:image/*;base64,${image}`;
   });
 }
