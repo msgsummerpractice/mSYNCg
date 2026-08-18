@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.UserViewResponse;
+import com.example.demo.exceptions.CannotChangeOwnRoleException;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.model.Location;
@@ -25,11 +27,11 @@ import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +40,8 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,7 +60,7 @@ public class UserServiceTests {
 	private UserService userService;
 
 	@Test
-	void createUserWhenEmailAlreadyExistsThrowsValidationException() {
+	void createUser_whenEmailAlreadyExists_throwsValidationException() {
 		UserRequest request = buildValidRequest();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
@@ -68,7 +72,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUserWhenPasswordIsNullSavesUserWithNullEncodedPassword() throws Exception {
+	void createUser_whenPasswordIsNull_savesUserWithNullEncodedPassword() throws Exception {
 		UserRequest request = buildValidRequest();
 		request.setPassword(null);
 		User mappedUser = new User();
@@ -93,7 +97,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUserWhenRepositorySaveFailsPropagatesException() {
+	void createUser_whenRepositorySaveFails_throwsException() {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
@@ -106,7 +110,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void createUserWhenValidInputEncodesPasswordAndSetsDefaults() throws Exception {
+	void createUser_whenInputisValid_savesUser() throws Exception {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		UserResponse mappedResponse = new UserResponse();
@@ -136,7 +140,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenUsersExistReturnsMappedPage() {
+	void getUsers_whenUsersExist_returnsMappedPage() {
 		User user = new User();
 		UserViewResponse viewResponse = new UserViewResponse();
 		viewResponse.setId(1);
@@ -157,7 +161,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenNoUsersMatchReturnsEmptyPageWithoutMapping() {
+	void getUsers_whenNoUsersMatch_returnsEmptyPageWithoutMapping() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -171,7 +175,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersPassesUserSpecAndPageableToRepository() {
+	void getUsers_passesUserSpec_andPageableToRepository() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(2, 5);
 
@@ -188,7 +192,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenSpecIsNullQueriesRepositoryWithoutFilters() {
+	void getUsers_whenSpecIsNull_queriesWithoutFilters() {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(userRepository.findAll((UserSpec) isNull(), eq(pageable)))
@@ -201,7 +205,7 @@ public class UserServiceTests {
 	}
 
 	@Test
-	void getUsersWhenRepositoryFailsPropagatesException() {
+	void getUsers_whenRepositoryFails_throwsException() {
 		UserSpec spec = mock(UserSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -226,4 +230,134 @@ public class UserServiceTests {
 		field.setAccessible(true);
 		return field.get(target);
 	}
+
+	@Test
+	void updateUserRole_whenUserExists_updatesRole() {
+		User user = new User();
+		user.setId(1);
+		user.setEmail("user@example.com");
+		user.setRole(UserRole.PARTICIPANT);
+
+		User authenticatedUser = new User();
+		authenticatedUser.setId(2);
+		authenticatedUser.setEmail("authenticated@example.com");
+		authenticatedUser.setRole(UserRole.ADMIN);
+
+		UserResponse mappedResponse = new UserResponse();
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.findByEmail("authenticated@example.com"))
+				.thenReturn(authenticatedUser);
+		when(userRepository.save(user)).thenReturn(user);
+		when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
+
+		UserResponse response =
+				userService.updateUserRole(
+						1,
+						UserRole.ADMIN,
+						"authenticated@example.com"
+				);
+
+		assertNotNull(response);
+		assertEquals(UserRole.ADMIN, user.getRole());
+
+		verify(userRepository).findById(1);
+		verify(userRepository).findByEmail("authenticated@example.com");
+		verify(userRepository).save(user);
+		verify(modelMapper).map(user, UserResponse.class);
+	}
+
+	@Test
+	void updateUserRole_whenUserDoesNotExist_throwsException() {
+			when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+			NotFoundException exception = assertThrows(
+					NotFoundException.class,
+					() -> userService.updateUserRole(99, UserRole.ADMIN, "authenticated@example.com")
+			);
+
+			assertEquals("User with id 99 not found", exception.getMessage());
+
+			verify(userRepository).findById(99);
+			verifyNoMoreInteractions(userRepository);
+			verifyNoInteractions(modelMapper);
+	}
+
+	@Test
+	void updateUserStatus_whenUserExists_updatesStatus() {
+		User user = new User();
+		user.setId(1);
+		user.setStatus(true);
+
+		UserResponse mappedResponse = new UserResponse();
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.save(user)).thenReturn(user);
+		when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
+
+		UserResponse response = userService.updateUserStatus(1, false);
+
+		assertNotNull(response);
+		assertEquals(Boolean.FALSE, user.getStatus());
+
+		verify(userRepository).findById(1);
+		verify(userRepository).save(user);
+		verify(modelMapper).map(user, UserResponse.class);
+	}
+
+	@Test
+	void updateUserStatus_whenUserDoesNotExist_throwsException() {
+		when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(
+				NotFoundException.class,
+				() -> userService.updateUserStatus(99, false)
+		);
+
+		assertEquals("User with id 99 not found", exception.getMessage());
+
+		verify(userRepository).findById(99);
+		verifyNoMoreInteractions(userRepository);
+		verifyNoInteractions(modelMapper);		
+	}
+
+	@Test
+	void updateUserRole_whenAdminChangesOwnRole_throwsException() {
+		User user = new User();
+		user.setId(1);
+		user.setEmail("admin@example.com");
+		user.setRole(UserRole.ADMIN);
+
+		User authenticatedUser = new User();
+		authenticatedUser.setId(1);
+		authenticatedUser.setEmail("admin@example.com");
+		authenticatedUser.setRole(UserRole.ADMIN);
+
+		when(userRepository.findById(1))
+				.thenReturn(Optional.of(user));
+
+		when(userRepository.findByEmail("admin@example.com"))
+				.thenReturn(authenticatedUser);
+
+		CannotChangeOwnRoleException exception = assertThrows(
+				CannotChangeOwnRoleException.class,
+				() -> userService.updateUserRole(
+						1,
+						UserRole.PARTICIPANT,
+						"admin@example.com"
+				)
+		);
+
+		assertEquals(
+				"Admin cannot change their own role.",
+				exception.getMessage()
+		);
+
+		verify(userRepository).findById(1);
+		verify(userRepository).findByEmail("admin@example.com");
+		verify(userRepository, never()).save(user);
+		verify(modelMapper, never()).map(user, UserResponse.class);
+	}
+
+
 }

@@ -61,49 +61,67 @@ public class GlobalExceptionHandler {
 	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(
-	    NotFoundException exception,
-	    HttpServletRequest request
-    ) {
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.NOT_FOUND.value(),
-		"Not Found",
-		exception.getMessage(),
-		request.getRequestURI(),
-		List.of()
-	);
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundException(
+        NotFoundException exception,
+        HttpServletRequest request
+	) 
+	{
+    	ErrorResponse response = new ErrorResponse(
+            Instant.now(),
+            HttpStatus.NOT_FOUND.value(),
+            "Not Found",
+            exception.getMessage(),
+            request.getRequestURI(),
+            List.of()
+    );
 
-	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
+    	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	}
+
+	@ExceptionHandler(CannotChangeOwnRoleException.class)
+	public ResponseEntity<ErrorResponse> handleCannotChangeOwnRoleException(
+        CannotChangeOwnRoleException exception,
+        HttpServletRequest request
+	) {
+    	ErrorResponse response = new ErrorResponse(
+            Instant.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            "Bad Request",
+            exception.getMessage(),
+            request.getRequestURI(),
+            List.of()
+    	);
+
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
 	    Exception exception,
 	    HttpServletRequest request
     ) {
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.INTERNAL_SERVER_ERROR.value(),
-		"Internal Server Error",
-		exception.getMessage(),
-		request.getRequestURI(),
-		List.of()
+		ErrorResponse response = new ErrorResponse(
+			Instant.now(),
+			HttpStatus.INTERNAL_SERVER_ERROR.value(),
+			"Internal Server Error",
+			exception.getMessage(),
+			request.getRequestURI(),
+			List.of()
 	);
 
-	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-    private FieldValidationError toFieldValidationError(FieldError fieldError) {
-	String reason = fieldError.getDefaultMessage() == null
-		? "Invalid value"
-		: fieldError.getDefaultMessage();
+		private FieldValidationError toFieldValidationError(FieldError fieldError) {
+		String reason = fieldError.getDefaultMessage() == null
+			? "Invalid value"
+			: fieldError.getDefaultMessage();
 
-	return new FieldValidationError(fieldError.getField(), reason);
+		return new FieldValidationError(fieldError.getField(), reason);
     }
 
-    public record FieldValidationError(String field, String reason) {
+    	public record FieldValidationError(String field, String reason) {
     }
 
     public record ErrorResponse(
@@ -132,4 +150,6 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
 	}
+
+
 }
