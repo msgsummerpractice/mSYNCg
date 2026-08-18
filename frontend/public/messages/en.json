@@ -146,6 +146,47 @@
       }
     }
   },
+  "USER_LIST": {
+    "FILTER_TITLE": "Filter users",
+    "LOAD_ERROR": "Users could not be loaded. Please try again.",
+    "FIELDS": {
+      "FIRST_NAME": "First name",
+      "FIRST_NAME_PLACEHOLDER": "Search first name...",
+      "LAST_NAME": "Last name",
+      "LAST_NAME_PLACEHOLDER": "Search last name...",
+      "EMAIL": "Email",
+      "EMAIL_PLACEHOLDER": "Search email...",
+      "ROLES": "Roles",
+      "LOCATIONS": "Locations",
+      "STATUS": "Status"
+    },
+    "STATUS": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Reset filters"
+    },
+    "TABLE": {
+      "FIRST_NAME": "First name",
+      "LAST_NAME": "Last name",
+      "EMAIL": "Email",
+      "USER_ROLE": "User role",
+      "LOCATION": "Location",
+      "STATUS": "Status"
+    },
+    "ROLES": {
+      "ADMIN": "Admin",
+      "HR_USER": "HR User",
+      "PARTICIPANT": "Participant",
+      "MARKETING_ORGANIZER": "Marketing Organizer"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Targu Mures",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timisoara"
+    }
+  },
   "EVENT": {
     "CARD": {
       "START_DATE": "Start date",

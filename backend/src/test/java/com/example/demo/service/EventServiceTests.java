@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
 import com.example.demo.repository.EventRepository;
@@ -17,9 +19,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
@@ -117,5 +122,72 @@ public class EventServiceTests {
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable));
+	}
+
+	@Test
+	void getById_WhenEventExists_ReturnsMappedDetails() {
+		Event event = new Event();
+		event.setId(1);
+		event.setName("Team event");
+
+		EventDetailsResponse detailsResponse = new EventDetailsResponse();
+		detailsResponse.setId(1);
+		detailsResponse.setName("Team event");
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(detailsResponse);
+
+		EventDetailsResponse result = eventService.getById(1);
+
+		assertEquals(1, result.getId());
+		assertEquals("Team event", result.getName());
+		verify(eventRepository).findById(1);
+		verify(modelMapper).map(event, EventDetailsResponse.class);
+	}
+
+	@Test
+	void getById_WhenEventHasImage_EncodesImageAsBase64() {
+		byte[] image = new byte[] { 1, 2, 3, 4 };
+		Event event = new Event();
+		event.setId(1);
+		event.setImage(image);
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(new EventDetailsResponse());
+
+		EventDetailsResponse result = eventService.getById(1);
+
+		assertEquals(Base64.getEncoder().encodeToString(image), result.getImage());
+	}
+
+	@Test
+	void getById_WhenEventHasNoImage_ReturnsNullImage() {
+		Event event = new Event();
+		event.setId(1);
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(new EventDetailsResponse());
+
+		EventDetailsResponse result = eventService.getById(1);
+
+		assertNull(result.getImage());
+	}
+
+	@Test
+	void getById_WhenEventDoesNotExist_ThrowsNotFoundException() {
+		when(eventRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> eventService.getById(99));
+
+		assertEquals("Event with id 99 was not found.", exception.getMessage());
+		verifyNoInteractions(modelMapper);
+	}
+
+	@Test
+	void getById_WhenRepositoryFails_PropagatesException() {
+		when(eventRepository.findById(1))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getById(1));
 	}
 }
