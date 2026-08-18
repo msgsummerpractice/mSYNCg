@@ -206,7 +206,6 @@ export class UserListContainer {
   }
 
   private handleLoadError(error: unknown): void {
-    console.error('Failed to load users', error);
     this.toastService.showError(this.translateService.instant('USER_LIST.LOAD_ERROR'));
   }
 }
