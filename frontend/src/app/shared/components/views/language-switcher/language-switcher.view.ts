@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import type { Language } from '../../../core/translation/supported-languages';
+import type { Language } from '../../../../core/translation/supported-languages';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -26,59 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
       </mat-select>
     </mat-form-field>
   `,
-  styles: `
-    .language-switcher-field .mdc-notched-outline,
-    .language-switcher-field .mat-mdc-select-arrow-wrapper {
-      display: none !important;
-    }
-
-    .language-switcher-field .mat-mdc-form-field-infix {
-      min-width: 0 !important;
-      padding: 0 !important;
-      width: 100% !important;
-    }
-
-    .language-switcher-field .mat-mdc-select,
-    .language-switcher-field .mat-mdc-select-trigger {
-      width: 100%;
-    }
-
-    .language-switcher-field .mat-mdc-select-trigger {
-      align-items: center;
-      display: flex;
-      justify-content: center;
-    }
-
-    .language-switcher-field .mat-mdc-select-value {
-      flex: 0 1 auto;
-      text-align: center;
-    }
-
-    .language-switcher-field .mat-mdc-select {
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: 0;
-      line-height: 1rem;
-    }
-
-    :host ::ng-deep .language-switcher-panel {
-      background-color: #ffffff !important;
-      min-width: 4.5rem !important;
-    }
-
-    :host ::ng-deep .language-switcher-panel .mat-mdc-option {
-      --mat-option-label-text-color: #000000 !important;
-    }
-
-    :host ::ng-deep .language-switcher-panel .mat-mdc-option:hover {
-      background-color: #f0f0f0;
-    }
-
-    :host ::ng-deep .language-switcher-panel .mat-mdc-option.mat-selected {
-      background-color: #e0e0e0;
-      --mat-option-label-text-color: #000000 !important;
-    }
-  `,
+  styleUrl: './language-switcher.view.scss',
 })
 export class LanguageSwitcherView {
   @Input() languages: Language[] = [];
