@@ -8,9 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { ErrorStateMatcher, provideNativeDateAdapter } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { EventForm, EventTypeEnum } from '../../../../../core/models/event.model';
+import { EventForm, EventTypeEnum, eventTypes } from '../../../../../core/models/event.model';
 import { GenericFormContainer } from '../../../../../shared/components/containers/generic-form.container';
-import { AVAILABLE_LOCATIONS, LocationEnum } from '../../../../../core/models/location.model';
+import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
 
 @Component({
   selector: 'app-event-creation-view',
@@ -40,7 +40,7 @@ export class EventCreationView {
   @Output() posterSelected = new EventEmitter<File>();
 
   readonly eventTypeEnum = EventTypeEnum;
-  readonly eventTypes = Object.values(EventTypeEnum);
+  readonly eventTypes = eventTypes;
   readonly locations = AVAILABLE_LOCATIONS;
   readonly eventRangeErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.parent?.hasError('invalidDateRange'),

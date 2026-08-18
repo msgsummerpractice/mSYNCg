@@ -5,8 +5,4 @@ export enum LocationEnum {
   ALL = 'ALL',
 }
 
-export const AVAILABLE_LOCATIONS = [
-  LocationEnum.CLUJ_NAPOCA,
-  LocationEnum.TIMISOARA,
-  LocationEnum.TARGU_MURES
-];
+export const AVAILABLE_LOCATIONS = Object.values(LocationEnum);
