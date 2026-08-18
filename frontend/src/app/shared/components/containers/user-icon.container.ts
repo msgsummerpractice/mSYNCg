@@ -20,7 +20,7 @@ export class UserIconContainer implements OnInit {
 
   private colors: string[] = ['#800000', '#FF0000', '#FFA500', '#FFFF00', '#ebba45'];
 
-  showInitials: boolean = false;
+  showInitials: boolean = true;
   initials: string = '';
   circleColor: string = '#000';
 
