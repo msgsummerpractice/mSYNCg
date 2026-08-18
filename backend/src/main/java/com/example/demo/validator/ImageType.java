@@ -10,6 +10,4 @@ import java.lang.annotation.Target;
 public @interface ImageType {
     String[] allowedTypes();
     String message() default "Invalid image type. Allowed types are {allowedTypes}.";
-
-    
 }

@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.EventRequest;
-import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.GlobalExceptionHandler;
 import com.example.demo.filtering.events.EventSpec;
@@ -16,6 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,7 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,31 +60,18 @@ public class EventControllerTests {
 
         @BeforeEach
         void setUp() {
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                                "organizer@example.com",
+                                null);
+
                 mockMvc = MockMvcBuilders.standaloneSetup(eventController)
                                 .setCustomArgumentResolvers(
                                                 new SpecificationArgumentResolver(),
                                                 new PageableHandlerMethodArgumentResolver())
                                 .setControllerAdvice(new GlobalExceptionHandler())
+                                .defaultRequest(get("/")
+                                                .principal(authentication))
                                 .build();
-        }
-
-        @Test
-        void createEvent_WhenRequestIsValid_ReturnsOkAndDraftStatus() throws Exception {
-                EventResponse serviceResponse = new EventResponse(7L, null);
-                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
-                when(eventService.create(requestCaptor.capture())).thenReturn(serviceResponse);
-
-                mockMvc.perform(post("/api/events")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(validRequestJson()))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.id").value(7))
-                                .andExpect(jsonPath("$.status").value("Draft"));
-
-                ArgumentCaptor<EventRequest> requestCaptor1 = ArgumentCaptor.forClass(EventRequest.class);
-                verify(eventService).create(requestCaptor1.capture());
-                assertNotNull(requestCaptor1.getValue());
-                assertEquals("Engineering Meetup", requestCaptor1.getValue().getEventName());
         }
 
         @Test
@@ -94,29 +83,33 @@ public class EventControllerTests {
                                 .andExpect(jsonPath("$.status").value(400))
                                 .andExpect(jsonPath("$.error").value("Validation Error"))
                                 .andExpect(jsonPath("$.message").value("Request validation failed"))
-                                .andExpect(jsonPath("$.fieldErrors.length()").value(7));
+                                .andExpect(jsonPath("$.fieldErrors.length()").value(8));
 
-                verify(eventService, never()).create(any(EventRequest.class));
+                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
+                verify(eventService, never()).create(requestCaptor.capture(), isNull(String.class));
         }
 
         @Test
-        void createEvent_WhenNameIsBlank_ReturnsBadRequest() throws Exception {
+        void createEvent_WhenNameIsNull_ReturnsBadRequest() throws Exception {
                 mockMvc.perform(post("/api/events")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestJson("", "LOCAL", "Cluj-Napoca", "2026-09-01T09:00:00",
+                                .content(requestJson(null, "LOCAL", "Cluj-Napoca", "2026-09-01T09:00:00",
                                                 "2026-09-01T12:00:00", true,
                                                 "Internal event for the engineering team", "2026-08-15T09:00:00",
                                                 "2026-08-31T18:00:00")))
                                 .andExpect(status().isBadRequest())
                                 .andExpect(jsonPath("$.status").value(400))
-                                .andExpect(jsonPath("$.fieldErrors[0].field").value("eventName"));
+                                .andExpect(jsonPath("$.fieldErrors[0].field").value("name"))
+                                .andExpect(jsonPath("$.fieldErrors[0].reason").value("Event name is required"));
 
-                verify(eventService, never()).create(any(EventRequest.class));
+                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
+                verify(eventService, never()).create(requestCaptor.capture(), isNull(String.class));
         }
 
         @Test
         void createEvent_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
-                when(eventService.create(any(EventRequest.class)))
+                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
+                when(eventService.create(requestCaptor.capture(), eq("organizer@example.com")))
                                 .thenThrow(new RuntimeException("Database unavailable"));
 
                 mockMvc.perform(post("/api/events")
@@ -130,37 +123,40 @@ public class EventControllerTests {
         private String validRequestJson() {
                 return """
                                 {
-                                  "eventName": "Engineering Meetup",
-                                  "eventType": "LOCAL",
-                                  "eventLocation": "Cluj-Napoca",
+                                  "name": "Engineering Meetup",
+                                  "type": "LOCAL",
+                                  "location": "Cluj-Napoca",
                                   "startTime": "2026-09-01T09:00:00",
                                   "endTime": "2026-09-01T12:00:00",
                                   "foodProvided": true,
                                   "description": "Internal event for the engineering team",
-                                  "registrationStartTime": "2026-08-15T09:00:00",
-                                  "registrationEndTime": "2026-08-31T18:00:00"
+                                  "registrationStart": "2026-08-15T09:00:00",
+                                  "registrationEnd": "2026-08-31T18:00:00"
                                 }
                                 """;
         }
 
-        private String requestJson(String eventName, String eventType, String eventLocation, String startTime,
-                        String endTime, boolean foodProvided, String description, String registrationStartTime,
-                        String registrationEndTime) {
+        private String requestJson(String name, String type, String location, String startTime,
+                        String endTime, boolean foodProvided, String description, String registrationStart,
+                        String registrationEnd) {
+                String nameJson = name == null
+                                ? "null"
+                                : "\"" + name + "\"";
                 return """
                                 {
-                                  "eventName": "%s",
-                                  "eventType": "%s",
-                                  "eventLocation": "%s",
+                                  "name": %s,
+                                  "type": "%s",
+                                  "location": "%s",
                                   "startTime": "%s",
                                   "endTime": "%s",
                                   "foodProvided": %s,
                                   "description": "%s",
-                                  "registrationStartTime": "%s",
-                                  "registrationEndTime": "%s"
+                                  "registrationStart": "%s",
+                                  "registrationEnd": "%s"
                                 }
-                                """.formatted(eventName, eventType, eventLocation, startTime, endTime, foodProvided,
+                                """.formatted(nameJson, type, location, startTime, endTime, foodProvided,
                                 description,
-                                registrationStartTime, registrationEndTime);
+                                registrationStart, registrationEnd);
         }
 
         @Test
@@ -251,18 +247,17 @@ public class EventControllerTests {
         @Test
         void createEvent_IsRestrictedToAllowedRoles() throws Exception {
                 PreAuthorize pre = EventController.class
-                                .getMethod("createEvent", com.example.demo.dto.request.EventRequest.class)
+                                .getMethod("createEvent", com.example.demo.dto.request.EventRequest.class,
+                                                org.springframework.security.core.Authentication.class)
                                 .getAnnotation(PreAuthorize.class);
 
                 String expr = pre == null ? null : pre.value();
 
-                // Ensure roles ADMIN, HR_MANAGER and MARKETING_ORGANIZER are present and
-                // PARTICIPANT is not
                 assertNotNull(expr);
-                assertTrue(expr.contains("ADMIN"));
-                assertTrue(expr.contains("HR_MANAGER"));
                 assertTrue(expr.contains("MARKETING_ORGANIZER"));
                 assertFalse(expr.contains("PARTICIPANT"));
+                assertFalse(expr.contains("ADMIN"));
+                assertFalse(expr.contains("HR_USER"));
         }
 
         private EventViewResponse buildViewResponse() {

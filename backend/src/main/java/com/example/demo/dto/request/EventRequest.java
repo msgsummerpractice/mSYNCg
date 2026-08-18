@@ -1,6 +1,5 @@
 package com.example.demo.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
@@ -19,14 +18,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventRequest {
 
-    @NotBlank(message = "Event name is required")
-    private String eventName;
+    @NotNull(message = "Event name is required")
+    private String name;
 
     @NotNull(message = "Event type is required")
-    private EventType eventType;
+    private EventType type;
 
     @NotNull(message = "Event location is required")
-    private Location eventLocation;
+    private Location location;
 
     @NotNull(message = "Event start time is required")
     private LocalDateTime startTime;
@@ -36,17 +35,17 @@ public class EventRequest {
 
     private Boolean foodProvided;
 
-    @NotBlank(message = "Event description is required")
+    @NotNull(message = "Event description is required")
     private String description;
 
     @NotNull(message = "Event registration start time is required")
-    private LocalDateTime registrationStartTime;
+    private LocalDateTime registrationStart;
 
     @NotNull(message = "Event registration end time is required")
-    private LocalDateTime registrationEndTime;
+    private LocalDateTime registrationEnd;
 
     @MaxFileSize(value = 5000000, message = "Poster file size exceeds the maximum limit of 5MB.")
     @ImageType(allowedTypes = { "image/jpeg",
             "image/png" }, message = "Invalid poster image type. Allowed types are JPEG and PNG.")
-    private byte[] poster;
+    private byte[] image;
 }

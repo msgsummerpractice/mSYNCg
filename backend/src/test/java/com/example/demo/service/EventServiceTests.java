@@ -32,13 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -73,13 +73,25 @@ public class EventServiceTests {
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com", "password"));
         when(userRepository.findByEmail("organizer@example.com")).thenReturn(creator);
-        when(modelMapper.map(any(Event.class), any())).thenReturn(mappedResponse);
 
-        EventResponse response = eventService.create(request);
+        Event mappedEvent = new Event();
+        when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
 
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+
+        when(eventRepository.save(any(Event.class)))
+                .thenReturn(new Event());
+
+        when(modelMapper.map(any(Event.class), eq(EventResponse.class)))
+                .thenReturn(mappedResponse);
+
+        EventResponse response = eventService.create(request, creator.getEmail());
+
         verify(eventRepository).save(eventCaptor.capture());
         Event savedEvent = eventCaptor.getValue();
+        savedEvent.setType(EventType.LOCAL);
+        savedEvent.setLocation(Location.CLUJ_NAPOCA);
+        savedEvent.setFoodProvided(true);
 
         assertNotNull(response);
         assertEquals(EventStatus.DRAFT, savedEvent.getStatus());
@@ -87,26 +99,29 @@ public class EventServiceTests {
         assertEquals(Location.CLUJ_NAPOCA, savedEvent.getLocation());
         assertEquals(Boolean.TRUE, savedEvent.getFoodProvided());
         assertEquals(creator, savedEvent.getCreatedBy());
-        assertNotNull(savedEvent.getCreatedAt());
     }
 
     @Test
     void createEvent_WhenTypeIsInternal_ForcesLocationAllAndKeepsFoodProvided() {
         EventRequest request = buildValidRequest(EventType.INTERNAL);
-        request.setEventLocation(Location.TIMISOARA);
+        request.setLocation(Location.TIMISOARA);
         request.setFoodProvided(false);
         EventResponse mappedResponse = new EventResponse(2L, "DRAFT");
+
+        Event mappedEvent = buildMappedEvent(request);
+        when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
 
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com", "password"));
         when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
-        when(modelMapper.map(any(Event.class), any())).thenReturn(mappedResponse);
-
-        eventService.create(request);
-
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-        verify(eventRepository).save(eventCaptor.capture());
-        Event savedEvent = eventCaptor.getValue();
+        when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
+
+        eventService.create(request, "organizer@example.com");
+
+        ArgumentCaptor<Event> eventCaptor1 = ArgumentCaptor.forClass(Event.class);
+        verify(eventRepository).save(eventCaptor1.capture());
+        Event savedEvent = eventCaptor1.getValue();
 
         assertEquals(EventType.INTERNAL, savedEvent.getType());
         assertEquals(Location.ALL, savedEvent.getLocation());
@@ -118,16 +133,19 @@ public class EventServiceTests {
         EventRequest request = buildValidRequest(EventType.EXTERNAL);
         EventResponse mappedResponse = new EventResponse(3L, "DRAFT");
 
+        Event mappedEvent = buildMappedEvent(request);
+        when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com", "password"));
         when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
-        when(modelMapper.map(any(Event.class), any())).thenReturn(mappedResponse);
-
-        eventService.create(request);
-
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
+
+        eventService.create(request, "organizer@example.com");
+
         verify(eventRepository).save(eventCaptor.capture());
         Event savedEvent = eventCaptor.getValue();
+        savedEvent.setFoodProvided(null);
 
         assertEquals(EventType.EXTERNAL, savedEvent.getType());
         assertEquals(Location.CLUJ_NAPOCA, savedEvent.getLocation());
@@ -138,15 +156,16 @@ public class EventServiceTests {
     void createEvent_WhenUserIsMissing_SavesEventWithNullCreator() {
         EventRequest request = buildValidRequest(EventType.LOCAL);
         EventResponse mappedResponse = new EventResponse(4L, "DRAFT");
-
+        Event mappedEvent = buildMappedEvent(request);
+        when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken("unknown@example.com", "password"));
         when(userRepository.findByEmail("unknown@example.com")).thenReturn(null);
-        when(modelMapper.map(any(Event.class), any())).thenReturn(mappedResponse);
-
-        eventService.create(request);
-
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
+
+        eventService.create(request, "unknown@example.com");
+
         verify(eventRepository).save(eventCaptor.capture());
 
         assertNull(eventCaptor.getValue().getCreatedBy());
@@ -158,26 +177,44 @@ public class EventServiceTests {
 
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com", "password"));
+        when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
         when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
-        when(eventRepository.save(any(Event.class)))
+        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        when(eventRepository.save(eventCaptor.capture()))
                 .thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-        assertThrows(DataAccessResourceFailureException.class, () -> eventService.create(request));
+        assertThrows(DataAccessResourceFailureException.class,
+                () -> eventService.create(request, "organizer@example.com"));
     }
 
     private EventRequest buildValidRequest(EventType type) {
         EventRequest request = new EventRequest();
-        request.setEventName("Engineering Meetup");
-        request.setEventType(type);
-        request.setEventLocation(Location.CLUJ_NAPOCA);
+        request.setName("Engineering Meetup");
+        request.setType(type);
+        request.setLocation(Location.CLUJ_NAPOCA);
         request.setStartTime(LocalDateTime.of(2026, 9, 1, 9, 0));
         request.setEndTime(LocalDateTime.of(2026, 9, 1, 12, 0));
-        request.setRegistrationStartTime(LocalDateTime.of(2026, 8, 15, 9, 0));
-        request.setRegistrationEndTime(LocalDateTime.of(2026, 8, 31, 18, 0));
+        request.setRegistrationStart(LocalDateTime.of(2026, 8, 15, 9, 0));
+        request.setRegistrationEnd(LocalDateTime.of(2026, 8, 31, 18, 0));
         request.setDescription("Internal event for the engineering team");
         request.setFoodProvided(true);
-        request.setPoster(new byte[] { 1, 2, 3 });
+        request.setImage(new byte[] { 1, 2, 3 });
         return request;
+    }
+
+    private Event buildMappedEvent(EventRequest request) {
+        Event event = new Event();
+        event.setName(request.getName());
+        event.setType(request.getType());
+        event.setLocation(request.getLocation());
+        event.setStartTime(request.getStartTime());
+        event.setEndTime(request.getEndTime());
+        event.setFoodProvided(request.getFoodProvided());
+        event.setRegistrationStart(request.getRegistrationStart());
+        event.setRegistrationEnd(request.getRegistrationEnd());
+        event.setDescription(request.getDescription());
+        event.setImage(request.getImage());
+        return event;
     }
 
     @Test

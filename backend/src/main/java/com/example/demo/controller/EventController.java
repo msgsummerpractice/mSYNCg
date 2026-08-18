@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.Authentication;
+
 import com.example.demo.filtering.events.EventSpec;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,15 +28,17 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class EventController {
 
     private final EventService eventService;
 
-    @PreAuthorize("hasRole('HR_MANAGER') or hasRole('MARKETING_ORGANIZER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
     @PostMapping
-    public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest) {
-        EventResponse eventResponse = eventService.create(eventRequest);
-        eventResponse.setStatus("Draft");
+    public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest,
+            Authentication authentication) {
+        EventResponse eventResponse = eventService.create(eventRequest, authentication.getName());
+
         return ResponseEntity.ok(eventResponse);
     }
 

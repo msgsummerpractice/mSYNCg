@@ -21,7 +21,7 @@ import com.example.demo.dto.request.UserRequest;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements ServiceInterface<UserRequest, UserResponse, UserViewResponse, UserSpec> {
+public class UserService implements UserServiceInterface<UserRequest, UserResponse, UserViewResponse, UserSpec> {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
