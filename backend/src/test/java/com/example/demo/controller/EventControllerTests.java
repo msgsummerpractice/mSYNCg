@@ -37,96 +37,111 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class EventControllerTests {
 
-    @Mock
-    private EventService eventService;
+	@Mock
+	private EventService eventService;
 
-    @InjectMocks
-    private EventController eventController;
+	@InjectMocks
+	private EventController eventController;
 
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-	mockMvc = MockMvcBuilders.standaloneSetup(eventController)
-		.setCustomArgumentResolvers(
-			new SpecificationArgumentResolver(),
-			new PageableHandlerMethodArgumentResolver())
-		.setControllerAdvice(new GlobalExceptionHandler())
-		.build();
-    }
+	@BeforeEach
+	void setUp() {
+		mockMvc = MockMvcBuilders.standaloneSetup(eventController)
+				.setCustomArgumentResolvers(
+						new SpecificationArgumentResolver(),
+						new PageableHandlerMethodArgumentResolver())
+				.setControllerAdvice(new GlobalExceptionHandler())
+				.build();
+	}
 
-    @Test
-    void getEvents_WhenNoFilters_ReturnsPageOfEvents() throws Exception {
-	Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
+	@Test
+	void getEvents_WhenNoFilters_ReturnsPageOfEvents() throws Exception {
+		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-	when(eventService.getAll(any(EventSpec.class), any(Pageable.class))).thenReturn(page);
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
 
-	mockMvc.perform(get("/api/events"))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.content[0].id").value(1))
-		.andExpect(jsonPath("$.content[0].name").value("Team event"))
-		.andExpect(jsonPath("$.content[0].status").value(EventStatus.PUBLISHED.name()))
-		.andExpect(jsonPath("$.totalElements").value(1));
-    }
+		mockMvc.perform(get("/api/events"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.content[0].id").value(1))
+				.andExpect(jsonPath("$.content[0].name").value("Team event"))
+				.andExpect(jsonPath("$.content[0].status").value(EventStatus.PUBLISHED.name()))
+				.andExpect(jsonPath("$.totalElements").value(1));
 
-    @Test
-    void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
-	when(eventService.getAll(any(EventSpec.class), any(Pageable.class)))
-		.thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
+		assertNotNull(specCaptor.getValue());
+		assertNotNull(pageableCaptor.getValue());
+	}
 
-	mockMvc.perform(get("/api/events").param("name", "Nobody"))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.content").isEmpty())
-		.andExpect(jsonPath("$.totalElements").value(0));
-    }
+	@Test
+	void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
-    @Test
-    void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
-	when(eventService.getAll(any(EventSpec.class), any(Pageable.class)))
-		.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
+		mockMvc.perform(get("/api/events").param("name", "Nobody"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.content").isEmpty())
+				.andExpect(jsonPath("$.totalElements").value(0));
 
-	mockMvc.perform(get("/api/events")
-		.param("page", "2")
-		.param("size", "5"))
-		.andExpect(status().isOk());
+		assertNotNull(specCaptor.getValue());
+		assertNotNull(pageableCaptor.getValue());
+	}
 
-	ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-	verify(eventService).getAll(any(EventSpec.class), pageableCaptor.capture());
+	@Test
+	void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
 
-	assertEquals(2, pageableCaptor.getValue().getPageNumber());
-	assertEquals(5, pageableCaptor.getValue().getPageSize());
-    }
+		mockMvc.perform(get("/api/events")
+				.param("page", "2")
+				.param("size", "5"))
+				.andExpect(status().isOk());
 
-    @Test
-    void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
-	Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
+		assertNotNull(specCaptor.getValue());
+		assertEquals(2, pageableCaptor.getValue().getPageNumber());
+		assertEquals(5, pageableCaptor.getValue().getPageSize());
+	}
 
-	when(eventService.getAll(any(EventSpec.class), any(Pageable.class))).thenReturn(page);
+	@Test
+	void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
+		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-	mockMvc.perform(get("/api/events")
-		.param("name", "Team")
-		.param("status", EventStatus.PUBLISHED.name()))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.content[0].name").value("Team event"));
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
 
-	ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-	verify(eventService).getAll(specCaptor.capture(), any(Pageable.class));
+		mockMvc.perform(get("/api/events")
+				.param("name", "Team")
+				.param("status", EventStatus.PUBLISHED.name()))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.content[0].name").value("Team event"));
 
-	assertNotNull(specCaptor.getValue());
-    }
+		assertNotNull(specCaptor.getValue());
+		assertNotNull(pageableCaptor.getValue());
+	}
 
-    @Test
-    void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
-	when(eventService.getAll(any(EventSpec.class), any(Pageable.class)))
-		.thenThrow(new RuntimeException("Database unavailable"));
+	@Test
+	void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+				.thenThrow(new RuntimeException("Database unavailable"));
 
-	mockMvc.perform(get("/api/events"))
-		.andExpect(status().isInternalServerError())
-		.andExpect(jsonPath("$.error").value("Internal Server Error"));
-    }
+		mockMvc.perform(get("/api/events"))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
 
-    private EventViewResponse buildViewResponse() {
-	return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
-		EventType.EXTERNAL, Location.CLUJ_NAPOCA);
-    }
+		assertNotNull(specCaptor.getValue());
+		assertNotNull(pageableCaptor.getValue());
+	}
+
+	private EventViewResponse buildViewResponse() {
+		return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
+				EventType.EXTERNAL, Location.CLUJ_NAPOCA);
+	}
 }

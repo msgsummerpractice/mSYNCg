@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventResponse;
@@ -10,6 +11,7 @@ import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
 import com.example.demo.repository.EventRepository;
 
+@Service
 public class EventService implements ServiceInterface<EventRequest, EventResponse, EventViewResponse, EventSpec> {
 
     private final EventRepository eventRepository;
