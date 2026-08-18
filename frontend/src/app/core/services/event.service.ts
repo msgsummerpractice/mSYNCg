@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { EventDraftRequest, EventResponse } from '../models/event.model';
+import { Event as AppEvent, EventDraftRequest, EventResponse } from '../models/event.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,5 +18,9 @@ export class EventService {
 
   updateDraft(id: number, event: EventDraftRequest): Observable<EventResponse> {
     return this.http.put<EventResponse>(`${this.eventsUrl}/${id}`, event);
+  }
+
+  getEventById(id: number): Observable<AppEvent> {
+    return this.http.get<AppEvent>(`${this.eventsUrl}/${id}`);
   }
 }
