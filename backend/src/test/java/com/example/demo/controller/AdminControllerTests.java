@@ -81,7 +81,7 @@ public class AdminControllerTests {
         Page<UserViewResponse> page =
                 new PageImpl<>(List.of(user), PageRequest.of(0, 20), 1);
 
-       when(userService.getUsers(
+       when(userService.getAll(
         notNull(),
         eq(PageRequest.of(0, 20))
         )).thenReturn(page);
@@ -94,7 +94,7 @@ public class AdminControllerTests {
                 .andExpect(jsonPath("$.content[0].email").value("ada@example.com"))
                 .andExpect(jsonPath("$.totalElements").value(1));
 
-        verify(userService).getUsers(
+        verify(userService).getAll(
         notNull(),
         eq(PageRequest.of(0, 20))
         );

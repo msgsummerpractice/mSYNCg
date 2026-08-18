@@ -177,12 +177,12 @@ public class EventControllerTests {
 
 	@Test
 	void getEventDetails_whenEventDoesNotExist_returnsNotFound() throws Exception {
-		when(eventService.getById(99)).thenThrow(new NotFoundException("Event with id 99 was not found."));
+		when(eventService.getById(99)).thenThrow(new NotFoundException("Event", 99));
 
 		mockMvc.perform(get("/api/events/99"))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.error").value("Not Found"))
-				.andExpect(jsonPath("$.message").value("Event with id 99 was not found."));
+				.andExpect(jsonPath("$.message").value("Event with id 99 not found"));
 	}
 
 	@Test

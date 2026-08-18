@@ -29,7 +29,7 @@ public class AdminController {
             Pageable pageable) {
 
         Page<UserViewResponse> response =
-                userService.getUsers(userSpec, pageable);
+                userService.getAll(userSpec, pageable);
 
         return ResponseEntity.ok(response);
     }

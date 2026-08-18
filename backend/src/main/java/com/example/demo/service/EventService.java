@@ -42,7 +42,7 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
 
     public EventDetailsResponse getById(Integer id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Event with id " + id + " was not found."));
+                .orElseThrow(() -> new NotFoundException("Event", id));
 
         EventDetailsResponse response = modelMapper.map(event, EventDetailsResponse.class);
 

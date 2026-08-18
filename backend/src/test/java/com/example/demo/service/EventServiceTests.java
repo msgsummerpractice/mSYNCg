@@ -179,7 +179,7 @@ public class EventServiceTests {
 
 		NotFoundException exception = assertThrows(NotFoundException.class, () -> eventService.getById(99));
 
-		assertEquals("Event with id 99 was not found.", exception.getMessage());
+		assertEquals("Event with id 99 not found", exception.getMessage());
 		verifyNoInteractions(modelMapper);
 	}
 
