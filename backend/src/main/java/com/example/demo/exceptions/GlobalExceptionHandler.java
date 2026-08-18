@@ -61,6 +61,23 @@ public class GlobalExceptionHandler {
 	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(
+	    NotFoundException exception,
+	    HttpServletRequest request
+    ) {
+	ErrorResponse response = new ErrorResponse(
+		Instant.now(),
+		HttpStatus.NOT_FOUND.value(),
+		"Not Found",
+		exception.getMessage(),
+		request.getRequestURI(),
+		List.of()
+	);
+
+	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
 	    Exception exception,
