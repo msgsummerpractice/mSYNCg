@@ -59,7 +59,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenNoFilters_ReturnsPageOfEvents() throws Exception {
+	void getEvents_whenNoFilters_returnsPageOfEvents() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -78,7 +78,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
+	void getEvents_whenNoResults_returnsEmptyPage() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -129,7 +129,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+	void getEvents_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -149,7 +149,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_WhenEventExists_ReturnsEventDetails() throws Exception {
+	void getEventDetails_whenEventExists_returnsEventDetails() throws Exception {
 		EventDetailsResponse details = buildDetailsResponse();
 		details.setImage("AQIDBA==");
 
@@ -168,7 +168,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_WhenEventHasNoImage_ReturnsNullImage() throws Exception {
+	void getEventDetails_whenEventHasNoImage_returnsNullImage() throws Exception {
 		when(eventService.getById(1)).thenReturn(buildDetailsResponse());
 
 		mockMvc.perform(get("/api/events/1"))
@@ -177,7 +177,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_WhenEventDoesNotExist_ReturnsNotFound() throws Exception {
+	void getEventDetails_whenEventDoesNotExist_returnsNotFound() throws Exception {
 		when(eventService.getById(99)).thenThrow(new NotFoundException("Event with id 99 was not found."));
 
 		mockMvc.perform(get("/api/events/99"))
@@ -187,7 +187,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_WhenIdIsNotANumber_ReturnsInternalServerError() throws Exception {
+	void getEventDetails_whenIdIsNotANumber_returnsInternalServerError() throws Exception {
 		mockMvc.perform(get("/api/events/abc"))
 				.andExpect(status().isInternalServerError());
 
@@ -195,7 +195,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+	void getEventDetails_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
 		when(eventService.getById(1)).thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(get("/api/events/1"))
