@@ -5,10 +5,15 @@ import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import com.example.demo.exceptions.ValidationException;
+import com.example.demo.filtering.users.UserSpec;
+
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
@@ -16,14 +21,14 @@ import com.example.demo.dto.request.UserRequest;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements ServiceInterface {
+public class UserService implements ServiceInterface<UserRequest, UserResponse, UserViewResponse, UserSpec> {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse createUser(UserRequest user) {
+    public UserResponse create(UserRequest user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException("email", "Email address is already in use.");
@@ -38,6 +43,13 @@ public class UserService implements ServiceInterface {
         userRepository.save(newUser);
 
         return modelMapper.map(newUser, UserResponse.class);
+    }
+
+    @Override
+    public Page<UserViewResponse> getAll(UserSpec spec, Pageable pageable) {
+        Page<User> usersPage = userRepository.findAll(spec,pageable);
+
+        return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
 }

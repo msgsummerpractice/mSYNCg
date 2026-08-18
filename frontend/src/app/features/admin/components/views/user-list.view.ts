@@ -5,12 +5,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { User } from '../../../../core/models/user.model';
 import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
+import { UserRole, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
+import {
+  UserLocation,
+  USER_LOCATION_TRANSLATION_KEYS,
+} from '../../../../core/constants/location.constant';
 
 @Component({
   selector: 'app-user-list-view',
@@ -21,6 +27,7 @@ import { ToolbarContainer } from '../../../../shared/components/containers/toolb
     MatInputModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
@@ -29,40 +36,30 @@ import { ToolbarContainer } from '../../../../shared/components/containers/toolb
   templateUrl: './user-list.view.html',
 })
 export class UserListView {
-  private readonly roleLabelKeys: Record<string, string> = {
-    Admin: 'USER_LIST.ROLES.ADMIN',
-    'HR User': 'USER_LIST.ROLES.HR_USER',
-    Participant: 'USER_LIST.ROLES.PARTICIPANT',
-    'Marketing Organizer': 'USER_LIST.ROLES.MARKETING_ORGANIZER',
-  };
-
-  private readonly locationLabelKeys: Record<string, string> = {
-    'Targu Mures': 'USER_LIST.LOCATIONS.TARGU_MURES',
-    'Cluj-Napoca': 'USER_LIST.LOCATIONS.CLUJ_NAPOCA',
-    Timisoara: 'USER_LIST.LOCATIONS.TIMISOARA',
-  };
-
   @Input() users: User[] = [];
   @Input() columns: TableColumn<User>[] = [];
 
-  @Input() roles: string[] = [];
-  @Input() locations: string[] = [];
+  @Input() roles: UserRole[] = [];
+  @Input() locations: UserLocation[] = [];
 
-  @Input() selectedRoles: string[] = [];
-  @Input() selectedLocations: string[] = [];
+  @Input() selectedRoles: UserRole[] = [];
+  @Input() selectedLocations: UserLocation[] = [];
   @Input() selectedStatuses: boolean[] = [];
-  @Input() nameQuery = '';
+  @Input() firstNameQuery = '';
+  @Input() lastNameQuery = '';
   @Input() emailQuery = '';
-  @Input() totalItems = 0;
+  @Input({ required: true }) totalItems!: number;
   @Input() pageIndex = 0;
   @Input() pageSize = 10;
   @Input() pageSizeOptions: number[] = [10, 20, 50];
+  @Input() isLoading = false;
 
-  @Output() nameSearchChange = new EventEmitter<string>();
+  @Output() firstNameSearchChange = new EventEmitter<string>();
+  @Output() lastNameSearchChange = new EventEmitter<string>();
   @Output() emailSearchChange = new EventEmitter<string>();
 
-  @Output() roleChange = new EventEmitter<string[]>();
-  @Output() locationChange = new EventEmitter<string[]>();
+  @Output() roleChange = new EventEmitter<UserRole[]>();
+  @Output() locationChange = new EventEmitter<UserLocation[]>();
   @Output() statusChange = new EventEmitter<boolean[]>();
   @Output() resetFilters = new EventEmitter<void>();
   @Output() pageChange = new EventEmitter<PageEvent>();
@@ -77,9 +74,14 @@ export class UserListView {
     return this.columns.map((col) => col.key);
   }
 
-  onNameSearch(event: Event): void {
+  onFirstNameSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.nameSearchChange.emit(value);
+    this.firstNameSearchChange.emit(value);
+  }
+
+  onLastNameSearch(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.lastNameSearchChange.emit(value);
   }
 
   onEmailSearch(event: Event): void {
@@ -87,11 +89,11 @@ export class UserListView {
     this.emailSearchChange.emit(value);
   }
 
-  getRoleLabelKey(role: string): string {
-    return this.roleLabelKeys[role] ?? role;
+  getRoleLabelKey(role: UserRole): string {
+    return USER_ROLE_TRANSLATION_KEYS[role] ?? role;
   }
 
-  getLocationLabelKey(location: string): string {
-    return this.locationLabelKeys[location] ?? location;
+  getLocationLabelKey(location: UserLocation): string {
+    return USER_LOCATION_TRANSLATION_KEYS[location] ?? location;
   }
 }

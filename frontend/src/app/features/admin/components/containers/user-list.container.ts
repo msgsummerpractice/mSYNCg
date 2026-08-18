@@ -1,50 +1,39 @@
-import { Component, computed, signal, OnInit, inject, Signal } from '@angular/core';
+import { Component, computed, signal, inject, PLATFORM_ID, DestroyRef } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
+import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
 import { UserListView } from '../views/user-list.view';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
-import { MOCK_USERS } from '../../../../core/models/user.mocks';
+import { UserFilterParams } from '../../../../core/models/user-filters.model';
+import { UserRole, USER_ROLE_DISPLAY_VALUES } from '../../../../core/constants/role.constant';
+import { UserLocation } from '../../../../core/constants/location.constant';
+import { ToastService } from '../../../../core/services/toast.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-list-container',
   imports: [UserListView],
-  template: `
-    <app-user-list-view
-      [users]="pagedUsers()"
-      [columns]="tableColumns"
-      [roles]="roles()"
-      [locations]="locations()"
-      [selectedRoles]="selectedRoles()"
-      [selectedLocations]="selectedLocations()"
-      [selectedStatuses]="selectedStatuses()"
-      [nameQuery]="nameQuery()"
-      [emailQuery]="emailQuery()"
-      [totalItems]="totalFilteredItems()"
-      [pageIndex]="pageIndex()"
-      [pageSize]="pageSize()"
-      [pageSizeOptions]="pageSizeOptions"
-      (nameSearchChange)="onNameSearchChange($event)"
-      (emailSearchChange)="onEmailSearchChange($event)"
-      (roleChange)="onRoleChange($event)"
-      (locationChange)="onLocationChange($event)"
-      (statusChange)="onStatusChange($event)"
-      (resetFilters)="onResetFilters()"
-      (pageChange)="onPageChange($event)"
-      (cellAction)="onCellChange($event)"
-    >
-    </app-user-list-view>
-  `,
+  templateUrl: 'user-list.container.html',
 })
-export class UserListContainer implements OnInit {
+export class UserListContainer {
   private adminService = inject(AdminService);
+  private destroyRef = inject(DestroyRef);
+  private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
   tableColumns: TableColumn<User>[] = [
     {
-      key: 'fullName',
-      label: 'USER_LIST.TABLE.FULL_NAME',
+      key: 'firstName',
+      label: 'USER_LIST.TABLE.FIRST_NAME',
       type: 'text',
-      valueGetter: (user) => `${user.firstName} ${user.lastName}`,
+    },
+    {
+      key: 'lastName',
+      label: 'USER_LIST.TABLE.LAST_NAME',
+      type: 'text',
     },
     {
       key: 'email',
@@ -55,7 +44,7 @@ export class UserListContainer implements OnInit {
       key: 'role',
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
-      options: ['Admin', 'HR User', 'Participant', 'Marketing Organizer'],
+      options: Object.values(USER_ROLE_DISPLAY_VALUES),
     },
     {
       key: 'location',
@@ -69,93 +58,120 @@ export class UserListContainer implements OnInit {
     },
   ];
 
-  allUsers = signal<User[]>([]);
-  roles = signal<string[]>(['Admin', 'HR User', 'Participant', 'Marketing Organizer']);
-  locations = signal<string[]>(['Targu Mures', 'Cluj-Napoca', 'Timisoara']);
+  roles = signal<UserRole[]>([
+    UserRole.ADMIN,
+    UserRole.HR_USER,
+    UserRole.PARTICIPANT,
+    UserRole.MARKETING_ORGANIZER,
+  ]);
+  locations = signal<UserLocation[]>([
+    UserLocation.TARGU_MURES,
+    UserLocation.CLUJ_NAPOCA,
+    UserLocation.TIMISOARA,
+  ]);
 
-  nameQuery = signal<string>('');
+  firstNameQuery = signal<string>('');
+  lastNameQuery = signal<string>('');
   emailQuery = signal<string>('');
 
-  selectedRoles = signal<string[]>([]);
-  selectedLocations = signal<string[]>([]);
+  selectedRoles = signal<UserRole[]>([]);
+  selectedLocations = signal<UserLocation[]>([]);
   selectedStatuses = signal<boolean[]>([]);
 
   pageIndex = signal<number>(0);
   pageSize = signal<number>(10);
   pageSizeOptions: number[] = [10, 20, 50];
+  pagedUsers = signal<User[]>([]);
+  totalFilteredItems = signal<number>(0);
+  isLoading = signal<boolean>(false);
 
-  filteredUsers: Signal<User[]> = computed((): User[] => {
-    const searchName: string = this.nameQuery().toLowerCase().trim();
-    const searchEmail: string = this.emailQuery().toLowerCase().trim();
+  private filterParams = computed<UserFilterParams>(() => ({
+    firstName: this.firstNameQuery().trim(),
+    lastName: this.lastNameQuery().trim(),
+    email: this.emailQuery().trim(),
+    roles: this.selectedRoles(),
+    locations: this.selectedLocations(),
+    statuses: this.selectedStatuses(),
+    pageId: this.pageIndex(),
+    pageSize: this.pageSize(),
+  }));
 
-    const activeRoles: string[] = this.selectedRoles();
-    const activeLocations: string[] = this.selectedLocations();
-    const activeStatuses: boolean[] = this.selectedStatuses();
+  private searchParams = computed(() => ({
+    firstName: this.firstNameQuery().trim(),
+    lastName: this.lastNameQuery().trim(),
+    email: this.emailQuery().trim(),
+    roles: this.selectedRoles(),
+    locations: this.selectedLocations(),
+    statuses: this.selectedStatuses(),
+  }));
 
-    return this.allUsers().filter((user) => {
-      const fullName: string = `${user.firstName} ${user.lastName}`.toLowerCase();
-      const reverseName: string = `${user.lastName} ${user.firstName}`.toLowerCase();
-      const matchesName: boolean =
-        searchName === '' || fullName.includes(searchName) || reverseName.includes(searchName);
+  constructor() {
+    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+      return;
+    }
 
-      const email: string = (user.email || '').toLowerCase();
-      const matchesEmail: boolean = searchEmail === '' || email.includes(searchEmail);
+    this.isLoading.set(true);
 
-      const matchesRole: boolean = activeRoles.length === 0 || activeRoles.includes(user.role);
-      const matchesLocation: boolean =
-        activeLocations.length === 0 || activeLocations.includes(user.location);
-
-      const userStatus = (user as any).status;
-      const matchesStatus: boolean =
-        activeStatuses.length === 0 || activeStatuses.includes(userStatus);
-
-      return matchesName && matchesEmail && matchesRole && matchesLocation && matchesStatus;
-    });
-  });
-
-  totalFilteredItems: Signal<number> = computed((): number => this.filteredUsers().length);
-
-  pagedUsers: Signal<User[]> = computed((): User[] => {
-    const start: number = this.pageIndex() * this.pageSize();
-    const end: number = start + this.pageSize();
-    return this.filteredUsers().slice(start, end);
-  });
-
-  ngOnInit(): void {
-    // this.adminService.getAllUsers().subscribe({
-    //   next: (users) => this.allUsers.set(users),
-    //   error: (err) => console.error('Failed to load users', err),
-    // });
-    this.allUsers.set(MOCK_USERS);
+    toObservable(this.searchParams)
+      .pipe(
+        debounceTime(750),
+        tap(() => this.isLoading.set(true)),
+        switchMap(() =>
+          this.adminService
+            .getUsers(this.filterParams())
+            .pipe(finalize(() => this.isLoading.set(false)))
+        ),
+        takeUntilDestroyed()
+      )
+      .subscribe({
+        next: (response) => {
+          this.pagedUsers.set(response.content);
+          this.totalFilteredItems.set(response.totalElements);
+        },
+        error: (err) => this.handleLoadError(err),
+      });
   }
 
-  onNameSearchChange(value: string): void {
-    this.nameQuery.set(value);
+  onFirstNameSearchChange(value: string): void {
+    this.isLoading.set(true);
+    this.firstNameQuery.set(value);
+    this.pageIndex.set(0);
+  }
+
+  onLastNameSearchChange(value: string): void {
+    this.isLoading.set(true);
+    this.lastNameQuery.set(value);
     this.pageIndex.set(0);
   }
 
   onEmailSearchChange(value: string): void {
+    this.isLoading.set(true);
     this.emailQuery.set(value);
     this.pageIndex.set(0);
   }
 
-  onRoleChange(value: string[]): void {
+  onRoleChange(value: UserRole[]): void {
+    this.isLoading.set(true);
     this.selectedRoles.set(value);
     this.pageIndex.set(0);
   }
 
-  onLocationChange(value: string[]): void {
+  onLocationChange(value: UserLocation[]): void {
+    this.isLoading.set(true);
     this.selectedLocations.set(value);
     this.pageIndex.set(0);
   }
 
   onStatusChange(value: boolean[]): void {
+    this.isLoading.set(true);
     this.selectedStatuses.set(value);
     this.pageIndex.set(0);
   }
 
   onResetFilters(): void {
-    this.nameQuery.set('');
+    this.isLoading.set(true);
+    this.firstNameQuery.set('');
+    this.lastNameQuery.set('');
     this.emailQuery.set('');
     this.selectedRoles.set([]);
     this.selectedLocations.set([]);
@@ -164,9 +180,32 @@ export class UserListContainer implements OnInit {
   }
 
   onPageChange(event: PageEvent): void {
+    this.isLoading.set(true);
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
+    this.loadUsers();
   }
 
-  onCellChange(event: { row: User; key: string; newValue: unknown }): void {}
+  onCellChange(event: { row: User; key: string; newValue: unknown }): void {
+    //TODO: Implement cell change logic, e.g., send an update request to the server
+  }
+
+  private loadUsers(): void {
+    this.isLoading.set(true);
+    this.adminService
+      .getUsers(this.filterParams())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.pagedUsers.set(response.content);
+          this.totalFilteredItems.set(response.totalElements);
+        },
+        error: (err) => this.handleLoadError(err),
+      });
+  }
+
+  private handleLoadError(error: unknown): void {
+    this.toastService.showError(this.translateService.instant('USER_LIST.LOAD_ERROR'));
+  }
 }
