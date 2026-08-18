@@ -43,18 +43,24 @@ function isInvalidRange(
   }
 
   const start = new Date(startDate);
+  start.setHours(0, 0, 0, 0);
+
   const end = new Date(endDate);
+  end.setHours(0, 0, 0, 0);
 
-  if (end < start || end == start) {
-    return true;
+  if (end.getTime() < start.getTime()) {
+    return true; 
   }
 
-  if (end.getTime() !== start.getTime() || !startTime || !endTime) {
-    return false;
+  if (end.getTime() > start.getTime() || !startTime || !endTime) {
+    return false; 
   }
 
-  start.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0);
-  end.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0);
+  const fullStart = new Date(start);
+  fullStart.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0);
 
-  return end < start;
+  const fullEnd = new Date(end);
+  fullEnd.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0);
+
+  return fullEnd.getTime() < fullStart.getTime();
 }
