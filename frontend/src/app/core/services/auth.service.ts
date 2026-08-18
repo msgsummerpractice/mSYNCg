@@ -7,7 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/user-login.model';
 import { UserRegisterRequest, UserRegisterResponse } from '../models/user-register.model';
-import { UserRole } from '../constants/role.constant';
+import { USER_ROLES, UserRole } from '../constants/role.constant';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -47,7 +47,7 @@ export class AuthService {
 
     const role = payload['role'].replace(/^ROLE_/, '') as UserRole;
 
-    return Object.values(UserRole).includes(role) ? role : null;
+    return USER_ROLES.includes(role) ? role : null;
   }
 
   hasRole(role: UserRole): boolean {
