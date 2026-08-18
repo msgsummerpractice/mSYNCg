@@ -68,6 +68,7 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
         return modelMapper.map(event, EventResponse.class);
     }
 
+
     @Override
     public Page<EventViewResponse> getAll(EventSpec spec, Pageable pageable) {
         Page<Event> eventsPage = eventRepository.findAll(spec, pageable);

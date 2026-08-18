@@ -167,4 +167,82 @@ public class EventServiceTests {
         request.setPoster(new byte[] { 1, 2, 3 });
         return request;
     }
+
+	@Test
+	void getEvents_WhenEventsExist_ReturnsMappedPage() {
+		Event event = new Event();
+		EventViewResponse viewResponse = new EventViewResponse();
+		viewResponse.setId(1);
+		viewResponse.setName("Team event");
+		EventSpec spec = mock(EventSpec.class);
+		Pageable pageable = PageRequest.of(0, 20);
+		Page<Event> eventsPage = new PageImpl<>(List.of(event), pageable, 1);
+
+		when(eventRepository.findAll(spec, pageable)).thenReturn(eventsPage);
+		when(modelMapper.map(event, EventViewResponse.class)).thenReturn(viewResponse);
+
+		Page<EventViewResponse> result = eventService.getAll(spec, pageable);
+
+		assertEquals(1, result.getTotalElements());
+		assertEquals(viewResponse, result.getContent().get(0));
+		assertEquals(pageable, result.getPageable());
+		verify(modelMapper).map(event, EventViewResponse.class);
+	}
+
+	@Test
+	void getEvents_WhenNoEventsMatch_ReturnsEmptyPageWithoutMapping() {
+		EventSpec spec = mock(EventSpec.class);
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(eventRepository.findAll(spec, pageable))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		Page<EventViewResponse> result = eventService.getAll(spec, pageable);
+
+		assertTrue(result.getContent().isEmpty());
+		assertEquals(0, result.getTotalElements());
+		verifyNoInteractions(modelMapper);
+	}
+
+	@Test
+	void getEvents_WhenCalledWithSpecAndPageable_PassesThemToRepository() {
+		EventSpec spec = mock(EventSpec.class);
+		Pageable pageable = PageRequest.of(2, 5);
+
+		when(eventRepository.findAll(spec, pageable))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(spec, pageable);
+
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		verify(eventRepository).findAll(specCaptor.capture(), pageableCaptor.capture());
+
+		assertEquals(spec, specCaptor.getValue());
+		assertEquals(pageable, pageableCaptor.getValue());
+	}
+
+	@Test
+	void getEvents_WhenSpecIsNull_QueriesRepositoryWithoutFilters() {
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		Page<EventViewResponse> result = eventService.getAll(null, pageable);
+
+		assertTrue(result.getContent().isEmpty());
+		verify(eventRepository).findAll((EventSpec) isNull(), eq(pageable));
+	}
+
+	@Test
+	void getEvents_WhenRepositoryFails_PropagatesException() {
+		EventSpec spec = mock(EventSpec.class);
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(eventRepository.findAll(spec, pageable))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable));
+	}
 }

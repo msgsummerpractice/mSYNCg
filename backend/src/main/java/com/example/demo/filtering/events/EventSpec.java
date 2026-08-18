@@ -1,8 +1,21 @@
 package com.example.demo.filtering.events;
 
 import org.springframework.data.jpa.domain.Specification;
-import com.example.demo.model.Event;
+import net.kaczmarzyk.spring.data.jpa.domain.Equal;
+import net.kaczmarzyk.spring.data.jpa.domain.LikeIgnoreCase;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Disjunction;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 
-public interface EventSpec extends Specification<Event> {
+@Disjunction(value = {
+    @And({
+            @Spec(path = "name", params = "name", spec = LikeIgnoreCase.class),
+            @Spec(path = "type", params = "type", spec = Equal.class),
+            @Spec(path = "status", params = "status", spec = Equal.class),
+            @Spec(path = "location", params = "location", spec = LikeIgnoreCase.class),
+            @Spec(path = "startTime", params = "startTime", spec = Equal.class)
+        })
+})
+public interface EventSpec extends Specification<com.example.demo.model.Event> {
 
 }

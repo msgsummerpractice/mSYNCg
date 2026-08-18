@@ -15,7 +15,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class EventViewResponse {
-
     private Integer id;
     private String name;
     private LocalDateTime startTime;
