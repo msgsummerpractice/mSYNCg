@@ -7,7 +7,7 @@ export enum EventTypeEnum {
   LOCAL = 'LOCAL',
 }
 
-export const eventTypes = Object.values(EventTypeEnum);
+export const EVENT_TYPES = Object.values(EventTypeEnum);
 
 export enum EventStatusEnum {
   DRAFT = 'DRAFT',
