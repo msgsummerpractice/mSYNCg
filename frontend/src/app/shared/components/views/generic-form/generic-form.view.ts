@@ -14,12 +14,14 @@ export class GenericFormView {
   @Input() isLoading: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();
+  @Output() invalidSubmit = new EventEmitter<void>();
 
   onSubmit(): void {
     if (this.formGroup.valid) {
       this.formSubmit.emit();
     } else {
       this.formGroup.markAllAsTouched();
+      this.invalidSubmit.emit();
     }
   }
 }
