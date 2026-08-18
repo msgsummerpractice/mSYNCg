@@ -89,7 +89,7 @@ export class EventListContainer {
 
   isLoading = signal<boolean>(false);
 
-  userRole = signal<UserRole | null>(this.authService.getCurrentUserRole());
+  userRole = signal<UserRole | null>(this.authService.getRole());
 
   // Real backend state:
   // pagedEvents = signal<Event[]>([]);
