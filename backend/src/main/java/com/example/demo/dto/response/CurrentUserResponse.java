@@ -2,11 +2,18 @@ package com.example.demo.dto.response;
 
 import com.example.demo.model.UserRole;
 
-public record CurrentUserResponse(
-        Integer id,
-        String firstName,
-        String lastName,
-        String email,
-        UserRole role
-) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CurrentUserResponse {
+
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private UserRole role;
 }
