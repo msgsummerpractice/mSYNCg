@@ -2,7 +2,7 @@
 
 import { EventStatus } from '../event-status.constant';
 import { EventType } from '../event-type.constant';
-import { Location } from '../location.constant';
+import { LocationEnum } from '../../models/location.model';
 import { Event } from '../../models/event.model';
 
 export const MOCK_EVENTS: Event[] = [
@@ -12,7 +12,7 @@ export const MOCK_EVENTS: Event[] = [
     startTime: '2026-08-20T18:00:00',
     status: EventStatus.PUBLISHED,
     type: EventType.INTERNAL,
-    location: Location.CLUJ_NAPOCA,
+    location: LocationEnum.CLUJ_NAPOCA,
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ export const MOCK_EVENTS: Event[] = [
     startTime: '2026-09-10T09:30:00',
     status: EventStatus.DRAFT,
     type: EventType.EXTERNAL,
-    location: Location.TIMISOARA,
+    location: LocationEnum.TIMISOARA,
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ export const MOCK_EVENTS: Event[] = [
     startTime: '2026-10-05T17:00:00',
     status: EventStatus.COMPLETED,
     type: EventType.LOCAL,
-    location: Location.TARGU_MURES,
+    location: LocationEnum.TARGU_MURES,
   },
   {
     id: 4,
@@ -36,7 +36,7 @@ export const MOCK_EVENTS: Event[] = [
     startTime: '2026-10-15T10:00:00',
     status: EventStatus.PUBLISHED,
     type: EventType.INTERNAL,
-    location: Location.TIMISOARA,
+    location: LocationEnum.TIMISOARA,
   },
   {
     id: 5,
@@ -44,6 +44,6 @@ export const MOCK_EVENTS: Event[] = [
     startTime: '2026-12-18T18:30:00',
     status: EventStatus.DRAFT,
     type: EventType.LOCAL,
-    location: Location.CLUJ_NAPOCA,
+    location: LocationEnum.CLUJ_NAPOCA,
   },
 ];

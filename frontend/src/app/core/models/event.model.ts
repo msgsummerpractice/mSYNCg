@@ -1,6 +1,5 @@
 import { EventStatus } from '../constants/event-status.constant';
 import { EventType } from '../constants/event-type.constant';
-import { Location } from '../constants/location.constant';
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
 
@@ -10,7 +9,7 @@ export interface Event {
   startTime: string;
   status: EventStatus;
   type: EventType;
-  location: Location;
+  location: LocationEnum;
 }
 
 export interface PageResponse<T> {
@@ -22,7 +21,6 @@ export interface PageResponse<T> {
   first: boolean;
   last: boolean;
 }
-
 
 export enum EventTypeEnum {
   INTERNAL = 'INTERNAL',

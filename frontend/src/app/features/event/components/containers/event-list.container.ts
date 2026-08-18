@@ -14,7 +14,7 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 
 import { EventStatus } from '../../../../core/constants/event-status.constant';
 import { EventType } from '../../../../core/constants/event-type.constant';
-import { Location } from '../../../../core/constants/location.constant';
+import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { MOCK_EVENTS } from '../../../../core/constants/mocks/event.mocks';
 
@@ -74,14 +74,14 @@ export class EventListContainer {
     EventStatus.COMPLETED,
   ]);
 
-  locations = signal<Location[]>([Location.CLUJ_NAPOCA, Location.TARGU_MURES, Location.TIMISOARA]);
+  locations = signal<LocationEnum[]>([LocationEnum.CLUJ_NAPOCA, LocationEnum.TARGU_MURES, LocationEnum.TIMISOARA]);
 
   nameQuery = signal<string>('');
   startTimeQuery = signal<string>('');
 
   selectedTypes = signal<EventType[]>([]);
   selectedStatuses = signal<EventStatus[]>([]);
-  selectedLocations = signal<Location[]>([]);
+  selectedLocations = signal<LocationEnum[]>([]);
 
   pageIndex = signal<number>(0);
   pageSize = signal<number>(10);
@@ -188,7 +188,7 @@ export class EventListContainer {
     this.applyMockFilters();
   }
 
-  onLocationChange(value: Location[]): void {
+  onLocationChange(value: LocationEnum[]): void {
     // BACKEND VERSION
     /*
     this.isLoading.set(true);
