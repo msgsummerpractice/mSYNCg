@@ -98,7 +98,10 @@
     },
     "BUTTONS": {
       "RESET_FILTERS": "Reset filters",
-      "VIEW": "View"
+      "VIEW": "View",
+      "EDIT": "Edit",
+      "PUBLISH": "Publish",
+      "COMPLETE": "Complete"
     },
     "LOAD_ERROR": "Failed to load events."
   }

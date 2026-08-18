@@ -98,7 +98,10 @@
     },
     "BUTTONS": {
       "RESET_FILTERS": "Resetează filtrele",
-      "VIEW": "Vezi"
+      "VIEW": "Vezi",
+      "EDIT": "Editează",
+      "PUBLISH": "Publică",
+      "COMPLETE": "Finalizează"
     },
     "LOAD_ERROR": "Evenimentele nu au putut fi încărcate."
   }

@@ -98,7 +98,10 @@
     },
     "BUTTONS": {
       "RESET_FILTERS": "Filter zurücksetzen",
-      "VIEW": "Anzeigen"
+      "VIEW": "Anzeigen",
+      "EDIT": "Bearbeiten",
+      "PUBLISH": "Veröffentlichen",
+      "COMPLETE": "Abschließen"
     },
     "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
   }

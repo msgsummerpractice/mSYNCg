@@ -7,6 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -19,6 +22,7 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { EventStatus } from '../../../../core/constants/event-status.constant';
 import { EventType } from '../../../../core/constants/event-type.constant';
 import { Location } from '../../../../core/constants/location.constant';
+import { UserRole } from '../../../../core/constants/role.constant';
 
 @Component({
   selector: 'app-event-list-view',
@@ -31,6 +35,9 @@ import { Location } from '../../../../core/constants/location.constant';
     MatSelectModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatButtonModule,
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
@@ -60,6 +67,8 @@ export class EventListView {
 
   @Input() isLoading = false;
 
+  @Input() userRole: UserRole | null = null;
+
   @Output() nameSearchChange = new EventEmitter<string>();
   @Output() startTimeChange = new EventEmitter<string>();
 
@@ -71,6 +80,17 @@ export class EventListView {
   @Output() pageChange = new EventEmitter<PageEvent>();
 
   @Output() viewEvent = new EventEmitter<number>();
+  @Output() editEvent = new EventEmitter<number>();
+  @Output() publishEvent = new EventEmitter<number>();
+  @Output() completeEvent = new EventEmitter<number>();
+
+  get canManageEvents(): boolean {
+    return (
+      this.userRole === UserRole.ADMIN ||
+      this.userRole === UserRole.MARKETING_ORGANIZER ||
+      this.userRole === UserRole.HR_USER
+    );
+  }
 
   get resolvedTotalItems(): number {
     return this.totalItems > 0 ? this.totalItems : this.events.length;

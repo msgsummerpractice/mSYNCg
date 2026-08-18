@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 import { EventListView } from '../views/event-list.view';
 import { EventService } from '../../../../core/services/event.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Event } from '../../../../core/models/event.model';
 import { EventFilterParams } from '../../../../core/models/event-filter.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
@@ -14,6 +15,7 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { EventStatus } from '../../../../core/constants/event-status.constant';
 import { EventType } from '../../../../core/constants/event-type.constant';
 import { Location } from '../../../../core/constants/location.constant';
+import { UserRole } from '../../../../core/constants/role.constant';
 import { MOCK_EVENTS } from '../../../../core/constants/mocks/event.mocks';
 
 @Component({
@@ -24,6 +26,7 @@ import { MOCK_EVENTS } from '../../../../core/constants/mocks/event.mocks';
 })
 export class EventListContainer {
   private readonly eventService = inject(EventService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -85,6 +88,8 @@ export class EventListContainer {
   pageSizeOptions: number[] = [10, 20, 50];
 
   isLoading = signal<boolean>(false);
+
+  userRole = signal<UserRole | null>(this.authService.getCurrentUserRole());
 
   // Real backend state:
   // pagedEvents = signal<Event[]>([]);
@@ -240,6 +245,24 @@ export class EventListContainer {
 
   onViewEvent(eventId: number): void {
     this.router.navigate(['/events', eventId]);
+  }
+
+  onEditEvent(eventId: number): void {
+    this.router.navigate(['/events', eventId, 'edit']);
+  }
+
+  onPublishEvent(eventId: number): void {
+    this.updateMockEventStatus(eventId, EventStatus.PUBLISHED);
+  }
+
+  onCompleteEvent(eventId: number): void {
+    this.updateMockEventStatus(eventId, EventStatus.COMPLETED);
+  }
+
+  private updateMockEventStatus(eventId: number, status: EventStatus): void {
+    this.pagedEvents.update((events) =>
+      events.map((event) => (event.id === eventId ? { ...event, status } : event))
+    );
   }
 
   private applyMockFilters(): void {

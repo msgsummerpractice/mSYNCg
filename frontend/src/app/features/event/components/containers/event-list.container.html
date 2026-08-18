@@ -14,6 +14,7 @@
   [pageSize]="pageSize()"
   [pageSizeOptions]="pageSizeOptions"
   [isLoading]="isLoading()"
+  [userRole]="userRole()"
   (nameSearchChange)="onNameSearchChange($event)"
   (typeChange)="onTypeChange($event)"
   (statusChange)="onStatusChange($event)"
@@ -22,5 +23,8 @@
   (resetFilters)="onResetFilters()"
   (pageChange)="onPageChange($event)"
   (viewEvent)="onViewEvent($event)"
+  (editEvent)="onEditEvent($event)"
+  (publishEvent)="onPublishEvent($event)"
+  (completeEvent)="onCompleteEvent($event)"
 >
 </app-event-list-view>
