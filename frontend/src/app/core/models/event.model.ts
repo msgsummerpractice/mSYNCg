@@ -34,10 +34,10 @@ export type EventForm = {
 export interface EventDraftRequest {
   name: string;
   description: string;
-  startTime: string;
-  endTime: string;
-  registrationStart: string;
-  registrationEnd: string;
+  startTime: Date | null;
+  endTime: Date | null;
+  registrationStart: Date | null;
+  registrationEnd: Date | null;
   type: EventTypeEnum;
   location: LocationEnum;
   foodProvided: boolean;
@@ -53,10 +53,10 @@ export interface Event {
   status: EventStatusEnum;
   image: string | null;
   location: LocationEnum;
-  startTime: string;
-  endTime: string;
-  registrationStart: string;
-  registrationEnd: string;
+  startTime: Date | null;
+  endTime: Date | null;
+  registrationStart: Date | null;
+  registrationEnd: Date | null;
   foodProvided: boolean | null;
 }
 

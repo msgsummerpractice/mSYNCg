@@ -10,7 +10,7 @@ import { EventTypeEnum } from '../../../../core/models/event.model';
 import { EventCreationView } from '../views/event-creation/event-creation.view';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { eventDateTimeRangeValidator } from '../../../../core/validators/time-range.validatior';
-import { formatDateTime } from '../../../../core/utils/date.util';
+import { combineDateTime } from '../../../../core/utils/date.util';
 
 @Component({
   selector: 'app-event-creation-container',
@@ -116,10 +116,10 @@ export class EventCreationContainer {
     const payload: EventDraftRequest = {
       name: value.title,
       description: value.description,
-      startTime: formatDateTime(value.startDate, value.startTime),
-      endTime: formatDateTime(value.endDate, value.endTime),
-      registrationStart: formatDateTime(value.registrationStartDate, value.registrationStartTime),
-      registrationEnd: formatDateTime(value.registrationEndDate, value.registrationEndTime),
+      startTime: combineDateTime(value.startDate, value.startTime),
+      endTime: combineDateTime(value.endDate, value.endTime),
+      registrationStart: combineDateTime(value.registrationStartDate, value.registrationStartTime),
+      registrationEnd: combineDateTime(value.registrationEndDate, value.registrationEndTime),
       type: value.type,
       location: value.location,
       foodProvided: value.isFoodProvided ?? false,

@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Event as EventDetails } from '../../../../core/models/event.model';
-import { parseDateTime } from '../../../../core/utils/date.util';
 import { EventCreationView } from '../views/event-creation/event-creation.view';
 import { EventCreationContainer } from './event-creation.container';
 
@@ -37,6 +36,7 @@ export class EventUpdateContainer extends EventCreationContainer {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!Number.isNaN(id)) {
+      this.eventId = id;
       this.loadEvent(id);
     }
   }
@@ -55,14 +55,12 @@ export class EventUpdateContainer extends EventCreationContainer {
   }
 
   private fillForm(event: EventDetails): void {
-    this.eventId = event.id;
-
     this.eventFormGroup.controls.type.setValue(event.type);
 
-    const start = parseDateTime(event.startTime);
-    const end = parseDateTime(event.endTime);
-    const registrationStart = parseDateTime(event.registrationStart);
-    const registrationEnd = parseDateTime(event.registrationEnd);
+    const start = event.startTime;
+    const end = event.endTime;
+    const registrationStart = event.registrationStart;
+    const registrationEnd = event.registrationEnd;
 
     this.eventFormGroup.patchValue({
       title: event.name,
