@@ -5,8 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
-
+import org.springframework.stereotype.Service;
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
@@ -14,7 +15,9 @@ import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
+import com.example.demo.model.EventStatus;
 import com.example.demo.repository.EventRepository;
+import  com.example.demo.exceptions.EventCannotBeCompletedException;
 
 @Service
 public class EventService implements ServiceInterface<EventRequest, EventResponse, EventViewResponse, EventSpec> {
@@ -48,6 +51,36 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
 
         response.setImage(event.getImage() != null
                 ? Base64.getEncoder().encodeToString(event.getImage())
+                : null);
+
+        return response;
+    }
+
+    public EventDetailsResponse completeEvent(Integer id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event", id));
+
+        if (event.getStatus() == EventStatus.COMPLETED) {
+            throw new EventCannotBeCompletedException(
+                    "Event is already completed."
+            );
+        }
+
+        if (event.getEndTime().isAfter(LocalDateTime.now())) {
+            throw new EventCannotBeCompletedException(
+                    "Event cannot be completed before its end time."
+            );
+        }
+
+        event.setStatus(EventStatus.COMPLETED);
+
+        Event updatedEvent = eventRepository.save(event);
+
+        EventDetailsResponse response =
+                modelMapper.map(updatedEvent, EventDetailsResponse.class);
+
+        response.setImage(updatedEvent.getImage() != null
+                ? Base64.getEncoder().encodeToString(updatedEvent.getImage())
                 : null);
 
         return response;

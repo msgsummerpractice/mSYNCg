@@ -33,10 +33,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
+
+                        .requestMatchers(HttpMethod.PATCH, "/api/events/*/complete")
+                        .hasAnyRole("ADMIN", "HR_USER", "MARKETING_ORGANIZER")
+                        
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class
 );
         return http.build();
