@@ -30,10 +30,6 @@ export class EventUpdateContainer extends EventDraftContainer implements OnInit 
   private readonly toast = inject(ToastService);
   private readonly translation = inject(TranslateService);
 
-  constructor() {
-    super();
-  }
-
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
