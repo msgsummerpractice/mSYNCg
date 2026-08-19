@@ -14,10 +14,12 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastContainer } from '../../../../shared/components/containers/toast.container';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-user-list-container',
-  imports: [UserListView],
+  imports: [UserListView, ToastContainer],
   templateUrl: 'user-list.container.html',
 })
 export class UserListContainer {
@@ -26,6 +28,7 @@ export class UserListContainer {
   private toastService = inject(ToastService);
   private translateService = inject(TranslateService);
   private readonly dialog = inject(MatDialog);
+  private authService = inject(AuthService);
 
   tableColumns: TableColumn<User>[] = [
     {
@@ -190,15 +193,15 @@ export class UserListContainer {
     this.loadUsers();
   }
 
-  updateUserRole(userId: string, newRole: UserRole): void {
-    this.allUsers.update((users) => {
-      return users.map((user) => (user.email === userId ? { ...user, role: newRole } : user));
+  updateUserRole(userId: number, newRole: UserRole): void {
+    this.pagedUsers.update((users) => {
+      return users.map((user) => (user.id === userId ? { ...user, role: newRole } : user));
     });
   }
 
-  updateUserStatus(userId: string, newStatus: boolean): void {
-    this.allUsers.update((users) => {
-      return users.map((user) => (user.email === userId ? { ...user, status: newStatus } : user));
+  updateUserStatus(userId: number, newStatus: boolean): void {
+    this.pagedUsers.update((users) => {
+      return users.map((user) => (user.id === userId ? { ...user, status: newStatus } : user));
     });
   }
 
@@ -206,16 +209,20 @@ export class UserListContainer {
     const oldRole = event.oldValue as UserRole;
     const oldStatus = event.oldValue as boolean;
 
-    let isRoleChange = null;
+    let isRoleChange = false;
 
-    if (event.key === 'role' && oldRole === UserRole.ADMIN) {
+    if (
+      event.key === 'role' &&
+      event.row.email === this.authService.getEmail() &&
+      this.authService.getRole() === UserRole.ADMIN
+    ) {
       const errorMsg = this.translateService.instant('ROLE_UPDATE.ADMIN_CHANGE_ERROR');
       this.toastService.showError(errorMsg);
-      this.updateUserRole(event.row.email, oldRole);
+      this.updateUserRole(event.row.id!, oldRole);
       return;
     } else {
       isRoleChange =
-        event.key === 'role' && Object.values(UserRole).includes(event.newValue as UserRole);
+        event.key === 'role' && typeof event.newValue === 'string';
     }
 
     const isStatusChange = event.key === 'status' && typeof event.newValue === 'boolean';
@@ -233,22 +240,22 @@ export class UserListContainer {
       .subscribe((confirmed) => {
         if (!confirmed) {
           if (event.key === 'role') {
-            this.updateUserRole(event.row.email, oldRole);
+            this.updateUserRole(event.row.id!, oldRole);
           } else if (event.key === 'status') {
-            this.updateUserStatus(event.row.email, oldStatus);
+            this.updateUserStatus(event.row.id!, oldStatus);
           }
           return;
         }
 
         if (isRoleChange) {
-          this.adminService.updateUserRole(event.row.email, event.newValue as UserRole).subscribe({
+          this.adminService.updateUserRole(event.row.id!, event.newValue as UserRole).subscribe({
             next: () => {
-              this.updateUserRole(event.row.email, event.newValue as UserRole);
+              this.updateUserRole(event.row.id!, event.newValue as UserRole);
               const successMsg = this.translateService.instant('ROLE_UPDATE.SUCCESS');
               this.toastService.showSuccess(successMsg, 5000);
             },
             error: () => {
-              this.updateUserRole(event.row.email, oldRole);
+              this.updateUserRole(event.row.id!, oldRole);
               const errorMsg = this.translateService.instant('ROLE_UPDATE.FAILURE');
               this.toastService.showError(errorMsg);
             },
@@ -257,13 +264,14 @@ export class UserListContainer {
         }
 
         if (isStatusChange) {
-          this.adminService.updateUserStatus(event.row.email, event.newValue as boolean).subscribe({
+          this.adminService.updateUserStatus(event.row.id!, event.newValue as boolean).subscribe({
             next: () => {
               const successMsg = this.translateService.instant('STATUS_UPDATE.SUCCESS');
-              this.updateUserStatus(event.row.email, event.newValue as boolean);
+              this.updateUserStatus(event.row.id!, event.newValue as boolean);
               this.toastService.showSuccess(successMsg, 5000);
             },
             error: () => {
+              this.updateUserStatus(event.row.id!, oldStatus);
               const errorMsg = this.translateService.instant('STATUS_UPDATE.FAILURE');
               this.toastService.showError(errorMsg);
             },
@@ -272,22 +280,22 @@ export class UserListContainer {
       });
   }
 
-    private loadUsers(): void {
-      this.isLoading.set(true);
-      this.adminService
-        .getUsers(this.filterParams())
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .pipe(finalize(() => this.isLoading.set(false)))
-        .subscribe({
-          next: (response) => {
-            this.pagedUsers.set(response.content);
-            this.totalFilteredItems.set(response.totalElements);
-          },
-          error: (err) => this.handleLoadError(err),
-        });
-    }
+  private loadUsers(): void {
+    this.isLoading.set(true);
+    this.adminService
+      .getUsers(this.filterParams())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.pagedUsers.set(response.content);
+          this.totalFilteredItems.set(response.totalElements);
+        },
+        error: (err) => this.handleLoadError(err),
+      });
+  }
 
-    private handleLoadError(error: unknown): void {
-      this.toastService.showError(this.translateService.instant('USER_LIST.LOAD_ERROR'));
-    }
+  private handleLoadError(error: unknown): void {
+    this.toastService.showError(this.translateService.instant('USER_LIST.LOAD_ERROR'));
+  }
 }

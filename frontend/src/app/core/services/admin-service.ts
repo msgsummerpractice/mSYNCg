@@ -5,6 +5,7 @@ import { User } from '../models/user.model';
 import { Page } from '../models/page.model';
 import { UserFilterParams } from '../models/user-filters.model';
 import { environment } from '../../../environments/environment';
+import {MatDialog} from "@angular/material/dialog";
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ import { environment } from '../../../environments/environment';
 export class AdminService {
   private http: HttpClient = inject(HttpClient);
 
-  private readonly apiUrl = `${environment.apiUrl}/users`;
+  private readonly adminUrl = `${environment.apiUrl}/admin/users`;
 
   getUsers(filters: UserFilterParams): Observable<Page<User>> {
     let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
@@ -32,16 +33,16 @@ export class AdminService {
       params = params.append('status', status.toString());
     });
 
-    return this.http.get<Page<User>>(this.apiUrl, { params });
+    return this.http.get<Page<User>>(this.adminUrl, { params });
   }
 
-  updateUserRole(userId: string, newRole: User['role']): Observable<User> {
-    const url = `${this.apiUrl}/${userId}/role`;
-    return this.http.patch<User>(url, { role: newRole });
+  updateUserRole(userId: number, newRole: User['role']): Observable<User> {
+    const url = `${this.adminUrl}/${userId}/role`;
+    return this.http.patch<User>(url, { userRole: newRole });
   }
 
-  updateUserStatus(userId: string, newStatus: User['status']): Observable<User> {
-    const url = `${this.apiUrl}/${userId}/status`;
+  updateUserStatus(userId: number, newStatus: User['status']): Observable<User> {
+    const url = `${this.adminUrl}/${userId}/status`;
     return this.http.patch<User>(url, { status: newStatus });
   }
 }

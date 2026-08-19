@@ -16,6 +16,7 @@
     "SUCCESS": "Benutzerrolle erfolgreich aktualisiert",
     "FAILURE": "Benutzerrolle konnte nicht aktualisiert werden",
     "ADMIN_CHANGE_ERROR": "Die Änderung der Rolle eines Admin-Benutzers ist nicht erlaubt."
+  },
   "HOME": {
     "WELCOME": "Willkommen bei mSYNCg !"
   },

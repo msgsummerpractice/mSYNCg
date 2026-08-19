@@ -21,24 +21,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,JWTAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JWTAuthenticationFilter jwtAuthenticationFilter)
+            throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/events").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/events/{id}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events/{id}").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers(HttpMethod.GET, "/api/admin/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/admin/users/{id}/role").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/admin/users/{id}/status").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class
-);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -48,7 +51,7 @@ public class SecurityConfig {
         cfg.setAllowedOrigins(List.of("http://localhost:4200"));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         cfg.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        cfg.setAllowCredentials(false); 
+        cfg.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return source;
@@ -70,5 +73,5 @@ public class SecurityConfig {
             UserDetailService userDetailService) {
 
         return new JWTAuthenticationFilter(jwtTokenProvider, userDetailService);
-}
+    }
 }

@@ -16,6 +16,7 @@
     "SUCCESS": "User role updated successfully",
     "FAILURE": "Unable to update user role",
     "ADMIN_CHANGE_ERROR": "Changing the role of an Admin user is not allowed."
+  },
   "HOME": {
     "WELCOME": "Welcome to mSYNCg !"
   },

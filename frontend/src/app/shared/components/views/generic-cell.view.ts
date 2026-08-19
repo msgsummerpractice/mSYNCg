@@ -4,6 +4,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TableColumn } from '../../../core/models/table.column.model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { USER_ROLE_DISPLAY_VALUES } from '../../../core/constants/role.constant';
 
 @Component({
   selector: 'generic-cell-view',
@@ -19,7 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         >
           <mat-select [value]="displayValue" (selectionChange)="onSelectionChange($event.value)">
             @for (option of column.options; track option) {
-              <mat-option [value]="option">{{ option }}</mat-option>
+              <mat-option [value]="getOptionValue(option)">{{ option }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -41,7 +42,12 @@ export class GenericCellView<T> {
   @Input({ required: true }) column!: TableColumn<T>;
   @Input({ required: true }) row!: T;
 
-  @Output() valueChanged = new EventEmitter<{ row: T; key: string; oldValue: unknown; newValue: unknown }>();
+  @Output() valueChanged = new EventEmitter<{
+    row: T;
+    key: string;
+    oldValue: unknown;
+    newValue: unknown;
+  }>();
 
   get displayValue(): unknown {
     if (this.column.valueGetter) {
@@ -51,9 +57,31 @@ export class GenericCellView<T> {
   }
 
   onSelectionChange(newValue: unknown): void {
-    this.valueChanged.emit({ row: this.row, key: this.column.key, oldValue: this.displayValue, newValue });
+    this.valueChanged.emit({
+      row: this.row,
+      key: this.column.key,
+      oldValue: this.displayValue,
+      newValue,
+    });
   }
   onSwitchChange(newValue: boolean): void {
-    this.valueChanged.emit({ row: this.row, key: this.column.key, oldValue: this.displayValue, newValue });
+    this.valueChanged.emit({
+      row: this.row,
+      key: this.column.key,
+      oldValue: this.displayValue,
+      newValue,
+    });
+  }
+
+  getOptionValue(option: unknown): unknown {
+    if (this.column.key === 'role') {
+      const role = Object.entries(USER_ROLE_DISPLAY_VALUES).find(
+        ([, displayValue]) => displayValue === option
+      )?.[0];
+
+      return role ?? option;
+    }
+
+    return option;
   }
 }
