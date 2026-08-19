@@ -64,3 +64,4 @@ export interface EventResponse {
   id: number;
   status: EventStatusEnum;
 }
+export { EventStatusEnum, EventTypeEnum };

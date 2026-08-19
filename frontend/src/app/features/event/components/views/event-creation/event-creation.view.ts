@@ -9,7 +9,7 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { ErrorStateMatcher, provideNativeDateAdapter } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EventForm, EVENT_TYPES } from '../../../../../core/models/event.model';
-import { EventType } from '../../../../../core/constants/event-type.constant';
+import { EventTypeEnum } from '../../../../../core/constants/event-type.constant';
 import { GenericFormContainer } from '../../../../../shared/components/containers/generic-form.container';
 import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
 
@@ -33,14 +33,14 @@ import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
 export class EventCreationView {
   @Input({ required: true }) formGroup!: FormGroup<EventForm>;
   @Input() isLoading = false;
-  @Input() selectedType: EventType | null = null;
+  @Input() selectedType: EventTypeEnum | null = null;
   @Input() posterName: string | null = null;
 
   @Output() submitEvent = new EventEmitter<void>();
   @Output() invalidSubmit = new EventEmitter<void>();
   @Output() posterSelected = new EventEmitter<File>();
 
-  readonly eventTypeEnum = EventType;
+  readonly eventTypeEnum = EventTypeEnum;
   readonly eventTypes = EVENT_TYPES;
   readonly locations = AVAILABLE_LOCATIONS;
   readonly eventRangeErrorStateMatcher: ErrorStateMatcher = {

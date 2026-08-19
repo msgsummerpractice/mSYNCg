@@ -12,8 +12,8 @@ import { Event } from '../../../../core/models/event.model';
 import { EventFilterParams } from '../../../../core/models/event-filter.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
-import { EventStatus } from '../../../../core/constants/event-status.constant';
-import { EventType } from '../../../../core/constants/event-type.constant';
+import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
+import { EventTypeEnum } from '../../../../core/constants/event-type.constant';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -44,13 +44,15 @@ export class EventListContainer {
       label: 'EVENT_LIST.TABLE.DATE',
       type: 'text',
       valueGetter: (event) =>
-        new Date(event.startTime).toLocaleString('ro-RO', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
+        event.startTime
+          ? new Date(event.startTime).toLocaleString('ro-RO', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : '-',
     },
     {
       key: 'status',
@@ -69,12 +71,16 @@ export class EventListContainer {
     },
   ];
 
-  types = signal<EventType[]>([EventType.INTERNAL, EventType.EXTERNAL, EventType.LOCAL]);
+  types = signal<EventTypeEnum[]>([
+    EventTypeEnum.INTERNAL,
+    EventTypeEnum.EXTERNAL,
+    EventTypeEnum.LOCAL,
+  ]);
 
-  statuses = signal<EventStatus[]>([
-    EventStatus.DRAFT,
-    EventStatus.PUBLISHED,
-    EventStatus.COMPLETED,
+  statuses = signal<EventStatusEnum[]>([
+    EventStatusEnum.DRAFT,
+    EventStatusEnum.PUBLISHED,
+    EventStatusEnum.COMPLETED,
   ]);
 
   locations = signal<LocationEnum[]>([
@@ -86,8 +92,8 @@ export class EventListContainer {
   nameQuery = signal<string>('');
   startTimeQuery = signal<string>('');
 
-  selectedTypes = signal<EventType[]>([]);
-  selectedStatuses = signal<EventStatus[]>([]);
+  selectedTypes = signal<EventTypeEnum[]>([]);
+  selectedStatuses = signal<EventStatusEnum[]>([]);
   selectedLocations = signal<LocationEnum[]>([]);
 
   pageIndex = signal<number>(0);
@@ -151,12 +157,12 @@ export class EventListContainer {
     this.pageIndex.set(0);
   }
 
-  onTypeChange(value: EventType[]): void {
+  onTypeChange(value: EventTypeEnum[]): void {
     this.selectedTypes.set(value);
     this.pageIndex.set(0);
   }
 
-  onStatusChange(value: EventStatus[]): void {
+  onStatusChange(value: EventStatusEnum[]): void {
     this.selectedStatuses.set(value);
     this.pageIndex.set(0);
   }

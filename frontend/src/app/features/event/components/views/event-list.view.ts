@@ -19,8 +19,8 @@ import { ButtonContainer } from '../../../../shared/components/containers/button
 import { Event } from '../../../../core/models/event.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
-import { EventStatus } from '../../../../core/constants/event-status.constant';
-import { EventType } from '../../../../core/constants/event-type.constant';
+import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
+import { EventTypeEnum } from '../../../../core/constants/event-type.constant';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRole } from '../../../../core/constants/role.constant';
 
@@ -48,12 +48,12 @@ export class EventListView {
   @Input() events: Event[] = [];
   @Input() columns: TableColumn<Event>[] = [];
 
-  @Input() types: EventType[] = [];
-  @Input() statuses: EventStatus[] = [];
+  @Input() types: EventTypeEnum[] = [];
+  @Input() statuses: EventStatusEnum[] = [];
   @Input() locations: LocationEnum[] = [];
 
-  @Input() selectedTypes: EventType[] = [];
-  @Input() selectedStatuses: EventStatus[] = [];
+  @Input() selectedTypes: EventTypeEnum[] = [];
+  @Input() selectedStatuses: EventStatusEnum[] = [];
   @Input() selectedLocations: LocationEnum[] = [];
 
   @Input() nameQuery = '';
@@ -72,8 +72,8 @@ export class EventListView {
   @Output() nameSearchChange = new EventEmitter<string>();
   @Output() startTimeChange = new EventEmitter<string>();
 
-  @Output() typeChange = new EventEmitter<EventType[]>();
-  @Output() statusChange = new EventEmitter<EventStatus[]>();
+  @Output() typeChange = new EventEmitter<EventTypeEnum[]>();
+  @Output() statusChange = new EventEmitter<EventStatusEnum[]>();
   @Output() locationChange = new EventEmitter<LocationEnum[]>();
 
   @Output() resetFilters = new EventEmitter<void>();

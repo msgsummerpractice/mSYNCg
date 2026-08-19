@@ -1,11 +1,11 @@
-import { EventStatus } from '../constants/event-status.constant';
-import { EventType } from '../constants/event-type.constant';
+import { EventStatusEnum } from '../constants/event-status.constant';
+import { EventTypeEnum } from '../constants/event-type.constant';
 import { LocationEnum } from './location.model';
 
 export interface EventFilterParams {
   name: string;
-  types: EventType[];
-  statuses: EventStatus[];
+  types: EventTypeEnum[];
+  statuses: EventStatusEnum[];
   locations: LocationEnum[];
   startTime: string;
   pageId: number;
