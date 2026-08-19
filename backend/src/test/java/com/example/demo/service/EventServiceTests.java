@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.EventCannotBeCompletedException;
+import com.example.demo.dto.request.EventRequest;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
@@ -50,13 +51,29 @@ public class EventServiceTests {
 
 	@InjectMocks
 	private EventService eventService;
+	
+	private EventRequest createEventRequest(String name) {
+		return createEventRequest(name, null);
+	}
+
+	private EventRequest createEventRequest(String name, String imageBase64) {
+		EventRequest request = new EventRequest();
+		request.setName(name);
+		request.setImageBase64(imageBase64);
+		return request;
+	}
+
+	private EventViewResponse createViewResponse(Integer id, String name) {
+		EventViewResponse response = new EventViewResponse();
+		response.setId(id);
+		response.setName(name);
+		return response;
+	}
 
 	@Test
 	void getEvents_whenEventsExist_returnsMappedPage() {
-		Event event = new Event();
-		EventViewResponse viewResponse = new EventViewResponse();
-		viewResponse.setId(1);
-		viewResponse.setName("Team event");
+		Event event = createEvent(1);
+		EventViewResponse viewResponse = createViewResponse(1, "Team event");
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 		Page<Event> eventsPage = new PageImpl<>(List.of(event), pageable, 1);
@@ -130,7 +147,41 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_whenEventExists_returnsMappedDetails() {
+	void updateEvent_whenEventExists_updatesAndReturnsMappedResponse() {
+		Integer eventId = 1;
+		Event existingEvent = createEvent(eventId);
+		EventRequest eventRequest = createEventRequest("Updated Event");
+		Event mappedEvent = createEvent(null);
+		Event savedEvent = createEvent(eventId);
+		EventViewResponse viewResponse = createViewResponse(eventId, "Updated Event");
+
+		when(eventRepository.findById(eventId)).thenReturn(java.util.Optional.of(existingEvent));
+		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
+		when(eventRepository.save(mappedEvent)).thenReturn(savedEvent);
+		when(modelMapper.map(savedEvent, EventViewResponse.class)).thenReturn(viewResponse);
+
+		EventViewResponse result = eventService.updateEvent(eventId, eventRequest);
+
+		assertEquals(viewResponse, result);
+		verify(eventRepository).findById(eventId);
+		verify(modelMapper).map(eventRequest, Event.class);
+		verify(eventRepository).save(mappedEvent);
+		verify(modelMapper).map(savedEvent, EventViewResponse.class);
+	}
+
+	@Test
+	void updateEvent_whenEventNotFound_throwsException() {
+		Integer eventId = 999;
+		EventRequest eventRequest = new EventRequest();
+
+		when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
+
+		assertThrows(RuntimeException.class, () -> eventService.updateEvent(eventId, eventRequest));
+		verify(eventRepository).findById(eventId);
+	}
+
+	@Test
+	void getById_WhenEventExists_ReturnsMappedDetails() {
 		Event event = new Event();
 		event.setId(1);
 		event.setName("Team event");
@@ -262,5 +313,6 @@ public class EventServiceTests {
 		assertEquals(EventStatus.COMPLETED, event.getStatus());
 		assertEquals(response, result);
 		verify(eventRepository).save(event);
-	}
+	}	
 }
+

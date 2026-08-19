@@ -1,11 +1,15 @@
 package com.example.demo.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import com.example.demo.filtering.events.EventSpec;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +28,18 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<Page<EventViewResponse>> getEvents(
-        EventSpec eventSpec,
-        Pageable pageable) {
-            Page<EventViewResponse> response = eventService.getAll(eventSpec, pageable);
-            return ResponseEntity.ok(response);
-        }
+            EventSpec eventSpec,
+            Pageable pageable) {
+        Page<EventViewResponse> response = eventService.getAll(eventSpec, pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{eventId}")
+    public ResponseEntity<EventViewResponse> updateEvent(@PathVariable Integer eventId,
+            @RequestBody EventRequest eventRequest) {
+        EventViewResponse updatedEvent = eventService.updateEvent(eventId, eventRequest);
+        return ResponseEntity.ok(updatedEvent);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDetailsResponse> getEventDetails(@PathVariable Integer id) {

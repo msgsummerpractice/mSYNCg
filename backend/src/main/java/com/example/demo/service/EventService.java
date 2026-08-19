@@ -3,6 +3,9 @@ package com.example.demo.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
+
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
@@ -41,6 +44,25 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
         Page<Event> eventsPage = eventRepository.findAll(spec, pageable);
 
         return eventsPage.map(event -> modelMapper.map(event, EventViewResponse.class));
+    }
+
+    public EventViewResponse updateEvent(Integer eventId, EventRequest eventRequest) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found with id: " + eventId));
+        // TODO: I will change the exception to a custom one later
+
+        Event updatedEvent = modelMapper.map(eventRequest, Event.class);
+
+        byte[] poster = null;
+        if (eventRequest.getImageBase64() != null && !eventRequest.getImageBase64().isEmpty()) {
+            poster = Base64.getDecoder().decode(eventRequest.getImageBase64());
+        }
+
+        updatedEvent.setId(event.getId());
+        updatedEvent.setImage(poster);
+        updatedEvent = eventRepository.save(updatedEvent);
+
+        return modelMapper.map(updatedEvent, EventViewResponse.class);
     }
 
     public EventDetailsResponse getById(Integer id) {
