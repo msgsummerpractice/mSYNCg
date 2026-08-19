@@ -120,8 +120,8 @@
 :root {
   --color-primary: #a01441;
   --color-on-primary: #ffffff;
-  --font-family-base: 'Oxygen', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-ui: 'Oxanium', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-ui: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-family-icons: 'Material Icons', sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -180,8 +180,8 @@
   --color-on-success: #003916;
   --color-warning: #ffb95c;
   --color-on-warning: #3c2100;
-  --font-family-base: 'Oxygen', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-ui: 'Oxanium', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-ui: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-family-icons: 'Material Icons', sans-serif;
 
   /* Keep Material vars in sync in dark mode */
@@ -326,7 +326,7 @@ body {
   direction: ltr;
 }
 
-/* Material Toolbar with Oxanium font and brand colors */
+/* Material Toolbar with Roboto font and brand colors */
 mat-toolbar {
   font-family: var(--font-family-ui) !important;
   background-color: var(--color-primary) !important;

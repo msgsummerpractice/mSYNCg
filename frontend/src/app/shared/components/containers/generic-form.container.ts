@@ -15,6 +15,7 @@ import { GenericFormView } from '../views/generic-form/generic-form.view';
       [isLoading]="isLoading"
       [submitLabel]="submitLabel$ | async"
       (formSubmit)="onFormSubmit()"
+      (invalidSubmit)="invalidSubmit.emit()"
     >
       <ng-content></ng-content>
     </app-generic-form-view>
@@ -25,6 +26,7 @@ export class GenericFormContainer {
   @Input() isLoading: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();
+  @Output() invalidSubmit = new EventEmitter<void>();
 
   submitLabel$: Observable<string>;
 

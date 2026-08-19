@@ -1,4 +1,4 @@
-//Used only for testing should be delted and replaced with actual data from backend
+import { UserLocation } from '../constants/location.constant';
 import { UserRole } from '../constants/role.constant';
 import { User } from '../models/user.model';
 
@@ -8,7 +8,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Popescu',
     email: 'ion.popescu@example.com',
     role: UserRole.ADMIN,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -16,7 +16,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Ionescu',
     email: 'maria.ionescu@example.com',
     role: UserRole.HR_USER,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -24,7 +24,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Mureșan',
     email: 'andrei.muresan@example.com',
     role: UserRole.PARTICIPANT,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -32,7 +32,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Dumitrescu',
     email: 'elena.dumitrescu@example.com',
     role: UserRole.MARKETING_ORGANIZER,
-    location: 'Timisoara',
+    location: UserLocation.TIMISOARA,
     status: true,
   },
   {
@@ -40,7 +40,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Stan',
     email: 'mihai.stan@example.com',
     role: UserRole.PARTICIPANT,
-    location: 'Targu Mures',
+    location: UserLocation.TARGU_MURES,
     status: true,
   },
   {
@@ -48,7 +48,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Radu',
     email: 'ana.radu@example.com',
     role: UserRole.HR_USER,
-    location: 'Timisoara',
+    location: UserLocation.TIMISOARA,
     status: true,
   },
   {
@@ -56,7 +56,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Enescu',
     email: 'george.enescu@example.com',
     role: UserRole.ADMIN,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -64,7 +64,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Neagu',
     email: 'cristina.neagu@example.com',
     role: UserRole.MARKETING_ORGANIZER,
-    location: 'Targu Mures',
+    location: UserLocation.TARGU_MURES,
     status: true,
   },
   {
@@ -72,7 +72,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Popescu',
     email: 'ion.popescu@example.com',
     role: UserRole.ADMIN,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -80,7 +80,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Ionescu',
     email: 'maria.ionescu@example.com',
     role: UserRole.HR_USER,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -88,7 +88,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Mureșan',
     email: 'andrei.muresan@example.com',
     role: UserRole.PARTICIPANT,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -96,7 +96,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Dumitrescu',
     email: 'elena.dumitrescu@example.com',
     role: UserRole.MARKETING_ORGANIZER,
-    location: 'Timisoara',
+    location: UserLocation.TIMISOARA,
     status: true,
   },
   {
@@ -104,7 +104,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Stan',
     email: 'mihai.stan@example.com',
     role: UserRole.PARTICIPANT,
-    location: 'Targu Mures',
+    location: UserLocation.TARGU_MURES,
     status: true,
   },
   {
@@ -112,7 +112,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Radu',
     email: 'ana.radu@example.com',
     role: UserRole.HR_USER,
-    location: 'Timisoara',
+    location: UserLocation.TIMISOARA,
     status: true,
   },
   {
@@ -120,7 +120,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Enescu',
     email: 'george.enescu@example.com',
     role: UserRole.ADMIN,
-    location: 'Cluj-Napoca',
+    location: UserLocation.CLUJ_NAPOCA,
     status: true,
   },
   {
@@ -128,7 +128,7 @@ export const MOCK_USERS: User[] = [
     lastName: 'Neagu',
     email: 'cristina.neagu@example.com',
     role: UserRole.MARKETING_ORGANIZER,
-    location: 'Targu Mures',
+    location: UserLocation.TARGU_MURES,
     status: true,
   },
 ];

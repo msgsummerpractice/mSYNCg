@@ -3,10 +3,10 @@ import { LoginPage } from './shared/pages/login/login.page';
 import { UserListContainer } from './features/admin/components/containers/user-list.container';
 import { EventListContainer } from './features/event/components/containers/event-list.container';
 import { adminGuard } from './core/guards/admin-guard';
-import UserRegisterComponent from './shared/pages/user-register';
 import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -18,6 +18,12 @@ export const routes: Routes = [
         component: UserListContainer,
       },
     ],
+  },
+  {
+    path: 'events',
+    component: EventListContainer,
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
@@ -37,6 +43,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutPage,
+    canActivate: [authGuard],
     children: [
       {
         path: 'events',
@@ -59,6 +66,14 @@ export const routes: Routes = [
         ],
       },
     ],
+  },
+
+  {
+  path: 'events/create',
+  loadComponent: () =>
+    import('./features/event/pages/event-creation.page').then(
+      ({ EventCreationPage }) => EventCreationPage
+    ),
   },
 
   // Fallback

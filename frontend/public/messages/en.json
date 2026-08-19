@@ -34,8 +34,8 @@
     "NO_ACCOUNT": "Don't have an account yet?",
     "REGISTER_NOW": "Register now!",
     "FORGOT_PASSWORD": "Forgot password?",
-    "TAGLINE": "Plan. Organize. Stay in sync.",
-    "DESCRIPTION": "Organize events, manage participants, and keep everything in sync — all in one place.",
+    "TAGLINE": "At .msg, we stay in SYNC.",
+    "DESCRIPTION": "Keep up with your events, stay connected, and enjoy every moment.",
     "SIGN_IN_TITLE": "Sign in to your account",
     "SIGN_IN_SUBTITLE": "Enter your credentials to continue.",
     "LOGIN_SUCCESS": "Login successful!",
@@ -89,13 +89,85 @@
         }
       }
     },
-    "EVENT": {}
+    "EVENT": {
+      "TITLE": "Create Event Draft",
+      "EVENT_TITLE": {
+        "LABEL": "Title",
+        "REQUIRED": "Title is required"
+      },
+      "DESCRIPTION": {
+        "LABEL": "Description",
+        "REQUIRED": "Description is required"
+      },
+      "START_DATE": {
+        "LABEL": "Start date",
+        "REQUIRED": "Start date is required"
+      },
+      "START_TIME": {
+        "LABEL": "Start time",
+        "REQUIRED": "Start time is required"
+      },
+      "END_DATE": {
+        "LABEL": "End date",
+        "REQUIRED": "End date is required",
+        "INVALID_RANGE": "End date must be after the start date"
+      },
+      "END_TIME": {
+        "LABEL": "End time",
+        "REQUIRED": "End time is required"
+      },
+      "REGISTRATION_START_DATE": {
+        "LABEL": "Registration start",
+        "REQUIRED": "Registration start date is required"
+      },
+      "REGISTRATION_START_TIME": {
+        "LABEL": "Start time",
+        "REQUIRED": "Registration start time is required"
+      },
+      "REGISTRATION_END_DATE": {
+        "LABEL": "Registration end",
+        "REQUIRED": "Registration end date is required"
+      },
+      "REGISTRATION_END_TIME": {
+        "LABEL": "End time",
+        "REQUIRED": "Registration end time is required"
+      },
+      "TYPE": {
+        "LABEL": "Type",
+        "REQUIRED": "Please select an event type"
+      },
+      "LOCATION": {
+        "LABEL": "Location",
+        "REQUIRED": "Please select a location"
+      },
+      "FOOD_PROVIDED": {
+        "LABEL": "Food provided",
+        "YES": "Yes",
+        "NO": "No",
+        "REQUIRED": "Please select whether food is provided"
+      },
+      "POSTER": {
+        "UPLOAD": "Upload poster",
+        "INVALID": "The poster must be a JPEG or PNG image no larger than 5 MB"
+      },
+      "MESSAGES": {
+        "SUCCESS": {
+          "SAVE": "Event draft saved successfully."
+        },
+        "ERROR": {
+          "SAVE": "Unable to save the event draft."
+        }
+      }
+    }
   },
   "USER_LIST": {
     "FILTER_TITLE": "Filter users",
+    "LOAD_ERROR": "Users could not be loaded. Please try again.",
     "FIELDS": {
-      "FULL_NAME": "Full name",
-      "FULL_NAME_PLACEHOLDER": "Search name...",
+      "FIRST_NAME": "First name",
+      "FIRST_NAME_PLACEHOLDER": "Search first name...",
+      "LAST_NAME": "Last name",
+      "LAST_NAME_PLACEHOLDER": "Search last name...",
       "EMAIL": "Email",
       "EMAIL_PLACEHOLDER": "Search email...",
       "ROLES": "Roles",
@@ -110,7 +182,8 @@
       "RESET_FILTERS": "Reset filters"
     },
     "TABLE": {
-      "FULL_NAME": "Full name",
+      "FIRST_NAME": "First name",
+      "LAST_NAME": "Last name",
       "EMAIL": "Email",
       "USER_ROLE": "User role",
       "LOCATION": "Location",

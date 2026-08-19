@@ -1,16 +1,22 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { UserRole } from '../../../../core/constants/role.constant';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { User } from '../../../../core/models/user.model';
+import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
+import { UserRole, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
+import {
+  UserLocation,
+  USER_LOCATION_TRANSLATION_KEYS,
+} from '../../../../core/constants/location.constant';
 
 @Component({
   selector: 'app-user-list-view',
@@ -21,47 +27,40 @@ import { User } from '../../../../core/models/user.model';
     MatInputModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
+    ToolbarContainer,
   ],
   templateUrl: './user-list.view.html',
 })
 export class UserListView {
-  private readonly roleLabelKeys: Record<UserRole, string> = {
-    [UserRole.ADMIN]: 'USER_LIST.ROLES.ADMIN',
-    [UserRole.HR_USER]: 'USER_LIST.ROLES.HR_USER',
-    [UserRole.PARTICIPANT]: 'USER_LIST.ROLES.PARTICIPANT',
-    [UserRole.MARKETING_ORGANIZER]: 'USER_LIST.ROLES.MARKETING_ORGANIZER',
-  };
-
-  private readonly locationLabelKeys: Record<string, string> = {
-    'Targu Mures': 'USER_LIST.LOCATIONS.TARGU_MURES',
-    'Cluj-Napoca': 'USER_LIST.LOCATIONS.CLUJ_NAPOCA',
-    Timisoara: 'USER_LIST.LOCATIONS.TIMISOARA',
-  };
 
   @Input() users: User[] = [];
   @Input() columns: TableColumn<User>[] = [];
 
   @Input() roles: UserRole[] = [];
-  @Input() locations: string[] = [];
+  @Input() locations: UserLocation[] = [];
 
   @Input() selectedRoles: UserRole[] = [];
-  @Input() selectedLocations: string[] = [];
+  @Input() selectedLocations: UserLocation[] = [];
   @Input() selectedStatuses: boolean[] = [];
-  @Input() nameQuery = '';
+  @Input() firstNameQuery = '';
+  @Input() lastNameQuery = '';
   @Input() emailQuery = '';
-  @Input() totalItems = 0;
+  @Input({ required: true }) totalItems!: number;
   @Input() pageIndex = 0;
   @Input() pageSize = 10;
   @Input() pageSizeOptions: number[] = [10, 20, 50];
+  @Input() isLoading = false;
 
-  @Output() nameSearchChange = new EventEmitter<string>();
+  @Output() firstNameSearchChange = new EventEmitter<string>();
+  @Output() lastNameSearchChange = new EventEmitter<string>();
   @Output() emailSearchChange = new EventEmitter<string>();
 
   @Output() roleChange = new EventEmitter<UserRole[]>();
-  @Output() locationChange = new EventEmitter<string[]>();
+  @Output() locationChange = new EventEmitter<UserLocation[]>();
   @Output() statusChange = new EventEmitter<boolean[]>();
   @Output() resetFilters = new EventEmitter<void>();
   @Output() pageChange = new EventEmitter<PageEvent>();
@@ -76,9 +75,14 @@ export class UserListView {
     return this.columns.map((col) => col.key);
   }
 
-  onNameSearch(event: Event): void {
+  onFirstNameSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.nameSearchChange.emit(value);
+    this.firstNameSearchChange.emit(value);
+  }
+
+  onLastNameSearch(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.lastNameSearchChange.emit(value);
   }
 
   onEmailSearch(event: Event): void {
@@ -87,10 +91,10 @@ export class UserListView {
   }
 
   getRoleLabelKey(role: UserRole): string {
-    return this.roleLabelKeys[role] ?? role;
+    return USER_ROLE_TRANSLATION_KEYS[role] ?? role;
   }
 
-  getLocationLabelKey(location: string): string {
-    return this.locationLabelKeys[location] ?? location;
+  getLocationLabelKey(location: UserLocation): string {
+    return USER_LOCATION_TRANSLATION_KEYS[location] ?? location;
   }
 }

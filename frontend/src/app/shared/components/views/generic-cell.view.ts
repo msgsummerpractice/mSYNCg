@@ -15,7 +15,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         <mat-form-field
           appearance="outline"
           subscriptSizing="dynamic"
-          class="w-full min-w-[120px] ![--mdc-outlined-text-field-outline-color:transparent] ![--mdc-outlined-text-field-hover-outline-color:transparent] ![--mdc-outlined-text-field-focus-outline-color:transparent] ![--mat-sys-outline:transparent] ![--mat-sys-outline-variant:transparent] [&_.mdc-notched-outline__leading]:!border-transparent [&_.mdc-notched-outline__notch]:!border-transparent [&_.mdc-notched-outline__trailing]:!border-transparent"
+          class="w-full min-w-0 max-w-full text-xs sm:min-w-[120px] sm:text-sm ![--mdc-outlined-text-field-outline-color:transparent] ![--mdc-outlined-text-field-hover-outline-color:transparent] ![--mdc-outlined-text-field-focus-outline-color:transparent] ![--mat-sys-outline:transparent] ![--mat-sys-outline-variant:transparent] [&_.mdc-notched-outline__leading]:!border-transparent [&_.mdc-notched-outline__notch]:!border-transparent [&_.mdc-notched-outline__trailing]:!border-transparent [&_.mat-mdc-select-value]:max-w-full [&_.mat-mdc-select-value-text]:truncate"
         >
           <mat-select [value]="displayValue" (selectionChange)="onSelectionChange($event.value)">
             @for (option of column.options; track option) {
