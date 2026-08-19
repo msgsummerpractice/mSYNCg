@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(
+    public ResponseEntity<ErrorResponse> handleNotFoundException1(
 	    NotFoundException exception,
 	    HttpServletRequest request
     ) {

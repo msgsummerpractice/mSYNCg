@@ -1,5 +1,7 @@
 package com.example.demo.validator;
 
+import java.util.Base64;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -17,7 +19,13 @@ public class MaxFileSizeValidator implements ConstraintValidator<MaxFileSize, by
         if (value == null || value.length == 0) {
             return true;
         }
-        return value.length <= maxFileSize;
+        
+        try {
+            byte[] decodedImage = Base64.getDecoder().decode(value);
+            return decodedImage.length <= maxFileSize;
+        } catch (IllegalArgumentException exception) {
+            return false;
+        }
     }
 
 }
