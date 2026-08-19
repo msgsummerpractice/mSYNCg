@@ -67,7 +67,8 @@ public class UserControllerTests {
 		UserResponse response = new UserResponse(1, "Ada", "Lovelace", "ada@example.com",
 				Location.CLUJ_NAPOCA.name(), true, null, UserRole.PARTICIPANT.name());
 
-		when(userService.create(any(UserRequest.class))).thenReturn(response);
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
+		when(userService.create(requestCaptor.capture())).thenReturn(response);
 
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -78,13 +79,14 @@ public class UserControllerTests {
 				.andExpect(jsonPath("$.email").value("ada@example.com"))
 				.andExpect(jsonPath("$.role").value(UserRole.PARTICIPANT.name()));
 
-		verify(userService).create(any(UserRequest.class));
+		verify(userService).create(requestCaptor.capture());
 	}
 
 	@Test
 	void createUserWhenEmailIsInvalidReturnsBadRequestWithFieldError() throws Exception {
 		String body = requestJson("Ada", "Lovelace", "not-an-email", "StrongP@ssw0rd", CLUJ_NAPOCA_JSON);
 
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body))
@@ -92,24 +94,25 @@ public class UserControllerTests {
 				.andExpect(jsonPath("$.error").value("Validation Error"))
 				.andExpect(jsonPath("$.fieldErrors[0].field").value("email"));
 
-		verify(userService, never()).create(any(UserRequest.class));
+		verify(userService, never()).create(requestCaptor.capture());
 	}
 
 	@Test
 	void createUserWhenPasswordIsWeakReturnsBadRequest() throws Exception {
 		String body = requestJson("Ada", "Lovelace", "ada@example.com", "weak", CLUJ_NAPOCA_JSON);
-
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.fieldErrors[0].field").value("password"));
 
-		verify(userService, never()).create(any(UserRequest.class));
+		verify(userService, never()).create(requestCaptor.capture());
 	}
 
 	@Test
 	void createUserWhenRequiredFieldsAreMissingReturnsBadRequest() throws Exception {
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{}"))
@@ -118,7 +121,7 @@ public class UserControllerTests {
 				.andExpect(jsonPath("$.message").value("Request validation failed"))
 				.andExpect(jsonPath("$.fieldErrors.length()").value(5));
 
-		verify(userService, never()).create(any(UserRequest.class));
+		verify(userService, never()).create(requestCaptor.capture());
 	}
 
 	@Test
@@ -176,14 +179,14 @@ public class UserControllerTests {
 	void getUsersWhenPaginationParamsProvidedForwardsPageableToService() throws Exception {
 		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
 				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
-
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
 		mockMvc.perform(get("/api/users")
 				.param("page", "2")
 				.param("size", "5"))
 				.andExpect(status().isOk());
 
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-		verify(userService).getAll(any(UserSpec.class), pageableCaptor.capture());
+		verify(userService).getAll(specCaptor.capture(), pageableCaptor.capture());
 
 		assertEquals(2, pageableCaptor.getValue().getPageNumber());
 		assertEquals(5, pageableCaptor.getValue().getPageSize());
@@ -193,7 +196,9 @@ public class UserControllerTests {
 	void getUsersWhenFiltersProvidedResolvesUserSpec() throws Exception {
 		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-		when(userService.getAll(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(userService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
 
 		mockMvc.perform(get("/api/users")
 				.param("firstName", "Ada")
@@ -202,8 +207,7 @@ public class UserControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.content[0].firstName").value("Ada"));
 
-		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
-		verify(userService).getAll(specCaptor.capture(), any(Pageable.class));
+		verify(userService).getAll(specCaptor.capture(), pageableCaptor.capture());
 
 		assertNotNull(specCaptor.getValue());
 	}

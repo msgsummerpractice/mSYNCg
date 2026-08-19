@@ -4,6 +4,7 @@ import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.filtering.events.EventSpec;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.model.Event;
 import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
@@ -38,7 +39,6 @@ import static org.mockito.Mockito.mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -79,10 +79,10 @@ public class EventServiceTests {
 
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 
-        when(eventRepository.save(any(Event.class)))
+        when(eventRepository.save(eventCaptor.capture()))
                 .thenReturn(new Event());
 
-        when(modelMapper.map(any(Event.class), eq(EventResponse.class)))
+        when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class)))
                 .thenReturn(mappedResponse);
 
         EventResponse response = eventService.create(request, creator.getEmail());
@@ -104,7 +104,7 @@ public class EventServiceTests {
     @Test
     void createEvent_WhenTypeIsInternal_ForcesLocationAllAndKeepsFoodProvided() {
         EventRequest request = buildValidRequest(EventType.INTERNAL);
-        request.setLocation(Location.TIMISOARA);
+        request.setLocation(Location.ALL);
         request.setFoodProvided(false);
         EventResponse mappedResponse = new EventResponse(2L, "DRAFT");
 
@@ -169,6 +169,22 @@ public class EventServiceTests {
         verify(eventRepository).save(eventCaptor.capture());
 
         assertNull(eventCaptor.getValue().getCreatedBy());
+    }
+
+    @Test
+    void createEvent_WhenUserLookupFails_ThrowsNotFoundException() {
+        EventRequest request = buildValidRequest(EventType.LOCAL);
+        String username = "organizer@example.com";
+
+        when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+        when(userRepository.findByEmail(username))
+                .thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> eventService.create(request, username));
+
+        assertEquals("User not found with email: " + username, exception.getMessage());
+        verifyNoInteractions(eventRepository);
     }
 
     @Test

@@ -1,11 +1,16 @@
 package com.example.demo.service;
 
 import org.springframework.data.domain.Pageable;
+
+import com.example.demo.dto.request.UserRequest;
+import com.example.demo.dto.response.UserResponse;
+import com.example.demo.dto.response.UserViewResponse;
+import com.example.demo.filtering.users.UserSpec;
+
 import org.springframework.data.domain.Page;
 
+public interface UserServiceInterface {
+    UserResponse create(UserRequest request);
 
-public interface UserServiceInterface<TRequest, TResponse, TViewResponse, TSpec> {
-    TResponse create(TRequest request);
-
-    Page<TViewResponse> getAll(TSpec spec, Pageable pageable);
+    Page<UserViewResponse> getAll(UserSpec spec, Pageable pageable);
 }
