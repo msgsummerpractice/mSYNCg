@@ -93,7 +93,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+	void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -110,7 +110,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
+	void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -128,7 +128,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+	void getEvents_whenServiceThrowsUnexpectedException_returns_internalServerError() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -186,7 +186,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_whenIdIsNotANumber_returnsInternalServerError() throws Exception {
+	void getEventDetails_whenIdIsNotANumber_returns_internalServerError() throws Exception {
 		mockMvc.perform(get("/api/events/abc"))
 				.andExpect(status().isInternalServerError());
 
