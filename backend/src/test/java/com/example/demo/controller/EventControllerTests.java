@@ -233,7 +233,7 @@ public class EventControllerTests {
 	private EventRequest createEventRequest(String name, String imageBase64) {
 		EventRequest request = new EventRequest();
 		request.setName(name);
-		request.setImageBase64(imageBase64);
+		request.setImage(imageBase64);
 		return request;
 	}
 
