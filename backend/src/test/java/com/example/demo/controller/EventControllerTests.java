@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.response.EventDetailsResponse;
+import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.GlobalExceptionHandler;
 import com.example.demo.exceptions.NotFoundException;
@@ -29,7 +30,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -206,15 +206,19 @@ public class EventControllerTests {
 
 	@Test
 	void publishEvent_whenEventExists_returnsOk() throws Exception {
+		when(eventService.publishEvent(1)).thenReturn(new EventResponse(1L, EventStatus.PUBLISHED.name()));
+
 		mockMvc.perform(patch("/api/events/1/publish"))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()));
 
 		verify(eventService).publishEvent(1);
 	}
 
 	@Test
 	void publishEvent_whenEventDoesNotExist_returnsNotFound() throws Exception {
-		doThrow(new NotFoundException("Event", 99)).when(eventService).publishEvent(99);
+		when(eventService.publishEvent(99)).thenThrow(new NotFoundException("Event", 99));
 
 		mockMvc.perform(patch("/api/events/99/publish"))
 				.andExpect(status().isNotFound())
@@ -224,7 +228,7 @@ public class EventControllerTests {
 
 	@Test
 	void publishEvent_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
-		doThrow(new RuntimeException("Database unavailable")).when(eventService).publishEvent(1);
+		when(eventService.publishEvent(1)).thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(patch("/api/events/1/publish"))
 				.andExpect(status().isInternalServerError())

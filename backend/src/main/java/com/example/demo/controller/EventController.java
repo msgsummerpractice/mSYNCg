@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.response.EventDetailsResponse;
+import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
 import org.springframework.data.domain.Page;
@@ -36,9 +37,9 @@ public class EventController {
     }
 
     @PatchMapping("/{id}/publish")
-    public ResponseEntity<Void> publishEvent(@PathVariable Integer id) {
-        eventService.publishEvent(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EventResponse> publishEvent(@PathVariable Integer id) {
+        EventResponse response = eventService.publishEvent(id);
+        return ResponseEntity.ok(response);
     }
 
 }

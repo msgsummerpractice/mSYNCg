@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.response.EventDetailsResponse;
+import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
@@ -196,12 +197,16 @@ public class EventServiceTests {
 	void publishEvent_whenEventExists_publishesAndSavesEvent() {
 		Event event = createEvent();
 		event.setStatus(EventStatus.DRAFT);
+		EventResponse response = new EventResponse(1L, EventStatus.PUBLISHED.name());
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+		when(modelMapper.map(event, EventResponse.class)).thenReturn(response);
 
-		eventService.publishEvent(1);
+		EventResponse result = eventService.publishEvent(1);
 
+		assertEquals(response, result);
 		assertEquals(EventStatus.PUBLISHED, event.getStatus());
 		verify(eventRepository).save(event);
+		verify(modelMapper).map(event, EventResponse.class);
 	}
 
 	@Test

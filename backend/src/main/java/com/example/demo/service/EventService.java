@@ -54,10 +54,12 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
         return response;
     }
 
-    public void publishEvent(Integer id) {
+    public EventResponse publishEvent(Integer id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Event", id));
-        event.setStatus(EventStatus.PUBLISHED);;
+        event.setStatus(EventStatus.PUBLISHED);
+        ;
         eventRepository.save(event);
+        return modelMapper.map(event, EventResponse.class);
     }
 }
