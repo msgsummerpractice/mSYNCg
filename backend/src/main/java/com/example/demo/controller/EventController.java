@@ -1,5 +1,5 @@
 package com.example.demo.controller;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
@@ -35,6 +35,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.getById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")
     @PatchMapping("/{id}/complete")
     public ResponseEntity<EventDetailsResponse> completeEvent(@PathVariable Integer id) {
         return ResponseEntity.ok(eventService.completeEvent(id));
