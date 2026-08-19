@@ -29,7 +29,7 @@ export class EventCardView {
   }
 
   readonly posterSrc = computed(() => {
-    const image = this.event()?.imageBase64 ?? '';
+    const image = this.event()?.image ?? '';
     return /^(data:|https?:\/\/|\/)/.test(image) ? image : `data:image/*;base64,${image}`;
   });
 }

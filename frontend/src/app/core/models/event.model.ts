@@ -21,10 +21,10 @@ export interface Event {
   description: string;
   type: EventTypeEnum;
   status: EventStatusEnum;
-  imageBase64: string;
+  image: string;
   location: LocationEnum;
-  startDate: Date;
-  endDate: Date;
+  startTime: Date;
+  endTime: Date;
   registrationStart: Date;
   registrationEnd: Date;
   foodProvided: boolean;
