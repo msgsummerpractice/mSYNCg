@@ -45,6 +45,21 @@ export interface EventDraftRequest {
   status: EventStatusEnum.DRAFT;
 }
 
+export interface Event {
+  id: number;
+  name: string;
+  description: string;
+  type: EventTypeEnum;
+  status: EventStatusEnum;
+  image: string | null;
+  location: LocationEnum;
+  startTime: string;
+  endTime: string;
+  registrationStart: string;
+  registrationEnd: string;
+  foodProvided: boolean | null;
+}
+
 export interface EventResponse {
   id: number;
   status: EventStatusEnum;

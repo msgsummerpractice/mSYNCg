@@ -39,8 +39,8 @@ export class EventCreationContainer {
   readonly selectedType = signal<EventTypeEnum | null>(null);
   readonly posterName = signal<string | null>(null);
 
-  private eventId: number | null = null;
-  private posterBase64: string | null = null;
+  protected eventId: number | null = null;
+  protected posterBase64: string | null = null;
   private readonly booleanRequiredValidator: ValidatorFn = (control) =>
     control.value === null || control.value === undefined ? { required: true } : null;
 
@@ -118,10 +118,7 @@ export class EventCreationContainer {
       description: value.description,
       startTime: formatDateTime(value.startDate, value.startTime),
       endTime: formatDateTime(value.endDate, value.endTime),
-      registrationStart: formatDateTime(
-        value.registrationStartDate,
-        value.registrationStartTime
-      ),
+      registrationStart: formatDateTime(value.registrationStartDate, value.registrationStartTime),
       registrationEnd: formatDateTime(value.registrationEndDate, value.registrationEndTime),
       type: value.type,
       location: value.location,
@@ -158,7 +155,7 @@ export class EventCreationContainer {
     }
   }
 
- private configureFieldsForType(type: EventTypeEnum | null): void {
+  private configureFieldsForType(type: EventTypeEnum | null): void {
     this.selectedType.set(type);
 
     const location = this.eventFormGroup.controls.location;
@@ -195,7 +192,7 @@ export class EventCreationContainer {
 
   private configureLocalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
     location.enable({ emitEvent: false });
-    
+
     if (location.value === LocationEnum.ALL) {
       location.setValue(null, { emitEvent: false });
     }
@@ -207,7 +204,7 @@ export class EventCreationContainer {
 
   private configureExternalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
     location.enable({ emitEvent: false });
-    
+
     if (location.value === LocationEnum.ALL) {
       location.setValue(null, { emitEvent: false });
     }
@@ -277,5 +274,4 @@ export class EventCreationContainer {
 
     return acceptedTypes.includes(file.type) && file.size <= maxSizeInBytes;
   }
-
 }
