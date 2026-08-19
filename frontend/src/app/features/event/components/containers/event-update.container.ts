@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -6,7 +6,7 @@ import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Event as EventDetails } from '../../../../core/models/event.model';
 import { EventCreationView } from '../views/event-creation/event-creation.view';
-import { EventCreationContainer } from './event-creation.container';
+import { EventDraftContainer } from './event-draft.container';
 
 @Component({
   selector: 'app-event-update-container',
@@ -24,7 +24,7 @@ import { EventCreationContainer } from './event-creation.container';
     />
   `,
 })
-export class EventUpdateContainer extends EventCreationContainer {
+export class EventUpdateContainer extends EventDraftContainer implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly events = inject(EventService);
   private readonly toast = inject(ToastService);
@@ -32,7 +32,9 @@ export class EventUpdateContainer extends EventCreationContainer {
 
   constructor() {
     super();
+  }
 
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!Number.isNaN(id)) {
