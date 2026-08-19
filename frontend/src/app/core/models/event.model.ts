@@ -1,16 +1,7 @@
-import { EventStatus } from '../constants/event-status.constant';
-import { EventType } from '../constants/event-type.constant';
+import { EventStatusEnum } from '../constants/event-status.constant';
+import { EventTypeEnum } from '../constants/event-type.constant';
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
-
-export interface Event {
-  id: number;
-  name: string;
-  startTime: string;
-  status: EventStatus;
-  type: EventType;
-  location: LocationEnum;
-}
 
 export interface PageResponse<T> {
   content: T[];
@@ -22,13 +13,7 @@ export interface PageResponse<T> {
   last: boolean;
 }
 
-export const EVENT_TYPES = Object.values(EventType);
-
-export enum EventStatusEnum {
-  DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
-  COMPLETED = 'COMPLETED',
-}
+export const EVENT_TYPES = Object.values(EventTypeEnum);
 
 export type EventForm = {
   title: FormControl<string>;
@@ -41,7 +26,7 @@ export type EventForm = {
   registrationStartTime: FormControl<Date | null>;
   registrationEndDate: FormControl<Date | null>;
   registrationEndTime: FormControl<Date | null>;
-  type: FormControl<EventType | null>;
+  type: FormControl<EventTypeEnum | null>;
   location: FormControl<LocationEnum | null>;
   isFoodProvided: FormControl<boolean | null>;
 };
@@ -49,18 +34,33 @@ export type EventForm = {
 export interface EventDraftRequest {
   name: string;
   description: string;
-  startTime: string;
-  endTime: string;
-  registrationStart: string;
-  registrationEnd: string;
-  type: EventType;
+  startTime: Date | null;
+  endTime: Date | null;
+  registrationStart: Date | null;
+  registrationEnd: Date | null;
+  type: EventTypeEnum;
   location: LocationEnum;
   foodProvided: boolean;
   image: string | null;
-  status: EventStatus;
+  status: EventStatusEnum;
+}
+
+export interface Event {
+  id: number;
+  name: string;
+  description: string;
+  type: EventTypeEnum;
+  status: EventStatusEnum;
+  image: string | null;
+  location: LocationEnum;
+  startTime: Date | null;
+  endTime: Date | null;
+  registrationStart: Date | null;
+  registrationEnd: Date | null;
+  foodProvided: boolean | null;
 }
 
 export interface EventResponse {
   id: number;
-  status: EventStatus;
+  status: EventStatusEnum;
 }
