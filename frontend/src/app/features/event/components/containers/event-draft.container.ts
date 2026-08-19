@@ -78,7 +78,7 @@ export abstract class EventDraftContainer {
     const reader = new FileReader();
 
     reader.onload = () => {
-      const result = reader.result as string;
+      const result = reader.result!.toString();
       this.posterBase64 = result.split(',')[1] ?? result;
       this.posterName.set(file.name);
     };
