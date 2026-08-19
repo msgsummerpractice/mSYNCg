@@ -59,7 +59,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenNoFilters_ReturnsPageOfEvents() throws Exception {
+	void getEvents_whenNoFilters_returnsPageOfEvents() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -78,7 +78,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
+	void getEvents_whenNoResults_returnsEmptyPage() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -94,7 +94,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+	void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -111,7 +111,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
+	void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -129,7 +129,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+	void getEvents_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -144,7 +144,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void updateEvent_WhenValidRequest_ReturnsUpdatedEvent() throws Exception {
+	void updateEvent_whenValidRequest_returnsUpdatedEvent() throws Exception {
 		Integer eventId = 1;
 		EventViewResponse updatedResponse = buildViewResponse();
 		EventRequest eventRequest = new EventRequest();
@@ -164,7 +164,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void updateEvent_WhenEventNotFound_ReturnsInternalServerError() throws Exception {
+	void updateEvent_whenEventNotFound_returnsInternalServerError() throws Exception {
 		Integer eventId = 999;
 		EventRequest eventRequest = new EventRequest();
 		eventRequest.setName("Nonexistent event");
@@ -182,7 +182,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void updateEvent_WhenImageBase64Provided_UpdatesAndReturnsEvent() throws Exception {
+	void updateEvent_whenImageBase64Provided_updatesAndReturnsEvent() throws Exception {
 		Integer eventId = 1;
 		String imageBase64 = "aGVsbG8gd29ybGQ=";
 		EventViewResponse updatedResponse = buildViewResponse();
@@ -203,7 +203,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void updateEvent_WhenNoImageProvided_UpdatesWithoutImage() throws Exception {
+	void updateEvent_whenNoImageProvided_updatesWithoutImage() throws Exception {
 		Integer eventId = 1;
 		EventViewResponse updatedResponse = buildViewResponse();
 		EventRequest eventRequest = new EventRequest();

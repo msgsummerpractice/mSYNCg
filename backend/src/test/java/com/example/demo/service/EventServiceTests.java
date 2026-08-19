@@ -44,7 +44,7 @@ public class EventServiceTests {
 	private EventService eventService;
 
 	@Test
-	void getEvents_WhenEventsExist_ReturnsMappedPage() {
+	void getEvents_whenEventsExist_returnsMappedPage() {
 		Event event = new Event();
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(1);
@@ -65,7 +65,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenNoEventsMatch_ReturnsEmptyPageWithoutMapping() {
+	void getEvents_whenNoEventsMatch_returnsEmptyPageWithoutMapping() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -80,7 +80,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenCalledWithSpecAndPageable_PassesThemToRepository() {
+	void getEvents_whenCalledWithSpecAndPageable_passesThemToRepository() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(2, 5);
 
@@ -98,7 +98,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenSpecIsNull_QueriesRepositoryWithoutFilters() {
+	void getEvents_whenSpecIsNull_queriesRepositoryWithoutFilters() {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
@@ -111,7 +111,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenRepositoryFails_PropagatesException() {
+	void getEvents_whenRepositoryFails_propagatesException() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -122,7 +122,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void updateEvent_WhenEventExists_UpdatesAndReturnsMappedResponse() {
+	void updateEvent_whenEventExists_updatesAndReturnsMappedResponse() {
 		Integer eventId = 1;
 		Event existingEvent = new Event();
 		existingEvent.setId(eventId);
@@ -150,7 +150,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void updateEvent_WhenEventNotFound_ThrowsException() {
+	void updateEvent_whenEventNotFound_throwsException() {
 		Integer eventId = 999;
 		EventRequest eventRequest = new EventRequest();
 
@@ -162,7 +162,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void updateEvent_WhenImageBase64Provided_DecodesAndSaves() {
+	void updateEvent_whenImageBase64Provided_decodesAndSaves() {
 		Integer eventId = 1;
 		Event existingEvent = new Event();
 		existingEvent.setId(eventId);
@@ -189,7 +189,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void updateEvent_WhenNoImageProvided_SavesWithoutImage() {
+	void updateEvent_whenNoImageProvided_savesWithoutImage() {
 		Integer eventId = 1;
 		Event existingEvent = new Event();
 		existingEvent.setId(eventId);
