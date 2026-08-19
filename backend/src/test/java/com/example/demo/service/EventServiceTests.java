@@ -49,12 +49,28 @@ public class EventServiceTests {
 		return event;
 	}
 
+	private EventRequest createEventRequest(String name) {
+		return createEventRequest(name, null);
+	}
+
+	private EventRequest createEventRequest(String name, String imageBase64) {
+		EventRequest request = new EventRequest();
+		request.setName(name);
+		request.setImageBase64(imageBase64);
+		return request;
+	}
+
+	private EventViewResponse createViewResponse(Integer id, String name) {
+		EventViewResponse response = new EventViewResponse();
+		response.setId(id);
+		response.setName(name);
+		return response;
+	}
+
 	@Test
 	void getEvents_whenEventsExist_returnsMappedPage() {
 		Event event = createEvent(1);
-		EventViewResponse viewResponse = new EventViewResponse();
-		viewResponse.setId(1);
-		viewResponse.setName("Team event");
+		EventViewResponse viewResponse = createViewResponse(1, "Team event");
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 		Page<Event> eventsPage = new PageImpl<>(List.of(event), pageable, 1);
@@ -131,13 +147,10 @@ public class EventServiceTests {
 	void updateEvent_whenEventExists_updatesAndReturnsMappedResponse() {
 		Integer eventId = 1;
 		Event existingEvent = createEvent(eventId);
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Updated Event");
+		EventRequest eventRequest = createEventRequest("Updated Event");
 		Event mappedEvent = createEvent(null);
 		Event savedEvent = createEvent(eventId);
-		EventViewResponse viewResponse = new EventViewResponse();
-		viewResponse.setId(eventId);
-		viewResponse.setName("Updated Event");
+		EventViewResponse viewResponse = createViewResponse(eventId, "Updated Event");
 
 		when(eventRepository.findById(eventId)).thenReturn(java.util.Optional.of(existingEvent));
 		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
@@ -170,13 +183,10 @@ public class EventServiceTests {
 		Integer eventId = 1;
 		Event existingEvent = createEvent(eventId);
 		String imageBase64 = "aGVsbG8gd29ybGQ=";
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Event with image");
-		eventRequest.setImageBase64(imageBase64);
+		EventRequest eventRequest = createEventRequest("Event with image", imageBase64);
 		Event mappedEvent = createEvent(null);
 		Event savedEvent = createEvent(eventId);
-		EventViewResponse viewResponse = new EventViewResponse();
-		viewResponse.setId(eventId);
+		EventViewResponse viewResponse = createViewResponse(eventId, null);
 
 		when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
 		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
@@ -194,13 +204,10 @@ public class EventServiceTests {
 	void updateEvent_whenNoImageProvided_savesWithoutImage() {
 		Integer eventId = 1;
 		Event existingEvent = createEvent(eventId);
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Event without image");
-		eventRequest.setImageBase64(null);
+		EventRequest eventRequest = createEventRequest("Event without image", null);
 		Event mappedEvent = createEvent(null);
 		Event savedEvent = createEvent(eventId);
-		EventViewResponse viewResponse = new EventViewResponse();
-		viewResponse.setId(eventId);
+		EventViewResponse viewResponse = createViewResponse(eventId, null);
 
 		when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
 		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);

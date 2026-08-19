@@ -147,8 +147,7 @@ public class EventControllerTests {
 	void updateEvent_whenValidRequest_returnsUpdatedEvent() throws Exception {
 		Integer eventId = 1;
 		EventViewResponse updatedResponse = buildViewResponse();
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Updated Team event");
+		EventRequest eventRequest = createEventRequest("Updated Team event");
 
 		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
 
@@ -166,8 +165,7 @@ public class EventControllerTests {
 	@Test
 	void updateEvent_whenEventNotFound_returnsInternalServerError() throws Exception {
 		Integer eventId = 999;
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Nonexistent event");
+		EventRequest eventRequest = createEventRequest("Nonexistent event");
 
 		when(eventService.updateEvent(eventId, eventRequest))
 				.thenThrow(new RuntimeException("Event not found with id: " + eventId));
@@ -186,9 +184,7 @@ public class EventControllerTests {
 		Integer eventId = 1;
 		String imageBase64 = "aGVsbG8gd29ybGQ=";
 		EventViewResponse updatedResponse = buildViewResponse();
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Event with image");
-		eventRequest.setImageBase64(imageBase64);
+		EventRequest eventRequest = createEventRequest("Event with image", imageBase64);
 
 		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
 
@@ -206,9 +202,7 @@ public class EventControllerTests {
 	void updateEvent_whenNoImageProvided_updatesWithoutImage() throws Exception {
 		Integer eventId = 1;
 		EventViewResponse updatedResponse = buildViewResponse();
-		EventRequest eventRequest = new EventRequest();
-		eventRequest.setName("Event without image");
-		eventRequest.setImageBase64(null);
+		EventRequest eventRequest = createEventRequest("Event without image", null);
 
 		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
 
@@ -224,5 +218,16 @@ public class EventControllerTests {
 	private EventViewResponse buildViewResponse() {
 		return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
 				EventType.EXTERNAL, Location.CLUJ_NAPOCA);
+	}
+
+	private EventRequest createEventRequest(String name) {
+		return createEventRequest(name, null);
+	}
+
+	private EventRequest createEventRequest(String name, String imageBase64) {
+		EventRequest request = new EventRequest();
+		request.setName(name);
+		request.setImageBase64(imageBase64);
+		return request;
 	}
 }
