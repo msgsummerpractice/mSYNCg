@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.exceptions.GlobalExceptionHandler;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -212,5 +214,41 @@ public class EventControllerTests {
 		details.setFoodProvided(true);
 		details.setDescription("Yearly team gathering");
 		return details;
+	}
+
+	@Test
+	void completeEvent_whenSuccessful_returnsCompletedEvent() throws Exception {
+		EventDetailsResponse completedEvent = buildDetailsResponse();
+		completedEvent.setStatus(EventStatus.COMPLETED);
+
+		when(eventService.completeEvent(1)).thenReturn(completedEvent);
+
+		mockMvc.perform(patch("/api/events/1/complete"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.status").value(EventStatus.COMPLETED.name()));
+
+		verify(eventService).completeEvent(1);
+	}
+
+	@Test
+	void completeEvent_whenEventDoesNotExist_returnsNotFound() throws Exception {
+		when(eventService.completeEvent(99)).thenThrow(new NotFoundException("Event", 99));
+
+		mockMvc.perform(patch("/api/events/99/complete"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+	}
+
+	@Test
+	void completeEvent_whenEventCannotBeCompleted_returnsBadRequest() throws Exception {
+		when(eventService.completeEvent(1))
+				.thenThrow(new EventCannotBeCompletedException("Event cannot be completed before its end time."));
+
+		mockMvc.perform(patch("/api/events/1/complete"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("Bad Request"))
+				.andExpect(jsonPath("$.message").value("Event cannot be completed before its end time."));
 	}
 }

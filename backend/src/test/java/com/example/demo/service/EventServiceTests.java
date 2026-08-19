@@ -2,9 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
+import com.example.demo.model.EventStatus;
 import com.example.demo.repository.EventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,7 +52,7 @@ public class EventServiceTests {
 	private EventService eventService;
 
 	@Test
-	void getEvents_WhenEventsExist_ReturnsMappedPage() {
+	void getEvents_whenEventsExist_returnsMappedPage() {
 		Event event = new Event();
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(1);
@@ -68,7 +73,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenNoEventsMatch_ReturnsEmptyPageWithoutMapping() {
+	void getEvents_whenNoEventsMatch_returnsEmptyPageWithoutMapping() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -83,7 +88,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenCalledWithSpecAndPageable_PassesThemToRepository() {
+	void getEvents_whenCalledWithSpecAndPageable_passesThemToRepository() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(2, 5);
 
@@ -101,7 +106,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenSpecIsNull_QueriesRepositoryWithoutFilters() {
+	void getEvents_whenSpecIsNull_queriesRepositoryWithoutFilters() {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
@@ -114,7 +119,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getEvents_WhenRepositoryFails_PropagatesException() {
+	void getEvents_whenRepositoryFails_propagatesException() {
 		EventSpec spec = mock(EventSpec.class);
 		Pageable pageable = PageRequest.of(0, 20);
 
@@ -125,7 +130,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventExists_ReturnsMappedDetails() {
+	void getById_whenEventExists_returnsMappedDetails() {
 		Event event = new Event();
 		event.setId(1);
 		event.setName("Team event");
@@ -146,7 +151,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventHasImage_EncodesImageAsBase64() {
+	void getById_whenEventHasImage_encodesImageAsBase64() {
 		byte[] image = new byte[] { 1, 2, 3, 4 };
 		Event event = new Event();
 		event.setId(1);
@@ -161,7 +166,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventHasNoImage_ReturnsNullImage() {
+	void getById_whenEventHasNoImage_returnsNullImage() {
 		Event event = new Event();
 		event.setId(1);
 
@@ -174,7 +179,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventDoesNotExist_ThrowsNotFoundException() {
+	void getById_whenEventDoesNotExist_throwsNotFoundException() {
 		when(eventRepository.findById(99)).thenReturn(Optional.empty());
 
 		NotFoundException exception = assertThrows(NotFoundException.class, () -> eventService.getById(99));
@@ -184,10 +189,78 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenRepositoryFails_PropagatesException() {
+	void getById_whenRepositoryFails_propagatesException() {
 		when(eventRepository.findById(1))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getById(1));
+	}
+
+	@Test
+	void completeEvent_whenEventDoesNotExist_throwsNotFoundException() {
+		when(eventRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> eventService.completeEvent(99));
+
+		assertEquals("Event with id 99 not found", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void completeEvent_whenEventAlreadyCompleted_throwsEventCannotBeCompletedException() {
+		Event event = new Event();
+		event.setId(1);
+		event.setStatus(EventStatus.COMPLETED);
+		event.setEndTime(LocalDateTime.now().minusDays(1));
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+
+		EventCannotBeCompletedException exception = assertThrows(
+				EventCannotBeCompletedException.class,
+				() -> eventService.completeEvent(1)
+		);
+
+		assertEquals("Event is already completed.", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void completeEvent_whenEndTimeIsInFuture_throwsEventCannotBeCompletedException() {
+		Event event = new Event();
+		event.setId(1);
+		event.setStatus(EventStatus.PUBLISHED);
+		event.setEndTime(LocalDateTime.now().plusDays(1));
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+
+		EventCannotBeCompletedException exception = assertThrows(
+				EventCannotBeCompletedException.class,
+				() -> eventService.completeEvent(1)
+		);
+
+		assertEquals("Event cannot be completed before its end time.", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void completeEvent_whenEventEnded_setsStatusToCompleted() {
+		Event event = new Event();
+		event.setId(1);
+		event.setStatus(EventStatus.PUBLISHED);
+		event.setEndTime(LocalDateTime.now().minusDays(1));
+
+		EventDetailsResponse response = new EventDetailsResponse();
+		response.setId(1);
+		response.setStatus(EventStatus.COMPLETED);
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+		when(eventRepository.save(event)).thenReturn(event);
+		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(response);
+
+		EventDetailsResponse result = eventService.completeEvent(1);
+
+		assertEquals(EventStatus.COMPLETED, event.getStatus());
+		assertEquals(response, result);
+		verify(eventRepository).save(event);
 	}
 }
