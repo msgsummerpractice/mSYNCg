@@ -2,7 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
-import { EVENT_MANAGEMENT_ROLES } from '../constants/event.constant';
+import { EVENT_MANAGEMENT_ROLES } from '../constants/role.constant';
 
 export const eventManagementGuard: CanActivateFn = () => {
   const router = inject(Router);
