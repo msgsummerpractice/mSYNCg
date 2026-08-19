@@ -43,9 +43,15 @@ public class EventServiceTests {
 	@InjectMocks
 	private EventService eventService;
 
+	private Event createEvent(Integer id) {
+		Event event = new Event();
+		event.setId(id);
+		return event;
+	}
+
 	@Test
 	void getEvents_whenEventsExist_returnsMappedPage() {
-		Event event = new Event();
+		Event event = createEvent(1);
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(1);
 		viewResponse.setName("Team event");
@@ -124,13 +130,11 @@ public class EventServiceTests {
 	@Test
 	void updateEvent_whenEventExists_updatesAndReturnsMappedResponse() {
 		Integer eventId = 1;
-		Event existingEvent = new Event();
-		existingEvent.setId(eventId);
+		Event existingEvent = createEvent(eventId);
 		EventRequest eventRequest = new EventRequest();
 		eventRequest.setName("Updated Event");
-		Event mappedEvent = new Event();
-		Event savedEvent = new Event();
-		savedEvent.setId(eventId);
+		Event mappedEvent = createEvent(null);
+		Event savedEvent = createEvent(eventId);
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(eventId);
 		viewResponse.setName("Updated Event");
@@ -164,15 +168,13 @@ public class EventServiceTests {
 	@Test
 	void updateEvent_whenImageBase64Provided_decodesAndSaves() {
 		Integer eventId = 1;
-		Event existingEvent = new Event();
-		existingEvent.setId(eventId);
+		Event existingEvent = createEvent(eventId);
 		String imageBase64 = "aGVsbG8gd29ybGQ=";
 		EventRequest eventRequest = new EventRequest();
 		eventRequest.setName("Event with image");
 		eventRequest.setImageBase64(imageBase64);
-		Event mappedEvent = new Event();
-		Event savedEvent = new Event();
-		savedEvent.setId(eventId);
+		Event mappedEvent = createEvent(null);
+		Event savedEvent = createEvent(eventId);
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(eventId);
 
@@ -191,14 +193,12 @@ public class EventServiceTests {
 	@Test
 	void updateEvent_whenNoImageProvided_savesWithoutImage() {
 		Integer eventId = 1;
-		Event existingEvent = new Event();
-		existingEvent.setId(eventId);
+		Event existingEvent = createEvent(eventId);
 		EventRequest eventRequest = new EventRequest();
 		eventRequest.setName("Event without image");
 		eventRequest.setImageBase64(null);
-		Event mappedEvent = new Event();
-		Event savedEvent = new Event();
-		savedEvent.setId(eventId);
+		Event mappedEvent = createEvent(null);
+		Event savedEvent = createEvent(eventId);
 		EventViewResponse viewResponse = new EventViewResponse();
 		viewResponse.setId(eventId);
 
