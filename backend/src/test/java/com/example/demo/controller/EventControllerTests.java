@@ -29,10 +29,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,7 +95,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+	void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -110,7 +112,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
+	void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -198,6 +200,33 @@ public class EventControllerTests {
 		when(eventService.getById(1)).thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+	}
+
+	@Test
+	void publishEvent_whenEventExists_returnsOk() throws Exception {
+		mockMvc.perform(patch("/api/events/1/publish"))
+				.andExpect(status().isOk());
+
+		verify(eventService).publishEvent(1);
+	}
+
+	@Test
+	void publishEvent_whenEventDoesNotExist_returnsNotFound() throws Exception {
+		doThrow(new NotFoundException("Event", 99)).when(eventService).publishEvent(99);
+
+		mockMvc.perform(patch("/api/events/99/publish"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+	}
+
+	@Test
+	void publishEvent_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+		doThrow(new RuntimeException("Database unavailable")).when(eventService).publishEvent(1);
+
+		mockMvc.perform(patch("/api/events/1/publish"))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.error").value("Internal Server Error"));
 	}

@@ -14,6 +14,7 @@ import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
+import com.example.demo.model.EventStatus;
 import com.example.demo.repository.EventRepository;
 
 @Service
@@ -53,4 +54,10 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
         return response;
     }
 
+    public void publishEvent(Integer id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event", id));
+        event.setStatus(EventStatus.PUBLISHED);;
+        eventRepository.save(event);
+    }
 }

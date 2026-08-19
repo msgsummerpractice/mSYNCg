@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.demo.filtering.events.EventSpec;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,15 +24,21 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<Page<EventViewResponse>> getEvents(
-        EventSpec eventSpec,
-        Pageable pageable) {
-            Page<EventViewResponse> response = eventService.getAll(eventSpec, pageable);
-            return ResponseEntity.ok(response);
-        }
+            EventSpec eventSpec,
+            Pageable pageable) {
+        Page<EventViewResponse> response = eventService.getAll(eventSpec, pageable);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDetailsResponse> getEventDetails(@PathVariable Integer id) {
         return ResponseEntity.ok(eventService.getById(id));
+    }
+
+    @PatchMapping("/{id}/publish")
+    public ResponseEntity<Void> publishEvent(@PathVariable Integer id) {
+        eventService.publishEvent(id);
+        return ResponseEntity.ok().build();
     }
 
 }
