@@ -86,17 +86,18 @@ public class EventControllerTests {
 
         @Test
         void createEvent_WhenRequiredFieldsMissing_ReturnsBadRequest() throws Exception {
-                mockMvc.perform(post("/api/events")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{}"))
-                                .andExpect(status().isBadRequest())
-                                .andExpect(jsonPath("$.status").value(400))
-                                .andExpect(jsonPath("$.error").value("Validation Error"))
-                                .andExpect(jsonPath("$.message").value("Request validation failed"))
-                                .andExpect(jsonPath("$.fieldErrors.length()").value(8));
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.message").value("Request validation failed"))
+                .andExpect(jsonPath("$.fieldErrors.length()").value(9));
 
-                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
-                verify(eventService, never()).create(requestCaptor.capture(), isNull(String.class));
+        verify(eventService, never()).create(
+                org.mockito.ArgumentMatchers.any(EventRequest.class),
+                org.mockito.ArgumentMatchers.anyString());
         }
 
         @Test
@@ -110,34 +111,40 @@ public class EventControllerTests {
                                 .andExpect(status().isBadRequest())
                                 .andExpect(jsonPath("$.status").value(400))
                                 .andExpect(jsonPath("$.fieldErrors[0].field").value("name"))
-                                .andExpect(jsonPath("$.fieldErrors[0].reason").value("Event name is required"));
+                                .andExpect(jsonPath("$.fieldErrors[0].reason").value("Event name cannot be blank"));
 
                 ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
                 verify(eventService, never()).create(requestCaptor.capture(), isNull(String.class));
         }
 
         @Test
-        void getEvents_whenNoResults_returnsEmptyPage() throws Exception {
-        ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
+                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+                                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
-        when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
-                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
+                mockMvc.perform(get("/api/events").param("name", "Nobody"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.content").isEmpty())
+                                .andExpect(jsonPath("$.totalElements").value(0));
+
+                assertNotNull(specCaptor.getValue());
+                assertNotNull(pageableCaptor.getValue());
         }
 
         @Test
         void createEvent_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
-        ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
+                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
+                when(eventService.create(requestCaptor.capture(), eq("organizer@example.com")))
+                                .thenThrow(new RuntimeException("Database unavailable"));
 
-        when(eventService.create(requestCaptor.capture(), eq("organizer@example.com")))
-                .thenThrow(new RuntimeException("Database unavailable"));
-
-        mockMvc.perform(post("/api/events")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validRequestJson()))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.error").value("Internal Server Error"))
-                .andExpect(jsonPath("$.message").value("Database unavailable"));
+                mockMvc.perform(post("/api/events")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(validRequestJson()))
+                                .andExpect(status().isInternalServerError())
+                                .andExpect(jsonPath("$.error").value("Internal Server Error"))
+                                .andExpect(jsonPath("$.message").value("Database unavailable"));
         }
 
         private String validRequestJson() {
@@ -151,17 +158,27 @@ public class EventControllerTests {
                                   "foodProvided": true,
                                   "description": "Internal event for the engineering team",
                                   "registrationStart": "2026-08-15T09:00:00",
-                                  "registrationEnd": "2026-08-31T18:00:00"
+                                  "registrationEnd": "2026-08-31T18:00:00",
+                                  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
                                 }
                                 """;
         }
 
-    @Test
-	void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
-		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
-				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
+        @Test
+        void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+                                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
+
+                mockMvc.perform(get("/api/events")
+                                .param("page", "2")
+                                .param("size", "5"))
+                                .andExpect(status().isOk());
+
+                assertNotNull(specCaptor.getValue());
+                assertEquals(2, pageableCaptor.getValue().getPageNumber());
+                assertEquals(5, pageableCaptor.getValue().getPageSize());
         }
 
         private String requestJson(String name, String type, String location, String startTime,
@@ -180,7 +197,8 @@ public class EventControllerTests {
                                   "foodProvided": %s,
                                   "description": "%s",
                                   "registrationStart": "%s",
-                                  "registrationEnd": "%s"
+                                  "registrationEnd": "%s",
+                                  "image": "iVBORw0KGgoAAAANSUhEUgAAAAUA"
                                 }
                                 """.formatted(nameJson, type, location, startTime, endTime, foodProvided,
                                 description,
@@ -194,13 +212,7 @@ public class EventControllerTests {
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
                 when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
-        }
 
-        @Test
-        void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
-                Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
-                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
                 mockMvc.perform(get("/api/events"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content[0].id").value(1))
@@ -210,47 +222,6 @@ public class EventControllerTests {
 
                 assertNotNull(specCaptor.getValue());
                 assertNotNull(pageableCaptor.getValue());
-        }
-
-        @Test
-        void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
-                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
-                                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
-
-                mockMvc.perform(get("/api/events").param("name", "Nobody"))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.content").isEmpty())
-                                .andExpect(jsonPath("$.totalElements").value(0));
-        }
-
-        @Test
-        void getEvents_whenServiceThrowsUnexpectedException_returns_internalServerError() throws Exception {
-                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
-                                .thenThrow(new RuntimeException("Database unavailable"));
-
-                assertNotNull(specCaptor.getValue());
-                assertNotNull(pageableCaptor.getValue());
-        }
-
-        @Test
-        void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
-                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
-                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
-                                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
-
-                mockMvc.perform(get("/api/events")
-                                .param("page", "2")
-                                .param("size", "5"))
-                                .andExpect(status().isOk());
-
-                assertNotNull(specCaptor.getValue());
-                assertEquals(2, pageableCaptor.getValue().getPageNumber());
-                assertEquals(5, pageableCaptor.getValue().getPageSize());
         }
 
         @Test

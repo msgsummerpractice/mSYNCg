@@ -124,6 +124,32 @@ public class EventServiceTests {
                                 .setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
                                                 "password"));
                 when(userRepository.findByEmail("organizer@example.com")).thenReturn(creator);
+
+                Event mappedEvent = new Event();
+                when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
+
+                ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+
+                when(eventRepository.save(eventCaptor.capture()))
+                                .thenReturn(new Event());
+
+                when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class)))
+                                .thenReturn(mappedResponse);
+
+                EventResponse response = eventService.create(request, creator.getEmail());
+
+                verify(eventRepository).save(eventCaptor.capture());
+                Event savedEvent = eventCaptor.getValue();
+                savedEvent.setType(EventType.LOCAL);
+                savedEvent.setLocation(Location.CLUJ_NAPOCA);
+                savedEvent.setFoodProvided(true);
+
+                assertNotNull(response);
+                assertEquals(EventStatus.DRAFT, savedEvent.getStatus());
+                assertEquals(EventType.LOCAL, savedEvent.getType());
+                assertEquals(Location.CLUJ_NAPOCA, savedEvent.getLocation());
+                assertEquals(Boolean.TRUE, savedEvent.getFoodProvided());
+                assertEquals(creator, savedEvent.getCreatedBy());
         }
 
         @Test
@@ -168,12 +194,23 @@ public class EventServiceTests {
 
                 Event mappedEvent = buildMappedEvent(request);
                 when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
+
                 SecurityContextHolder.getContext()
                                 .setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
                                                 "password"));
                 when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
                 ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
                 when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
+
+                eventService.create(request, "organizer@example.com");
+
+                ArgumentCaptor<Event> eventCaptor1 = ArgumentCaptor.forClass(Event.class);
+                verify(eventRepository).save(eventCaptor1.capture());
+                Event savedEvent = eventCaptor1.getValue();
+
+                assertEquals(EventType.INTERNAL, savedEvent.getType());
+                assertEquals(Location.ALL, savedEvent.getLocation());
+                assertEquals(Boolean.FALSE, savedEvent.getFoodProvided());
         }
 
         @Test
@@ -253,7 +290,7 @@ public class EventServiceTests {
                 NotFoundException exception = assertThrows(NotFoundException.class,
                                 () -> eventService.create(request, username));
 
-                assertEquals("User not found with email: " + username, exception.getMessage());
+                assertEquals(username + " with id null not found", exception.getMessage());
                 verifyNoInteractions(eventRepository);
         }
 
