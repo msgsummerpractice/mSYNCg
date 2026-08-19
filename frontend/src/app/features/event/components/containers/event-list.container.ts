@@ -16,7 +16,6 @@ import { EventStatus } from '../../../../core/constants/event-status.constant';
 import { EventType } from '../../../../core/constants/event-type.constant';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRole } from '../../../../core/constants/role.constant';
-import { MOCK_EVENTS } from '../../../../core/constants/mocks/event.mocks';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -99,13 +98,8 @@ export class EventListContainer {
 
   userRole = signal<UserRole | null>(this.authService.getRole());
 
-  // Real backend state:
-  // pagedEvents = signal<Event[]>([]);
-  // totalFilteredItems = signal<number>(0);
-
-  // Temporary mock state:
-  pagedEvents = signal<Event[]>(MOCK_EVENTS.slice(0, this.pageSize()));
-  totalFilteredItems = signal<number>(MOCK_EVENTS.length);
+  pagedEvents = signal<Event[]>([]);
+  totalFilteredItems = signal<number>(0);
 
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
@@ -130,123 +124,65 @@ export class EventListContainer {
       return;
     }
 
-    // BACKEND VERSION - KEEP FOR LATER
-    /*
-      this.isLoading.set(true);
+    this.isLoading.set(true);
 
-      toObservable(this.searchParams)
-        .pipe(
-          debounceTime(750),
-          tap(() => this.isLoading.set(true)),
-          switchMap(() =>
-            this.eventService
-              .getEvents(this.filterParams())
-              .pipe(finalize(() => this.isLoading.set(false)))
-          ),
-          takeUntilDestroyed(this.destroyRef)
-        )
-        .subscribe({
-          next: (response) => {
-            this.pagedEvents.set(response.content);
-            this.totalFilteredItems.set(response.totalElements);
-          },
-          error: () => this.handleLoadError(),
-        });
-      */
+    toObservable(this.searchParams)
+      .pipe(
+        debounceTime(750),
+        tap(() => this.isLoading.set(true)),
+        switchMap(() =>
+          this.eventService
+            .getEvents(this.filterParams())
+            .pipe(finalize(() => this.isLoading.set(false)))
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: (response) => {
+          this.pagedEvents.set(response.content);
+          this.totalFilteredItems.set(response.totalElements);
+        },
+        error: () => this.handleLoadError(),
+      });
   }
 
   onNameSearchChange(value: string): void {
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      this.nameQuery.set(value);
-      this.pageIndex.set(0);
-      */
-
     this.nameQuery.set(value);
     this.pageIndex.set(0);
-    this.applyMockFilters();
   }
 
   onTypeChange(value: EventType[]): void {
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      this.selectedTypes.set(value);
-      this.pageIndex.set(0);
-      */
-
     this.selectedTypes.set(value);
     this.pageIndex.set(0);
-    this.applyMockFilters();
   }
 
   onStatusChange(value: EventStatus[]): void {
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      this.selectedStatuses.set(value);
-      this.pageIndex.set(0);
-      */
-
     this.selectedStatuses.set(value);
     this.pageIndex.set(0);
-    this.applyMockFilters();
   }
 
   onLocationChange(value: LocationEnum[]): void {
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      this.selectedLocations.set(value);
-      this.pageIndex.set(0);
-      */
-
     this.selectedLocations.set(value);
     this.pageIndex.set(0);
-    this.applyMockFilters();
   }
 
   onStartTimeChange(value: string): void {
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      this.startTimeQuery.set(value);
-      this.pageIndex.set(0);
-      */
-
     this.startTimeQuery.set(value);
     this.pageIndex.set(0);
-    this.applyMockFilters();
   }
 
   onResetFilters(): void {
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      */
-
     this.nameQuery.set('');
     this.startTimeQuery.set('');
     this.selectedTypes.set([]);
     this.selectedStatuses.set([]);
     this.selectedLocations.set([]);
     this.pageIndex.set(0);
-
-    this.applyMockFilters();
   }
 
   onPageChange(event: PageEvent): void {
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
-
-    // BACKEND VERSION
-    /*
-      this.isLoading.set(true);
-      this.loadEvents();
-      */
-
-    this.applyMockFilters();
   }
 
   onViewEvent(eventId: number): void {
@@ -258,73 +194,16 @@ export class EventListContainer {
   }
 
   onPublishEvent(eventId: number): void {
-    this.updateMockEventStatus(eventId, EventStatus.PUBLISHED);
+    // TODO: Implement backend call to publish event
+    this.toastService.showSuccess('Event published!');
   }
 
   onCompleteEvent(eventId: number): void {
-    this.updateMockEventStatus(eventId, EventStatus.COMPLETED);
-  }
-
-  private updateMockEventStatus(eventId: number, status: EventStatus): void {
-    this.pagedEvents.update((events) =>
-      events.map((event) => (event.id === eventId ? { ...event, status } : event))
-    );
-  }
-
-  private applyMockFilters(): void {
-    const name = this.nameQuery().trim().toLowerCase();
-    const selectedTypes = this.selectedTypes();
-    const selectedStatuses = this.selectedStatuses();
-    const selectedLocations = this.selectedLocations();
-    const startTime = this.startTimeQuery();
-
-    const filteredEvents = MOCK_EVENTS.filter((event) => {
-      const matchesName = !name || event.name.toLowerCase().includes(name);
-
-      const matchesType = selectedTypes.length === 0 || selectedTypes.includes(event.type);
-
-      const matchesStatus =
-        selectedStatuses.length === 0 || selectedStatuses.includes(event.status);
-
-      const matchesLocation =
-        selectedLocations.length === 0 || selectedLocations.includes(event.location);
-
-      const matchesStartTime = !startTime || event.startTime.startsWith(startTime);
-
-      return matchesName && matchesType && matchesStatus && matchesLocation && matchesStartTime;
-    });
-
-    this.totalFilteredItems.set(filteredEvents.length);
-
-    const start = this.pageIndex() * this.pageSize();
-    const end = start + this.pageSize();
-
-    this.pagedEvents.set(filteredEvents.slice(start, end));
-    this.isLoading.set(false);
+    // TODO: Implement backend call to complete event
+    this.toastService.showSuccess('Event completed!');
   }
 
   private handleLoadError(): void {
     this.toastService.showError(this.translateService.instant('EVENT_LIST.LOAD_ERROR'));
   }
-
-  // BACKEND VERSION - KEEP FOR LATER
-  /*
-      private loadEvents(): void {
-        this.isLoading.set(true);
-
-        this.eventService
-          .getEvents(this.filterParams())
-          .pipe(
-            takeUntilDestroyed(this.destroyRef),
-            finalize(() => this.isLoading.set(false))
-          )
-          .subscribe({
-            next: (response) => {
-              this.pagedEvents.set(response.content);
-              this.totalFilteredItems.set(response.totalElements);
-            },
-            error: () => this.handleLoadError(),
-          });
-      }
-      */
 }
