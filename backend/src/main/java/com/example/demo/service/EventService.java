@@ -54,12 +54,13 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
         Event updatedEvent = modelMapper.map(eventRequest, Event.class);
 
         byte[] poster = null;
-        if (eventRequest.getImageBase64() != null && !eventRequest.getImageBase64().isEmpty()) {
-            poster = Base64.getDecoder().decode(eventRequest.getImageBase64());
+        if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
+            poster = Base64.getDecoder().decode(eventRequest.getImage());
         }
 
         updatedEvent.setId(event.getId());
         updatedEvent.setImage(poster);
+        updatedEvent.setStatus(EventStatus.DRAFT);
         updatedEvent = eventRepository.save(updatedEvent);
 
         return modelMapper.map(updatedEvent, EventViewResponse.class);

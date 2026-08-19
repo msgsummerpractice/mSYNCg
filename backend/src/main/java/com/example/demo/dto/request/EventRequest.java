@@ -49,5 +49,5 @@ public class EventRequest {
     private LocalDateTime registrationEnd;
 
     @MaxFileSize(value = 5000000, message = "Poster file size exceeds the maximum limit of 5MB.")
-    private String imageBase64;
+    private String image;
 }
