@@ -63,6 +63,12 @@ public class EventServiceTests {
 		return request;
 	}
 
+	private Event createEvent(Integer id) {
+		Event event = new Event();
+		event.setId(id);
+		return event;
+	}
+
 	private EventViewResponse createViewResponse(Integer id, String name) {
 		EventViewResponse response = new EventViewResponse();
 		response.setId(id);
