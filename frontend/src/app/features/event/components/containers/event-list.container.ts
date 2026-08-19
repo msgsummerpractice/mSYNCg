@@ -17,6 +17,8 @@ import { EventType } from '../../../../core/constants/event-type.constant';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { MOCK_EVENTS } from '../../../../core/constants/mocks/event.mocks';
+import { ToastService } from '../../../../core/services/toast.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-event-list-container',
@@ -29,6 +31,8 @@ export class EventListContainer {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly toastService = inject(ToastService);
+  private readonly translateService = inject(TranslateService);
 
   tableColumns: TableColumn<Event>[] = [
     {
@@ -74,7 +78,11 @@ export class EventListContainer {
     EventStatus.COMPLETED,
   ]);
 
-  locations = signal<LocationEnum[]>([LocationEnum.CLUJ_NAPOCA, LocationEnum.TARGU_MURES, LocationEnum.TIMISOARA]);
+  locations = signal<LocationEnum[]>([
+    LocationEnum.CLUJ_NAPOCA,
+    LocationEnum.TARGU_MURES,
+    LocationEnum.TIMISOARA,
+  ]);
 
   nameQuery = signal<string>('');
   startTimeQuery = signal<string>('');
@@ -124,38 +132,36 @@ export class EventListContainer {
 
     // BACKEND VERSION - KEEP FOR LATER
     /*
-    this.isLoading.set(true);
+      this.isLoading.set(true);
 
-    toObservable(this.searchParams)
-      .pipe(
-        debounceTime(750),
-        tap(() => this.isLoading.set(true)),
-        switchMap(() =>
-          this.eventService
-            .getEvents(this.filterParams())
-            .pipe(finalize(() => this.isLoading.set(false)))
-        ),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: (response) => {
-          this.pagedEvents.set(response.content);
-          this.totalFilteredItems.set(response.totalElements);
-        },
-        error: (error) => {
-          console.error('Failed to load events', error);
-        },
-      });
-    */
+      toObservable(this.searchParams)
+        .pipe(
+          debounceTime(750),
+          tap(() => this.isLoading.set(true)),
+          switchMap(() =>
+            this.eventService
+              .getEvents(this.filterParams())
+              .pipe(finalize(() => this.isLoading.set(false)))
+          ),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe({
+          next: (response) => {
+            this.pagedEvents.set(response.content);
+            this.totalFilteredItems.set(response.totalElements);
+          },
+          error: () => this.handleLoadError(),
+        });
+      */
   }
 
   onNameSearchChange(value: string): void {
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    this.nameQuery.set(value);
-    this.pageIndex.set(0);
-    */
+      this.isLoading.set(true);
+      this.nameQuery.set(value);
+      this.pageIndex.set(0);
+      */
 
     this.nameQuery.set(value);
     this.pageIndex.set(0);
@@ -165,10 +171,10 @@ export class EventListContainer {
   onTypeChange(value: EventType[]): void {
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    this.selectedTypes.set(value);
-    this.pageIndex.set(0);
-    */
+      this.isLoading.set(true);
+      this.selectedTypes.set(value);
+      this.pageIndex.set(0);
+      */
 
     this.selectedTypes.set(value);
     this.pageIndex.set(0);
@@ -178,10 +184,10 @@ export class EventListContainer {
   onStatusChange(value: EventStatus[]): void {
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    this.selectedStatuses.set(value);
-    this.pageIndex.set(0);
-    */
+      this.isLoading.set(true);
+      this.selectedStatuses.set(value);
+      this.pageIndex.set(0);
+      */
 
     this.selectedStatuses.set(value);
     this.pageIndex.set(0);
@@ -191,10 +197,10 @@ export class EventListContainer {
   onLocationChange(value: LocationEnum[]): void {
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    this.selectedLocations.set(value);
-    this.pageIndex.set(0);
-    */
+      this.isLoading.set(true);
+      this.selectedLocations.set(value);
+      this.pageIndex.set(0);
+      */
 
     this.selectedLocations.set(value);
     this.pageIndex.set(0);
@@ -204,10 +210,10 @@ export class EventListContainer {
   onStartTimeChange(value: string): void {
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    this.startTimeQuery.set(value);
-    this.pageIndex.set(0);
-    */
+      this.isLoading.set(true);
+      this.startTimeQuery.set(value);
+      this.pageIndex.set(0);
+      */
 
     this.startTimeQuery.set(value);
     this.pageIndex.set(0);
@@ -217,8 +223,8 @@ export class EventListContainer {
   onResetFilters(): void {
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    */
+      this.isLoading.set(true);
+      */
 
     this.nameQuery.set('');
     this.startTimeQuery.set('');
@@ -236,9 +242,9 @@ export class EventListContainer {
 
     // BACKEND VERSION
     /*
-    this.isLoading.set(true);
-    this.loadEvents();
-    */
+      this.isLoading.set(true);
+      this.loadEvents();
+      */
 
     this.applyMockFilters();
   }
@@ -297,26 +303,28 @@ export class EventListContainer {
     this.isLoading.set(false);
   }
 
+  private handleLoadError(): void {
+    this.toastService.showError(this.translateService.instant('EVENT_LIST.LOAD_ERROR'));
+  }
+
   // BACKEND VERSION - KEEP FOR LATER
   /*
-  private loadEvents(): void {
-    this.isLoading.set(true);
+      private loadEvents(): void {
+        this.isLoading.set(true);
 
-    this.eventService
-      .getEvents(this.filterParams())
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.isLoading.set(false))
-      )
-      .subscribe({
-        next: (response) => {
-          this.pagedEvents.set(response.content);
-          this.totalFilteredItems.set(response.totalElements);
-        },
-        error: (error) => {
-          console.error('Failed to load events', error);
-        },
-      });
-  }
-  */
+        this.eventService
+          .getEvents(this.filterParams())
+          .pipe(
+            takeUntilDestroyed(this.destroyRef),
+            finalize(() => this.isLoading.set(false))
+          )
+          .subscribe({
+            next: (response) => {
+              this.pagedEvents.set(response.content);
+              this.totalFilteredItems.set(response.totalElements);
+            },
+            error: () => this.handleLoadError(),
+          });
+      }
+      */
 }

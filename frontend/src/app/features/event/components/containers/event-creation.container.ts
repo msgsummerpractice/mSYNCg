@@ -6,11 +6,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/services/toast.service';
 import { EventService } from '../../../../core/services/event.service';
 import { EventDraftRequest, EventForm, EventStatusEnum } from '../../../../core/models/event.model';
-import { EventTypeEnum } from '../../../../core/models/event.model';
+import { EventType } from '../../../../core/constants/event-type.constant';
 import { EventCreationView } from '../views/event-creation/event-creation.view';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { eventDateTimeRangeValidator } from '../../../../core/validators/time-range.validatior';
 import { formatDateTime } from '../../../../core/utils/date.util';
+import { EventStatus } from '../../../../core/constants/event-status.constant';
 
 @Component({
   selector: 'app-event-creation-container',
@@ -36,7 +37,7 @@ export class EventCreationContainer {
   private readonly translate = inject(TranslateService);
 
   readonly isLoading = signal(false);
-  readonly selectedType = signal<EventTypeEnum | null>(null);
+  readonly selectedType = signal<EventType | null>(null);
   readonly posterName = signal<string | null>(null);
 
   private eventId: number | null = null;
@@ -56,7 +57,7 @@ export class EventCreationContainer {
       registrationStartTime: this.fb.control<Date | null>(null, Validators.required),
       registrationEndDate: this.fb.control<Date | null>(null, Validators.required),
       registrationEndTime: this.fb.control<Date | null>(null, Validators.required),
-      type: this.fb.control<EventTypeEnum | null>(null, Validators.required),
+      type: this.fb.control<EventType | null>(null, Validators.required),
       location: this.fb.control<LocationEnum | null>(null),
       isFoodProvided: this.fb.control<boolean | null>(null),
     },
@@ -127,7 +128,7 @@ export class EventCreationContainer {
       location: value.location,
       foodProvided: value.isFoodProvided ?? false,
       image: this.posterBase64,
-      status: EventStatusEnum.DRAFT,
+      status: EventStatus.DRAFT,
     };
 
     this.isLoading.set(true);
@@ -158,7 +159,7 @@ export class EventCreationContainer {
     }
   }
 
- private configureFieldsForType(type: EventTypeEnum | null): void {
+ private configureFieldsForType(type: EventType | null): void {
     this.selectedType.set(type);
 
     const location = this.eventFormGroup.controls.location;
@@ -168,13 +169,13 @@ export class EventCreationContainer {
     isFoodProvided.clearValidators();
 
     switch (type) {
-      case EventTypeEnum.INTERNAL:
+      case EventType.INTERNAL:
         this.configureInternalType(location, isFoodProvided);
         break;
-      case EventTypeEnum.LOCAL:
+      case EventType.LOCAL:
         this.configureLocalType(location, isFoodProvided);
         break;
-      case EventTypeEnum.EXTERNAL:
+      case EventType.EXTERNAL:
         this.configureExternalType(location, isFoodProvided);
         break;
       default:

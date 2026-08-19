@@ -1,4 +1,6 @@
-<div class="grid grid-cols-1 items-start gap-4 p-4 lg:grid-cols-[20rem_minmax(0,1fr)]">
+<div
+  class="grid grid-cols-1 items-stretch gap-4 p-4 lg:grid-cols-[20rem_minmax(0,1fr)] h-[calc(100vh-8rem)]"
+>
   <aside
     class="self-start rounded-xl bg-[var(--color-on-primary)] p-4 text-[var(--color-primary)] shadow-lg [--mat-sys-on-surface:var(--color-primary)] [--mat-sys-on-surface-variant:var(--color-primary)] [--mat-sys-primary:var(--color-primary)] [--mdc-outlined-text-field-outline-color:var(--color-primary)] [--mdc-outlined-text-field-hover-outline-color:var(--color-primary)] [--mdc-outlined-text-field-focus-outline-color:var(--color-primary)] [--mdc-outlined-text-field-caret-color:var(--color-primary)] [--mdc-outlined-text-field-input-text-color:var(--color-primary)] [--mdc-outlined-text-field-label-text-color:var(--color-primary)] [--mdc-outlined-text-field-focus-label-text-color:var(--color-primary)] [--mat-select-enabled-trigger-text-color:var(--color-primary)] [--mat-select-enabled-arrow-color:var(--color-primary)] [&_.mat-mdc-input-element]:!text-[var(--color-primary)] [&_.mdc-floating-label]:!text-[var(--color-primary)] [&_.mat-mdc-select-value-text]:!text-[var(--color-primary)] [&_.mat-mdc-select-arrow]:!text-[var(--color-primary)] [&_input:focus]:!outline-none"
   >
@@ -80,9 +82,9 @@
     </div>
   </aside>
 
-  <section class="min-w-0">
+  <section class="min-w-0 flex flex-col h-full">
     <div
-      class="relative overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8"
+      class="relative overflow-auto rounded-xl bg-brand-surface mat-elevation-z8 max-h-[calc(100vh-13rem)]"
       [attr.aria-busy]="isLoading"
     >
       @if (isLoading) {
@@ -114,15 +116,7 @@
           <th mat-header-cell *matHeaderCellDef> {{ 'EVENT_LIST.TABLE.ACTIONS' | translate }} </th>
 
           <td mat-cell *matCellDef="let event">
-            <app-button-container
-              *ngIf="!canManageEvents"
-              variant="primary"
-              [label]="'EVENT_LIST.BUTTONS.VIEW' | translate"
-              (clickEvent)="viewEvent.emit(event.id)"
-            ></app-button-container>
-
             <div
-              *ngIf="canManageEvents"
               class="flex items-center gap-1 [--mdc-icon-button-icon-color:var(--color-primary)]"
             >
               <button
@@ -139,6 +133,7 @@
               </button>
 
               <button
+                *ngIf="canManageEvents"
                 mat-icon-button
                 type="button"
                 class="!h-9 !w-9"
@@ -152,6 +147,7 @@
               </button>
 
               <button
+                *ngIf="canManageEvents"
                 mat-icon-button
                 type="button"
                 class="!h-9 !w-9"
@@ -165,6 +161,7 @@
               </button>
 
               <button
+                *ngIf="canManageEvents"
                 mat-icon-button
                 type="button"
                 class="!h-9 !w-9"
@@ -186,7 +183,7 @@
       </table>
     </div>
 
-    <div class="mt-2 flex justify-center">
+    <div class="mt-2 flex justify-center flex-shrink-0">
       <mat-paginator
         class="!w-auto rounded-xl bg-brand-surface"
         [length]="resolvedTotalItems"

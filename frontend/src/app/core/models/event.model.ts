@@ -22,13 +22,7 @@ export interface PageResponse<T> {
   last: boolean;
 }
 
-export enum EventTypeEnum {
-  INTERNAL = 'INTERNAL',
-  EXTERNAL = 'EXTERNAL',
-  LOCAL = 'LOCAL',
-}
-
-export const EVENT_TYPES = Object.values(EventTypeEnum);
+export const EVENT_TYPES = Object.values(EventType);
 
 export enum EventStatusEnum {
   DRAFT = 'DRAFT',
@@ -47,7 +41,7 @@ export type EventForm = {
   registrationStartTime: FormControl<Date | null>;
   registrationEndDate: FormControl<Date | null>;
   registrationEndTime: FormControl<Date | null>;
-  type: FormControl<EventTypeEnum | null>;
+  type: FormControl<EventType | null>;
   location: FormControl<LocationEnum | null>;
   isFoodProvided: FormControl<boolean | null>;
 };
@@ -59,14 +53,14 @@ export interface EventDraftRequest {
   endTime: string;
   registrationStart: string;
   registrationEnd: string;
-  type: EventTypeEnum;
+  type: EventType;
   location: LocationEnum;
   foodProvided: boolean;
   image: string | null;
-  status: EventStatusEnum.DRAFT;
+  status: EventStatus;
 }
 
 export interface EventResponse {
   id: number;
-  status: EventStatusEnum;
+  status: EventStatus;
 }
