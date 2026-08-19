@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.EventRequest;
+import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.EventCannotBeCompletedException;
+import com.example.demo.dto.request.EventRequest;
 import com.example.demo.exceptions.GlobalExceptionHandler;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
@@ -26,6 +30,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -38,10 +43,15 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -107,17 +117,27 @@ public class EventControllerTests {
         }
 
         @Test
-        void createEvent_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
-                ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
-                when(eventService.create(requestCaptor.capture(), eq("organizer@example.com")))
-                                .thenThrow(new RuntimeException("Database unavailable"));
+        void getEvents_whenNoResults_returnsEmptyPage() throws Exception {
+        ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 
-                mockMvc.perform(post("/api/events")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(validRequestJson()))
-                                .andExpect(status().isInternalServerError())
-                                .andExpect(jsonPath("$.error").value("Internal Server Error"))
-                                .andExpect(jsonPath("$.message").value("Database unavailable"));
+        when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
+        }
+
+        @Test
+        void createEvent_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+        ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
+
+        when(eventService.create(requestCaptor.capture(), eq("organizer@example.com")))
+                .thenThrow(new RuntimeException("Database unavailable"));
+
+        mockMvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validRequestJson()))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("Internal Server Error"))
+                .andExpect(jsonPath("$.message").value("Database unavailable"));
         }
 
         private String validRequestJson() {
@@ -134,6 +154,14 @@ public class EventControllerTests {
                                   "registrationEnd": "2026-08-31T18:00:00"
                                 }
                                 """;
+        }
+
+    @Test
+	void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
+		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
         }
 
         private String requestJson(String name, String type, String location, String startTime,
@@ -166,7 +194,13 @@ public class EventControllerTests {
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
                 when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
+        }
 
+        @Test
+        void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
+                Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
+                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
                 mockMvc.perform(get("/api/events"))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content[0].id").value(1))
@@ -189,6 +223,14 @@ public class EventControllerTests {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content").isEmpty())
                                 .andExpect(jsonPath("$.totalElements").value(0));
+        }
+
+        @Test
+        void getEvents_whenServiceThrowsUnexpectedException_returns_internalServerError() throws Exception {
+                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+                                .thenThrow(new RuntimeException("Database unavailable"));
 
                 assertNotNull(specCaptor.getValue());
                 assertNotNull(pageableCaptor.getValue());

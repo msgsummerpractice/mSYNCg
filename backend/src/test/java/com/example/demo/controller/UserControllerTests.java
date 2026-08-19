@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTests {
@@ -63,7 +64,7 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenRequestIsValidReturnsOkWithUserResponse() throws Exception {
+	void createUser_whenRequestIsValid_returnsOkWithUserResponse() throws Exception {
 		UserResponse response = new UserResponse(1, "Ada", "Lovelace", "ada@example.com",
 				Location.CLUJ_NAPOCA.name(), true, null, UserRole.PARTICIPANT.name());
 
@@ -83,7 +84,7 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenEmailIsInvalidReturnsBadRequestWithFieldError() throws Exception {
+	void createUser_whenEmailIsInvalid_returnsBadRequestWithFieldError() throws Exception {
 		String body = requestJson("Ada", "Lovelace", "not-an-email", "StrongP@ssw0rd", CLUJ_NAPOCA_JSON);
 
 		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
@@ -98,7 +99,7 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenPasswordIsWeakReturnsBadRequest() throws Exception {
+	void createUser_whenPasswordIsWeak_returnsBadRequest() throws Exception {
 		String body = requestJson("Ada", "Lovelace", "ada@example.com", "weak", CLUJ_NAPOCA_JSON);
 		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
@@ -111,7 +112,8 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenRequiredFieldsAreMissingReturnsBadRequest() throws Exception {
+	void createUser_whenRequiredFieldsAreMissing_returnsBadRequest() throws Exception {
+		
 		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -125,8 +127,10 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenServiceThrowsValidationExceptionReturnsBadRequest() throws Exception {
-		when(userService.create(any(UserRequest.class)))
+	void createUser_whenServiceThrowsValidationException_returnsBadRequest() throws Exception {
+		
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
+		when(userService.create(requestCaptor.capture()))
 				.thenThrow(new ValidationException("email", "Email address is already in use."));
 
 		mockMvc.perform(post("/api/users")
@@ -138,8 +142,9 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenServiceThrowsUnexpectedExceptionReturnsInternalServerError() throws Exception {
-		when(userService.create(any(UserRequest.class)))
+	void createUser_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
+		when(userService.create(requestCaptor.capture()))
 				.thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(post("/api/users")
@@ -151,10 +156,12 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenNoFiltersReturnsPageOfUsers() throws Exception {
+	void getUsers_whenNoFilters_returnsPageOfUsers() throws Exception {
 		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-		when(userService.getAll(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(userService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
 
 		mockMvc.perform(get("/api/users"))
 				.andExpect(status().isOk())
@@ -165,8 +172,10 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenNoResultsReturnsEmptyPage() throws Exception {
-		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
+	void getUsers_whenNoResults_returnsEmptyPage() throws Exception {
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(userService.getAll(specCaptor.capture(), pageableCaptor.capture()))
 				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
 		mockMvc.perform(get("/api/users").param("firstName", "Nobody"))
@@ -176,16 +185,17 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenPaginationParamsProvidedForwardsPageableToService() throws Exception {
-		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
-				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
+	void getUsers_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
 		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(userService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
+
 		mockMvc.perform(get("/api/users")
 				.param("page", "2")
 				.param("size", "5"))
 				.andExpect(status().isOk());
 
-		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		verify(userService).getAll(specCaptor.capture(), pageableCaptor.capture());
 
 		assertEquals(2, pageableCaptor.getValue().getPageNumber());
@@ -193,7 +203,7 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenFiltersProvidedResolvesUserSpec() throws Exception {
+	void getUsers_whenFiltersProvided_resolvesUserSpec() throws Exception {
 		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
@@ -213,8 +223,10 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenServiceThrowsUnexpectedExceptionReturnsInternalServerError() throws Exception {
-		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
+	void getUsers_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(userService.getAll(specCaptor.capture(), pageableCaptor.capture()))
 				.thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(get("/api/users"))

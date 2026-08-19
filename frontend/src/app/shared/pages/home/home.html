@@ -1,33 +1,35 @@
 <div class="min-h-dvh bg-brand-surface">
   <header
-    class="bg-brand-primary text-brand-on-primary flex h-[72px] items-center justify-between px-4 sm:px-10"
+    class="flex min-h-[72px] flex-wrap items-center justify-between gap-3 bg-brand-primary px-4 py-3 text-brand-on-primary sm:px-10 sm:py-0"
     role="banner"
   >
-    <div class="text-xl font-light tracking-[0.08em] sm:text-[1.8rem]">.msg</div>
+    <div class="text-lg font-light tracking-[0.08em] sm:text-[1.8rem]">.msg</div>
 
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-3 sm:gap-5">
       <mat-divider vertical class="!h-9 border-brand-on-primary-70"></mat-divider>
 
-      <section class="flex items-center gap-3" aria-label="User profile">
-        <div class="text-right">
-          <p class="m-0 text-sm font-bold">User Name</p>
+      <section class="flex min-w-0 items-center gap-2 sm:gap-3" aria-label="User profile">
+        <div class="min-w-0 text-right">
+          <p class="m-0 max-w-32 truncate text-xs font-bold sm:max-w-none sm:text-sm">User Name</p>
 
-          <p class="text-brand-on-primary-80 m-0 mt-0.5 text-xs font-normal">Role</p>
+          <p class="text-brand-on-primary-80 m-0 mt-0.5 text-[0.7rem] font-normal sm:text-xs"
+            >Role</p
+          >
         </div>
 
         <div
-          class="bg-brand-on-primary-20 border-brand-on-primary-90 h-10 w-10 rounded-full border-2"
+          class="bg-brand-on-primary-20 border-brand-on-primary-90 h-9 w-9 shrink-0 rounded-full border-2 sm:h-10 sm:w-10"
           aria-hidden="true"
         ></div>
       </section>
     </div>
   </header>
 
-  <main class="p-10">
-    <h1 class="text-brand-on-secondary mb-6 text-2xl font-semibold"></h1>
+  <main class="p-4 sm:p-10">
+    <h1 class="text-brand-on-secondary mb-5 text-xl font-semibold sm:mb-6 sm:text-2xl"></h1>
 
     <section>
-      <h2 class="mb-4 font-semibold"></h2>
+      <h2 class="mb-4 text-sm font-semibold sm:text-base"></h2>
     </section>
   </main>
 </div>

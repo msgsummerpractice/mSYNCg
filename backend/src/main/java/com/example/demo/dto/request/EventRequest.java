@@ -12,11 +12,15 @@ import com.example.demo.validator.MaxFileSize;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class EventRequest {
 
     @NotNull(message = "Event name is required")
@@ -57,5 +61,5 @@ public class EventRequest {
     @ImageType(allowedTypes = { "image/jpeg",
             "image/png" }, message = "Invalid poster image type. Allowed types are JPEG and PNG.")
     @NotBlank(message = "Event poster is required")
-    private byte[] image;
+    private String image;
 }

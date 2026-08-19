@@ -12,6 +12,7 @@ import { UserIconView } from '../views/user-icon/user-icon.view';
     [userImage]="userImage"
     [initials]="initials"
     [circleColor]="circleColor"
+    [textColor]="textColor"
   ></app-user-icon-view>`,
 })
 export class UserIconContainer implements OnInit {
@@ -20,9 +21,10 @@ export class UserIconContainer implements OnInit {
 
   private colors: string[] = ['#800000', '#FF0000', '#FFA500', '#FFFF00', '#ebba45'];
 
-  showInitials: boolean = false;
+  showInitials: boolean = true;
   initials: string = '';
   circleColor: string = '#000';
+  textColor: string = '#fff';
 
   ngOnInit() {
     if (!this.userImage) {
@@ -31,7 +33,19 @@ export class UserIconContainer implements OnInit {
 
     const randomIndex: number = Math.floor(Math.random() * this.colors.length);
     this.circleColor = this.colors[randomIndex];
+    this.textColor = this.getContrastingTextColor(this.circleColor);
     this.initials = this.getInitials();
+  }
+
+  private getContrastingTextColor(hexColor: string): string {
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // relative luminance (WCAG formula)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.6 ? '#000000' : '#ffffff';
   }
 
   private getInitials(): string {
