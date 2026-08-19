@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.example.demo.filtering.events.EventSpec;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +44,12 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventDetailsResponse> getEventDetails(@PathVariable Integer id) {
         return ResponseEntity.ok(eventService.getById(id));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<EventDetailsResponse> completeEvent(@PathVariable Integer id) {
+        return ResponseEntity.ok(eventService.completeEvent(id));
     }
 
 }

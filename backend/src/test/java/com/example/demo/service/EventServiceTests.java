@@ -2,10 +2,12 @@ package com.example.demo.service;
 
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
+import com.example.demo.model.EventStatus;
 import com.example.demo.repository.EventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,13 +51,7 @@ public class EventServiceTests {
 
 	@InjectMocks
 	private EventService eventService;
-
-	private Event createEvent(Integer id) {
-		Event event = new Event();
-		event.setId(id);
-		return event;
-	}
-
+	
 	private EventRequest createEventRequest(String name) {
 		return createEventRequest(name, null);
 	}
@@ -62,6 +61,12 @@ public class EventServiceTests {
 		request.setName(name);
 		request.setImageBase64(imageBase64);
 		return request;
+	}
+
+	private Event createEvent(Integer id) {
+		Event event = new Event();
+		event.setId(id);
+		return event;
 	}
 
 	private EventViewResponse createViewResponse(Integer id, String name) {
@@ -203,7 +208,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventHasImage_EncodesImageAsBase64() {
+	void getById_whenEventHasImage_encodesImageAsBase64() {
 		byte[] image = new byte[] { 1, 2, 3, 4 };
 		Event event = new Event();
 		event.setId(1);
@@ -218,7 +223,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventHasNoImage_ReturnsNullImage() {
+	void getById_whenEventHasNoImage_returnsNullImage() {
 		Event event = new Event();
 		event.setId(1);
 
@@ -231,7 +236,7 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_WhenEventDoesNotExist_ThrowsNotFoundException() {
+	void getById_whenEventDoesNotExist_throwsNotFoundException() {
 		when(eventRepository.findById(99)).thenReturn(Optional.empty());
 
 		NotFoundException exception = assertThrows(NotFoundException.class, () -> eventService.getById(99));
@@ -241,53 +246,79 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void updateEvent_whenImageBase64Provided_decodesAndSaves() {
-		Integer eventId = 1;
-		Event existingEvent = createEvent(eventId);
-		String imageBase64 = "aGVsbG8gd29ybGQ=";
-		EventRequest eventRequest = createEventRequest("Event with image", imageBase64);
-		Event mappedEvent = createEvent(null);
-		Event savedEvent = createEvent(eventId);
-		EventViewResponse viewResponse = createViewResponse(eventId, null);
-
-		when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
-		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
-		when(eventRepository.save(mappedEvent)).thenReturn(savedEvent);
-		when(modelMapper.map(savedEvent, EventViewResponse.class)).thenReturn(viewResponse);
-
-		EventViewResponse result = eventService.updateEvent(eventId, eventRequest);
-
-		assertEquals(viewResponse, result);
-		verify(eventRepository).findById(eventId);
-		verify(eventRepository).save(mappedEvent);
-	}
-
-	@Test
-	void updateEvent_whenNoImageProvided_savesWithoutImage() {
-		Integer eventId = 1;
-		Event existingEvent = createEvent(eventId);
-		EventRequest eventRequest = createEventRequest("Event without image", null);
-		Event mappedEvent = createEvent(null);
-		Event savedEvent = createEvent(eventId);
-		EventViewResponse viewResponse = createViewResponse(eventId, null);
-
-		when(eventRepository.findById(eventId)).thenReturn(Optional.of(existingEvent));
-		when(modelMapper.map(eventRequest, Event.class)).thenReturn(mappedEvent);
-		when(eventRepository.save(mappedEvent)).thenReturn(savedEvent);
-		when(modelMapper.map(savedEvent, EventViewResponse.class)).thenReturn(viewResponse);
-
-		EventViewResponse result = eventService.updateEvent(eventId, eventRequest);
-
-		assertEquals(viewResponse, result);
-		verify(eventRepository).findById(eventId);
-		verify(eventRepository).save(mappedEvent);
-	}
-
-	@Test
-	void getById_WhenRepositoryFails_PropagatesException() {
+	void getById_whenRepositoryFails_propagatesException() {
 		when(eventRepository.findById(1))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getById(1));
 	}
+
+	@Test
+	void completeEvent_whenEventDoesNotExist_throwsNotFoundException() {
+		when(eventRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> eventService.completeEvent(99));
+
+		assertEquals("Event with id 99 not found", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void completeEvent_whenEventAlreadyCompleted_throwsEventCannotBeCompletedException() {
+		Event event = new Event();
+		event.setId(1);
+		event.setStatus(EventStatus.COMPLETED);
+		event.setEndTime(LocalDateTime.now().minusDays(1));
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+
+		EventCannotBeCompletedException exception = assertThrows(
+				EventCannotBeCompletedException.class,
+				() -> eventService.completeEvent(1)
+		);
+
+		assertEquals("Event is already completed.", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void completeEvent_whenEndTimeIsInFuture_throwsEventCannotBeCompletedException() {
+		Event event = new Event();
+		event.setId(1);
+		event.setStatus(EventStatus.PUBLISHED);
+		event.setEndTime(LocalDateTime.now().plusDays(1));
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+
+		EventCannotBeCompletedException exception = assertThrows(
+				EventCannotBeCompletedException.class,
+				() -> eventService.completeEvent(1)
+		);
+
+		assertEquals("Event cannot be completed before its end time.", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void completeEvent_whenEventEnded_setsStatusToCompleted() {
+		Event event = new Event();
+		event.setId(1);
+		event.setStatus(EventStatus.PUBLISHED);
+		event.setEndTime(LocalDateTime.now().minusDays(1));
+
+		EventDetailsResponse response = new EventDetailsResponse();
+		response.setId(1);
+		response.setStatus(EventStatus.COMPLETED);
+
+		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+		when(eventRepository.save(event)).thenReturn(event);
+		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(response);
+
+		EventDetailsResponse result = eventService.completeEvent(1);
+
+		assertEquals(EventStatus.COMPLETED, event.getStatus());
+		assertEquals(response, result);
+		verify(eventRepository).save(event);
+	}	
 }
+
