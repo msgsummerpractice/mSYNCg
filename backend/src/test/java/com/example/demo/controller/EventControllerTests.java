@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.EventCannotBeCompletedException;
+import com.example.demo.dto.request.EventRequest;
 import com.example.demo.exceptions.GlobalExceptionHandler;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
@@ -22,6 +24,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -32,7 +36,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,7 +100,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+	void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -110,7 +117,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_WhenFiltersProvided_ResolvesEventSpec() throws Exception {
+	void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
 		Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
@@ -128,7 +135,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEvents_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+	void getEvents_whenServiceThrowsUnexpectedException_returns_internalServerError() throws Exception {
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
 		when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
@@ -142,9 +149,92 @@ public class EventControllerTests {
 		assertNotNull(pageableCaptor.getValue());
 	}
 
+	@Test
+	void updateEvent_whenValidRequest_returnsUpdatedEvent() throws Exception {
+		Integer eventId = 1;
+		EventViewResponse updatedResponse = buildViewResponse();
+		EventRequest eventRequest = createEventRequest("Updated Team event");
+
+		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Team event"))
+				.andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
+	@Test
+	void updateEvent_whenEventNotFound_returnsInternalServerError() throws Exception {
+		Integer eventId = 999;
+		EventRequest eventRequest = createEventRequest("Nonexistent event");
+
+		when(eventService.updateEvent(eventId, eventRequest))
+				.thenThrow(new RuntimeException("Event not found with id: " + eventId));
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
+	@Test
+	void updateEvent_whenImageBase64Provided_updatesAndReturnsEvent() throws Exception {
+		Integer eventId = 1;
+		String imageBase64 = "aGVsbG8gd29ybGQ=";
+		EventViewResponse updatedResponse = buildViewResponse();
+		EventRequest eventRequest = createEventRequest("Event with image", imageBase64);
+
+		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Team event"));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
+	@Test
+	void updateEvent_whenNoImageProvided_updatesWithoutImage() throws Exception {
+		Integer eventId = 1;
+		EventViewResponse updatedResponse = buildViewResponse();
+		EventRequest eventRequest = createEventRequest("Event without image", null);
+
+		when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+		mockMvc.perform(put("/api/events/{eventId}", eventId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(eventRequest)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1));
+
+		verify(eventService).updateEvent(eventId, eventRequest);
+	}
+
 	private EventViewResponse buildViewResponse() {
 		return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
 				EventType.EXTERNAL, Location.CLUJ_NAPOCA);
+	}
+
+	private EventRequest createEventRequest(String name) {
+		return createEventRequest(name, null);
+	}
+
+	private EventRequest createEventRequest(String name, String imageBase64) {
+		EventRequest request = new EventRequest();
+		request.setName(name);
+		request.setImageBase64(imageBase64);
+		return request;
 	}
 
 	@Test
@@ -186,7 +276,7 @@ public class EventControllerTests {
 	}
 
 	@Test
-	void getEventDetails_whenIdIsNotANumber_returnsInternalServerError() throws Exception {
+	void getEventDetails_whenIdIsNotANumber_returns_internalServerError() throws Exception {
 		mockMvc.perform(get("/api/events/abc"))
 				.andExpect(status().isInternalServerError());
 
@@ -212,5 +302,41 @@ public class EventControllerTests {
 		details.setFoodProvided(true);
 		details.setDescription("Yearly team gathering");
 		return details;
+	}
+
+	@Test
+	void completeEvent_whenSuccessful_returnsCompletedEvent() throws Exception {
+		EventDetailsResponse completedEvent = buildDetailsResponse();
+		completedEvent.setStatus(EventStatus.COMPLETED);
+
+		when(eventService.completeEvent(1)).thenReturn(completedEvent);
+
+		mockMvc.perform(patch("/api/events/1/complete"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.status").value(EventStatus.COMPLETED.name()));
+
+		verify(eventService).completeEvent(1);
+	}
+
+	@Test
+	void completeEvent_whenEventDoesNotExist_returnsNotFound() throws Exception {
+		when(eventService.completeEvent(99)).thenThrow(new NotFoundException("Event", 99));
+
+		mockMvc.perform(patch("/api/events/99/complete"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+	}
+
+	@Test
+	void completeEvent_whenEventCannotBeCompleted_returnsBadRequest() throws Exception {
+		when(eventService.completeEvent(1))
+				.thenThrow(new EventCannotBeCompletedException("Event cannot be completed before its end time."));
+
+		mockMvc.perform(patch("/api/events/1/complete"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error").value("Bad Request"))
+				.andExpect(jsonPath("$.message").value("Event cannot be completed before its end time."));
 	}
 }
