@@ -1,6 +1,6 @@
-<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-lg">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
+<main class="flex min-h-screen items-center justify-center bg-gray-50 px-3 py-6 sm:px-4 sm:py-8">
+  <div class="w-full max-w-lg rounded-xl bg-white p-4 shadow-md sm:p-8">
+    <h1 class="mb-6 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
       {{ 'REGISTER.USER.TITLE' | translate }}
     </h1>
 
@@ -9,7 +9,7 @@
       [isLoading]="isLoading"
       (formSubmit)="submitRegister.emit()"
     >
-      <div class="flex gap-4 w-full">
+      <div class="flex w-full flex-col gap-4 sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.USER.FIRST_NAME.LABEL' | translate }}</mat-label>
           <input
@@ -85,7 +85,7 @@
         }
       </mat-form-field>
     </app-generic-form-container>
-    <div class="mt-5 rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
+    <div class="mt-5 rounded-lg bg-gray-50 px-3 py-3 text-center text-sm text-gray-600 sm:px-4">
       <span>{{ 'REGISTER.USER.ALREADY_HAVE_ACCOUNT' | translate }}</span>
 
       <a [routerLink]="loginRoute" class="ml-1 font-semibold text-[#A01441] hover:underline">

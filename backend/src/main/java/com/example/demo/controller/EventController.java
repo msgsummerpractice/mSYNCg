@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.EventRequest;
+import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,11 @@ public class EventController {
             @RequestBody EventRequest eventRequest) {
         EventViewResponse updatedEvent = eventService.updateEvent(eventId, eventRequest);
         return ResponseEntity.ok(updatedEvent);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EventDetailsResponse> getEventDetails(@PathVariable Integer id) {
+        return ResponseEntity.ok(eventService.getById(id));
     }
 
 }

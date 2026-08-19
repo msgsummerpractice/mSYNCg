@@ -7,9 +7,14 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 
 import org.modelmapper.ModelMapper;
+
+import java.util.Base64;
+
 import com.example.demo.dto.request.EventRequest;
+import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
 import com.example.demo.repository.EventRepository;
@@ -55,6 +60,19 @@ public class EventService implements ServiceInterface<EventRequest, EventRespons
         updatedEvent = eventRepository.save(updatedEvent);
 
         return modelMapper.map(updatedEvent, EventViewResponse.class);
+    }
+
+    public EventDetailsResponse getById(Integer id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event", id));
+
+        EventDetailsResponse response = modelMapper.map(event, EventDetailsResponse.class);
+
+        response.setImage(event.getImage() != null
+                ? Base64.getEncoder().encodeToString(event.getImage())
+                : null);
+
+        return response;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.exceptions.GlobalExceptionHandler;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
@@ -30,6 +32,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -229,5 +233,72 @@ public class EventControllerTests {
 		request.setName(name);
 		request.setImageBase64(imageBase64);
 		return request;
+	}
+
+	@Test
+	void getEventDetails_whenEventExists_returnsEventDetails() throws Exception {
+		EventDetailsResponse details = buildDetailsResponse();
+		details.setImage("AQIDBA==");
+
+		when(eventService.getById(1)).thenReturn(details);
+
+		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Team event"))
+				.andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()))
+				.andExpect(jsonPath("$.type").value(EventType.EXTERNAL.name()))
+				.andExpect(jsonPath("$.location").value("Cluj-Napoca"))
+				.andExpect(jsonPath("$.image").value("AQIDBA=="));
+
+		verify(eventService).getById(1);
+	}
+
+	@Test
+	void getEventDetails_whenEventHasNoImage_returnsNullImage() throws Exception {
+		when(eventService.getById(1)).thenReturn(buildDetailsResponse());
+
+		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.image").doesNotExist());
+	}
+
+	@Test
+	void getEventDetails_whenEventDoesNotExist_returnsNotFound() throws Exception {
+		when(eventService.getById(99)).thenThrow(new NotFoundException("Event", 99));
+
+		mockMvc.perform(get("/api/events/99"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+	}
+
+	@Test
+	void getEventDetails_whenIdIsNotANumber_returnsInternalServerError() throws Exception {
+		mockMvc.perform(get("/api/events/abc"))
+				.andExpect(status().isInternalServerError());
+
+		verifyNoInteractions(eventService);
+	}
+
+	@Test
+	void getEventDetails_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+		when(eventService.getById(1)).thenThrow(new RuntimeException("Database unavailable"));
+
+		mockMvc.perform(get("/api/events/1"))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+	}
+
+	private EventDetailsResponse buildDetailsResponse() {
+		EventDetailsResponse details = new EventDetailsResponse();
+		details.setId(1);
+		details.setName("Team event");
+		details.setStatus(EventStatus.PUBLISHED);
+		details.setType(EventType.EXTERNAL);
+		details.setLocation(Location.CLUJ_NAPOCA);
+		details.setFoodProvided(true);
+		details.setDescription("Yearly team gathering");
+		return details;
 	}
 }
