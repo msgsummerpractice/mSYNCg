@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, DestroyRef, inject, Input, PLATFORM_ID, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 
@@ -28,12 +28,18 @@ export class EventCardContainer {
   readonly event = signal<AppEvent | null>(null);
   readonly isLoading = signal(false);
 
-  @Input({ required: true }) set eventId(id: number) {
-    this.loadEvent(id);
-  }
+  readonly eventId = input<number>(0);
 
-  //for testing
   constructor() {
+    effect(() => {
+      const id = this.eventId();
+
+      if (Number.isInteger(id) && id > 0) {
+        this.loadEvent(id);
+      }
+    });
+
+    //for testing
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (Number.isInteger(id) && id > 0) {
