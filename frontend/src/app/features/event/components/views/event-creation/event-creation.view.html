@@ -228,5 +228,15 @@
       </div>
       }
     </app-generic-form-container>
+
+    <button
+      type="button"
+      mat-stroked-button
+      color="warn"
+      class="w-full py-5 mt-3"
+      (click)="cancelEvent.emit()"
+    >
+      {{ 'BUTTONS.CANCEL' | translate }}
+    </button>
   </div>
 </main>

@@ -39,6 +39,7 @@ export class EventCreationView {
   @Output() submitEvent = new EventEmitter<void>();
   @Output() invalidSubmit = new EventEmitter<void>();
   @Output() posterSelected = new EventEmitter<File>();
+  @Output() cancelEvent = new EventEmitter<void>();
 
   readonly eventTypeEnum = EventTypeEnum;
   readonly eventTypes = EVENT_TYPES;

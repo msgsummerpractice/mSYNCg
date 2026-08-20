@@ -8,9 +8,6 @@ import { ToolbarView } from '../../../shared/components/views/toolbar/toolbar.vi
   standalone: true,
   imports: [EventUpdateContainer, ToolbarView, LanguageSwitcherContainer],
   template: `
-    <app-toolbar-view [showNavigation]="true" [showUserIcon]="true">
-      <app-language-switcher></app-language-switcher>
-    </app-toolbar-view>
     <app-event-update-container></app-event-update-container>
   `,
 })
