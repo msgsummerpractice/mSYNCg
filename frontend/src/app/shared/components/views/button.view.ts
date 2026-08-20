@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ButtonVariant } from '../containers/button-variant.type';
+import { ButtonVariant } from '../types/button-variant.type';
 
 @Component({
   selector: 'app-button-view',

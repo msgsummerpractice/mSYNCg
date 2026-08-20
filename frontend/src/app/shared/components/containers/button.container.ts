@@ -1,7 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
 import { ButtonView } from '../views/button.view';
 import { EventEmitter, Output } from '@angular/core';
-import { ButtonVariant } from './button-variant.type';
+import { ButtonVariant } from '../types/button-variant.type';
 
 @Component({
   selector: 'app-button-container',
