@@ -53,6 +53,12 @@ public class EventService implements EventServiceInterface {
             throw new NotFoundException(username, null);
         }
 
+        byte[] poster = null;
+        if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
+            poster = decoder.decode(eventRequest.getImage());
+        }
+
+        event.setImage(poster);
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
         eventRepository.save(event);
