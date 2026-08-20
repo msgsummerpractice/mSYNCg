@@ -11,6 +11,7 @@ import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.service.EventService;
+import com.example.demo.service.notification.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
@@ -60,8 +61,11 @@ public class EventControllerTests {
         @Mock
         private EventService eventService;
 
-        @InjectMocks
-        private EventController eventController;
+	@Mock
+	private EmailService emailService;
+
+	@InjectMocks
+	private EventController eventController;
 
         private MockMvc mockMvc;
 
