@@ -4,10 +4,12 @@
   [isLoading]="isLoading"
   (formSubmit)="formSubmit.emit()"
 >
-  <div>
-    <h2 class="text-xl font-semibold text-gray-950"> {{ 'LOGIN.SIGN_IN_TITLE' | translate }} </h2>
+  <div class="min-w-0">
+    <h2 class="text-lg font-semibold text-gray-950 sm:text-xl">
+      {{ 'LOGIN.SIGN_IN_TITLE' | translate }}
+    </h2>
 
-    <p class="mt-1 text-sm text-gray-600"> {{ 'LOGIN.SIGN_IN_SUBTITLE' | translate }} </p>
+    <p class="mt-1 text-sm leading-5 text-gray-600"> {{ 'LOGIN.SIGN_IN_SUBTITLE' | translate }} </p>
   </div>
 
   <mat-form-field appearance="outline" class="w-full" subscriptSizing="dynamic" floatLabel="always">
@@ -54,10 +56,12 @@
     </a>
   </div>
 </app-generic-form-view>
-<div class="mt-5 rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
+<div
+  class="mt-5 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-lg bg-gray-50 px-3 py-3 text-center text-sm text-gray-600 sm:px-4"
+>
   <span>{{ 'LOGIN.NO_ACCOUNT' | translate }}</span>
 
-  <a routerLink="/register" class="ml-1 font-semibold text-[#A01441] hover:underline">
+  <a routerLink="/register" class="font-semibold text-[#A01441] hover:underline">
     {{ 'LOGIN.REGISTER_NOW' | translate }}
   </a>
 </div>

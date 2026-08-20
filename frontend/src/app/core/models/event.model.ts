@@ -1,34 +1,9 @@
+import { EventStatusEnum, EventTypeEnum } from '../constants/event.constant';
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
-
-export enum EventTypeEnum {
-  INTERNAL = 'INTERNAL',
-  EXTERNAL = 'EXTERNAL',
-  LOCAL = 'LOCAL',
-}
+import { EventLocation } from '../constants/location.constant';
 
 export const EVENT_TYPES = Object.values(EventTypeEnum);
-
-export enum EventStatusEnum {
-  DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
-  COMPLETED = 'COMPLETED',
-}
-
-export interface Event {
-  id: number;
-  name: string;
-  description: string;
-  type: EventTypeEnum;
-  status: EventStatusEnum;
-  image: string;
-  location: LocationEnum;
-  startTime: Date;
-  endTime: Date;
-  registrationStart: Date;
-  registrationEnd: Date;
-  foodProvided: boolean;
-}
 
 export type EventForm = {
   title: FormControl<string>;
@@ -49,18 +24,53 @@ export type EventForm = {
 export interface EventDraftRequest {
   name: string;
   description: string;
-  startTime: string;
-  endTime: string;
-  registrationStart: string;
-  registrationEnd: string;
+  startTime: Date | null;
+  endTime: Date | null;
+  registrationStart: Date | null;
+  registrationEnd: Date | null;
   type: EventTypeEnum;
   location: LocationEnum;
   foodProvided: boolean;
   image: string | null;
-  status: EventStatusEnum.DRAFT;
+  status: EventStatusEnum;
+}
+
+export interface EventView {
+  id: number;
+  name: string;
+  startTime: string;
+  status: EventStatusEnum;
+  type: EventTypeEnum;
+  location: LocationEnum;
+}
+
+export interface Event {
+  id: number;
+  name: string;
+  description: string;
+  type: EventTypeEnum;
+  status: EventStatusEnum;
+  image: string | null;
+  location: LocationEnum;
+  startTime: Date | null;
+  endTime: Date | null;
+  registrationStart: Date | null;
+  registrationEnd: Date | null;
+  foodProvided: boolean | null;
 }
 
 export interface EventResponse {
   id: number;
   status: EventStatusEnum;
 }
+
+export interface EventFilterParams {
+  name: string;
+  types: EventTypeEnum[];
+  statuses: EventStatusEnum[];
+  locations: EventLocation[];
+  startTime: string;
+  pageId: number;
+  pageSize: number;
+}
+export { EventStatusEnum };

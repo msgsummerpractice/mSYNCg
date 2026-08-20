@@ -120,8 +120,8 @@
 :root {
   --color-primary: #a01441;
   --color-on-primary: #ffffff;
-  --font-family-base: 'Oxygen', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-ui: 'Oxanium', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-ui: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-family-icons: 'Material Icons', sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -185,8 +185,8 @@
   --color-on-success: #003916;
   --color-warning: #ffb95c;
   --color-on-warning: #3c2100;
-  --font-family-base: 'Oxygen', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-ui: 'Oxanium', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-ui: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-family-icons: 'Material Icons', sans-serif;
 
   /* Keep Material vars in sync in dark mode */
@@ -430,22 +430,4 @@ body {
     background-color: #e0e0e0;
     --mat-option-label-text-color: #000000 !important;
   }
-}
-
-/* Language switcher dropdown panel styling */
-.language-switcher-panel {
-  background-color: #ffffff !important;
-}
-
-.language-switcher-panel .mat-mdc-option {
-  --mat-option-label-text-color: #000000 !important;
-}
-
-.language-switcher-panel .mat-mdc-option:hover {
-  background-color: #f0f0f0;
-}
-
-.language-switcher-panel .mat-mdc-option.mat-selected {
-  background-color: #e0e0e0;
-  --mat-option-label-text-color: #000000 !important;
 }
