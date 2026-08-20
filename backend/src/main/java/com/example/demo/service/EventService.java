@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-
 import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import com.example.demo.dto.request.EventRequest;
