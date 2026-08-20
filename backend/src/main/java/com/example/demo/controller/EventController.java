@@ -9,6 +9,8 @@ import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
+import com.example.demo.service.notification.EmailService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ public class EventController {
 
     private final EventService eventService;
 
+    private final EmailService emailService;
     @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest,

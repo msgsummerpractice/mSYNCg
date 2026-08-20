@@ -234,9 +234,9 @@ public class EventServiceTests {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
-		User creator = new User();
-		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
-		when(modelMapper.map(any(Event.class), eq(EventResponse.class))).thenReturn(mappedResponse);
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
+		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
 
 		eventService.create(request, "organizer@example.com");
 
@@ -275,8 +275,7 @@ public class EventServiceTests {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
-		User creator = new User();
-		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(modelMapper.map(any(Event.class), eq(EventResponse.class))).thenReturn(mappedResponse);
 

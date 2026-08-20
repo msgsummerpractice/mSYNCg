@@ -15,8 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
+
 import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.dto.response.UserResponse;
+import com.example.demo.model.Location;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRole;
 import com.example.demo.dto.request.UserRequest;
@@ -83,6 +86,15 @@ public class UserService implements UserServiceInterface {
 
         return modelMapper.map(updatedUser, UserResponse.class);
     }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public List<User> findAllByLocation(Location location) {
+        return userRepository.findAllByLocation(location);
+    }
+
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
