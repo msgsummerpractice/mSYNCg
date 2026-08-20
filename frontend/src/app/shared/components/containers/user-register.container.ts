@@ -81,7 +81,7 @@ export class UserRegisterContainer {
       const body = payload as BackendErrorResponse;
 
       if (Array.isArray(body.fieldErrors) && body.fieldErrors.length > 0) {
-        return body.fieldErrors.map((f) => `${f.field}: ${f.reason}`).join(' | ');
+        return body.fieldErrors.map((f) => `${f.reason}`).join(' | ');
       }
 
       if (typeof body.message === 'string' && body.message.trim().length > 0) {

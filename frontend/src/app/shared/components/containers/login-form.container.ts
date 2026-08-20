@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { LoginFormView } from '../views/login-form/login-form.view';
-import { LoginRequest } from '../../../core/models/user-login.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../core/services/toast.service';
@@ -40,8 +39,7 @@ export class LoginFormContainer {
       .login(this.loginForm.getRawValue())
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
-        next: (response) => {
-          localStorage.setItem('accessToken', response.accessToken);
+        next: () => {
           this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
           this.router.navigate(['/home']);
         },

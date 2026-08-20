@@ -63,11 +63,12 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenRequestIsValidReturnsOkWithUserResponse() throws Exception {
+	void createUser_WhenRequestIsValid_ReturnsOkWithUserResponse() throws Exception {
 		UserResponse response = new UserResponse(1, "Ada", "Lovelace", "ada@example.com",
 				Location.CLUJ_NAPOCA.name(), true, null, UserRole.PARTICIPANT.name());
 
-		when(userService.createUser(any(UserRequest.class))).thenReturn(response);
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
+		when(userService.create(requestCaptor.capture())).thenReturn(response);
 
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -78,13 +79,14 @@ public class UserControllerTests {
 				.andExpect(jsonPath("$.email").value("ada@example.com"))
 				.andExpect(jsonPath("$.role").value(UserRole.PARTICIPANT.name()));
 
-		verify(userService).createUser(any(UserRequest.class));
+		verify(userService).create(requestCaptor.capture());
 	}
 
 	@Test
-	void createUserWhenEmailIsInvalidReturnsBadRequestWithFieldError() throws Exception {
+	void createUser_WhenEmailIsInvalid_ReturnsBadRequestWithFieldError() throws Exception {
 		String body = requestJson("Ada", "Lovelace", "not-an-email", "StrongP@ssw0rd", CLUJ_NAPOCA_JSON);
 
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body))
@@ -92,24 +94,25 @@ public class UserControllerTests {
 				.andExpect(jsonPath("$.error").value("Validation Error"))
 				.andExpect(jsonPath("$.fieldErrors[0].field").value("email"));
 
-		verify(userService, never()).createUser(any(UserRequest.class));
+		verify(userService, never()).create(requestCaptor.capture());
 	}
 
 	@Test
-	void createUserWhenPasswordIsWeakReturnsBadRequest() throws Exception {
+	void createUser_WhenPasswordIsWeak_ReturnsBadRequest() throws Exception {
 		String body = requestJson("Ada", "Lovelace", "ada@example.com", "weak", CLUJ_NAPOCA_JSON);
-
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(body))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.fieldErrors[0].field").value("password"));
 
-		verify(userService, never()).createUser(any(UserRequest.class));
+		verify(userService, never()).create(requestCaptor.capture());
 	}
 
 	@Test
-	void createUserWhenRequiredFieldsAreMissingReturnsBadRequest() throws Exception {
+	void createUser_WhenRequiredFieldsAreMissing_ReturnsBadRequest() throws Exception {
+		ArgumentCaptor<UserRequest> requestCaptor = ArgumentCaptor.forClass(UserRequest.class);
 		mockMvc.perform(post("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{}"))
@@ -118,12 +121,12 @@ public class UserControllerTests {
 				.andExpect(jsonPath("$.message").value("Request validation failed"))
 				.andExpect(jsonPath("$.fieldErrors.length()").value(5));
 
-		verify(userService, never()).createUser(any(UserRequest.class));
+		verify(userService, never()).create(requestCaptor.capture());
 	}
 
 	@Test
-	void createUserWhenServiceThrowsValidationExceptionReturnsBadRequest() throws Exception {
-		when(userService.createUser(any(UserRequest.class)))
+	void createUser_WhenServiceThrowsValidationException_ReturnsBadRequest() throws Exception {
+		when(userService.create(any(UserRequest.class)))
 				.thenThrow(new ValidationException("email", "Email address is already in use."));
 
 		mockMvc.perform(post("/api/users")
@@ -135,8 +138,8 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void createUserWhenServiceThrowsUnexpectedExceptionReturnsInternalServerError() throws Exception {
-		when(userService.createUser(any(UserRequest.class)))
+	void createUser_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+		when(userService.create(any(UserRequest.class)))
 				.thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(post("/api/users")
@@ -148,10 +151,10 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenNoFiltersReturnsPageOfUsers() throws Exception {
+	void getUsers_WhenNoFilters_ReturnsPageOfUsers() throws Exception {
 		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-		when(userService.getUsers(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
+		when(userService.getAll(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
 
 		mockMvc.perform(get("/api/users"))
 				.andExpect(status().isOk())
@@ -162,8 +165,8 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenNoResultsReturnsEmptyPage() throws Exception {
-		when(userService.getUsers(any(UserSpec.class), any(Pageable.class)))
+	void getUsers_WhenNoResults_ReturnsEmptyPage() throws Exception {
+		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
 				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
 		mockMvc.perform(get("/api/users").param("firstName", "Nobody"))
@@ -173,27 +176,29 @@ public class UserControllerTests {
 	}
 
 	@Test
-	void getUsersWhenPaginationParamsProvidedForwardsPageableToService() throws Exception {
-		when(userService.getUsers(any(UserSpec.class), any(Pageable.class)))
+	void getUsers_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
+		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
 				.thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
-
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
 		mockMvc.perform(get("/api/users")
 				.param("page", "2")
 				.param("size", "5"))
 				.andExpect(status().isOk());
 
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-		verify(userService).getUsers(any(UserSpec.class), pageableCaptor.capture());
+		verify(userService).getAll(specCaptor.capture(), pageableCaptor.capture());
 
 		assertEquals(2, pageableCaptor.getValue().getPageNumber());
 		assertEquals(5, pageableCaptor.getValue().getPageSize());
 	}
 
 	@Test
-	void getUsersWhenFiltersProvidedResolvesUserSpec() throws Exception {
+	void getUsers_WhenFiltersProvided_ResolvesUserSpec() throws Exception {
 		Page<UserViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
 
-		when(userService.getUsers(any(UserSpec.class), any(Pageable.class))).thenReturn(page);
+		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
+		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+		when(userService.getAll(specCaptor.capture(), pageableCaptor.capture())).thenReturn(page);
 
 		mockMvc.perform(get("/api/users")
 				.param("firstName", "Ada")
@@ -202,15 +207,14 @@ public class UserControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.content[0].firstName").value("Ada"));
 
-		ArgumentCaptor<UserSpec> specCaptor = ArgumentCaptor.forClass(UserSpec.class);
-		verify(userService).getUsers(specCaptor.capture(), any(Pageable.class));
+		verify(userService).getAll(specCaptor.capture(), pageableCaptor.capture());
 
 		assertNotNull(specCaptor.getValue());
 	}
 
 	@Test
-	void getUsersWhenServiceThrowsUnexpectedExceptionReturnsInternalServerError() throws Exception {
-		when(userService.getUsers(any(UserSpec.class), any(Pageable.class)))
+	void getUsers_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+		when(userService.getAll(any(UserSpec.class), any(Pageable.class)))
 				.thenThrow(new RuntimeException("Database unavailable"));
 
 		mockMvc.perform(get("/api/users"))

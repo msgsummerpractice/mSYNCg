@@ -8,5 +8,4 @@ import com.example.demo.model.User;
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
     boolean existsByEmail(String email);
     User findByEmail(String email);
-
 }
