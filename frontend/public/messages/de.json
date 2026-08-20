@@ -161,6 +161,40 @@
       }
     }
   },
+  "EVENT_LIST": {
+    "FILTER_TITLE": "Veranstaltungen filtern",
+    "FIELDS": {
+      "NAME": "Veranstaltungsname",
+      "NAME_PLACEHOLDER": "Nach Veranstaltungsname suchen",
+      "TYPE": "Veranstaltungstyp",
+      "STATUS": "Status",
+      "LOCATION": "Standort",
+      "START_TIME": "Startzeit",
+      "START_TIME_PLACEHOLDER": "Datum und Uhrzeit auswählen"
+    },
+    "TABLE": {
+      "NAME": "Name",
+      "DATE": "Datum",
+      "STATUS": "Status",
+      "TYPE": "Typ",
+      "LOCATION": "Standort",
+      "ACTIONS": "Aktionen"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Filter zurücksetzen",
+      "VIEW": "Anzeigen",
+      "EDIT": "Bearbeiten",
+      "PUBLISH": "Veröffentlichen",
+      "COMPLETE": "Abschließen"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Targu Mures",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timisoara",
+      "ALL": "Alle"
+    },
+    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
+  },
   "USER_LIST": {
     "FILTER_TITLE": "Benutzer filtern",
     "LOAD_ERROR": "Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",

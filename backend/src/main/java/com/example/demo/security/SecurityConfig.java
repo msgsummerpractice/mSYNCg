@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -18,10 +18,15 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JWTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JWTAuthenticationFilter jwtAuthenticationFilter)
@@ -31,9 +36,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/events").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/events/{id}").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
@@ -41,12 +45,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/admin/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/events/*/complete").authenticated()
-                        .anyRequest().authenticated())      
-                
+                        .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(httpBasic -> httpBasic.disable())
-                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class
-);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -75,7 +77,7 @@ public class SecurityConfig {
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter(
             JWTokenProvider jwtTokenProvider,
-            UserDetailService userDetailService) {
+            UserDetailsService userDetailService) {
 
         return new JWTAuthenticationFilter(jwtTokenProvider, userDetailService);
     }

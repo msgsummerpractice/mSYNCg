@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
+import com.example.demo.validator.ImageType;
 import com.example.demo.validator.MaxFileSize;
 
 import lombok.AllArgsConstructor;
@@ -22,32 +23,35 @@ import lombok.Setter;
 @Setter
 public class EventRequest {
 
-    @NotBlank(message = "Event name is required")
+    @NotBlank(message = "Event name cannot be blank")
     private String name;
 
-    @NotNull(message = "Event type is required")
+    @NotNull(message = "Event type cannot be blank")
     private EventType type;
 
-    @NotNull(message = "Event location is required")
+    @NotNull(message = "Event location cannot be blank")
     private Location location;
 
-    @NotNull(message = "Event start time is required")
+    @NotNull(message = "Event start time cannot be blank")
     private LocalDateTime startTime;
 
-    @NotNull(message = "Event end time is required")
+    @NotNull(message = "Event end time cannot be blank")
     private LocalDateTime endTime;
 
-    private boolean foodProvided;
+    private Boolean foodProvided;
 
-    @NotNull(message = "Event description is required")
+    @NotBlank(message = "Event description cannot be blank")
     private String description;
 
-    @NotNull(message = "Event registration start time is required")
+    @NotNull(message = "Event registration start time cannot be blank")
     private LocalDateTime registrationStart;
 
-    @NotNull(message = "Event registration end time is required")
+    @NotNull(message = "Event registration end time cannot be blank")
     private LocalDateTime registrationEnd;
 
     @MaxFileSize(value = 5000000, message = "Poster file size exceeds the maximum limit of 5MB.")
-    private String imageBase64;
+    @ImageType(allowedTypes = { "image/jpeg",
+            "image/png" }, message = "Invalid poster image type. Allowed types are JPEG and PNG.")
+    @NotBlank(message = "Event poster is required")
+    private String image;
 }

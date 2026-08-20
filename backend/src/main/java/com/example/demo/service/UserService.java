@@ -23,7 +23,7 @@ import com.example.demo.dto.request.UserRequest;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements ServiceInterface<UserRequest, UserResponse, UserViewResponse, UserSpec> {
+public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -49,7 +49,7 @@ public class UserService implements ServiceInterface<UserRequest, UserResponse, 
 
     @Override
     public Page<UserViewResponse> getAll(UserSpec spec, Pageable pageable) {
-        Page<User> usersPage = userRepository.findAll(spec,pageable);
+        Page<User> usersPage = userRepository.findAll(spec, pageable);
 
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
