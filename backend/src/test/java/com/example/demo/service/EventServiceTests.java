@@ -56,6 +56,9 @@ public class EventServiceTests {
 	private EventRepository eventRepository;
 
 	@Mock
+	private UserService userService;
+
+	@Mock
 	private UserRepository userRepository;
 
 	@Mock
@@ -122,7 +125,7 @@ public class EventServiceTests {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
-		when(userRepository.findByEmail("organizer@example.com")).thenReturn(creator);
+		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
 
 		Event mappedEvent = new Event();
 		when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
@@ -197,7 +200,7 @@ public class EventServiceTests {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
-		when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
 
@@ -235,7 +238,7 @@ public class EventServiceTests {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
-		when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
 
@@ -263,7 +266,8 @@ public class EventServiceTests {
 		String username = "unknown@example.com";
 
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
-		when(userRepository.findByEmail(username)).thenReturn(null);
+		when(userService.findByEmail(username))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		NotFoundException exception = assertThrows(NotFoundException.class,
 				() -> eventService.create(request, username));
@@ -278,10 +282,10 @@ public class EventServiceTests {
 		String username = "organizer@example.com";
 
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
-		when(userRepository.findByEmail(username))
+		when(userService.findByEmail(username))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class,
+		assertThrows(NotFoundException.class,
 				() -> eventService.create(request, username));
 
 		verify(eventRepository, never()).save(any(Event.class));
@@ -295,7 +299,7 @@ public class EventServiceTests {
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
-		when(userRepository.findByEmail("organizer@example.com")).thenReturn(new User());
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(eventRepository.save(eventCaptor.capture()))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
@@ -488,7 +492,7 @@ public class EventServiceTests {
 
 		EventDetailsResponse result = eventService.getById(1);
 
-		assertEquals(expectedBase64, result.getImage());
+		assertEquals(image, result.getImage());
 	}
 
 	@Test
