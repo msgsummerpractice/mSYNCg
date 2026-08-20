@@ -172,6 +172,12 @@
       "PUBLISH": "Publish",
       "COMPLETE": "Complete"
     },
+    "LOCATIONS": {
+      "TARGU_MURES": "Targu Mures",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timisoara",
+      "ALL": "All"
+    },
     "LOAD_ERROR": "Failed to load events."
   },
   "USER_LIST": {

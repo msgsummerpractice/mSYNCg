@@ -1,17 +1,6 @@
-import { EventStatusEnum } from '../constants/event-status.constant';
-import { EventTypeEnum } from '../constants/event-type.constant';
+import { EventStatusEnum, EventTypeEnum } from '../constants/event.constant';
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
-
-export interface PageResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  first: boolean;
-  last: boolean;
-}
 
 export const EVENT_TYPES = Object.values(EventTypeEnum);
 

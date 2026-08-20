@@ -3,13 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import {
-  Event,
-  EventDraftRequest,
-  EventResponse,
-  PageResponse,
-  EventView,
-} from '../models/event.model';
+import { Event, EventDraftRequest, EventResponse, EventView } from '../models/event.model';
+import { PageResponse } from '../models/page.model';
 import { EventFilterParams } from '../models/event-filter.model';
 import { formatDateTime, parseDateTime } from '../utils/date.util';
 
@@ -25,7 +20,7 @@ type EventDraftPayload = Omit<EventDraftRequest, DateTimeField> & Record<DateTim
 export class EventService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = `${environment.apiUrl}/events`;
+  private readonly eventsUrl = `${environment.apiUrl}/events`;
 
   getEvents(filters: EventFilterParams): Observable<PageResponse<EventView>> {
     let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
@@ -50,22 +45,21 @@ export class EventService {
       params = params.append('location', location);
     });
 
-    console.log('EventService.getEvents - params:', params.toString());
-    return this.http.get<PageResponse<EventView>>(this.apiUrl, { params });
+    return this.http.get<PageResponse<EventView>>(this.eventsUrl, { params });
   }
 
   getEvent(id: number): Observable<Event> {
     return this.http
-      .get<EventPayload>(`${this.apiUrl}/${id}`)
+      .get<EventPayload>(`${this.eventsUrl}/${id}`)
       .pipe(map((payload) => this.toEvent(payload)));
   }
 
   createDraft(event: EventDraftRequest): Observable<EventResponse> {
-    return this.http.post<EventResponse>(this.apiUrl, this.toDraftPayload(event));
+    return this.http.post<EventResponse>(this.eventsUrl, this.toDraftPayload(event));
   }
 
   updateDraft(id: number, event: EventDraftRequest): Observable<EventResponse> {
-    return this.http.put<EventResponse>(`${this.apiUrl}/${id}`, this.toDraftPayload(event));
+    return this.http.put<EventResponse>(`${this.eventsUrl}/${id}`, this.toDraftPayload(event));
   }
 
   private toEvent(payload: EventPayload): Event {

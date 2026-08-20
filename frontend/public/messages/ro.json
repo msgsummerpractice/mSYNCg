@@ -172,6 +172,12 @@
       "PUBLISH": "Publică",
       "COMPLETE": "Finalizează"
     },
+    "LOCATIONS": {
+      "TARGU_MURES": "Târgu Mureș",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timișoara",
+      "ALL": "Toate"
+    },
     "LOAD_ERROR": "Evenimentele nu au putut fi încărcate."
   },
   "USER_LIST": {

@@ -57,7 +57,9 @@
           (selectionChange)="locationChange.emit($event.value)"
         >
           @for (location of locations; track location) {
-          <mat-option [value]="location"> {{ location }} </mat-option>
+          <mat-option [value]="location">
+            {{ getLocationLabelKey(location) | translate }}
+          </mat-option>
           }
         </mat-select>
       </mat-form-field>

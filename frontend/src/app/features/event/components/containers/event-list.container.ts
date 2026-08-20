@@ -12,12 +12,12 @@ import { EventView } from '../../../../core/models/event.model';
 import { EventFilterParams } from '../../../../core/models/event-filter.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
-import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
-import { EventTypeEnum } from '../../../../core/constants/event-type.constant';
+import { EventTypeEnum, EventStatusEnum } from '../../../../core/constants/event.constant';
 import { EventLocation } from '../../../../core/constants/location.constant';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-event-list-container',
@@ -25,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
   imports: [EventListView],
   templateUrl: './event-list.container.html',
 })
-export class EventListContainer {
+export class EventListContainer implements OnInit {
   private readonly eventService = inject(EventService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -117,12 +117,10 @@ export class EventListContainer {
     pageSize: this.pageSize(),
   }));
 
-  constructor() {
-    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
-      return;
-    }
+  private readonly filterParams$ = toObservable(this.filterParams);
 
-    toObservable(this.filterParams)
+  ngOnInit(): void {
+    this.filterParams$
       .pipe(
         debounceTime(750),
         tap(() => this.isLoading.set(true)),

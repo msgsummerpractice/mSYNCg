@@ -1,7 +1,4 @@
-// Used only for testing. Should be deleted and replaced with actual data from backend.
-
-import { EventStatusEnum } from '../event-status.constant';
-import { EventTypeEnum } from '../event-type.constant';
+import { EventStatusEnum, EventTypeEnum } from '../../constants/event.constant';
 import { LocationEnum } from '../../models/location.model';
 import { Event } from '../../models/event.model';
 

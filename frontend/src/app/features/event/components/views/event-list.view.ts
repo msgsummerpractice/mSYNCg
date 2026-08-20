@@ -19,10 +19,13 @@ import { ButtonContainer } from '../../../../shared/components/containers/button
 import { EventView } from '../../../../core/models/event.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
-import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
-import { EventTypeEnum } from '../../../../core/constants/event-type.constant';
-import { EventLocation } from '../../../../core/constants/location.constant';
+import { EventTypeEnum, EventStatusEnum } from '../../../../core/constants/event.constant';
+import {
+  EVENT_LOCATION_TRANSLATION_KEYS,
+  EventLocation,
+} from '../../../../core/constants/location.constant';
 import { UserRole } from '../../../../core/constants/role.constant';
+import { EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/role.constant';
 
 @Component({
   selector: 'app-event-list-view',
@@ -85,11 +88,7 @@ export class EventListView {
   @Output() completeEvent = new EventEmitter<number>();
 
   get canManageEvents(): boolean {
-    return (
-      this.userRole === UserRole.ADMIN ||
-      this.userRole === UserRole.MARKETING_ORGANIZER ||
-      this.userRole === UserRole.HR_USER
-    );
+    return this.userRole !== null && EVENT_MANAGEMENT_ROLES.includes(this.userRole);
   }
 
   get resolvedTotalItems(): number {
@@ -98,5 +97,9 @@ export class EventListView {
 
   get displayedColumnKeys(): string[] {
     return [...this.columns.map((column) => column.key), 'actions'];
+  }
+
+  getLocationLabelKey(location: EventLocation): string {
+    return EVENT_LOCATION_TRANSLATION_KEYS[location] ?? location;
   }
 }

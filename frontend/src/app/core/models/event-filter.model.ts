@@ -1,5 +1,4 @@
-import { EventStatusEnum } from '../constants/event-status.constant';
-import { EventTypeEnum } from '../constants/event-type.constant';
+import { EventStatusEnum, EventTypeEnum } from '../constants/event.constant';
 import { EventLocation } from '../constants/location.constant';
 
 export interface EventFilterParams {

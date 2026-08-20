@@ -16,3 +16,10 @@ export enum EventLocation {
   TIMISOARA = 'TIMISOARA',
   ALL = 'ALL',
 }
+
+export const EVENT_LOCATION_TRANSLATION_KEYS: Record<EventLocation, string> = {
+  [EventLocation.TARGU_MURES]: 'EVENT_LIST.LOCATIONS.TARGU_MURES',
+  [EventLocation.CLUJ_NAPOCA]: 'EVENT_LIST.LOCATIONS.CLUJ_NAPOCA',
+  [EventLocation.TIMISOARA]: 'EVENT_LIST.LOCATIONS.TIMISOARA',
+  [EventLocation.ALL]: 'EVENT_LIST.LOCATIONS.ALL',
+};
