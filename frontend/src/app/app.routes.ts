@@ -7,6 +7,7 @@ import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
 import { authGuard } from './core/guards/auth.guard';
+import { eventManagementGuard } from './core/guards/event-management.guard';
 
 export const routes: Routes = [
   {
@@ -69,11 +70,21 @@ export const routes: Routes = [
   },
 
   {
-  path: 'events/create',
-  loadComponent: () =>
-    import('./features/event/pages/event-creation.page').then(
-      ({ EventCreationPage }) => EventCreationPage
-    ),
+    path: 'events/create',
+    canActivate: [eventManagementGuard],
+    loadComponent: () =>
+      import('./features/event/pages/event-creation.page').then(
+        ({ EventCreationPage }) => EventCreationPage
+      ),
+  },
+
+  {
+    path: 'events/update/:id',
+    canActivate: [eventManagementGuard],
+    loadComponent: () =>
+      import('./features/event/pages/event-update.page').then(
+        ({ EventUpdatePage }) => EventUpdatePage
+      ),
   },
 
   // Fallback

@@ -59,7 +59,7 @@ import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class EventControllerTests {
-
+  
         @Mock
         private EventService eventService;
 
@@ -132,7 +132,7 @@ public class EventControllerTests {
                 assertNotNull(specCaptor.getValue());
                 assertNotNull(pageableCaptor.getValue());
         }
-
+  
         @Test
         void createEvent_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
                 ArgumentCaptor<EventRequest> requestCaptor = ArgumentCaptor.forClass(EventRequest.class);
@@ -277,4 +277,194 @@ public class EventControllerTests {
                 return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
                                 EventType.EXTERNAL, Location.CLUJ_NAPOCA);
         }
+    @Test
+    void updateEvent_whenValidRequest_returnsUpdatedEvent() throws Exception {
+      Integer eventId = 1;
+      EventViewResponse updatedResponse = buildViewResponse();
+      EventRequest eventRequest = createEventRequest("Updated Team event");
+
+      when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+      mockMvc.perform(put("/api/events/{eventId}", eventId)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(new ObjectMapper().writeValueAsString(eventRequest)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(1))
+          .andExpect(jsonPath("$.name").value("Team event"))
+          .andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()));
+
+      verify(eventService).updateEvent(eventId, eventRequest);
+    }
+
+    @Test
+    void updateEvent_whenEventNotFound_returnsInternalServerError() throws Exception {
+      Integer eventId = 999;
+      EventRequest eventRequest = createEventRequest("Nonexistent event");
+
+      when(eventService.updateEvent(eventId, eventRequest))
+          .thenThrow(new RuntimeException("Event not found with id: " + eventId));
+
+      mockMvc.perform(put("/api/events/{eventId}", eventId)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(new ObjectMapper().writeValueAsString(eventRequest)))
+          .andExpect(status().isInternalServerError())
+          .andExpect(jsonPath("$.error").value("Internal Server Error"));
+
+      verify(eventService).updateEvent(eventId, eventRequest);
+    }
+
+    @Test
+    void updateEvent_whenImageBase64Provided_updatesAndReturnsEvent() throws Exception {
+      Integer eventId = 1;
+      String imageBase64 = "aGVsbG8gd29ybGQ=";
+      EventViewResponse updatedResponse = buildViewResponse();
+      EventRequest eventRequest = createEventRequest("Event with image", imageBase64);
+
+      when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+      mockMvc.perform(put("/api/events/{eventId}", eventId)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(new ObjectMapper().writeValueAsString(eventRequest)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(1))
+          .andExpect(jsonPath("$.name").value("Team event"));
+
+      verify(eventService).updateEvent(eventId, eventRequest);
+    }
+
+    @Test
+    void updateEvent_whenNoImageProvided_updatesWithoutImage() throws Exception {
+      Integer eventId = 1;
+      EventViewResponse updatedResponse = buildViewResponse();
+      EventRequest eventRequest = createEventRequest("Event without image", null);
+
+      when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
+
+      mockMvc.perform(put("/api/events/{eventId}", eventId)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(new ObjectMapper().writeValueAsString(eventRequest)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(1));
+
+      verify(eventService).updateEvent(eventId, eventRequest);
+    }
+
+    private EventViewResponse buildViewResponse() {
+      return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
+          EventType.EXTERNAL, Location.CLUJ_NAPOCA);
+    }
+
+    private EventRequest createEventRequest(String name) {
+      return createEventRequest(name, null);
+    }
+
+    private EventRequest createEventRequest(String name, String imageBase64) {
+      EventRequest request = new EventRequest();
+      request.setName(name);
+      request.setImage(imageBase64);
+      return request;
+    }
+
+    @Test
+    void getEventDetails_whenEventExists_returnsEventDetails() throws Exception {
+      EventDetailsResponse details = buildDetailsResponse();
+      details.setImage("AQIDBA==");
+
+      when(eventService.getById(1)).thenReturn(details);
+
+      mockMvc.perform(get("/api/events/1"))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(1))
+          .andExpect(jsonPath("$.name").value("Team event"))
+          .andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()))
+          .andExpect(jsonPath("$.type").value(EventType.EXTERNAL.name()))
+          .andExpect(jsonPath("$.location").value("Cluj-Napoca"))
+          .andExpect(jsonPath("$.image").value("AQIDBA=="));
+
+      verify(eventService).getById(1);
+    }
+
+    @Test
+    void getEventDetails_whenEventHasNoImage_returnsNullImage() throws Exception {
+      when(eventService.getById(1)).thenReturn(buildDetailsResponse());
+
+      mockMvc.perform(get("/api/events/1"))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.image").doesNotExist());
+    }
+
+    @Test
+    void getEventDetails_whenEventDoesNotExist_returnsNotFound() throws Exception {
+      when(eventService.getById(99)).thenThrow(new NotFoundException("Event", 99));
+
+      mockMvc.perform(get("/api/events/99"))
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.error").value("Not Found"))
+          .andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+    }
+
+    @Test
+    void getEventDetails_whenIdIsNotANumber_returns_internalServerError() throws Exception {
+      mockMvc.perform(get("/api/events/abc"))
+          .andExpect(status().isInternalServerError());
+
+      verifyNoInteractions(eventService);
+    }
+
+    @Test
+    void getEventDetails_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+      when(eventService.getById(1)).thenThrow(new RuntimeException("Database unavailable"));
+
+      mockMvc.perform(get("/api/events/1"))
+          .andExpect(status().isInternalServerError())
+          .andExpect(jsonPath("$.error").value("Internal Server Error"));
+    }
+
+    private EventDetailsResponse buildDetailsResponse() {
+      EventDetailsResponse details = new EventDetailsResponse();
+      details.setId(1);
+      details.setName("Team event");
+      details.setStatus(EventStatus.PUBLISHED);
+      details.setType(EventType.EXTERNAL);
+      details.setLocation(Location.CLUJ_NAPOCA);
+      details.setFoodProvided(true);
+      details.setDescription("Yearly team gathering");
+      return details;
+    }
+
+    @Test
+    void completeEvent_whenSuccessful_returnsCompletedEvent() throws Exception {
+      EventDetailsResponse completedEvent = buildDetailsResponse();
+      completedEvent.setStatus(EventStatus.COMPLETED);
+
+      when(eventService.completeEvent(1)).thenReturn(completedEvent);
+
+      mockMvc.perform(patch("/api/events/1/complete"))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(1))
+          .andExpect(jsonPath("$.status").value(EventStatus.COMPLETED.name()));
+
+      verify(eventService).completeEvent(1);
+    }
+
+    @Test
+    void completeEvent_whenEventDoesNotExist_returnsNotFound() throws Exception {
+      when(eventService.completeEvent(99)).thenThrow(new NotFoundException("Event", 99));
+
+      mockMvc.perform(patch("/api/events/99/complete"))
+          .andExpect(status().isNotFound())
+          .andExpect(jsonPath("$.error").value("Not Found"))
+          .andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+    }
+
+    @Test
+    void completeEvent_whenEventCannotBeCompleted_returnsBadRequest() throws Exception {
+      when(eventService.completeEvent(1))
+          .thenThrow(new EventCannotBeCompletedException("Event cannot be completed before its end time."));
+
+      mockMvc.perform(patch("/api/events/1/complete"))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.error").value("Bad Request"))
+          .andExpect(jsonPath("$.message").value("Event cannot be completed before its end time."));
+    }
 }

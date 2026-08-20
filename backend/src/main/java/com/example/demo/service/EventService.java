@@ -77,6 +77,7 @@ public class EventService implements EventServiceInterface {
 
         updatedEvent.setId(event.getId());
         updatedEvent.setImage(poster);
+        updatedEvent.setStatus(EventStatus.DRAFT);
         updatedEvent = eventRepository.save(updatedEvent);
 
         return modelMapper.map(updatedEvent, EventViewResponse.class);
