@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/services/toast.service';
 import { EventService } from '../../../../core/services/event.service';
 import { EventDraftRequest, EventForm, EventStatusEnum } from '../../../../core/models/event.model';
-import { EventTypeEnum } from '../../../../core/models/event.model';
+import { EventTypeEnum } from '../../../../core/constants/event.constant';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { eventDateTimeRangeValidator } from '../../../../core/validators/time-range.validatior';
 import { combineDateTime } from '../../../../core/utils/date.util';
