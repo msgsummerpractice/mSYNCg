@@ -124,11 +124,11 @@ export class UserListContainer {
   private searchParamsForInit = toObservable(this.searchParams);
 
   private confirmRoleChange(event: UserCellChangeEvent): boolean {
-    return event.key === 'role' && typeof event.newValue === 'string';
+    return event.key === 'role';
   }
 
   private confirmStatusChange(event: UserCellChangeEvent): boolean {
-    return event.key === 'status' && typeof event.newValue === 'boolean';
+    return event.key === 'status';
   }
 
   private ifAdminTriesToModifyOwnRole(event: UserCellChangeEvent): boolean {
