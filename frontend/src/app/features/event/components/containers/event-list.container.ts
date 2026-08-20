@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { EventListView } from '../views/event-list.view';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Event } from '../../../../core/models/event.model';
+import { EventView } from '../../../../core/models/event.model';
 import { EventFilterParams } from '../../../../core/models/event-filter.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
@@ -33,7 +33,7 @@ export class EventListContainer {
   private readonly toastService = inject(ToastService);
   private readonly translateService = inject(TranslateService);
 
-  tableColumns: TableColumn<Event>[] = [
+  tableColumns: TableColumn<EventView>[] = [
     {
       key: 'name',
       label: 'EVENT_LIST.TABLE.NAME',
@@ -104,7 +104,7 @@ export class EventListContainer {
 
   userRole = signal<UserRole | null>(this.authService.getRole());
 
-  pagedEvents = signal<Event[]>([]);
+  pagedEvents = signal<EventView[]>([]);
   totalFilteredItems = signal<number>(0);
 
   private filterParams = computed<EventFilterParams>(() => ({
@@ -117,29 +117,17 @@ export class EventListContainer {
     pageSize: this.pageSize(),
   }));
 
-  private searchParams = computed(() => ({
-    name: this.nameQuery().trim(),
-    types: this.selectedTypes(),
-    statuses: this.selectedStatuses(),
-    locations: this.selectedLocations(),
-    startTime: this.startTimeQuery(),
-  }));
-
   constructor() {
     if (!isPlatformBrowser(inject(PLATFORM_ID))) {
       return;
     }
 
-    this.isLoading.set(true);
-
-    toObservable(this.searchParams)
+    toObservable(this.filterParams)
       .pipe(
         debounceTime(750),
         tap(() => this.isLoading.set(true)),
-        switchMap(() =>
-          this.eventService
-            .getEvents(this.filterParams())
-            .pipe(finalize(() => this.isLoading.set(false)))
+        switchMap((filters) =>
+          this.eventService.getEvents(filters).pipe(finalize(() => this.isLoading.set(false)))
         ),
         takeUntilDestroyed(this.destroyRef)
       )

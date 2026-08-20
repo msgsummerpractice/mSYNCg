@@ -16,7 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 
-import { Event } from '../../../../core/models/event.model';
+import { EventView } from '../../../../core/models/event.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
 import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
@@ -45,8 +45,8 @@ import { UserRole } from '../../../../core/constants/role.constant';
   templateUrl: './event-list.view.html',
 })
 export class EventListView {
-  @Input() events: Event[] = [];
-  @Input() columns: TableColumn<Event>[] = [];
+  @Input() events: EventView[] = [];
+  @Input() columns: TableColumn<EventView>[] = [];
 
   @Input() types: EventTypeEnum[] = [];
   @Input() statuses: EventStatusEnum[] = [];

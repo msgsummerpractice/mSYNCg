@@ -3,7 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { Event, EventDraftRequest, EventResponse, PageResponse } from '../models/event.model';
+import {
+  Event,
+  EventDraftRequest,
+  EventResponse,
+  PageResponse,
+  EventView,
+} from '../models/event.model';
 import { EventFilterParams } from '../models/event-filter.model';
 import { formatDateTime, parseDateTime } from '../utils/date.util';
 
@@ -21,7 +27,7 @@ export class EventService {
 
   private readonly apiUrl = `${environment.apiUrl}/events`;
 
-  getEvents(filters: EventFilterParams): Observable<PageResponse<Event>> {
+  getEvents(filters: EventFilterParams): Observable<PageResponse<EventView>> {
     let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
 
     if (filters.name) {
@@ -44,7 +50,7 @@ export class EventService {
       params = params.append('location', location);
     });
 
-    return this.http.get<PageResponse<Event>>(this.apiUrl, { params });
+    return this.http.get<PageResponse<EventView>>(this.apiUrl, { params });
   }
 
   getEvent(id: number): Observable<Event> {
