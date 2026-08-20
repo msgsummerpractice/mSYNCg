@@ -1,6 +1,7 @@
 {
   "BUTTONS": {
-    "SUBMIT": "Trimite"
+    "SUBMIT": "Trimite",
+    "CANCEL": "Anulează"
   },
   "HOME": {
     "WELCOME": "Bine ai venit la mSYNCg !"

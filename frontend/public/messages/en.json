@@ -1,6 +1,7 @@
 {
   "BUTTONS": {
-    "SUBMIT": "Send"
+    "SUBMIT": "Send",
+    "CANCEL": "Cancel"
   },
   "HOME": {
     "WELCOME": "Welcome to mSYNCg !"
