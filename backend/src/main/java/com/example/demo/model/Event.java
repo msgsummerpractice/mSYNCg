@@ -40,7 +40,7 @@ public class Event {
     private Location location;
 
     @Column(columnDefinition = "bytea")
-    private String image;
+    private byte[] image;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;

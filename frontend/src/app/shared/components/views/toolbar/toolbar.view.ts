@@ -70,7 +70,7 @@ export class ToolbarView {
 
   navItems: NavItems[] = [
     { label: 'Events', route: '/events' },
-    { label: 'User', route: '/users' },
+    { label: 'Users', route: '/admin/users' },
   ];
 
   handleEventClick(route: string): void {
