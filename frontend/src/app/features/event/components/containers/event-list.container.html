@@ -35,3 +35,9 @@
   (close)="onCloseEventCard()"
 ></app-event-card-container>
 }
+
+<app-publish-event-container
+  [eventId]="publishingEventId()"
+  (published)="onPublishSucceeded()"
+  (finished)="onPublishFinished()"
+></app-publish-event-container>

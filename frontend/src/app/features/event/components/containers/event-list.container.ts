@@ -2,11 +2,13 @@ import { Component, computed, signal, inject, PLATFORM_ID, DestroyRef } from '@a
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
-import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
+import { merge, Subject } from 'rxjs';
+import { debounceTime, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { EventListView } from '../views/event-list.view';
 import { EventCardContainer } from './event-card.container';
+import { PublishEventContainer } from './publish-event.container';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventView } from '../../../../core/models/event.model';
@@ -23,7 +25,7 @@ import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-event-list-container',
   standalone: true,
-  imports: [EventListView, EventCardContainer],
+  imports: [EventListView, EventCardContainer, PublishEventContainer],
   templateUrl: './event-list.container.html',
 })
 export class EventListContainer implements OnInit {
@@ -110,6 +112,7 @@ export class EventListContainer implements OnInit {
   totalFilteredItems = signal<number>(0);
 
   readonly selectedEventId = signal<number | null>(null);
+  readonly publishingEventId = signal<number>(0);
 
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
@@ -122,6 +125,7 @@ export class EventListContainer implements OnInit {
   }));
 
   private readonly filterParams$ = toObservable(this.filterParams);
+  private readonly reload$ = new Subject<void>();
 
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -130,9 +134,11 @@ export class EventListContainer implements OnInit {
       this.selectedEventId.set(Number.isInteger(parsed) && parsed > 0 ? parsed : null);
     });
 
-    this.filterParams$
+    merge(
+      this.filterParams$.pipe(debounceTime(750)),
+      this.reload$.pipe(map(() => this.filterParams()))
+    )
       .pipe(
-        debounceTime(750),
         tap(() => this.isLoading.set(true)),
         switchMap((filters) =>
           this.eventService.getEvents(filters).pipe(finalize(() => this.isLoading.set(false)))
@@ -209,8 +215,15 @@ export class EventListContainer implements OnInit {
   }
 
   onPublishEvent(eventId: number): void {
-    // TODO: Implement backend call to publish event
-    this.toastService.showSuccess('Event published!');
+    this.publishingEventId.set(eventId);
+  }
+
+  onPublishSucceeded(): void {
+    this.reload$.next();
+  }
+
+  onPublishFinished(): void {
+    this.publishingEventId.set(0);
   }
 
   onCompleteEvent(eventId: number): void {

@@ -179,7 +179,9 @@
       "TIMISOARA": "Timisoara",
       "ALL": "Alle"
     },
-    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
+    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden.",
+    "PUBLISH_SUCCESS": "Die Veranstaltung wurde erfolgreich veröffentlicht.",
+    "PUBLISH_ERROR": "Die Veranstaltung konnte nicht veröffentlicht werden. Bitte versuche es erneut."
   },
   "USER_LIST": {
     "TITLE": "Benutzer",

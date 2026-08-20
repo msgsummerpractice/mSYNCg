@@ -63,7 +63,7 @@ export class EventService {
   }
 
   publishEvent(id: number): Observable<EventResponse> {
-    return this.http.post<EventResponse>(`${this.eventsUrl}/${id}/publish`, {});
+    return this.http.patch<EventResponse>(`${this.eventsUrl}/${id}/publish`, {});
   }
 
   getEventById(id: number): Observable<Event> {
