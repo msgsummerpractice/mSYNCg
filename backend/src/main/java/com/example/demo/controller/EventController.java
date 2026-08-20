@@ -42,7 +42,6 @@ public class EventController {
     public ResponseEntity<EventViewResponse> updateEvent(@PathVariable Integer eventId,
             @RequestBody EventRequest eventRequest) {
         EventViewResponse updatedEvent = eventService.updateEvent(eventId, eventRequest);
-        emailService.sendEmail(eventId);
         return ResponseEntity.ok(updatedEvent);
     }
 

@@ -45,7 +45,8 @@ public class EmailSender {
 
             if (content.poster() != null) {
                 helper.addInline(POSTER_CID,
-                        new ByteArrayResource(content.poster()), "image/png");
+                        new ByteArrayResource(content.poster()),
+                        detectImageMime(content.poster()));
             }
         } catch (MessagingException e) {
             throw new MailPreparationException("Failed to build message for " + to, e);
@@ -57,5 +58,21 @@ public class EmailSender {
     @Recover
     public void recover(MailException e, String to, EmailContent content) {
         log.warn("Giving up on email to {} after retries: {}", to, e.getMessage());
+    }
+
+    private static String detectImageMime(byte[] bytes) {
+        if (bytes == null || bytes.length < 4) {
+            return "application/octet-stream";
+        }
+        if ((bytes[0] & 0xFF) == 0xFF
+                && (bytes[1] & 0xFF) == 0xD8
+                && (bytes[2] & 0xFF) == 0xFF) {
+            return "image/jpeg";
+        }
+        if ((bytes[0] & 0xFF) == 0x89
+                && bytes[1] == 'P' && bytes[2] == 'N' && bytes[3] == 'G') {
+            return "image/png";
+        }
+        return "application/octet-stream";
     }
 }
