@@ -51,10 +51,10 @@ export class UserListContainer {
       key: 'role',
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
-      options: Object.entries(USER_ROLE_DISPLAY_VALUES).map(([value, label]) => ({
-        value,
+      options: Object.values(USER_ROLE_DISPLAY_VALUES).map((label) => ({
+        value: label,
         label,
-      })),
+      }))
     },
     {
       key: 'location',
