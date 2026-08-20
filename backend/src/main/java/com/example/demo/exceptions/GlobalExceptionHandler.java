@@ -1,6 +1,7 @@
 package com.example.demo.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -94,6 +95,23 @@ public class GlobalExceptionHandler {
 
 	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+	@ExceptionHandler(EventCannotBeCompletedException.class)
+	public ResponseEntity<ErrorResponse> handleEventCannotBeCompletedException(
+			EventCannotBeCompletedException exception,
+			HttpServletRequest request
+	) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of()
+		);
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
