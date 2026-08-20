@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum Location {
     CLUJ_NAPOCA("Cluj-Napoca"),
     TARGU_MURES("Târgu Mureș"),
-    TIMISOARA("Timișoara");
+    TIMISOARA("Timișoara"),
+    ALL("All");
 
     private final String displayValue;
 
