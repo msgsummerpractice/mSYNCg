@@ -1,6 +1,7 @@
 import { EventStatusEnum, EventTypeEnum } from '../constants/event.constant';
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
+import { EventLocation } from '../constants/location.constant';
 
 export const EVENT_TYPES = Object.values(EventTypeEnum);
 
@@ -62,4 +63,14 @@ export interface EventResponse {
   id: number;
   status: EventStatusEnum;
 }
-export { EventStatusEnum, EventTypeEnum };
+
+export interface EventFilterParams {
+  name: string;
+  types: EventTypeEnum[];
+  statuses: EventStatusEnum[];
+  locations: EventLocation[];
+  startTime: string;
+  pageId: number;
+  pageSize: number;
+}
+export { EventStatusEnum };

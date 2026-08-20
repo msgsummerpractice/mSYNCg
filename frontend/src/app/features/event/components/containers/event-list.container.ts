@@ -9,7 +9,7 @@ import { EventListView } from '../views/event-list.view';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventView } from '../../../../core/models/event.model';
-import { EventFilterParams } from '../../../../core/models/event-filter.model';
+import { EventFilterParams } from '../../../../core/models/event.model';
 import { TableColumn } from '../../../../core/models/table.column.model';
 
 import { EventTypeEnum, EventStatusEnum } from '../../../../core/constants/event.constant';
