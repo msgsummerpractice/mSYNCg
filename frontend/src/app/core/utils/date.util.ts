@@ -32,3 +32,15 @@ export function parseDateTime(value: string | null | undefined): Date | null {
 
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
+
+export function formatDate(value: Date | null): string {
+  if (value === null) {
+    return '';
+  }
+
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}

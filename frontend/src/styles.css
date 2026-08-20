@@ -162,6 +162,11 @@
   --mat-sys-outline-variant: var(--color-border);
   --mat-sys-surface-variant: var(--color-muted);
   --mat-sys-on-surface-variant: var(--color-on-muted);
+
+  --mat-card-title-text-font: var(--font-family-ui);
+  --mat-card-subtitle-text-font: var(--font-family-base);
+  --mat-card-subtitle-text-color: var(--color-on-muted);
+  --mat-chip-label-text-font: var(--font-family-ui);
 }
 
 .dark {
@@ -324,11 +329,67 @@ body {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Material Toolbar with Roboto font and brand colors */
+/* Material Toolbar with Oxanium font and brand colors */
 mat-toolbar {
   font-family: var(--font-family-ui) !important;
   background-color: var(--color-primary) !important;
   color: var(--color-on-primary) !important;
+}
+
+.chip-success.mat-mdc-standard-chip {
+  --mdc-chip-elevated-container-color: var(--color-success);
+  --mdc-chip-elevated-selected-container-color: var(--color-success);
+  --mat-chip-label-text-color: var(--color-on-success);
+  --mat-chip-with-icon-icon-color: var(--color-on-success);
+  --mat-chip-outline-color: transparent;
+  --mat-chip-outline-width: 0;
+  background-color: var(--color-success) !important;
+}
+
+.chip-danger.mat-mdc-standard-chip {
+  --mdc-chip-elevated-container-color: var(--color-danger);
+  --mdc-chip-elevated-selected-container-color: var(--color-danger);
+  --mat-chip-label-text-color: var(--color-on-danger);
+  --mat-chip-with-icon-icon-color: var(--color-on-danger);
+  --mat-chip-outline-color: transparent;
+  --mat-chip-outline-width: 0;
+  background-color: var(--color-danger) !important;
+}
+
+.chip-success.mat-mdc-standard-chip .mdc-evolution-chip__text-label,
+.chip-success.mat-mdc-standard-chip .mat-mdc-chip-avatar {
+  color: var(--color-on-success) !important;
+}
+
+.chip-danger.mat-mdc-standard-chip .mdc-evolution-chip__text-label,
+.chip-danger.mat-mdc-standard-chip .mat-mdc-chip-avatar {
+  color: var(--color-on-danger) !important;
+}
+
+/* Purely informational chips: no hover/focus feedback */
+.chip-static.mat-mdc-standard-chip {
+  --mat-chip-hover-state-layer-opacity: 0;
+  --mat-chip-focus-state-layer-opacity: 0;
+  --mat-chip-selected-hover-state-layer-opacity: 0;
+  --mat-chip-selected-focus-state-layer-opacity: 0;
+  cursor: default;
+  pointer-events: none;
+}
+
+.chip-static.mat-mdc-standard-chip .mat-mdc-chip-focus-overlay,
+.chip-static.mat-mdc-standard-chip .mat-ripple {
+  display: none;
+  app-button-container button {
+    margin-left: 0 !important;
+    border: 0;
+    border-radius: 0.375rem;
+    background-color: var(--color-primary) !important;
+    color: var(--color-on-primary) !important;
+    padding: 0.5rem 1rem;
+  }
 }

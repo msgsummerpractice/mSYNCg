@@ -336,11 +336,9 @@ public class EventServiceTests {
 		event.setRegistrationStart(request.getRegistrationStart());
 		event.setRegistrationEnd(request.getRegistrationEnd());
 		event.setDescription(request.getDescription());
-		event.setImage(
-    	request.getImage() == null
-        ? null
-        : Base64.getDecoder().decode(request.getImage())
-);
+		event.setImage(request.getImage() == null || request.getImage().isEmpty()
+				? null
+				: Base64.getDecoder().decode(request.getImage()));
 		return event;
 	}
 
@@ -478,16 +476,11 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_whenEventHasImage_returnsBase64Image() {
-		byte[] imageBytes = {
-			(byte) 0x89, (byte) 0x50, (byte) 0x4E, (byte) 0x47,
-			(byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A
-		};
-		String expectedBase64 = Base64.getEncoder().encodeToString(imageBytes);
-
+	void getById_whenEventHasImage_returnsImageString() {
+		String image = "iVBORw0KGgoAAAANSUhEUg==";
 		Event event = new Event();
 		event.setId(1);
-		event.setImage(imageBytes);
+		event.setImage(Base64.getDecoder().decode(image));
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class))

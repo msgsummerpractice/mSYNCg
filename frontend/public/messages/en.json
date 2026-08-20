@@ -2,6 +2,21 @@
   "BUTTONS": {
     "SUBMIT": "Send"
   },
+  "CONFIRMATION_DIALOG": {
+    "TITLE": "Confirmation",
+    "MESSAGE": "Are you sure you want to proceed?",
+    "CONFIRM_BUTTON": "Yes",
+    "CANCEL_BUTTON": "No"
+  },
+  "STATUS_UPDATE": {
+    "SUCCESS": "User status updated successfully",
+    "FAILURE": "Unable to update user status"
+  },
+  "ROLE_UPDATE": {
+    "SUCCESS": "User role updated successfully",
+    "FAILURE": "Unable to update user role",
+    "ADMIN_CHANGE_ERROR": "Changing the role of an Admin user is not allowed."
+  },
   "HOME": {
     "WELCOME": "Welcome to mSYNCg !"
   },
@@ -76,7 +91,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Create Event Draft",
+      "TITLE": "Create/Update Event Draft",
       "EVENT_TITLE": {
         "LABEL": "Title",
         "REQUIRED": "Title is required"
@@ -146,7 +161,43 @@
       }
     }
   },
+  "EVENT_LIST": {
+    "TITLE": "Events",
+    "FILTER_TITLE": "Filter events",
+    "FIELDS": {
+      "NAME": "Event name",
+      "NAME_PLACEHOLDER": "Search by event name",
+      "TYPE": "Event type",
+      "STATUS": "Status",
+      "LOCATION": "Location",
+      "START_TIME": "Start time",
+      "START_TIME_PLACEHOLDER": "Select date and time"
+    },
+    "TABLE": {
+      "NAME": "Name",
+      "DATE": "Date",
+      "STATUS": "Status",
+      "TYPE": "Type",
+      "LOCATION": "Location",
+      "ACTIONS": "Actions"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Reset filters",
+      "VIEW": "View",
+      "EDIT": "Edit",
+      "PUBLISH": "Publish",
+      "COMPLETE": "Complete"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Targu Mures",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timisoara",
+      "ALL": "All"
+    },
+    "LOAD_ERROR": "Failed to load events."
+  },
   "USER_LIST": {
+    "TITLE": "Users",
     "FILTER_TITLE": "Filter users",
     "LOAD_ERROR": "Users could not be loaded. Please try again.",
     "FIELDS": {
@@ -185,6 +236,15 @@
       "TARGU_MURES": "Targu Mures",
       "CLUJ_NAPOCA": "Cluj-Napoca",
       "TIMISOARA": "Timisoara"
+    }
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Start date",
+      "END_DATE": "End date",
+      "REGISTRATION_START": "Registration opens",
+      "REGISTRATION_END": "Registration closes",
+      "FOOD_PROVIDED": "Food provided"
     }
   }
 }

@@ -8,7 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { ErrorStateMatcher, provideNativeDateAdapter } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { EventForm, EventTypeEnum, EVENT_TYPES } from '../../../../../core/models/event.model';
+import { EventForm, EVENT_TYPES } from '../../../../../core/models/event.model';
+import { EventTypeEnum } from '../../../../../core/constants/event.constant';
 import { GenericFormContainer } from '../../../../../shared/components/containers/generic-form.container';
 import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
 
