@@ -172,7 +172,8 @@
       "PUBLISH": "Publish",
       "COMPLETE": "Complete"
     },
-    "LOAD_ERROR": "Failed to load events.",
+    "LOAD_ERROR": "Failed to load events."
+  },
   "USER_LIST": {
     "FILTER_TITLE": "Filter users",
     "LOAD_ERROR": "Users could not be loaded. Please try again.",
@@ -214,5 +215,4 @@
       "TIMISOARA": "Timisoara"
     }
   }
-}
 }

@@ -172,47 +172,47 @@
       "PUBLISH": "Veröffentlichen",
       "COMPLETE": "Abschließen"
     },
-    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden.",
-    "USER_LIST": {
-      "FILTER_TITLE": "Benutzer filtern",
-      "LOAD_ERROR": "Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",
-      "FIELDS": {
-        "FIRST_NAME": "Vorname",
-        "FIRST_NAME_PLACEHOLDER": "Vornamen suchen...",
-        "LAST_NAME": "Nachname",
-        "LAST_NAME_PLACEHOLDER": "Nachnamen suchen...",
-        "EMAIL": "E-Mail",
-        "EMAIL_PLACEHOLDER": "E-Mail suchen...",
-        "ROLES": "Rollen",
-        "LOCATIONS": "Standorte",
-        "STATUS": "Status"
-      },
-      "STATUS": {
-        "ACTIVE": "Aktiv",
-        "INACTIVE": "Inaktiv"
-      },
-      "BUTTONS": {
-        "RESET_FILTERS": "Filter zurücksetzen"
-      },
-      "TABLE": {
-        "FIRST_NAME": "Vorname",
-        "LAST_NAME": "Nachname",
-        "EMAIL": "E-Mail",
-        "USER_ROLE": "Benutzerrolle",
-        "LOCATION": "Standort",
-        "STATUS": "Status"
-      },
-      "ROLES": {
-        "ADMIN": "Administrator",
-        "HR_USER": "HR-Benutzer",
-        "PARTICIPANT": "Teilnehmer",
-        "MARKETING_ORGANIZER": "Marketing-Organisator"
-      },
-      "LOCATIONS": {
-        "TARGU_MURES": "Targu Mures",
-        "CLUJ_NAPOCA": "Cluj-Napoca",
-        "TIMISOARA": "Timisoara"
-      }
+    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
+  },
+  "USER_LIST": {
+    "FILTER_TITLE": "Benutzer filtern",
+    "LOAD_ERROR": "Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",
+    "FIELDS": {
+      "FIRST_NAME": "Vorname",
+      "FIRST_NAME_PLACEHOLDER": "Vornamen suchen...",
+      "LAST_NAME": "Nachname",
+      "LAST_NAME_PLACEHOLDER": "Nachnamen suchen...",
+      "EMAIL": "E-Mail",
+      "EMAIL_PLACEHOLDER": "E-Mail suchen...",
+      "ROLES": "Rollen",
+      "LOCATIONS": "Standorte",
+      "STATUS": "Status"
+    },
+    "STATUS": {
+      "ACTIVE": "Aktiv",
+      "INACTIVE": "Inaktiv"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Filter zurücksetzen"
+    },
+    "TABLE": {
+      "FIRST_NAME": "Vorname",
+      "LAST_NAME": "Nachname",
+      "EMAIL": "E-Mail",
+      "USER_ROLE": "Benutzerrolle",
+      "LOCATION": "Standort",
+      "STATUS": "Status"
+    },
+    "ROLES": {
+      "ADMIN": "Administrator",
+      "HR_USER": "HR-Benutzer",
+      "PARTICIPANT": "Teilnehmer",
+      "MARKETING_ORGANIZER": "Marketing-Organisator"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Targu Mures",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timisoara"
     }
   }
 }
