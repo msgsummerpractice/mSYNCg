@@ -107,6 +107,7 @@
             </generic-cell-view>
           </td>
         </ng-container>
+      }
         @if (isLoading) {
         <div class="absolute inset-0 z-10 flex items-center justify-center bg-brand-surface/70">
           <mat-spinner diameter="48" aria-label="Loading users"></mat-spinner>
@@ -128,7 +129,7 @@
               <generic-cell-view
                 [column]="col"
                 [row]="row"
-                (valueChanged)="cellAction.emit($event)"
+                (valueChanged)="onCellValueChanged($event)"
               >
               </generic-cell-view>
             </td>
