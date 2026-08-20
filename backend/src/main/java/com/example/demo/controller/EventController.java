@@ -5,6 +5,8 @@ import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
+import com.example.demo.service.notification.EmailService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class EventController {
     private final EventService eventService;
 
+    private final EmailService emailService;
+
     @GetMapping
     public ResponseEntity<Page<EventViewResponse>> getEvents(
             EventSpec eventSpec,
@@ -38,6 +42,7 @@ public class EventController {
     public ResponseEntity<EventViewResponse> updateEvent(@PathVariable Integer eventId,
             @RequestBody EventRequest eventRequest) {
         EventViewResponse updatedEvent = eventService.updateEvent(eventId, eventRequest);
+        emailService.sendEmail(eventId);
         return ResponseEntity.ok(updatedEvent);
     }
 

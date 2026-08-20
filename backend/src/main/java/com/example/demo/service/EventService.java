@@ -9,8 +9,6 @@ import java.util.Base64;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
-import org.springframework.stereotype.Service;
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;

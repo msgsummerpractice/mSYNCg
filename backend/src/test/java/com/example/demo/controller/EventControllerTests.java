@@ -11,6 +11,7 @@ import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.service.EventService;
+import com.example.demo.service.notification.EmailService;
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -48,6 +48,9 @@ public class EventControllerTests {
 
 	@Mock
 	private EventService eventService;
+
+	@Mock
+	private EmailService emailService;
 
 	@InjectMocks
 	private EventController eventController;
