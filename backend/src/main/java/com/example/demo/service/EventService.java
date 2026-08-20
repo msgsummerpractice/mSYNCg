@@ -46,13 +46,13 @@ public class EventService implements EventServiceInterface {
 
         User user = userRepository.findByEmail(username);
 
+        if (user == null) {
+            throw new NotFoundException(username, null);
+        }
+
         byte[] poster = null;
         if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
             poster = Base64.getDecoder().decode(eventRequest.getImage());
-        }
-
-        if (user == null) {
-            throw new NotFoundException(username, null);
         }
 
         event.setStatus(EventStatus.DRAFT);

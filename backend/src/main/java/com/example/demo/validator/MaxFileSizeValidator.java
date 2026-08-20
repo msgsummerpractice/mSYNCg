@@ -19,7 +19,7 @@ public class MaxFileSizeValidator implements ConstraintValidator<MaxFileSize, St
         if (value == null || value.isBlank()) {
             return true;
         }
-        
+
         try {
             byte[] decodedImage = Base64.getDecoder().decode(value);
             return decodedImage.length <= maxFileSize;
