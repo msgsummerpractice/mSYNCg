@@ -35,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -65,12 +64,13 @@ public class UserServiceTests {
 	void createUser_whenEmailAlreadyExists_throwsValidationException() {
 		UserRequest request = buildValidRequest();
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
 		ValidationException ex = assertThrows(ValidationException.class, () -> userService.create(request));
 
 		assertEquals("email", ex.getField());
 		assertEquals("Email address is already in use.", ex.getReason());
-		verify(userRepository, never()).save(any(User.class));
+		verify(userRepository, never()).save(userCaptor.capture());
 	}
 
 	@Test
@@ -79,16 +79,16 @@ public class UserServiceTests {
 		request.setPassword(null);
 		User mappedUser = new User();
 		UserResponse mappedResponse = new UserResponse();
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
 		when(modelMapper.map(request, User.class)).thenReturn(mappedUser);
 		when(passwordEncoder.encode(null)).thenReturn(null);
-		when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+		when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 		when(modelMapper.map(mappedUser, UserResponse.class)).thenReturn(mappedResponse);
 
 		UserResponse response = userService.create(request);
 
-		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 		verify(userRepository).save(userCaptor.capture());
 		User savedUser = userCaptor.getValue();
 
@@ -102,10 +102,11 @@ public class UserServiceTests {
 	void createUser_whenRepositorySaveFails_throwsException() {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
 		when(modelMapper.map(request, User.class)).thenReturn(mappedUser);
 		when(passwordEncoder.encode(request.getPassword())).thenReturn("encoded-password");
-		when(userRepository.save(any(User.class)))
+		when(userRepository.save(userCaptor.capture()))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		assertThrows(DataAccessResourceFailureException.class, () -> userService.create(request));
@@ -116,15 +117,16 @@ public class UserServiceTests {
 		UserRequest request = buildValidRequest();
 		User mappedUser = new User();
 		UserResponse mappedResponse = new UserResponse();
+
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 		when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
 		when(modelMapper.map(request, User.class)).thenReturn(mappedUser);
 		when(passwordEncoder.encode(request.getPassword())).thenReturn("$2encodedPassword");
-		when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+		when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 		when(modelMapper.map(mappedUser, UserResponse.class)).thenReturn(mappedResponse);
 
 		UserResponse response = userService.create(request);
 
-		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 		verify(userRepository).save(userCaptor.capture());
 		User savedUser = userCaptor.getValue();
 
@@ -168,12 +170,12 @@ public class UserServiceTests {
 		Pageable pageable = PageRequest.of(0, 20);
 
 		when(userRepository.findAll(spec, pageable)).thenReturn(new PageImpl<>(List.of(), pageable, 0));
-
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 		Page<UserViewResponse> result = userService.getAll(spec, pageable);
 
 		assertTrue(result.getContent().isEmpty());
 		assertEquals(0, result.getTotalElements());
-		verify(modelMapper, never()).map(any(User.class), eq(UserViewResponse.class));
+		verify(modelMapper, never()).map(userCaptor.capture(), eq(UserViewResponse.class));
 	}
 
 	@Test

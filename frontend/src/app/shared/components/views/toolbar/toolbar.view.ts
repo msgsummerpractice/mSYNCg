@@ -48,14 +48,12 @@ interface NavItems {
         [userImage]="iconUrl"
         [userName]="userName"
       ></app-user-icon-container>
-      <button
+      <app-button-container
         *ngIf="showLogoutButton"
-        mat-button
-        class="text-brand-on-primary"
-        (click)="logout.emit()"
-      >
-        Logout
-      </button>
+        label="Logout"
+        variant="primary"
+        (clickEvent)="logout.emit()"
+      ></app-button-container>
     </div>
   </mat-toolbar>`,
 })
