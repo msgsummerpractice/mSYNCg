@@ -9,3 +9,10 @@ export const USER_LOCATION_TRANSLATION_KEYS: Record<UserLocation, string> = {
   [UserLocation.CLUJ_NAPOCA]: 'USER_LIST.LOCATIONS.CLUJ_NAPOCA',
   [UserLocation.TIMISOARA]: 'USER_LIST.LOCATIONS.TIMISOARA',
 };
+
+export enum EventLocation {
+  CLUJ_NAPOCA = 'CLUJ_NAPOCA',
+  TARGU_MURES = 'TARGU_MURES',
+  TIMISOARA = 'TIMISOARA',
+  ALL = 'ALL',
+}

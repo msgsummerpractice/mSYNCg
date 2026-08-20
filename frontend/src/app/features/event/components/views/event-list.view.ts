@@ -21,7 +21,7 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 
 import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
 import { EventTypeEnum } from '../../../../core/constants/event-type.constant';
-import { LocationEnum } from '../../../../core/models/location.model';
+import { EventLocation } from '../../../../core/constants/location.constant';
 import { UserRole } from '../../../../core/constants/role.constant';
 
 @Component({
@@ -50,11 +50,11 @@ export class EventListView {
 
   @Input() types: EventTypeEnum[] = [];
   @Input() statuses: EventStatusEnum[] = [];
-  @Input() locations: LocationEnum[] = [];
+  @Input() locations: EventLocation[] = [];
 
   @Input() selectedTypes: EventTypeEnum[] = [];
   @Input() selectedStatuses: EventStatusEnum[] = [];
-  @Input() selectedLocations: LocationEnum[] = [];
+  @Input() selectedLocations: EventLocation[] = [];
 
   @Input() nameQuery = '';
   @Input() startTimeQuery = '';
@@ -74,7 +74,7 @@ export class EventListView {
 
   @Output() typeChange = new EventEmitter<EventTypeEnum[]>();
   @Output() statusChange = new EventEmitter<EventStatusEnum[]>();
-  @Output() locationChange = new EventEmitter<LocationEnum[]>();
+  @Output() locationChange = new EventEmitter<EventLocation[]>();
 
   @Output() resetFilters = new EventEmitter<void>();
   @Output() pageChange = new EventEmitter<PageEvent>();

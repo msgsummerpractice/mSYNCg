@@ -50,6 +50,7 @@ export class EventService {
       params = params.append('location', location);
     });
 
+    console.log('EventService.getEvents - params:', params.toString());
     return this.http.get<PageResponse<EventView>>(this.apiUrl, { params });
   }
 

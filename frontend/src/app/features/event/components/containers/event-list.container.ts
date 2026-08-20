@@ -14,7 +14,7 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 
 import { EventStatusEnum } from '../../../../core/constants/event-status.constant';
 import { EventTypeEnum } from '../../../../core/constants/event-type.constant';
-import { LocationEnum } from '../../../../core/models/location.model';
+import { EventLocation } from '../../../../core/constants/location.constant';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -83,10 +83,10 @@ export class EventListContainer {
     EventStatusEnum.COMPLETED,
   ]);
 
-  locations = signal<LocationEnum[]>([
-    LocationEnum.CLUJ_NAPOCA,
-    LocationEnum.TARGU_MURES,
-    LocationEnum.TIMISOARA,
+  locations = signal<EventLocation[]>([
+    EventLocation.CLUJ_NAPOCA,
+    EventLocation.TARGU_MURES,
+    EventLocation.TIMISOARA,
   ]);
 
   nameQuery = signal<string>('');
@@ -94,7 +94,7 @@ export class EventListContainer {
 
   selectedTypes = signal<EventTypeEnum[]>([]);
   selectedStatuses = signal<EventStatusEnum[]>([]);
-  selectedLocations = signal<LocationEnum[]>([]);
+  selectedLocations = signal<EventLocation[]>([]);
 
   pageIndex = signal<number>(0);
   pageSize = signal<number>(10);
@@ -155,7 +155,7 @@ export class EventListContainer {
     this.pageIndex.set(0);
   }
 
-  onLocationChange(value: LocationEnum[]): void {
+  onLocationChange(value: EventLocation[]): void {
     this.selectedLocations.set(value);
     this.pageIndex.set(0);
   }
