@@ -41,6 +41,7 @@ public class EventController {
     private final EventService eventService;
 
     private final EmailService emailService;
+
     @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest,
@@ -73,6 +74,7 @@ public class EventController {
     @PatchMapping("/{id}/publish")
     public ResponseEntity<EventResponse> publishEvent(@PathVariable Integer id) {
         EventResponse response = eventService.publishEvent(id);
+        emailService.sendEmail(id);
         return ResponseEntity.ok(response);
     }
 

@@ -16,7 +16,7 @@
   "ROLE_UPDATE": {
     "SUCCESS": "Rolul utilizatorului a fost actualizat cu succes",
     "FAILURE": "Nu s-a putut actualiza rolul utilizatorului",
-    "ADMIN_CHANGE_ERROR": "Schimbarea rolului unui utilizator Admin nu este permisă." 
+    "ADMIN_CHANGE_ERROR": "Schimbarea rolului unui utilizator Admin nu este permisă."
   },
   "HOME": {
     "WELCOME": "Bine ai venit la mSYNCg !"
@@ -196,6 +196,7 @@
       "ALL": "Toate"
     },
     "LOAD_ERROR": "Evenimentele nu au putut fi încărcate.",
+    "PUBLISH_CONFIRM": "Ești sigur că vrei să publici acest eveniment?",
     "PUBLISH_SUCCESS": "Evenimentul a fost publicat cu succes.",
     "PUBLISH_ERROR": "Evenimentul nu a putut fi publicat. Încearcă din nou."
   },

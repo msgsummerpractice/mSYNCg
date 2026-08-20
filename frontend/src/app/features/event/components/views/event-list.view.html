@@ -158,11 +158,14 @@
                 mat-icon-button
                 type="button"
                 class="!h-9 !w-9"
+                [disabled]="isPublished(event)"
                 [matTooltip]="'EVENT_LIST.BUTTONS.PUBLISH' | translate"
                 [attr.aria-label]="'EVENT_LIST.BUTTONS.PUBLISH' | translate"
                 (click)="publishEvent.emit(event.id)"
               >
-                <mat-icon class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
+                <mat-icon
+                  class="!text-[20px] !leading-5"
+                  [ngClass]="isPublished(event) ? '!text-gray-400' : '!text-[var(--color-primary)]'"
                   >publish</mat-icon
                 >
               </button>

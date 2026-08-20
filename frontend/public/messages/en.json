@@ -196,6 +196,7 @@
       "ALL": "All"
     },
     "LOAD_ERROR": "Failed to load events.",
+    "PUBLISH_CONFIRM": "Are you sure you want to publish this event?",
     "PUBLISH_SUCCESS": "Event published successfully.",
     "PUBLISH_ERROR": "Failed to publish event. Please try again."
   },

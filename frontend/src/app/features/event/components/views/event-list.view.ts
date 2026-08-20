@@ -107,6 +107,11 @@ export class EventListView {
   getLocationLabelKey(location: EventLocation): string {
     return EVENT_LOCATION_TRANSLATION_KEYS[location] ?? location;
   }
+
+  isPublished(event: EventView): boolean {
+    return event.status === EventStatusEnum.PUBLISHED;
+  }
+
   onDateChange(date: Date | null): void {
     this.startTimeChange.emit(formatDate(date));
   }
