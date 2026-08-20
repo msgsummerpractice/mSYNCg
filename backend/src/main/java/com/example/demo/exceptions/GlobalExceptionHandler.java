@@ -1,6 +1,7 @@
 package com.example.demo.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,138 +16,155 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(
-	    ValidationException exception,
-	    HttpServletRequest request
-    ) {
-	List<FieldValidationError> fieldErrors = new ArrayList<>();
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<ErrorResponse> handleValidationException(
+			ValidationException exception,
+			HttpServletRequest request) {
+		List<FieldValidationError> fieldErrors = new ArrayList<>();
 
-	if (exception.getField() != null && !exception.getField().isBlank()) {
-	    fieldErrors.add(new FieldValidationError(exception.getField(), exception.getReason()));
+		if (exception.getField() != null && !exception.getField().isBlank()) {
+			fieldErrors.add(new FieldValidationError(exception.getField(), exception.getReason()));
+		}
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Validation Error",
+				exception.getMessage(),
+				request.getRequestURI(),
+				fieldErrors);
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.BAD_REQUEST.value(),
-		"Validation Error",
-		exception.getMessage(),
-		request.getRequestURI(),
-		fieldErrors
-	);
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
+			MethodArgumentNotValidException exception,
+			HttpServletRequest request) {
+		List<FieldValidationError> fieldErrors = exception.getBindingResult()
+				.getFieldErrors()
+				.stream()
+				.map(this::toFieldValidationError)
+				.toList();
 
-	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Validation Error",
+				"Request validation failed",
+				request.getRequestURI(),
+				fieldErrors);
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
-	    MethodArgumentNotValidException exception,
-	    HttpServletRequest request
-    ) {
-	List<FieldValidationError> fieldErrors = exception.getBindingResult()
-		.getFieldErrors()
-		.stream()
-		.map(this::toFieldValidationError)
-		.toList();
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.BAD_REQUEST.value(),
-		"Validation Error",
-		"Request validation failed",
-		request.getRequestURI(),
-		fieldErrors
-	);
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleNotFoundException1(
+			NotFoundException exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.NOT_FOUND.value(),
+				"Not Found",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
 
-	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	}
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(
-	    NotFoundException exception,
-	    HttpServletRequest request
-    ) {
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.NOT_FOUND.value(),
-		"Not Found",
-		exception.getMessage(),
-		request.getRequestURI(),
-		List.of()
-	);
+	@ExceptionHandler(CannotChangeOwnRoleException.class)
+	public ResponseEntity<ErrorResponse> handleCannotChangeOwnRoleException(
+			CannotChangeOwnRoleException exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
 
-	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 
-    @ExceptionHandler(CannotChangeOwnRoleException.class)
-    public ResponseEntity<ErrorResponse> handleCannotChangeOwnRoleException(
-	    CannotChangeOwnRoleException exception,
-	    HttpServletRequest request
-    ) {
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.BAD_REQUEST.value(),
-		"Bad Request",
-		exception.getMessage(),
-		request.getRequestURI(),
-		List.of()
-	);
+	@ExceptionHandler(EventCannotBeCompletedException.class)
+	public ResponseEntity<ErrorResponse> handleEventCannotBeCompletedException(
+			EventCannotBeCompletedException exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
 
-	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-	    Exception exception,
-	    HttpServletRequest request
-    ) {
-	ErrorResponse response = new ErrorResponse(
-		Instant.now(),
-		HttpStatus.INTERNAL_SERVER_ERROR.value(),
-		"Internal Server Error",
-		exception.getMessage(),
-		request.getRequestURI(),
-		List.of()
-	);
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorResponse> handleGenericException(
+			Exception exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.INTERNAL_SERVER_ERROR.value(),
+				"Internal Server Error",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
 
-	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	}
 
-    private FieldValidationError toFieldValidationError(FieldError fieldError) {
-	String reason = fieldError.getDefaultMessage() == null
-		? "Invalid value"
-		: fieldError.getDefaultMessage();
+	private FieldValidationError toFieldValidationError(FieldError fieldError) {
+		String reason = fieldError.getDefaultMessage() == null
+				? "Invalid value"
+				: fieldError.getDefaultMessage();
 
-	return new FieldValidationError(fieldError.getField(), reason);
-    }
+		return new FieldValidationError(fieldError.getField(), reason);
+	}
 
-    public record FieldValidationError(String field, String reason) {
-    }
+	public record FieldValidationError(String field, String reason) {
+	}
 
-    public record ErrorResponse(
-	    Instant timestamp,
-	    int status,
-	    String error,
-	    String message,
-	    String path,
-	    List<FieldValidationError> fieldErrors
-    ) {
-    }
+	public record ErrorResponse(
+			Instant timestamp,
+			int status,
+			String error,
+			String message,
+			String path,
+			List<FieldValidationError> fieldErrors) {
+	}
 
 	@ExceptionHandler(UnathorizedException.class)
 	public ResponseEntity<ErrorResponse> handleLoginException(
 			UnathorizedException exception,
-			HttpServletRequest request
-	) {
+			HttpServletRequest request) {
 		ErrorResponse response = new ErrorResponse(
 				Instant.now(),
 				HttpStatus.UNAUTHORIZED.value(),
 				"Unauthorized",
 				exception.getMessage(),
 				request.getRequestURI(),
-				List.of()
-		);
+				List.of());
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+	}
+
+	@ExceptionHandler(MissingLocationException.class)
+	public ResponseEntity<ErrorResponse> handleMissingLocationException(
+			MissingLocationException exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 }

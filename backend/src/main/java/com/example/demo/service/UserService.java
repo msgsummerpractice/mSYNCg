@@ -23,7 +23,7 @@ import com.example.demo.dto.request.UserRequest;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements ServiceInterface<UserRequest, UserResponse, UserViewResponse, UserSpec> {
+public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -49,12 +49,12 @@ public class UserService implements ServiceInterface<UserRequest, UserResponse, 
 
     @Override
     public Page<UserViewResponse> getAll(UserSpec spec, Pageable pageable) {
-        Page<User> usersPage = userRepository.findAll(spec,pageable);
+        Page<User> usersPage = userRepository.findAll(spec, pageable);
 
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
-    public UserResponse updateUserRole( Integer id, UserRole userRole,String authenticatedEmail) {
+    public UserResponse updateUserRole(Integer id, UserRole userRole, String authenticatedEmail) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User", id));
@@ -75,7 +75,7 @@ public class UserService implements ServiceInterface<UserRequest, UserResponse, 
     public UserResponse updateUserStatus(Integer id, Boolean status) {
 
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("User", id));
+                .orElseThrow(() -> new NotFoundException("User", id));
 
         user.setStatus(status);
 
@@ -84,6 +84,8 @@ public class UserService implements ServiceInterface<UserRequest, UserResponse, 
         return modelMapper.map(updatedUser, UserResponse.class);
     }
 
-
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
 }
