@@ -39,14 +39,14 @@ public class EventService implements EventServiceInterface {
     }
 
     @Override
-    public EventResponse create(EventRequest eventRequest,String username) {
-
-        Event event = modelMapper.map(eventRequest, Event.class);
+    public EventResponse create(EventRequest eventRequest, String username) {
         validateEvent(eventRequest);
 
-        User user = userRepository.findByEmail(username); 
-        
-        if(user == null) {
+        Event event = modelMapper.map(eventRequest, Event.class);
+
+        User user = userRepository.findByEmail(username);
+
+        if (user == null) {
             throw new NotFoundException(username, null);
         }
 

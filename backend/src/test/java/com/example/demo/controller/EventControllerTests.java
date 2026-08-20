@@ -30,7 +30,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -43,15 +42,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,18 +80,18 @@ public class EventControllerTests {
 
         @Test
         void createEvent_WhenRequiredFieldsMissing_ReturnsBadRequest() throws Exception {
-        mockMvc.perform(post("/api/events")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Validation Error"))
-                .andExpect(jsonPath("$.message").value("Request validation failed"))
-                .andExpect(jsonPath("$.fieldErrors.length()").value(9));
+                mockMvc.perform(post("/api/events")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{}"))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(jsonPath("$.status").value(400))
+                                .andExpect(jsonPath("$.error").value("Validation Error"))
+                                .andExpect(jsonPath("$.message").value("Request validation failed"))
+                                .andExpect(jsonPath("$.fieldErrors.length()").value(9));
 
-        verify(eventService, never()).create(
-                org.mockito.ArgumentMatchers.any(EventRequest.class),
-                org.mockito.ArgumentMatchers.anyString());
+                verify(eventService, never()).create(
+                                org.mockito.ArgumentMatchers.any(EventRequest.class),
+                                org.mockito.ArgumentMatchers.anyString());
         }
 
         @Test
