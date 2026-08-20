@@ -2,6 +2,7 @@ import { UserRole } from '../constants/role.constant';
 import { UserLocation } from '../constants/location.constant';
 
 export interface User {
+  id?: number;
   firstName: string;
   lastName: string;
   email: string;
