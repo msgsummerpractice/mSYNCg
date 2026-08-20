@@ -36,6 +36,9 @@ public class EmailService {
     @Value("classpath:templates/event-invitation.html")
     private Resource templateResource;
 
+    @Value("${app.frontend-url}/events")
+    private String eventsUrl;
+
     private String htmlTemplate;
 
     @PostConstruct
@@ -58,11 +61,14 @@ public class EmailService {
 
         String posterHtml = poster != null
                 ? "<img src=\"cid:" + POSTER_CID + "\" alt=\"Event poster\""
-                        + " style=\"max-width:100%;height:auto;display:block;margin-bottom:16px;\" />"
+                        + " style=\"max-width:100%;max-height:400px;width:auto;height:auto;"
+                        + "display:block;margin:0 auto 16px;object-fit:contain;\" />"
                 : "";
 
+        String eventLink = eventsUrl + "?eventId=" + eventId;
+
         String html = htmlTemplate.formatted(
-                posterHtml, event.getName(), registrationStartTime, registrationEndTime, locationLabel
+                posterHtml, event.getName(), registrationStartTime, registrationEndTime, locationLabel, eventLink
         );
 
         String subject = "You're invited: " + event.getName();
