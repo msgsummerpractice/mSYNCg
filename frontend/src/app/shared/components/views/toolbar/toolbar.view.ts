@@ -50,8 +50,8 @@ interface NavItems {
       ></app-user-icon-container>
       <button
         *ngIf="showLogoutButton"
-        mat-button
-        class="text-brand-on-primary"
+        type="button"
+        class="shrink-0 cursor-pointer bg-transparent px-1.5 py-1 text-sm font-medium text-brand-on-primary font-ui"
         (click)="logout.emit()"
       >
         Logout
