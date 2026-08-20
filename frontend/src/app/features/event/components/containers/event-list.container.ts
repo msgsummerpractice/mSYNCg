@@ -3,9 +3,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { EventListView } from '../views/event-list.view';
+import { EventCardContainer } from './event-card.container';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventView } from '../../../../core/models/event.model';
@@ -22,13 +23,14 @@ import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-event-list-container',
   standalone: true,
-  imports: [EventListView],
+  imports: [EventListView, EventCardContainer],
   templateUrl: './event-list.container.html',
 })
 export class EventListContainer implements OnInit {
   private readonly eventService = inject(EventService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly toastService = inject(ToastService);
   private readonly translateService = inject(TranslateService);
@@ -107,6 +109,8 @@ export class EventListContainer implements OnInit {
   pagedEvents = signal<EventView[]>([]);
   totalFilteredItems = signal<number>(0);
 
+  readonly selectedEventId = signal<number | null>(null);
+
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
     types: this.selectedTypes(),
@@ -120,6 +124,12 @@ export class EventListContainer implements OnInit {
   private readonly filterParams$ = toObservable(this.filterParams);
 
   ngOnInit(): void {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const raw = params.get('eventId');
+      const parsed = raw !== null ? Number(raw) : NaN;
+      this.selectedEventId.set(Number.isInteger(parsed) && parsed > 0 ? parsed : null);
+    });
+
     this.filterParams$
       .pipe(
         debounceTime(750),
@@ -179,11 +189,23 @@ export class EventListContainer implements OnInit {
   }
 
   onViewEvent(eventId: number): void {
-    this.router.navigate(['/events', eventId]);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { eventId },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  onCloseEventCard(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { eventId: null },
+      queryParamsHandling: 'merge',
+    });
   }
 
   onEditEvent(eventId: number): void {
-    this.router.navigate(['/events', eventId, 'edit']);
+    this.router.navigate([`/events/update/${eventId}`]);
   }
 
   onPublishEvent(eventId: number): void {

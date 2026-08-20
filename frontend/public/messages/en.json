@@ -91,7 +91,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Create Event Draft",
+      "TITLE": "Create/Update Event Draft",
       "EVENT_TITLE": {
         "LABEL": "Title",
         "REQUIRED": "Title is required"
@@ -162,6 +162,7 @@
     }
   },
   "EVENT_LIST": {
+    "TITLE": "Events",
     "FILTER_TITLE": "Filter events",
     "FIELDS": {
       "NAME": "Event name",
@@ -196,6 +197,7 @@
     "LOAD_ERROR": "Failed to load events."
   },
   "USER_LIST": {
+    "TITLE": "Users",
     "FILTER_TITLE": "Filter users",
     "LOAD_ERROR": "Users could not be loaded. Please try again.",
     "FIELDS": {
@@ -234,6 +236,15 @@
       "TARGU_MURES": "Targu Mures",
       "CLUJ_NAPOCA": "Cluj-Napoca",
       "TIMISOARA": "Timisoara"
+    }
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Start date",
+      "END_DATE": "End date",
+      "REGISTRATION_START": "Registration opens",
+      "REGISTRATION_END": "Registration closes",
+      "FOOD_PROVIDED": "Food provided"
     }
   }
 }

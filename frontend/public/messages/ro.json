@@ -91,7 +91,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Creează ciornă eveniment",
+      "TITLE": "Creează/Actualizează ciornă eveniment",
       "EVENT_TITLE": {
         "LABEL": "Titlu",
         "REQUIRED": "Titlul este obligatoriu"
@@ -162,6 +162,7 @@
     }
   },
   "EVENT_LIST": {
+    "TITLE": "Evenimente",
     "FILTER_TITLE": "Filtrează evenimente",
     "FIELDS": {
       "NAME": "Numele evenimentului",
@@ -196,6 +197,7 @@
     "LOAD_ERROR": "Evenimentele nu au putut fi încărcate."
   },
   "USER_LIST": {
+    "TITLE": "Utilizatori",
     "FILTER_TITLE": "Filtrează utilizatorii",
     "LOAD_ERROR": "Utilizatorii nu au putut fi încărcați. Încearcă din nou.",
     "FIELDS": {
@@ -234,6 +236,15 @@
       "TARGU_MURES": "Târgu Mureș",
       "CLUJ_NAPOCA": "Cluj-Napoca",
       "TIMISOARA": "Timișoara"
+    }
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Data de început",
+      "END_DATE": "Data de sfârșit",
+      "REGISTRATION_START": "Începerea înscrierilor",
+      "REGISTRATION_END": "Închiderea înscrierilor",
+      "FOOD_PROVIDED": "Masă inclusă"
     }
   }
 }

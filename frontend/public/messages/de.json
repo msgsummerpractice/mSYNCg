@@ -91,7 +91,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Veranstaltungsentwurf erstellen",
+      "TITLE": "Veranstaltungsentwurf erstellen/aktualisieren",
       "EVENT_TITLE": {
         "LABEL": "Titel",
         "REQUIRED": "Titel ist erforderlich"
@@ -162,6 +162,7 @@
     }
   },
   "EVENT_LIST": {
+    "TITLE": "Veranstaltungen",
     "FILTER_TITLE": "Veranstaltungen filtern",
     "FIELDS": {
       "NAME": "Veranstaltungsname",
@@ -196,6 +197,7 @@
     "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
   },
   "USER_LIST": {
+    "TITLE": "Benutzer",
     "FILTER_TITLE": "Benutzer filtern",
     "LOAD_ERROR": "Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",
     "FIELDS": {
@@ -234,6 +236,15 @@
       "TARGU_MURES": "Targu Mures",
       "CLUJ_NAPOCA": "Cluj-Napoca",
       "TIMISOARA": "Timisoara"
+    }
+  },
+  "EVENT": {
+    "CARD": {
+      "START_DATE": "Startdatum",
+      "END_DATE": "Enddatum",
+      "REGISTRATION_START": "Anmeldung öffnet",
+      "REGISTRATION_END": "Anmeldung schließt",
+      "FOOD_PROVIDED": "Verpflegung inklusive"
     }
   }
 }

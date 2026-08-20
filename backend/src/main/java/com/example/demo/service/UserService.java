@@ -54,7 +54,7 @@ public class UserService implements UserServiceInterface {
         return usersPage.map(user -> modelMapper.map(user, UserViewResponse.class));
     }
 
-    public UserResponse updateUserRole( Integer id, UserRole userRole,String authenticatedEmail) {
+    public UserResponse updateUserRole(Integer id, UserRole userRole, String authenticatedEmail) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User", id));
@@ -75,7 +75,7 @@ public class UserService implements UserServiceInterface {
     public UserResponse updateUserStatus(Integer id, Boolean status) {
 
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("User", id));
+                .orElseThrow(() -> new NotFoundException("User", id));
 
         user.setStatus(status);
 
@@ -84,6 +84,8 @@ public class UserService implements UserServiceInterface {
         return modelMapper.map(updatedUser, UserResponse.class);
     }
 
-
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
 }
