@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TableColumn } from '../../../core/models/table.column.model';
+import type { TableSelectOption } from '../../../core/models/table-select-option.model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { USER_ROLE_DISPLAY_VALUES } from '../../../core/constants/role.constant';
+import { CellChangeEvent } from '../../../core/models/cell-change-event.model';
 
 @Component({
   selector: 'generic-cell-view',
@@ -20,7 +22,7 @@ import { USER_ROLE_DISPLAY_VALUES } from '../../../core/constants/role.constant'
         >
           <mat-select [value]="displayValue" (selectionChange)="onSelectionChange($event.value)">
             @for (option of column.options; track option) {
-              <mat-option [value]="getOptionValue(option)">{{ option }}</mat-option>
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -42,12 +44,7 @@ export class GenericCellView<T> {
   @Input({ required: true }) column!: TableColumn<T>;
   @Input({ required: true }) row!: T;
 
-  @Output() valueChanged = new EventEmitter<{
-    row: T;
-    key: string;
-    oldValue: unknown;
-    newValue: unknown;
-  }>();
+  @Output() valueChanged = new EventEmitter<CellChangeEvent<T, string, unknown>>();
 
   get displayValue(): unknown {
     if (this.column.valueGetter) {
@@ -71,17 +68,5 @@ export class GenericCellView<T> {
       oldValue: this.displayValue,
       newValue,
     });
-  }
-
-  getOptionValue(option: unknown): unknown {
-    if (this.column.key === 'role') {
-      const role = Object.entries(USER_ROLE_DISPLAY_VALUES).find(
-        ([, displayValue]) => displayValue === option
-      )?.[0];
-
-      return role ?? option;
-    }
-
-    return option;
   }
 }

@@ -51,7 +51,7 @@ export class AuthService {
   }
 
   getEmail(): string | null {
-    return this.decodeToken(this.getToken())?.['sub'] ?? null;
+    return this.decodeToken(this.getToken())?.['sub'];
   }
 
   hasRole(role: UserRole): boolean {

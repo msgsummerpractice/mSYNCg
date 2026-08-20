@@ -1,9 +1,11 @@
+import { TableSelectOption } from './table-select-option.model';
+
 export type CellType = 'text' | 'dropdown' | 'switch';
 
 export interface TableColumn<T> {
   key: string;
   label: string;
   type: CellType;
-  options?: string[];
+  options?: TableSelectOption[];
   valueGetter?: (row: T) => string;
 }

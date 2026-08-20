@@ -5,7 +5,8 @@ import { User } from '../models/user.model';
 import { Page } from '../models/page.model';
 import { UserFilterParams } from '../models/user-filters.model';
 import { environment } from '../../../environments/environment';
-import {MatDialog} from "@angular/material/dialog";
+import { MatDialog } from '@angular/material/dialog';
+import { UserRole } from '../constants/role.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -36,12 +37,12 @@ export class AdminService {
     return this.http.get<Page<User>>(this.adminUrl, { params });
   }
 
-  updateUserRole(userId: number, newRole: User['role']): Observable<User> {
+  updateUserRole(userId: number, newRole: UserRole): Observable<User> {
     const url = `${this.adminUrl}/${userId}/role`;
     return this.http.patch<User>(url, { userRole: newRole });
   }
 
-  updateUserStatus(userId: number, newStatus: User['status']): Observable<User> {
+  updateUserStatus(userId: number, newStatus: boolean): Observable<User> {
     const url = `${this.adminUrl}/${userId}/status`;
     return this.http.patch<User>(url, { status: newStatus });
   }
