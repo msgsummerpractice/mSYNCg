@@ -5,7 +5,7 @@ import java.util.Base64;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class MaxFileSizeValidator implements ConstraintValidator<MaxFileSize, byte[]> {
+public class MaxFileSizeValidator implements ConstraintValidator<MaxFileSize, String> {
 
     private long maxFileSize;
 
@@ -15,8 +15,8 @@ public class MaxFileSizeValidator implements ConstraintValidator<MaxFileSize, by
     }
 
     @Override
-    public boolean isValid(byte[] value, ConstraintValidatorContext context) {
-        if (value == null || value.length == 0) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null || value.isBlank()) {
             return true;
         }
         

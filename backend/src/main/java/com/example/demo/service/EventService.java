@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
+import java.util.Base64;
+
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
@@ -44,12 +46,19 @@ public class EventService implements EventServiceInterface {
 
         User user = userRepository.findByEmail(username);
 
+        byte[] poster = null;
+        if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
+            poster = Base64.getDecoder().decode(eventRequest.getImage());
+        }
+
         if (user == null) {
             throw new NotFoundException(username, null);
         }
 
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
+        event.setImage(poster);
+        event.setCreatedAt(LocalDateTime.now());
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
     }
@@ -68,14 +77,13 @@ public class EventService implements EventServiceInterface {
 
         Event updatedEvent = modelMapper.map(eventRequest, Event.class);
 
-        String poster = null;
+        byte[] poster = null;
         if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
-            poster = eventRequest.getImage();
+            poster = Base64.getDecoder().decode(eventRequest.getImage());
         }
 
         updatedEvent.setId(event.getId());
         updatedEvent.setImage(poster);
-        updatedEvent.setStatus(EventStatus.DRAFT);
         updatedEvent = eventRepository.save(updatedEvent);
 
         return modelMapper.map(updatedEvent, EventViewResponse.class);
@@ -88,7 +96,7 @@ public class EventService implements EventServiceInterface {
         EventDetailsResponse response = modelMapper.map(event, EventDetailsResponse.class);
 
         response.setImage(event.getImage() != null
-                ? event.getImage()
+                ? Base64.getEncoder().encodeToString(event.getImage())
                 : null);
 
         return response;
@@ -114,8 +122,8 @@ public class EventService implements EventServiceInterface {
 
         EventDetailsResponse response = modelMapper.map(updatedEvent, EventDetailsResponse.class);
 
-        response.setImage(updatedEvent.getImage() != null
-                ? updatedEvent.getImage()
+        response.setImage(event.getImage() != null
+                ? Base64.getEncoder().encodeToString(event.getImage())
                 : null);
 
         return response;

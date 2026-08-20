@@ -37,7 +37,7 @@ public class EventController {
 
     private final EventService eventService;
 
-    @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
+    @PreAuthorize("hasRole('MARKETING_ORGANIZER') or hasRole('HR_USER') or hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest,
             Authentication authentication) {

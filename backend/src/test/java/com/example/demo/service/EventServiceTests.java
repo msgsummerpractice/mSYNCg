@@ -258,27 +258,22 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void createEvent_WhenUserIsMissing_SavesEventWithNullCreator() {
+	void createEvent_WhenUserIsMissing_ThrowsNotFoundException() {
 		EventRequest request = buildValidRequest(EventType.LOCAL);
-		EventResponse mappedResponse = new EventResponse(4L, "DRAFT");
-		Event mappedEvent = buildMappedEvent(request);
-		when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
-		SecurityContextHolder.getContext()
-				.setAuthentication(new UsernamePasswordAuthenticationToken("unknown@example.com",
-						"password"));
-		when(userRepository.findByEmail("unknown@example.com")).thenReturn(null);
-		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
+		String username = "unknown@example.com";
 
-		eventService.create(request, "unknown@example.com");
+		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+		when(userRepository.findByEmail(username)).thenReturn(null);
 
-		verify(eventRepository).save(eventCaptor.capture());
+		NotFoundException exception = assertThrows(NotFoundException.class,
+				() -> eventService.create(request, username));
 
-		assertNull(eventCaptor.getValue().getCreatedBy());
+		assertEquals(username + " with id null not found", exception.getMessage());
+		verify(eventRepository, never()).save(any(Event.class));
 	}
 
 	@Test
-	void createEvent_WhenUserLookupFails_ThrowsNotFoundException() {
+	void createEvent_WhenUserLookupFails_PropagatesDatabaseException() {
 		EventRequest request = buildValidRequest(EventType.LOCAL);
 		String username = "organizer@example.com";
 
@@ -286,11 +281,10 @@ public class EventServiceTests {
 		when(userRepository.findByEmail(username))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		NotFoundException exception = assertThrows(NotFoundException.class,
+		assertThrows(DataAccessResourceFailureException.class,
 				() -> eventService.create(request, username));
 
-		assertEquals(username + " with id null not found", exception.getMessage());
-		verifyNoInteractions(eventRepository);
+		verify(eventRepository, never()).save(any(Event.class));
 	}
 
 	@Test
@@ -342,7 +336,11 @@ public class EventServiceTests {
 		event.setRegistrationStart(request.getRegistrationStart());
 		event.setRegistrationEnd(request.getRegistrationEnd());
 		event.setDescription(request.getDescription());
-		event.setImage(request.getImage());
+		event.setImage(
+    	request.getImage() == null
+        ? null
+        : Base64.getDecoder().decode(request.getImage())
+);
 		return event;
 	}
 
@@ -480,11 +478,16 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void getById_whenEventHasImage_returnsImageString() {
-		String image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==";
+	void getById_whenEventHasImage_returnsBase64Image() {
+		byte[] imageBytes = {
+			(byte) 0x89, (byte) 0x50, (byte) 0x4E, (byte) 0x47,
+			(byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A
+		};
+		String expectedBase64 = Base64.getEncoder().encodeToString(imageBytes);
+
 		Event event = new Event();
 		event.setId(1);
-		event.setImage(image);
+		event.setImage(imageBytes);
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class))
@@ -492,7 +495,7 @@ public class EventServiceTests {
 
 		EventDetailsResponse result = eventService.getById(1);
 
-		assertEquals(image, result.getImage());
+		assertEquals(expectedBase64, result.getImage());
 	}
 
 	@Test
