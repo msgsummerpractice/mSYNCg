@@ -11,7 +11,6 @@ import { ButtonContainer } from '../../../../shared/components/containers/button
 import { TranslatePipe } from '@ngx-translate/core';
 import { TableColumn } from '../../../../core/models/table.column.model';
 import { User } from '../../../../core/models/user.model';
-import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
 import { UserRole, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
 import {
   UserLocation,
@@ -31,7 +30,6 @@ import {
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
-    ToolbarContainer,
   ],
   templateUrl: './user-list.view.html',
 })

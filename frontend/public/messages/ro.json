@@ -146,6 +146,40 @@
       }
     }
   },
+  "EVENT_LIST": {
+    "FILTER_TITLE": "Filtrează evenimente",
+    "FIELDS": {
+      "NAME": "Numele evenimentului",
+      "NAME_PLACEHOLDER": "Caută după numele evenimentului",
+      "TYPE": "Tip eveniment",
+      "STATUS": "Status",
+      "LOCATION": "Locație",
+      "START_TIME": "Data de început",
+      "START_TIME_PLACEHOLDER": "Selectează data și ora"
+    },
+    "TABLE": {
+      "NAME": "Nume",
+      "DATE": "Dată",
+      "STATUS": "Status",
+      "TYPE": "Tip",
+      "LOCATION": "Locație",
+      "ACTIONS": "Acțiuni"
+    },
+    "BUTTONS": {
+      "RESET_FILTERS": "Resetează filtrele",
+      "VIEW": "Vezi",
+      "EDIT": "Editează",
+      "PUBLISH": "Publică",
+      "COMPLETE": "Finalizează"
+    },
+    "LOCATIONS": {
+      "TARGU_MURES": "Târgu Mureș",
+      "CLUJ_NAPOCA": "Cluj-Napoca",
+      "TIMISOARA": "Timișoara",
+      "ALL": "Toate"
+    },
+    "LOAD_ERROR": "Evenimentele nu au putut fi încărcate."
+  },
   "USER_LIST": {
     "FILTER_TITLE": "Filtrează utilizatorii",
     "LOAD_ERROR": "Utilizatorii nu au putut fi încărcați. Încearcă din nou.",
