@@ -28,3 +28,10 @@
   (completeEvent)="onCompleteEvent($event)"
 >
 </app-event-list-view>
+
+@if (selectedEventId(); as eventId) {
+<app-event-card-container
+  [eventId]="eventId"
+  (close)="onCloseEventCard()"
+></app-event-card-container>
+}
