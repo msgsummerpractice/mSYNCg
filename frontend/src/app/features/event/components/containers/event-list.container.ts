@@ -164,6 +164,7 @@ export class EventListContainer implements OnInit {
   }
 
   onResetFilters(): void {
+    this.isLoading.set(true);
     this.nameQuery.set('');
     this.startTimeQuery.set('');
     this.selectedTypes.set([]);
