@@ -32,26 +32,26 @@ public class EventService implements EventServiceInterface {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
-    public void validateEvent(EventRequest eventRequest, Event event) {
-        if (eventRequest.getLocation() == null && eventRequest.getType() != EventType.INTERNAL) {
+    private void validateEvent(EventRequest eventRequest) {
+        if (eventRequest.getType() != EventType.INTERNAL && eventRequest.getLocation() == null) {
             throw new MissingLocationException("Event location is required for non-internal events.");
         }
     }
 
     @Override
-    public EventResponse create(EventRequest eventRequest, String username) {
+    public EventResponse create(EventRequest eventRequest,String username) {
 
         Event event = modelMapper.map(eventRequest, Event.class);
-        User user;
-        try {
-            user = userRepository.findByEmail(username);
-        } catch (Exception e) {
+        validateEvent(eventRequest);
+
+        User user = userRepository.findByEmail(username); 
+        
+        if(user == null) {
             throw new NotFoundException(username, null);
         }
 
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
-        validateEvent(eventRequest, event);
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
     }
