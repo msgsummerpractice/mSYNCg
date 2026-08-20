@@ -39,7 +39,6 @@ export const routes: Routes = [
     path: 'register',
     component: UserRegisterPage,
   },
-  //for testing
   {
     path: 'eventcard/:id',
     component: EventCardContainer,
