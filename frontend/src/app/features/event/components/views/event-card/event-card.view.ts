@@ -29,6 +29,20 @@ export class EventCardView {
 
   readonly posterSrc = computed(() => {
     const image = this.eventData().image ?? '';
-    return /^(data:|https?:\/\/|\/)/.test(image) ? image : `data:image/*;base64,${image}`;
+
+    // JPEG base64 starts with "/9j/", so URL detection must run before the leading-slash check
+    if (/^(data:|https?:\/\/)/.test(image)) {
+      return image;
+    }
+
+    // Only jpg/jpeg and png are accepted; these are their fixed base64 prefixes
+    if (image.startsWith('iVBORw0KGgo')) {
+      return `data:image/png;base64,${image}`;
+    }
+    if (image.startsWith('/9j/')) {
+      return `data:image/jpeg;base64,${image}`;
+    }
+
+    return image;
   });
 }
