@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -17,33 +18,38 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JWTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailService;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,JWTAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JWTAuthenticationFilter jwtAuthenticationFilter)
+            throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/events").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/events/{id}").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/events").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events/{id}").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
 
                         .requestMatchers(HttpMethod.PATCH, "/api/events/*/complete").authenticated()
-                        
-                        .anyRequest().authenticated()
-                )
+
+                        .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(httpBasic -> httpBasic.disable())
-                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class
-);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -53,7 +59,7 @@ public class SecurityConfig {
         cfg.setAllowedOrigins(List.of("http://localhost:4200"));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         cfg.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        cfg.setAllowCredentials(false); 
+        cfg.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return source;
@@ -72,8 +78,8 @@ public class SecurityConfig {
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter(
             JWTokenProvider jwtTokenProvider,
-            UserDetailService userDetailService) {
+            UserDetailsService userDetailService) {
 
         return new JWTAuthenticationFilter(jwtTokenProvider, userDetailService);
-}
+    }
 }

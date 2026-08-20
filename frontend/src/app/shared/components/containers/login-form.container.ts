@@ -41,7 +41,7 @@ export class LoginFormContainer {
       .subscribe({
         next: () => {
           this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
-          this.router.navigate(['/events/home']);
+          this.router.navigate(['/home']);
         },
         error: () => {
           this.toastService.showError(this.translateService.instant('LOGIN.LOGIN_ERROR'));
