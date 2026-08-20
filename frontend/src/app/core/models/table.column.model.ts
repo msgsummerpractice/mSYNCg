@@ -1,4 +1,4 @@
-import { TableSelectOption } from './table-select-option.model';
+import { TableSelectOption } from './layout.model';
 
 export type CellType = 'text' | 'dropdown' | 'switch';
 

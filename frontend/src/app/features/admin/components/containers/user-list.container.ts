@@ -8,7 +8,7 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
 import { UserFilterParams } from '../../../../core/models/user-filters.model';
-import { UserRole, USER_ROLE_DISPLAY_VALUES } from '../../../../core/constants/role.constant';
+import { UserRole, USER_ROLE_DISPLAY_VALUES, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
 import { UserLocation } from '../../../../core/constants/location.constant';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,7 +16,8 @@ import { ConfirmationDialogView } from '../../../../shared/components/views/conf
 import { MatDialog } from '@angular/material/dialog';
 import { ToastContainer } from '../../../../shared/components/containers/toast.container';
 import { AuthService } from '../../../../core/services/auth.service';
-import { UserCellChangeEvent } from '../../../../core/models/user-cell-change-event.model';
+import { UserCellChangeEvent } from '../../../../core/models/layout.model';
+import { TableSelectOption } from '../../../../core/models/layout.model';
 
 @Component({
   selector: 'app-user-list-container',
@@ -51,10 +52,14 @@ export class UserListContainer {
       key: 'role',
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
-      options: Object.values(USER_ROLE_DISPLAY_VALUES).map((label) => ({
-        value: label,
-        label,
-      }))
+      valueGetter: (row) =>
+      (Object.entries(USER_ROLE_DISPLAY_VALUES).find(
+        ([, display]) => display === row.role,
+      )?.[0] as UserRole) ?? row.role,
+      options: Object.values(UserRole).map((role) => ({
+        value: role,
+        label: USER_ROLE_DISPLAY_VALUES[role],
+      })),
     },
     {
       key: 'location',
@@ -116,32 +121,17 @@ export class UserListContainer {
     statuses: this.selectedStatuses(),
   }));
 
-  private searchParams1 = toObservable(this.searchParams);
+  private searchParamsForInit = toObservable(this.searchParams);
 
-  private confirmRoleChange(event: {
-    row: User;
-    key: string;
-    oldValue: unknown;
-    newValue: unknown;
-  }): boolean {
+  private confirmRoleChange(event: UserCellChangeEvent): boolean {
     return event.key === 'role' && typeof event.newValue === 'string';
   }
 
-  private confirmStatusChange(event: {
-    row: User;
-    key: string;
-    oldValue: unknown;
-    newValue: unknown;
-  }): boolean {
+  private confirmStatusChange(event: UserCellChangeEvent): boolean {
     return event.key === 'status' && typeof event.newValue === 'boolean';
   }
 
-  private ifAdminTriesToModifyOwnRole(event: {
-    row: User;
-    key: string;
-    oldValue: unknown;
-    newValue: unknown;
-  }): boolean {
+  private ifAdminTriesToModifyOwnRole(event: UserCellChangeEvent): boolean {
     return (
       event.row.email === this.authService.getEmail() &&
       this.authService.getRole() === UserRole.ADMIN
@@ -186,7 +176,7 @@ export class UserListContainer {
   ngOnInit(): void {
     this.isLoading.set(true);
 
-    this.searchParams1
+    this.searchParamsForInit
       .pipe(
         debounceTime(750),
         tap(() => this.isLoading.set(true)),
