@@ -342,7 +342,9 @@ public class EventServiceTests {
 		event.setRegistrationStart(request.getRegistrationStart());
 		event.setRegistrationEnd(request.getRegistrationEnd());
 		event.setDescription(request.getDescription());
-		event.setImage(request.getImage());
+		event.setImage(request.getImage() == null || request.getImage().isEmpty()
+				? null
+				: Base64.getDecoder().decode(request.getImage()));
 		return event;
 	}
 
@@ -481,10 +483,10 @@ public class EventServiceTests {
 
 	@Test
 	void getById_whenEventHasImage_returnsImageString() {
-		String image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==";
+		String image = "iVBORw0KGgoAAAANSUhEUg==";
 		Event event = new Event();
 		event.setId(1);
-		event.setImage(image);
+		event.setImage(Base64.getDecoder().decode(image));
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class))

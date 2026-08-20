@@ -1,5 +1,6 @@
-import { Event as AppEvent, EventStatusEnum, EventTypeEnum } from '../models/event.model';
+import { Event as AppEvent, EventStatusEnum } from '../models/event.model';
 import { LocationEnum } from '../models/location.model';
+import { EventTypeEnum } from '../constants/event.constant';
 
 const POSTER_PLACEHOLDER =
   'https://tse1.mm.bing.net/th/id/OIP.2Vf2Ci2rhp2H5LKUlRlojgHaKe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3';

@@ -45,33 +45,11 @@ export const routes: Routes = [
         path: 'home',
         component: HomePage,
       },
-
       // Event list
       {
         path: 'events',
         component: EventListPage,
       },
-
-      // Event creation
-      {
-        path: 'events/create',
-        canActivate: [eventManagementGuard],
-        loadComponent: () =>
-          import('./features/event/pages/event-creation.page').then(
-            ({ EventCreationPage }) => EventCreationPage
-          ),
-      },
-
-      // Event update
-      {
-        path: 'events/update/:id',
-        canActivate: [eventManagementGuard],
-        loadComponent: () =>
-          import('./features/event/pages/event-update.page').then(
-            ({ EventUpdatePage }) => EventUpdatePage
-          ),
-      },
-
       // Admin routes
       {
         path: 'admin',
@@ -84,6 +62,26 @@ export const routes: Routes = [
         ],
       },
     ],
+  },
+
+  // Event creation
+  {
+    path: 'events/create',
+    canActivate: [eventManagementGuard],
+    loadComponent: () =>
+      import('./features/event/pages/event-creation.page').then(
+        ({ EventCreationPage }) => EventCreationPage
+      ),
+  },
+
+  // Event update
+  {
+    path: 'events/update/:id',
+    canActivate: [eventManagementGuard],
+    loadComponent: () =>
+      import('./features/event/pages/event-update.page').then(
+        ({ EventUpdatePage }) => EventUpdatePage
+      ),
   },
 
   // Fallback

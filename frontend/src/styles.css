@@ -334,7 +334,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Chip color variants driven by brand tokens */
+/* Material Toolbar with Oxanium font and brand colors */
+mat-toolbar {
+  font-family: var(--font-family-ui) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-on-primary) !important;
+}
+
 .chip-success.mat-mdc-standard-chip {
   --mdc-chip-elevated-container-color: var(--color-success);
   --mdc-chip-elevated-selected-container-color: var(--color-success);
@@ -378,56 +384,12 @@ body {
 .chip-static.mat-mdc-standard-chip .mat-mdc-chip-focus-overlay,
 .chip-static.mat-mdc-standard-chip .mat-ripple {
   display: none;
-  s app-button-container button {
+  app-button-container button {
     margin-left: 0 !important;
     border: 0;
     border-radius: 0.375rem;
     background-color: var(--color-primary) !important;
     color: var(--color-on-primary) !important;
     padding: 0.5rem 1rem;
-  }
-
-  .admin-filters app-button-container button:hover {
-    opacity: 0.9;
-  }
-
-  /* Material Icons font configuration */
-  .mat-icon {
-    font-family: var(--font-family-icons) !important;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-  }
-
-  /* Material Toolbar with Oxanium font and brand colors */
-  mat-toolbar {
-    font-family: var(--font-family-ui) !important;
-    background-color: var(--color-primary) !important;
-    color: var(--color-on-primary) !important;
-  }
-
-  /* Language switcher dropdown panel styling */
-  .language-switcher-panel {
-    background-color: #ffffff !important;
-  }
-
-  .language-switcher-panel .mat-mdc-option {
-    --mat-option-label-text-color: #000000 !important;
-  }
-
-  .language-switcher-panel .mat-mdc-option:hover {
-    background-color: #f0f0f0;
-  }
-
-  .language-switcher-panel .mat-mdc-option.mat-selected {
-    background-color: #e0e0e0;
-    --mat-option-label-text-color: #000000 !important;
   }
 }

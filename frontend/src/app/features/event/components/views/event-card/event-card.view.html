@@ -1,11 +1,22 @@
 @if (eventData(); as ev) {
 <div
   class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-[3vh] backdrop-blur-[2px]"
+  (click)="close.emit()"
 >
   <mat-card
     appearance="raised"
-    class="flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl lg:!flex-row"
+    class="relative flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl lg:!flex-row"
+    (click)="$event.stopPropagation()"
   >
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Close"
+      class="!absolute top-2 right-2 z-10 !bg-white/80 hover:!bg-white"
+      (click)="close.emit()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
     <div
       class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-muted sm:h-72 lg:h-full lg:w-2/5 lg:max-w-lg"
     >

@@ -1,5 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, DestroyRef, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  output,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 
@@ -13,7 +22,7 @@ import { EventService } from '../../../../core/services/event.service';
   imports: [EventCardView],
   template: `
     @if (event(); as eventData) {
-      <app-event-card-view [eventData]="eventData"></app-event-card-view>
+      <app-event-card-view [eventData]="eventData" (close)="close.emit()"></app-event-card-view>
     }
   `,
 })
@@ -26,6 +35,7 @@ export class EventCardContainer {
   readonly isLoading = signal(false);
 
   readonly eventId = input<number>(0);
+  readonly close = output<void>();
 
   constructor() {
     effect(() => {
