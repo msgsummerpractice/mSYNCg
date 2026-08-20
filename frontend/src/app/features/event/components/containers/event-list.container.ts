@@ -214,8 +214,16 @@ export class EventListContainer implements OnInit {
   }
 
   onCompleteEvent(eventId: number): void {
-    // TODO: Implement backend call to complete event
-    this.toastService.showSuccess('Event completed!');
+    this.eventService.completeEvent(eventId).subscribe({
+      next: () => {
+        const successMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETED');
+        this.toastService.showSuccess(successMessage);
+      },
+      error: () => {
+        const failureMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETION_FAILED');
+        this.toastService.showError(failureMessage);
+      },
+    });
   }
 
   private handleLoadError(): void {

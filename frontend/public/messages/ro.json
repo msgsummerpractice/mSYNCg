@@ -179,7 +179,9 @@
       "TIMISOARA": "Timișoara",
       "ALL": "Toate"
     },
-    "LOAD_ERROR": "Evenimentele nu au putut fi încărcate."
+    "LOAD_ERROR": "Evenimentele nu au putut fi încărcate.",
+    "EVENT_COMPLETED": "Eveniment finalizat cu succes!",
+    "EVENT_COMPLETION_FAILED": "Nu s-a putut finaliza evenimentul."
   },
   "USER_LIST": {
     "TITLE": "Utilizatori",

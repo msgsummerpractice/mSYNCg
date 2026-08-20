@@ -179,7 +179,9 @@
       "TIMISOARA": "Timisoara",
       "ALL": "All"
     },
-    "LOAD_ERROR": "Failed to load events."
+    "LOAD_ERROR": "Failed to load events.",
+    "EVENT_COMPLETED": "Event completed successfully!",
+    "EVENT_COMPLETION_FAILED": "Failed to complete event."
   },
   "USER_LIST": {
     "TITLE": "Users",
