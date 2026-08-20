@@ -19,3 +19,9 @@ export const USER_ROLE_TRANSLATION_KEYS: Record<UserRole, string> = {
   [UserRole.MARKETING_ORGANIZER]: 'USER_LIST.ROLES.MARKETING_ORGANIZER',
 };
 export const USER_ROLES: UserRole[] = Object.values(UserRole);
+
+export const EVENT_MANAGEMENT_ROLES: readonly UserRole[] = [
+  UserRole.ADMIN,
+  UserRole.HR_USER,
+  UserRole.MARKETING_ORGANIZER,
+];
