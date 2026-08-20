@@ -2,6 +2,21 @@
   "BUTTONS": {
     "SUBMIT": "Senden"
   },
+  "CONFIRMATION_DIALOG": {
+    "TITLE": "Bestätigung",
+    "MESSAGE": "Sind Sie sicher, dass Sie fortfahren möchten?",
+    "CONFIRM_BUTTON": "Ja",
+    "CANCEL_BUTTON": "Nein"
+  },
+  "STATUS_UPDATE": {
+    "SUCCESS": "Benutzerstatus erfolgreich aktualisiert",
+    "FAILURE": "Benutzerstatus konnte nicht aktualisiert werden"
+  },
+  "ROLE_UPDATE": {
+    "SUCCESS": "Benutzerrolle erfolgreich aktualisiert",
+    "FAILURE": "Benutzerrolle konnte nicht aktualisiert werden",
+    "ADMIN_CHANGE_ERROR": "Die Änderung der Rolle eines Admin-Benutzers ist nicht erlaubt."
+  },
   "HOME": {
     "WELCOME": "Willkommen bei mSYNCg !"
   },

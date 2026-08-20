@@ -50,6 +50,10 @@ export class AuthService {
     return USER_ROLES.includes(role) ? role : null;
   }
 
+  getEmail(): string | null {
+    return this.decodeToken(this.getToken())?.['sub'];
+  }
+
   hasRole(role: UserRole): boolean {
     return this.getRole() === role;
   }

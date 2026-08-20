@@ -16,6 +16,8 @@ import {
   UserLocation,
   USER_LOCATION_TRANSLATION_KEYS,
 } from '../../../../core/constants/location.constant';
+import { UserCellChangeEvent } from '../../../../core/models/layout.model';
+import { CellChangeEvent } from '../../../../core/models/layout.model';
 
 @Component({
   selector: 'app-user-list-view',
@@ -62,7 +64,7 @@ export class UserListView {
   @Output() resetFilters = new EventEmitter<void>();
   @Output() pageChange = new EventEmitter<PageEvent>();
 
-  @Output() cellAction = new EventEmitter<{ row: User; key: string; newValue: unknown }>();
+  @Output() cellAction = new EventEmitter<UserCellChangeEvent>();
 
   get resolvedTotalItems(): number {
     return this.totalItems > 0 ? this.totalItems : this.users.length;
@@ -93,5 +95,38 @@ export class UserListView {
 
   getLocationLabelKey(location: UserLocation): string {
     return USER_LOCATION_TRANSLATION_KEYS[location] ?? location;
+  }
+
+  onCellValueChanged(event: CellChangeEvent<User, string, unknown>): void {
+    if (
+      event.key === 'role' &&
+      this.isUserRole(event.oldValue) &&
+      this.isUserRole(event.newValue)
+    ) {
+      this.cellAction.emit({
+        row: event.row,
+        key: 'role',
+        oldValue: event.oldValue,
+        newValue: event.newValue,
+      });
+      return;
+    }
+
+    if (
+      event.key === 'status' &&
+      typeof event.oldValue === 'boolean' &&
+      typeof event.newValue === 'boolean'
+    ) {
+      this.cellAction.emit({
+        row: event.row,
+        key: 'status',
+        oldValue: event.oldValue,
+        newValue: event.newValue,
+      });
+    }
+  }
+
+  private isUserRole(value: unknown): value is UserRole {
+    return Object.values(UserRole).some((role) => role === value);
   }
 }
