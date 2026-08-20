@@ -135,7 +135,7 @@ export class EventListContainer implements OnInit {
         debounceTime(750),
         tap(() => this.isLoading.set(true)),
         switchMap((filters) =>
-          this.eventService.getEvents(filters).pipe(finalize(() => this.isLoading.set(false)))
+          this.getEventsForCurrentUser(filters).pipe(finalize(() => this.isLoading.set(false)))
         ),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -220,5 +220,16 @@ export class EventListContainer implements OnInit {
 
   private handleLoadError(): void {
     this.toastService.showError(this.translateService.instant('EVENT_LIST.LOAD_ERROR'));
+  }
+
+  private getEventsForCurrentUser(filters: EventFilterParams) {
+    if (this.userRole() === UserRole.PARTICIPANT) {
+      // TODO: use getEligibleEvents(filters) when the backend endpoint is implemented
+      // return this.eventService.getEligibleEvents(filters);
+
+      return this.eventService.getEvents(filters);
+    }
+
+    return this.eventService.getEvents(filters);
   }
 }
