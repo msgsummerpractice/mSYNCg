@@ -5,32 +5,26 @@
 >
   <mat-card
     appearance="raised"
-    class="relative flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl lg:!flex-row"
+    class="relative flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl"
     (click)="$event.stopPropagation()"
   >
     <button
       mat-icon-button
       type="button"
       aria-label="Close"
-      class="!absolute top-2 right-2 z-10 !bg-white/80 hover:!bg-white"
+      class="!absolute top-2 right-2 !z-20 !bg-white/80 !text-brand-on-surface hover:!bg-white"
       (click)="close.emit()"
     >
       <mat-icon>close</mat-icon>
     </button>
-    <div
-      class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-muted sm:h-72 lg:h-full lg:w-2/5 lg:max-w-lg"
-    >
+    <div class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-muted sm:h-72">
       <img
         [src]="posterSrc()"
         alt=""
         aria-hidden="true"
-        class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl lg:hidden"
+        class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
       />
-      <img
-        [src]="posterSrc()"
-        [alt]="ev.name"
-        class="relative h-full w-full object-contain lg:object-cover"
-      />
+      <img [src]="posterSrc()" [alt]="ev.name" class="relative h-full w-full object-contain" />
     </div>
 
     <div class="min-h-0 min-w-0 flex-1 overflow-y-auto lg:pt-14">
