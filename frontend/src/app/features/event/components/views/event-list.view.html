@@ -69,10 +69,14 @@
 
         <input
           matInput
-          type="datetime-local"
-          [value]="startTimeQuery"
-          (input)="startTimeChange.emit($any($event.target).value)"
+          [matDatepicker]="picker"
+          (dateChange)="onDateChange($event.value)"
+          readonly
         />
+
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
       <div class="mt-4 flex justify-end">

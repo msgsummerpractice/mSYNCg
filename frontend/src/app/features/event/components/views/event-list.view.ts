@@ -1,3 +1,4 @@
+import { formatDate } from '../../../../core/utils/date.util';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -26,6 +27,8 @@ import {
 } from '../../../../core/constants/location.constant';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/role.constant';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-event-list-view',
@@ -44,6 +47,8 @@ import { EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/role.constant
     GenericCellView,
     ButtonContainer,
     TranslatePipe,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './event-list.view.html',
 })
@@ -101,5 +106,8 @@ export class EventListView {
 
   getLocationLabelKey(location: EventLocation): string {
     return EVENT_LOCATION_TRANSLATION_KEYS[location] ?? location;
+  }
+  onDateChange(date: Date | null): void {
+    this.startTimeChange.emit(formatDate(date));
   }
 }
