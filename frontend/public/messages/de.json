@@ -41,7 +41,8 @@
     "SIGN_IN_TITLE": "Melden Sie sich bei Ihrem Konto an",
     "SIGN_IN_SUBTITLE": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren.",
     "LOGIN_SUCCESS": "Anmeldung erfolgreich!",
-    "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort."
+    "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort.",
+    "ACCOUNT_INACTIVE_ERROR": "Das Konto ist inaktiv. Bitte wenden Sie sich an einen Administrator."
   },
   "REGISTER": {
     "USER": {
@@ -198,7 +199,9 @@
     "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden.",
     "PUBLISH_CONFIRM": "Möchtest du diese Veranstaltung wirklich veröffentlichen?",
     "PUBLISH_SUCCESS": "Die Veranstaltung wurde erfolgreich veröffentlicht.",
-    "PUBLISH_ERROR": "Die Veranstaltung konnte nicht veröffentlicht werden. Bitte versuche es erneut."
+    "PUBLISH_ERROR": "Die Veranstaltung konnte nicht veröffentlicht werden. Bitte versuche es erneut.",
+    "EVENT_COMPLETED": "Veranstaltung erfolgreich abgeschlossen!",
+    "EVENT_COMPLETION_FAILED": "Die Veranstaltung konnte nicht abgeschlossen werden."
   },
   "USER_LIST": {
     "TITLE": "Benutzer",

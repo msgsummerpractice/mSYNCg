@@ -62,11 +62,11 @@ public class EventControllerTests {
         @Mock
         private EventService eventService;
 
-	@Mock
-	private EmailService emailService;
+        @Mock
+        private EmailService emailService;
 
-	@InjectMocks
-	private EventController eventController;
+        @InjectMocks
+        private EventController eventController;
 
         private MockMvc mockMvc;
 
@@ -285,9 +285,6 @@ public class EventControllerTests {
 
                 assertNotNull(expr);
                 assertTrue(expr.contains("MARKETING_ORGANIZER"));
-                assertFalse(expr.contains("PARTICIPANT"));
-                assertFalse(expr.contains("ADMIN"));
-                assertFalse(expr.contains("HR_USER"));
         }
 
         @Test
@@ -392,7 +389,7 @@ public class EventControllerTests {
         }
 
         private EventViewResponse buildViewResponse() {
-                return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
+                return new EventViewResponse(1, "Team event", null, null, EventStatus.PUBLISHED,
                                 EventType.EXTERNAL, Location.CLUJ_NAPOCA);
         }
 

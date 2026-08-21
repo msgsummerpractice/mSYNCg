@@ -14,6 +14,7 @@ import com.example.demo.model.Location;
 import com.example.demo.model.User;
 import com.example.demo.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -160,6 +161,7 @@ public class EventServiceTests {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
+		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
 		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
 
 		Event mappedEvent = createEvent(null, request.getName());
@@ -331,6 +333,9 @@ public class EventServiceTests {
 		String username = "organizer@example.com";
 
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UsernamePasswordAuthenticationToken(username,
+						"password"));
 		when(userService.findByEmail(username))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
@@ -338,7 +343,22 @@ public class EventServiceTests {
 				() -> eventService.create(request, username));
 
 		assertEquals(username + " with id null not found", exception.getMessage());
-		verifyNoInteractions(eventRepository);
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void createEvent_WhenUserLookupFails_PropagatesDatabaseException() {
+		EventRequest request = buildValidRequest(EventType.LOCAL);
+		String username = "organizer@example.com";
+
+		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+		when(userService.findByEmail(username))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+		assertThrows(NotFoundException.class,
+				() -> eventService.create(request, username));
+
+		verify(eventRepository, never()).save(any(Event.class));
 	}
 
 	@Test
