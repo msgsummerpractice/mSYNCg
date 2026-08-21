@@ -1,6 +1,4 @@
-<div
-  class="grid grid-cols-1 items-stretch gap-4 p-4 lg:grid-cols-[20rem_minmax(0,1fr)] h-[calc(100vh-8rem)]"
->
+<div class="grid grid-cols-1 items-stretch gap-4 p-4 pb-24 lg:grid-cols-[20rem_minmax(0,1fr)]">
   <aside
     class="self-start rounded-xl bg-[var(--color-on-primary)] p-4 text-[var(--color-primary)] shadow-lg [--mat-sys-on-surface:var(--color-primary)] [--mat-sys-on-surface-variant:var(--color-primary)] [--mat-sys-primary:var(--color-primary)] [--mdc-outlined-text-field-outline-color:var(--color-primary)] [--mdc-outlined-text-field-hover-outline-color:var(--color-primary)] [--mdc-outlined-text-field-focus-outline-color:var(--color-primary)] [--mdc-outlined-text-field-caret-color:var(--color-primary)] [--mdc-outlined-text-field-input-text-color:var(--color-primary)] [--mdc-outlined-text-field-label-text-color:var(--color-primary)] [--mdc-outlined-text-field-focus-label-text-color:var(--color-primary)] [--mat-select-enabled-trigger-text-color:var(--color-primary)] [--mat-select-enabled-arrow-color:var(--color-primary)] [&_.mat-mdc-input-element]:!text-[var(--color-primary)] [&_.mdc-floating-label]:!text-[var(--color-primary)] [&_.mat-mdc-select-value-text]:!text-[var(--color-primary)] [&_.mat-mdc-select-arrow]:!text-[var(--color-primary)] [&_input:focus]:!outline-none"
   >
@@ -89,9 +87,9 @@
     </div>
   </aside>
 
-  <section class="min-w-0 flex flex-col h-full">
+  <section class="min-w-0 flex flex-col">
     <div
-      class="relative overflow-auto rounded-xl bg-brand-surface mat-elevation-z8 max-h-[calc(100vh-13rem)]"
+      class="relative overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8"
       [attr.aria-busy]="isLoading"
     >
       @if (isLoading) {
@@ -189,18 +187,32 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumnKeys;"></tr>
       </table>
     </div>
-
-    <div class="mt-2 flex justify-center flex-shrink-0">
-      <mat-paginator
-        class="!w-auto rounded-xl bg-brand-surface"
-        [length]="resolvedTotalItems"
-        [pageIndex]="pageIndex"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        [showFirstLastButtons]="true"
-        (page)="pageChange.emit($event)"
-      >
-      </mat-paginator>
-    </div>
   </section>
+</div>
+
+<div
+  class="fixed inset-x-0 bottom-6 z-30 grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-2"
+>
+  <div></div>
+
+  <mat-paginator
+    class="!w-auto !bg-transparent justify-self-center"
+    [length]="resolvedTotalItems"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="true"
+    (page)="pageChange.emit($event)"
+  >
+  </mat-paginator>
+
+  <div class="justify-self-end">
+    @if (canManageEvents) {
+    <app-button-container
+      [label]="'EVENT_LIST.BUTTONS.CREATE_EVENT' | translate"
+      variant="primary"
+      (clickEvent)="createEvent.emit()"
+    ></app-button-container>
+    }
+  </div>
 </div>

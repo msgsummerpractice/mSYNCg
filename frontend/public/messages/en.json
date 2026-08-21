@@ -187,7 +187,8 @@
       "VIEW": "View",
       "EDIT": "Edit",
       "PUBLISH": "Publish",
-      "COMPLETE": "Complete"
+      "COMPLETE": "Complete",
+      "CREATE_EVENT": "Create Event"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",

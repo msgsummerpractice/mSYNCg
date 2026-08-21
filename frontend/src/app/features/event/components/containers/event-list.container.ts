@@ -208,6 +208,10 @@ export class EventListContainer implements OnInit {
     this.router.navigate([`/events/update/${eventId}`]);
   }
 
+  onCreateEvent(): void {
+    this.router.navigate(['/events/create']);
+  }
+
   onPublishEvent(eventId: number): void {
     // TODO: Implement backend call to publish event
     this.toastService.showSuccess('Event published!');

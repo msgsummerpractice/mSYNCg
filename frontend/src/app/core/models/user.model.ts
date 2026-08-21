@@ -10,3 +10,11 @@ export interface User {
   role: UserRole;
   status: boolean;
 }
+
+export interface CurrentUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+}

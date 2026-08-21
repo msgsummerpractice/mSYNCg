@@ -187,7 +187,8 @@
       "VIEW": "Anzeigen",
       "EDIT": "Bearbeiten",
       "PUBLISH": "Veröffentlichen",
-      "COMPLETE": "Abschließen"
+      "COMPLETE": "Abschließen",
+      "CREATE_EVENT": "Veranstaltung erstellen"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",
