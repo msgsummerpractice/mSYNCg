@@ -8,6 +8,7 @@ import { GenericFormContainer } from '../../containers/generic-form.container';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { UserRegisterForm } from '../../../../core/models/user-register.model';
 import { RouterLink } from '@angular/router';
+import { UserLocation } from '../../../../core/constants/location.constant';
 
 @Component({
   selector: 'user-register-view',
@@ -29,6 +30,6 @@ export class UserRegisterView {
 
   @Output() submitRegister = new EventEmitter<void>();
 
-  readonly locations = Object.values(LocationEnum);
+  readonly locations = Object.values(UserLocation);
   readonly loginRoute = '/login';
 }
