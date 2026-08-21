@@ -134,7 +134,8 @@
       },
       "START_DATE": {
         "LABEL": "Data de început",
-        "REQUIRED": "Data de început este obligatorie"
+        "REQUIRED": "Data de început este obligatorie",
+        "IN_PAST": "Data de început nu poate fi în trecut"
       },
       "START_TIME": {
         "LABEL": "Ora de început",
@@ -151,7 +152,8 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Start înscriere",
-        "REQUIRED": "Data de început a înregistrării este obligatorie"
+        "REQUIRED": "Data de început a înregistrării este obligatorie",
+        "IN_PAST": "Data de început a înscrierii nu poate fi în trecut"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Ora de start",
