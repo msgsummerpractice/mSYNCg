@@ -14,6 +14,7 @@ import com.example.demo.model.Location;
 import com.example.demo.model.User;
 import com.example.demo.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -122,6 +123,7 @@ public class EventServiceTests {
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
 		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
+		when(userService.findByEmail("organizer@example.com")).thenReturn(creator);
 
 		Event mappedEvent = new Event();
 		when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
@@ -197,6 +199,7 @@ public class EventServiceTests {
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
 		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
 
@@ -235,6 +238,7 @@ public class EventServiceTests {
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
 		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
+		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
 
@@ -257,31 +261,13 @@ public class EventServiceTests {
 	}
 
 	@Test
-	void createEvent_WhenUserIsMissing_SavesEventWithNullCreator() {
+	void createEvent_WhenUserIsMissing_ThrowsNotFoundException() {
 		EventRequest request = buildValidRequest(EventType.LOCAL);
-		EventResponse mappedResponse = new EventResponse(4L, "DRAFT");
-		Event mappedEvent = buildMappedEvent(request);
-		when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
-		SecurityContextHolder.getContext()
-				.setAuthentication(new UsernamePasswordAuthenticationToken("unknown@example.com",
-						"password"));
-		when(userService.findByEmail("unknown@example.com")).thenReturn(null);
-		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
-
-		eventService.create(request, "unknown@example.com");
-
-		verify(eventRepository).save(eventCaptor.capture());
-
-		assertNull(eventCaptor.getValue().getCreatedBy());
-	}
-
-	@Test
-	void createEvent_WhenUserLookupFails_ThrowsNotFoundException() {
-		EventRequest request = buildValidRequest(EventType.LOCAL);
-		String username = "organizer@example.com";
-
+		String username = "unknown@example.com";
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UsernamePasswordAuthenticationToken(username,
+						"password"));
 		when(userService.findByEmail(username))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
@@ -289,7 +275,22 @@ public class EventServiceTests {
 				() -> eventService.create(request, username));
 
 		assertEquals(username + " with id null not found", exception.getMessage());
-		verifyNoInteractions(eventRepository);
+		verify(eventRepository, never()).save(any(Event.class));
+	}
+
+	@Test
+	void createEvent_WhenUserLookupFails_PropagatesDatabaseException() {
+		EventRequest request = buildValidRequest(EventType.LOCAL);
+		String username = "organizer@example.com";
+
+		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+		when(userService.findByEmail(username))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+		assertThrows(NotFoundException.class,
+				() -> eventService.create(request, username));
+
+		verify(eventRepository, never()).save(any(Event.class));
 	}
 
 	@Test

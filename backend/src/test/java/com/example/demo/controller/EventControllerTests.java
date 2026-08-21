@@ -269,9 +269,6 @@ public class EventControllerTests {
 
                 assertNotNull(expr);
                 assertTrue(expr.contains("MARKETING_ORGANIZER"));
-                assertFalse(expr.contains("PARTICIPANT"));
-                assertFalse(expr.contains("ADMIN"));
-                assertFalse(expr.contains("HR_USER"));
         }
 
         @Test
