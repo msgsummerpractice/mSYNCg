@@ -171,56 +171,59 @@
                 >
               </button>
 
-              <button
-                *ngIf="canManageEvents"
-                mat-icon-button
-                type="button"
-                class="!h-9 !w-9"
-                [disabled]="!isEditable(event)"
-                [matTooltip]="'EVENT_LIST.BUTTONS.EDIT' | translate"
-                [attr.aria-label]="'EVENT_LIST.BUTTONS.EDIT' | translate"
-                (click)="editEvent.emit(event.id)"
-              >
-                <mat-icon
-                  class="!text-[20px] !leading-5"
-                  [ngClass]="isEditable(event) ? '!text-[var(--color-primary)]' : '!text-gray-400'"
-                  >edit</mat-icon
+              <span *ngIf="canManageEvents" [matTooltip]="'EVENT_LIST.BUTTONS.EDIT' | translate">
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="!h-9 !w-9"
+                  [disabled]="!isEditable(event)"
+                  [attr.aria-label]="'EVENT_LIST.BUTTONS.EDIT' | translate"
+                  (click)="editEvent.emit(event.id)"
                 >
-              </button>
+                  <mat-icon
+                    class="!text-[20px] !leading-5"
+                    [ngClass]="isEditable(event) ? '!text-[var(--color-primary)]' : '!text-gray-400'"
+                    >edit</mat-icon
+                  >
+                </button>
+              </span>
 
-              <button
-                *ngIf="canManageEvents"
-                mat-icon-button
-                type="button"
-                class="!h-9 !w-9"
-                [disabled]="isPublished(event)"
-                [matTooltip]="'EVENT_LIST.BUTTONS.PUBLISH' | translate"
-                [attr.aria-label]="'EVENT_LIST.BUTTONS.PUBLISH' | translate"
-                (click)="publishEvent.emit(event.id)"
-              >
-                <mat-icon
-                  class="!text-[20px] !leading-5"
-                  [ngClass]="isPublished(event) ? '!text-gray-400' : '!text-[var(--color-primary)]'"
-                  >publish</mat-icon
+              <span *ngIf="canManageEvents" [matTooltip]="'EVENT_LIST.BUTTONS.PUBLISH' | translate">
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="!h-9 !w-9"
+                  [disabled]="isPublished(event)"
+                  [attr.aria-label]="'EVENT_LIST.BUTTONS.PUBLISH' | translate"
+                  (click)="publishEvent.emit(event.id)"
                 >
-              </button>
+                  <mat-icon
+                    class="!text-[20px] !leading-5"
+                    [ngClass]="isPublished(event) ? '!text-gray-400' : '!text-[var(--color-primary)]'"
+                    >publish</mat-icon
+                  >
+                </button>
+              </span>
 
-              <button
+              <span
                 *ngIf="canManageEvents"
-                mat-icon-button
-                type="button"
-                class="!h-9 !w-9"
-                [disabled]="!canCompleteEvent(event.id)"
                 [matTooltip]="'EVENT_LIST.BUTTONS.COMPLETE' | translate"
-                [attr.aria-label]="'EVENT_LIST.BUTTONS.COMPLETE' | translate"
-                (click)="completeEvent.emit(event.id)"
               >
-                <mat-icon
-                  class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
-                  [class.!text-gray-400]="!canCompleteEvent(event.id)"
-                  >check_circle</mat-icon
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="!h-9 !w-9"
+                  [disabled]="!canCompleteEvent(event.id)"
+                  [attr.aria-label]="'EVENT_LIST.BUTTONS.COMPLETE' | translate"
+                  (click)="completeEvent.emit(event.id)"
                 >
-              </button>
+                  <mat-icon
+                    class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
+                    [class.!text-gray-400]="!canCompleteEvent(event.id)"
+                    >check_circle</mat-icon
+                  >
+                </button>
+              </span>
             </div>
           </td>
         </ng-container>
