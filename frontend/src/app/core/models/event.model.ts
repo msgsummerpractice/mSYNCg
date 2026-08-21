@@ -3,6 +3,8 @@ import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
 import { EventLocation } from '../constants/location.constant';
 
+
+
 export const EVENT_TYPES = Object.values(EventTypeEnum);
 
 export enum EventParticipationStatus {
@@ -44,6 +46,7 @@ export interface EventView {
   id: number;
   name: string;
   startTime: string;
+  endTime: string;
   status: EventStatusEnum;
   type: EventTypeEnum;
   location: LocationEnum;

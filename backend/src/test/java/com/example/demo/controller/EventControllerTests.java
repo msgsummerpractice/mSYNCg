@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
+import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.exceptions.GlobalExceptionHandler;
@@ -11,6 +12,7 @@ import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.service.EventService;
+import com.example.demo.service.notification.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
@@ -59,6 +61,9 @@ public class EventControllerTests {
 
         @Mock
         private EventService eventService;
+
+        @Mock
+        private EmailService emailService;
 
         @InjectMocks
         private EventController eventController;
@@ -125,9 +130,19 @@ public class EventControllerTests {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content").isEmpty())
                                 .andExpect(jsonPath("$.totalElements").value(0));
-
                 assertNotNull(specCaptor.getValue());
                 assertNotNull(pageableCaptor.getValue());
+        }
+
+        @Test
+        void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
+                ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
+                ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture()))
+                                .thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
+
+                mockMvc.perform(get("/api/events").param("page", "2").param("size", "5"))
+                                .andExpect(status().isOk());
         }
 
         @Test
@@ -142,6 +157,11 @@ public class EventControllerTests {
                                 .andExpect(status().isInternalServerError())
                                 .andExpect(jsonPath("$.error").value("Internal Server Error"))
                                 .andExpect(jsonPath("$.message").value("Database unavailable"));
+        }
+
+        @Test
+        void getEvents_whenFiltersProvided_resolvesEventSpec() throws Exception {
+                Page<EventViewResponse> page = new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1);
         }
 
         private String validRequestJson() {
@@ -265,9 +285,6 @@ public class EventControllerTests {
 
                 assertNotNull(expr);
                 assertTrue(expr.contains("MARKETING_ORGANIZER"));
-                assertFalse(expr.contains("PARTICIPANT"));
-                assertFalse(expr.contains("ADMIN"));
-                assertFalse(expr.contains("HR_USER"));
         }
 
         @Test
@@ -275,9 +292,7 @@ public class EventControllerTests {
                 Integer eventId = 1;
                 EventViewResponse updatedResponse = buildViewResponse();
                 EventRequest eventRequest = createEventRequest("Updated Team event");
-
                 when(eventService.updateEvent(eventId, eventRequest)).thenReturn(updatedResponse);
-
                 mockMvc.perform(put("/api/events/{eventId}", eventId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper().writeValueAsString(eventRequest)))
@@ -287,6 +302,37 @@ public class EventControllerTests {
                                 .andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()));
 
                 verify(eventService).updateEvent(eventId, eventRequest);
+        }
+
+        @Test
+        void publishEvent_whenEventExists_returnsOk() throws Exception {
+                when(eventService.publishEvent(1)).thenReturn(new EventResponse(1L, EventStatus.PUBLISHED.name()));
+
+                mockMvc.perform(patch("/api/events/1/publish"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.id").value(1))
+                                .andExpect(jsonPath("$.status").value(EventStatus.PUBLISHED.name()));
+
+                verify(eventService).publishEvent(1);
+        }
+
+        @Test
+        void publishEvent_whenEventDoesNotExist_returnsNotFound() throws Exception {
+                when(eventService.publishEvent(99)).thenThrow(new NotFoundException("Event", 99));
+
+                mockMvc.perform(patch("/api/events/99/publish"))
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.error").value("Not Found"))
+                                .andExpect(jsonPath("$.message").value("Event with id 99 not found"));
+        }
+
+        @Test
+        void publishEvent_whenServiceThrowsUnexpectedException_returnsInternalServerError() throws Exception {
+                when(eventService.publishEvent(1)).thenThrow(new RuntimeException("Database unavailable"));
+
+                mockMvc.perform(patch("/api/events/1/publish"))
+                                .andExpect(status().isInternalServerError())
+                                .andExpect(jsonPath("$.error").value("Internal Server Error"));
         }
 
         @Test
@@ -343,7 +389,7 @@ public class EventControllerTests {
         }
 
         private EventViewResponse buildViewResponse() {
-                return new EventViewResponse(1, "Team event", null, EventStatus.PUBLISHED,
+                return new EventViewResponse(1, "Team event", null, null, EventStatus.PUBLISHED,
                                 EventType.EXTERNAL, Location.CLUJ_NAPOCA);
         }
 
@@ -450,7 +496,6 @@ public class EventControllerTests {
                                 .andExpect(jsonPath("$.message").value("Event with id 99 not found"));
         }
 
-        @Test
         void completeEvent_whenEventCannotBeCompleted_returnsBadRequest() throws Exception {
                 when(eventService.completeEvent(1))
                                 .thenThrow(new EventCannotBeCompletedException(

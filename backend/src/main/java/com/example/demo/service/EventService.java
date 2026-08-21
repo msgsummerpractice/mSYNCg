@@ -18,6 +18,7 @@ import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.MissingLocationException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
+import com.example.demo.model.EventStatus;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.model.EventType;
@@ -53,8 +54,16 @@ public class EventService implements EventServiceInterface {
             throw new NotFoundException(username, null);
         }
 
+        byte[] poster = null;
+        if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
+            poster = decoder.decode(eventRequest.getImage());
+        }
+
+        event.setImage(poster);
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
+        event.setImage(poster);
+        event.setCreatedAt(LocalDateTime.now());
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
     }
@@ -80,7 +89,6 @@ public class EventService implements EventServiceInterface {
 
         updatedEvent.setId(event.getId());
         updatedEvent.setImage(poster);
-        updatedEvent.setStatus(EventStatus.DRAFT);
         updatedEvent = eventRepository.save(updatedEvent);
 
         return modelMapper.map(updatedEvent, EventViewResponse.class);
@@ -126,4 +134,11 @@ public class EventService implements EventServiceInterface {
         return response;
     }
 
+    public EventResponse publishEvent(Integer id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event", id));
+        event.setStatus(EventStatus.PUBLISHED);
+        eventRepository.save(event);
+        return modelMapper.map(event, EventResponse.class);
+    }
 }

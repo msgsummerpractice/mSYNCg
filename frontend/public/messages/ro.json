@@ -1,6 +1,22 @@
 {
   "BUTTONS": {
-    "SUBMIT": "Trimite"
+    "SUBMIT": "Trimite",
+    "CANCEL": "Anulează"
+  },
+  "CONFIRMATION_DIALOG": {
+    "TITLE": "Confirmare",
+    "MESSAGE": "Sunteți sigur că doriți să continuați?",
+    "CONFIRM_BUTTON": "Da",
+    "CANCEL_BUTTON": "Nu"
+  },
+  "STATUS_UPDATE": {
+    "SUCCESS": "Starea utilizatorului a fost actualizată cu succes",
+    "FAILURE": "Nu s-a putut actualiza starea utilizatorului"
+  },
+  "ROLE_UPDATE": {
+    "SUCCESS": "Rolul utilizatorului a fost actualizat cu succes",
+    "FAILURE": "Nu s-a putut actualiza rolul utilizatorului",
+    "ADMIN_CHANGE_ERROR": "Schimbarea rolului unui utilizator Admin nu este permisă."
   },
   "HOME": {
     "WELCOME": "Bine ai venit la mSYNCg !"
@@ -25,7 +41,8 @@
     "SIGN_IN_TITLE": "Autentifică-te în contul tău",
     "SIGN_IN_SUBTITLE": "Introdu datele de autentificare pentru a continua.",
     "LOGIN_SUCCESS": "Autentificare reușită!",
-    "LOGIN_ERROR": "Email sau parolă incorectă."
+    "LOGIN_ERROR": "Email sau parolă incorectă.",
+    "ACCOUNT_INACTIVE_ERROR": "Contul este inactiv. Vă rugăm să contactați un administrator."
   },
   "REGISTER": {
     "USER": {
@@ -179,7 +196,12 @@
       "TIMISOARA": "Timișoara",
       "ALL": "Toate"
     },
-    "LOAD_ERROR": "Evenimentele nu au putut fi încărcate."
+    "LOAD_ERROR": "Evenimentele nu au putut fi încărcate.",
+    "PUBLISH_CONFIRM": "Ești sigur că vrei să publici acest eveniment?",
+    "PUBLISH_SUCCESS": "Evenimentul a fost publicat cu succes.",
+    "PUBLISH_ERROR": "Evenimentul nu a putut fi publicat. Încearcă din nou.",
+    "EVENT_COMPLETED": "Eveniment finalizat cu succes!",
+    "EVENT_COMPLETION_FAILED": "Nu s-a putut finaliza evenimentul."
   },
   "USER_LIST": {
     "TITLE": "Utilizatori",
