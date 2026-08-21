@@ -2,10 +2,12 @@
 package com.example.demo.service;
 
 import org.springframework.security.core.AuthenticationException;
+import com.example.demo.exceptions.AccountInactiveException;
 import com.example.demo.exceptions.UnathorizedException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,12 +33,19 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(LogInRequest logInRequest) {
 
+        User existingUser = userRepository.findByEmail(logInRequest.getEmail());
+        if (existingUser != null && Boolean.FALSE.equals(existingUser.getStatus())) {
+            throw new AccountInactiveException();
+        }
+
+        UserDetails userDetails = userDetailService.loadUserByUsername(logInRequest.getEmail());
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            userDetailService.loadUserByUsername(logInRequest.getEmail()),
+                            userDetails,
                             logInRequest.getPassword(),
-                            userDetailService.loadUserByUsername(logInRequest.getEmail()).getAuthorities()));
+                            userDetails.getAuthorities()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtTokenProvider.generateToken(authentication);

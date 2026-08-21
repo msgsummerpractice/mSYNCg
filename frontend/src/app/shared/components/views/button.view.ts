@@ -5,17 +5,17 @@ import { ButtonVariant, ButtonSize } from '../containers/button.container';
   selector: 'app-button-view',
   standalone: true,
   imports: [],
-  template: `
-    <button
-      type="button"
-      (click)="handleClick()"
-      [class]="buttonClasses"
-      class="ml-1 inline-flex max-w-full shrink-0 items-center justify-center whitespace-nowrap font-medium text-brand-on-primary font-ui cursor-pointer sm:ml-3"
-      aria-label="action button"
-    >
-      {{ label }}
-    </button>
-  `,
+  template: ` <button
+    type="button"
+    (click)="handleClick()"
+    [class]="buttonClasses"
+    class="ml-1 inline-flex max-w-full shrink-0 items-center justify-center whitespace-nowrap font-medium text-brand-on-primary font-ui cursor-pointer sm:ml-3"
+    aria-label="action button"
+  >
+    @if (label) {
+      <span>{{ label }}</span>
+    }
+  </button>`,
 })
 export class ButtonView {
   @Input() label: string = '';

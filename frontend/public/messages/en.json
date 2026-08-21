@@ -71,7 +71,8 @@
     "SIGN_IN_TITLE": "Sign in to your account",
     "SIGN_IN_SUBTITLE": "Enter your credentials to continue.",
     "LOGIN_SUCCESS": "Login successful!",
-    "LOGIN_ERROR": "Invalid email or password."
+    "LOGIN_ERROR": "Invalid email or password.",
+    "ACCOUNT_INACTIVE_ERROR": "Account is inactive. Please contact an administrator."
   },
   "REGISTER": {
     "USER": {
@@ -226,7 +227,12 @@
       "TIMISOARA": "Timisoara",
       "ALL": "All"
     },
-    "LOAD_ERROR": "Failed to load events."
+    "LOAD_ERROR": "Failed to load events.",
+    "PUBLISH_CONFIRM": "Are you sure you want to publish this event?",
+    "PUBLISH_SUCCESS": "Event published successfully.",
+    "PUBLISH_ERROR": "Failed to publish event. Please try again.",
+    "EVENT_COMPLETED": "Event completed successfully!",
+    "EVENT_COMPLETION_FAILED": "Failed to complete event."
   },
   "USER_LIST": {
     "TITLE": "Users",

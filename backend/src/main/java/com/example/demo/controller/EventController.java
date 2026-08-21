@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
+import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
 import com.example.demo.service.notification.EmailService;
@@ -40,6 +41,7 @@ public class EventController {
     private final EventService eventService;
 
     private final EmailService emailService;
+
     @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest eventRequest,
@@ -67,6 +69,14 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventDetailsResponse> getEventDetails(@PathVariable Integer id) {
         return ResponseEntity.ok(eventService.getById(id));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")
+    @PatchMapping("/{id}/publish")
+    public ResponseEntity<EventResponse> publishEvent(@PathVariable Integer id) {
+        EventResponse response = eventService.publishEvent(id);
+        emailService.sendEmail(id);
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")

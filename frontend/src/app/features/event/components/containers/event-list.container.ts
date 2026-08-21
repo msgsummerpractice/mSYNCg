@@ -2,12 +2,16 @@ import { Component, computed, signal, inject, PLATFORM_ID, DestroyRef } from '@a
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
-import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { merge, Subject } from 'rxjs';
+import { debounceTime, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { EventListView } from '../views/event-list.view';
 import { EventCardContainer } from './event-card.container';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
+import { PublishEventContainer } from './publish-event.container';
+import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventView } from '../../../../core/models/event.model';
@@ -20,11 +24,18 @@ import { UserRole, EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/rol
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { OnInit } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-event-list-container',
   standalone: true,
-  imports: [EventListView, EventCardContainer, ButtonContainer, TranslatePipe],
+  imports: [
+    EventListView,
+    EventCardContainer,
+    ButtonContainer,
+    TranslatePipe,
+    PublishEventContainer,
+  ],
   templateUrl: './event-list.container.html',
 })
 export class EventListContainer implements OnInit {
@@ -35,6 +46,7 @@ export class EventListContainer implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly toastService = inject(ToastService);
   private readonly translateService = inject(TranslateService);
+  private readonly dialog = inject(MatDialog);
 
   tableColumns: TableColumn<EventView>[] = [
     {
@@ -118,6 +130,7 @@ export class EventListContainer implements OnInit {
   totalFilteredItems = signal<number>(0);
 
   readonly selectedEventId = signal<number | null>(null);
+  readonly publishingEventId = signal<number>(0);
 
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
@@ -130,6 +143,7 @@ export class EventListContainer implements OnInit {
   }));
 
   private readonly filterParams$ = toObservable(this.filterParams);
+  private readonly reload$ = new Subject<void>();
 
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -138,9 +152,11 @@ export class EventListContainer implements OnInit {
       this.selectedEventId.set(Number.isInteger(parsed) && parsed > 0 ? parsed : null);
     });
 
-    this.filterParams$
+    merge(
+      this.filterParams$.pipe(debounceTime(750)),
+      this.reload$.pipe(map(() => this.filterParams()))
+    )
       .pipe(
-        debounceTime(750),
         tap(() => this.isLoading.set(true)),
         switchMap((filters) =>
           this.eventService.getEvents(filters).pipe(finalize(() => this.isLoading.set(false)))
@@ -221,13 +237,48 @@ export class EventListContainer implements OnInit {
   }
 
   onPublishEvent(eventId: number): void {
-    // TODO: Implement backend call to publish event
-    this.toastService.showSuccess('Event published!');
+    this.dialog
+      .open(ConfirmationDialogView, {
+        data: { message: this.translateService.instant('EVENT_LIST.PUBLISH_CONFIRM') },
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.publishingEventId.set(eventId);
+        }
+      });
   }
 
+  onPublishSucceeded(): void {
+    this.reload$.next();
+  }
+
+  onPublishFinished(): void {
+    this.publishingEventId.set(0);
+  }
+
+  canCompleteEvent = (eventId: number): boolean => {
+    const event = this.pagedEvents().find((e) => e.id === eventId);
+    if (!event || event.status !== EventStatusEnum.PUBLISHED) {
+      return false;
+    }
+    const endTime = Date.parse(event.endTime);
+    return Number.isFinite(endTime) && endTime < Date.now();
+  };
+
   onCompleteEvent(eventId: number): void {
-    // TODO: Implement backend call to complete event
-    this.toastService.showSuccess('Event completed!');
+    this.eventService.completeEvent(eventId).subscribe({
+      next: () => {
+        const successMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETED');
+        this.toastService.showSuccess(successMessage);
+      },
+      error: () => {
+        const failureMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETION_FAILED');
+        this.toastService.showError(failureMessage);
+      },
+    });
   }
 
   private handleLoadError(): void {

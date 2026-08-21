@@ -18,6 +18,7 @@ public class EventViewResponse {
     private Integer id;
     private String name;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private EventStatus status;
     private EventType type;
     private Location location;
