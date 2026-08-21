@@ -87,6 +87,7 @@ public class EventService implements EventServiceInterface {
             poster = decoder.decode(eventRequest.getImage());
         }
 
+        updatedEvent.setStatus(EventStatus.DRAFT);
         updatedEvent.setId(event.getId());
         updatedEvent.setImage(poster);
         updatedEvent = eventRepository.save(updatedEvent);
