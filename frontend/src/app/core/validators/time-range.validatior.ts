@@ -14,6 +14,14 @@ export const eventDateTimeRangeValidator: ValidatorFn = (
 
   const errors: ValidationErrors = {};
 
+  if (isDateInPast(startDate, startTime)) {
+    errors['startDateInPast'] = true;
+  }
+
+  if (isDateInPast(registrationStartDate, registrationStartTime)) {
+    errors['registrationStartDateInPast'] = true;
+  }
+
   if (isInvalidRange(startDate, startTime, endDate, endTime)) {
     errors['invalidDateRange'] = true;
   }
@@ -32,6 +40,32 @@ export const eventDateTimeRangeValidator: ValidatorFn = (
   return Object.keys(errors).length > 0 ? errors : null;
 };
 
+function isDateInPast(date: Date | null, time: Date | null): boolean {
+  if (!date) {
+    return false;
+  }
+
+  const now = new Date();
+  const checkDate = new Date(date);
+  checkDate.setHours(0, 0, 0, 0);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (checkDate.getTime() < today.getTime()) {
+    return true;
+  }
+
+  if (checkDate.getTime() > today.getTime() || !time) {
+    return false;
+  }
+
+  const fullDateTime = new Date(checkDate);
+  fullDateTime.setHours(time.getHours(), time.getMinutes(), 0, 0);
+
+  return fullDateTime.getTime() < now.getTime();
+}
+
 function isInvalidRange(
   startDate: Date | null,
   startTime: Date | null,
@@ -49,11 +83,11 @@ function isInvalidRange(
   end.setHours(0, 0, 0, 0);
 
   if (end.getTime() < start.getTime()) {
-    return true; 
+    return true;
   }
 
   if (end.getTime() > start.getTime() || !startTime || !endTime) {
-    return false; 
+    return false;
   }
 
   const fullStart = new Date(start);

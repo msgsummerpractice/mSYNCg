@@ -134,7 +134,8 @@
       },
       "START_DATE": {
         "LABEL": "Start date",
-        "REQUIRED": "Start date is required"
+        "REQUIRED": "Start date is required",
+        "IN_PAST": "Start date cannot be in the past"
       },
       "START_TIME": {
         "LABEL": "Start time",
@@ -151,7 +152,8 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Registration start",
-        "REQUIRED": "Registration start date is required"
+        "REQUIRED": "Registration start date is required",
+        "IN_PAST": "Registration start date cannot be in the past"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Start time",
@@ -207,11 +209,16 @@
     },
     "TABLE": {
       "NAME": "Name",
+      "PARTICIPATION": "Participation",
       "DATE": "Date",
       "STATUS": "Status",
       "TYPE": "Type",
       "LOCATION": "Location",
       "ACTIONS": "Actions"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Registered",
+      "CHECKED_IN": "Checked in"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Reset filters",
@@ -234,6 +241,7 @@
     "EVENT_COMPLETED": "Event completed successfully!",
     "EVENT_COMPLETION_FAILED": "Failed to complete event."
   },
+
   "USER_LIST": {
     "TITLE": "Users",
     "FILTER_TITLE": "Filter users",
