@@ -348,7 +348,7 @@ public class EventServiceTests {
 
 	@Test
 	void createEvent_WhenUserLookupFails_PropagatesDatabaseException() {
-		EventRequest request = buildValidRequest(EventType.LOCAL);
+		EventRequest request = createEvenetRequest(EventType.LOCAL);
 		String username = "organizer@example.com";
 
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));

@@ -19,7 +19,37 @@
     "ADMIN_CHANGE_ERROR": "Changing the role of an Admin user is not allowed."
   },
   "HOME": {
-    "WELCOME": "Welcome to mSYNCg !"
+    "WELCOME": "Welcome to mSYNCg !",
+    "BROWSE_EVENTS": {
+      "TITLE": "Browse Events",
+      "DESCRIPTION": "Discover and explore all upcoming company events in your location.",
+      "BUTTON": "View Events"
+    },
+    "FEATURES_TITLE": "Why mSYNCg?",
+    "FEATURE_1": {
+      "TITLE": "Company Culture",
+      "DESCRIPTION": "Connect with colleagues through company-hosted events"
+    },
+    "FEATURE_2": {
+      "TITLE": "Easy Registration",
+      "DESCRIPTION": "Sign up for events in just a few clicks"
+    },
+    "FEATURE_3": {
+      "TITLE": "Stay Informed",
+      "DESCRIPTION": "Never miss out on company events and updates"
+    },
+    "FEATURE_4": {
+      "TITLE": "Build Connections",
+      "DESCRIPTION": "Meet colleagues from different teams and locations"
+    },
+    "FEATURE_5": {
+      "TITLE": "Multiple Locations",
+      "DESCRIPTION": "Events across all .msg office locations"
+    },
+    "FEATURE_6": {
+      "TITLE": "Central Hub",
+      "DESCRIPTION": "Your go-to platform for all company events"
+    }
   },
   "LOGIN": {
     "TITLE": "Login",
@@ -188,7 +218,8 @@
       "VIEW": "View",
       "EDIT": "Edit",
       "PUBLISH": "Publish",
-      "COMPLETE": "Complete"
+      "COMPLETE": "Complete",
+      "CREATE_EVENT": "Create Event"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",
@@ -215,7 +246,7 @@
       "EMAIL": "Email",
       "EMAIL_PLACEHOLDER": "Search email...",
       "ROLES": "Roles",
-      "LOCATIONS": "Locations",
+      "LOCATIONS": "Location",
       "STATUS": "Status"
     },
     "STATUS": {
