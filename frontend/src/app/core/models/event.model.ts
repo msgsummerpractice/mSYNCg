@@ -5,6 +5,11 @@ import { EventLocation } from '../constants/location.constant';
 
 export const EVENT_TYPES = Object.values(EventTypeEnum);
 
+export enum EventParticipationStatus {
+  REGISTERED = 'REGISTERED',
+  CHECKED_IN = 'CHECKED_IN',
+}
+
 export type EventForm = {
   title: FormControl<string>;
   description: FormControl<string>;
@@ -42,6 +47,7 @@ export interface EventView {
   status: EventStatusEnum;
   type: EventTypeEnum;
   location: LocationEnum;
+  participationStatus?: EventParticipationStatus;
 }
 
 export interface Event {

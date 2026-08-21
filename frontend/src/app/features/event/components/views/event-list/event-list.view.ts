@@ -1,4 +1,4 @@
-import { formatDate } from '../../../../core/utils/date.util';
+import { formatDate } from '../../../../../core/utils/date.util';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -14,19 +14,19 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
-import { ButtonContainer } from '../../../../shared/components/containers/button.container';
+import { GenericCellView } from '../../../../../shared/components/views/generic-cell.view';
+import { ButtonContainer } from '../../../../../shared/components/containers/button.container';
 
-import { EventView } from '../../../../core/models/event.model';
-import { TableColumn } from '../../../../core/models/table.column.model';
+import { EventView } from '../../../../../core/models/event.model';
+import { TableColumn } from '../../../../../core/models/table.column.model';
 
-import { EventTypeEnum, EventStatusEnum } from '../../../../core/constants/event.constant';
+import { EventTypeEnum, EventStatusEnum } from '../../../../../core/constants/event.constant';
 import {
   EVENT_LOCATION_TRANSLATION_KEYS,
   EventLocation,
-} from '../../../../core/constants/location.constant';
-import { UserRole } from '../../../../core/constants/role.constant';
-import { EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/role.constant';
+} from '../../../../../core/constants/location.constant';
+import { UserRole } from '../../../../../core/constants/role.constant';
+import { EVENT_MANAGEMENT_ROLES } from '../../../../../core/constants/role.constant';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 

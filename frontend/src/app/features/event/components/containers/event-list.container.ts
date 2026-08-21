@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { EventListView } from '../views/event-list.view';
+import { EventListView } from '../views/event-list/event-list.view';
 import { EventCardContainer } from './event-card.container';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
