@@ -100,4 +100,9 @@ public class UserService implements UserServiceInterface {
         return userRepository.findByEmail(email);
     }
 
+    public User findById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User", id));
+    }
+
 }
