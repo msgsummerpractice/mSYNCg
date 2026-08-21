@@ -2,6 +2,7 @@
 package com.example.demo.service;
 
 import org.springframework.security.core.AuthenticationException;
+import com.example.demo.exceptions.AccountInactiveException;
 import com.example.demo.exceptions.UnathorizedException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -30,6 +31,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(LogInRequest logInRequest) {
+
+        User existingUser = userRepository.findByEmail(logInRequest.getEmail());
+        if (existingUser != null && Boolean.FALSE.equals(existingUser.getStatus())) {
+            throw new AccountInactiveException();
+        }
 
         try {
             Authentication authentication = authenticationManager.authenticate(

@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
 import { LoginFormView } from '../views/login-form/login-form.view';
 import { AuthService } from '../../../core/services/auth.service';
@@ -43,8 +44,12 @@ export class LoginFormContainer {
           this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
           this.router.navigate(['/home']);
         },
-        error: () => {
-          this.toastService.showError(this.translateService.instant('LOGIN.LOGIN_ERROR'));
+        error: (err: unknown) => {
+          const errorKey =
+            err instanceof HttpErrorResponse && err.status === 403
+              ? 'LOGIN.ACCOUNT_INACTIVE_ERROR'
+              : 'LOGIN.LOGIN_ERROR';
+          this.toastService.showError(this.translateService.instant(errorKey));
         },
       });
   }

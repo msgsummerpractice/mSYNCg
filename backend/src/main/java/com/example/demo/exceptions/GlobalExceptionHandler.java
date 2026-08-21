@@ -167,4 +167,19 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
+
+	@ExceptionHandler(AccountInactiveException.class)
+	public ResponseEntity<ErrorResponse> handleAccountInactiveException(
+			AccountInactiveException exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.FORBIDDEN.value(),
+				"Forbidden",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+	}
 }
