@@ -273,6 +273,7 @@ export class EventListContainer implements OnInit {
       next: () => {
         const successMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETED');
         this.toastService.showSuccess(successMessage);
+        this.reload$.next();
       },
       error: () => {
         const failureMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETION_FAILED');
