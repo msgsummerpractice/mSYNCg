@@ -28,6 +28,7 @@ import { UserRole } from '../../../../../core/constants/role.constant';
 import { EVENT_MANAGEMENT_ROLES } from '../../../../../core/constants/role.constant';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { EventParticipationStatus } from '../../../../../core/models/event.model';
 
 @Component({
   selector: 'app-event-list-view',
@@ -52,6 +53,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   templateUrl: './event-list.view.html',
 })
 export class EventListView {
+  readonly EventParticipationStatus = EventParticipationStatus;
+
   @Input() events: EventView[] = [];
   @Input() columns: TableColumn<EventView>[] = [];
 
@@ -101,7 +104,9 @@ export class EventListView {
   }
 
   get displayedColumnKeys(): string[] {
-    return [...this.columns.map((column) => column.key), 'actions'];
+    const keys = this.columns.map((column) => column.key);
+
+    return ['name', 'participation', ...keys.filter((key) => key !== 'name'), 'actions'];
   }
 
   getLocationLabelKey(location: EventLocation): string {

@@ -147,6 +147,7 @@
       },
       "END_TIME": {
         "LABEL": "Endzeit",
+        "PARTICIPATION": "Participation",
         "REQUIRED": "Endzeit ist erforderlich"
       },
       "REGISTRATION_START_DATE": {
@@ -207,11 +208,16 @@
     },
     "TABLE": {
       "NAME": "Name",
+      "PARTICIPATION": "Teilnahme",
       "DATE": "Datum",
       "STATUS": "Status",
       "TYPE": "Typ",
       "LOCATION": "Standort",
       "ACTIONS": "Aktionen"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Angemeldet",
+      "CHECKED_IN": "Eingecheckt"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Filter zurücksetzen",

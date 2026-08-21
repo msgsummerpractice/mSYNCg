@@ -208,10 +208,15 @@
     "TABLE": {
       "NAME": "Nume",
       "DATE": "Dată",
+      "PARTICIPATION": "Participare",
       "STATUS": "Status",
       "TYPE": "Tip",
       "LOCATION": "Locație",
       "ACTIONS": "Acțiuni"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Înregistrat",
+      "CHECKED_IN": "Prezent la eveniment"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Resetează filtrele",

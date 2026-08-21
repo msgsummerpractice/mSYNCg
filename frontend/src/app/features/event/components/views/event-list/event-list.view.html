@@ -118,6 +118,39 @@
 
         }
 
+        <ng-container matColumnDef="participation">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'EVENT_LIST.TABLE.PARTICIPATION' | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let event">
+            <div class="flex items-center gap-2 pl-2">
+              <mat-icon
+                [matTooltip]="'EVENT_LIST.PARTICIPATION.REGISTERED' | translate"
+                [ngClass]="
+          event.participationStatus === EventParticipationStatus.REGISTERED ||
+          event.participationStatus === EventParticipationStatus.CHECKED_IN
+            ? '!text-green-600'
+            : '!text-gray-300'
+        "
+              >
+                how_to_reg
+              </mat-icon>
+
+              <mat-icon
+                [matTooltip]="'EVENT_LIST.PARTICIPATION.CHECKED_IN' | translate"
+                [ngClass]="
+    event.participationStatus === EventParticipationStatus.CHECKED_IN
+      ? '!text-green-600'
+      : '!text-gray-300'
+  "
+              >
+                event_available
+              </mat-icon>
+            </div>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef> {{ 'EVENT_LIST.TABLE.ACTIONS' | translate }} </th>
 
@@ -182,8 +215,9 @@
                 [attr.aria-label]="'EVENT_LIST.BUTTONS.COMPLETE' | translate"
                 (click)="completeEvent.emit(event.id)"
               >
-                <mat-icon class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
-                [class.!text-gray-400]="!canCompleteEvent(event.id)"
+                <mat-icon
+                  class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
+                  [class.!text-gray-400]="!canCompleteEvent(event.id)"
                   >check_circle</mat-icon
                 >
               </button>
