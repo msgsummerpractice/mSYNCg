@@ -1,4 +1,4 @@
-import { formatDate } from '../../../../core/utils/date.util';
+import { formatDate, parseDateTime } from '../../../../core/utils/date.util';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -107,6 +107,11 @@ export class EventListView {
   getLocationLabelKey(location: EventLocation): string {
     return EVENT_LOCATION_TRANSLATION_KEYS[location] ?? location;
   }
+
+  get parsedStartTimeQuery(): Date | null {
+    return parseDateTime(this.startTimeQuery);
+  }
+
   onDateChange(date: Date | null): void {
     this.startTimeChange.emit(formatDate(date));
   }

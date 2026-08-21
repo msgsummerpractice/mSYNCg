@@ -112,6 +112,8 @@ export class EventListContainer implements OnInit {
     return role !== null && EVENT_MANAGEMENT_ROLES.includes(role);
   });
 
+  canCreateEvents = computed(() => this.userRole() === UserRole.MARKETING_ORGANIZER);
+
   pagedEvents = signal<EventView[]>([]);
   totalFilteredItems = signal<number>(0);
 

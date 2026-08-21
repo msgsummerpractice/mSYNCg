@@ -47,7 +47,6 @@
           <mat-label>{{ 'USER_LIST.FIELDS.ROLES' | translate }}</mat-label>
           <mat-select
             multiple
-            panelClass="admin-filter-panel"
             [value]="selectedRoles"
             (selectionChange)="roleChange.emit($event.value)"
           >
@@ -61,7 +60,6 @@
           <mat-label>{{ 'USER_LIST.FIELDS.LOCATIONS' | translate }}</mat-label>
           <mat-select
             multiple
-            panelClass="admin-filter-panel"
             [value]="selectedLocations"
             (selectionChange)="locationChange.emit($event.value)"
           >
@@ -75,7 +73,6 @@
           <mat-label>{{ 'USER_LIST.FIELDS.STATUS' | translate }}</mat-label>
           <mat-select
             multiple
-            panelClass="admin-filter-panel"
             [value]="selectedStatuses"
             (selectionChange)="statusChange.emit($event.value)"
           >

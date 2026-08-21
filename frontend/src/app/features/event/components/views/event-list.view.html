@@ -68,6 +68,7 @@
         <input
           matInput
           [matDatepicker]="picker"
+          [value]="parsedStartTimeQuery"
           (dateChange)="onDateChange($event.value)"
           readonly
         />
