@@ -81,11 +81,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.clearCurrentUser();
-
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem(this.tokenKey);
-    }
+    this.clearAuth();
   }
 
   private setToken(token: string): void {
@@ -155,7 +151,7 @@ export class AuthService {
     this.currentUserRequest = this.http.get<CurrentUser>(`${this.apiUrl}/auth/me`).pipe(
       tap((user) => this.currentUserSignal.set(user)),
       catchError(() => {
-        this.clearCurrentUser();
+        this.clearAuth();
         return of(null);
       }),
       shareReplay({ bufferSize: 1, refCount: false })
@@ -168,5 +164,13 @@ export class AuthService {
     this.currentUserSignal.set(null);
     this.currentUserRequest = null;
     this.currentUserToken = null;
+  }
+
+  private clearAuth(): void {
+    this.clearCurrentUser();
+
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.tokenKey);
+    }
   }
 }
