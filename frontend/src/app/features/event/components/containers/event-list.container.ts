@@ -214,8 +214,16 @@ export class EventListContainer implements OnInit {
     this.toastService.showSuccess('Event published!');
   }
 
-  onCompleteEvent(eventId: number): void {
+  canCompleteEvent = (eventId: number): boolean => {
+    const event = this.pagedEvents().find((e) => e.id === eventId);
+    if (!event || event.status !== EventStatusEnum.PUBLISHED) {
+      return false;
+    }
+    const endTime = Date.parse(event.endTime);
+    return Number.isFinite(endTime) && endTime < Date.now();
+  };
 
+  onCompleteEvent(eventId: number): void {
     this.eventService.completeEvent(eventId).subscribe({
       next: () => {
         const successMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETED');

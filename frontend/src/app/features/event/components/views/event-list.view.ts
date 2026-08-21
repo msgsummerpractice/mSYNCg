@@ -71,6 +71,7 @@ export class EventListView {
   @Input() pageIndex = 0;
   @Input() pageSize = 10;
   @Input() pageSizeOptions: number[] = [10, 20, 50];
+  @Input() canCompleteEvent: (eventId: number) => boolean = () => false;
 
   @Input() isLoading = false;
 
@@ -101,25 +102,6 @@ export class EventListView {
 
   get displayedColumnKeys(): string[] {
     return [...this.columns.map((column) => column.key), 'actions'];
-  }
-
-  getEndTime(eventId: number): string {
-    const event = this.events.find((e) => e.id === eventId);
-    return event ? event.endTime : '';
-  }
-
-  isCompleted(eventId: number): boolean {
-    const event = this.events.find((e) => e.id === eventId);
-    if (event?.status === EventStatusEnum.COMPLETED) {
-      return true;
-    }
-    return false;
-  }
-
-  canCompleteEvent(eventId: number): boolean {
-    const endTime = Date.parse(this.getEndTime(eventId));
-    const status = this.events.find((e) => e.id === eventId)?.status;
-    return status === EventStatusEnum.PUBLISHED && !this.isCompleted(eventId) && Number.isFinite(endTime) && endTime < Date.now();
   }
 
   getLocationLabelKey(location: EventLocation): string {
