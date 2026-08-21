@@ -196,7 +196,9 @@
       "TIMISOARA": "Timisoara",
       "ALL": "Alle"
     },
-    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden."
+    "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden.",
+    "EVENT_COMPLETED": "Veranstaltung erfolgreich abgeschlossen!",
+    "EVENT_COMPLETION_FAILED": "Die Veranstaltung konnte nicht abgeschlossen werden."
   },
   "USER_LIST": {
     "TITLE": "Benutzer",
