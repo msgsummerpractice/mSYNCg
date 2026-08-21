@@ -197,6 +197,9 @@
       "ALL": "Toate"
     },
     "LOAD_ERROR": "Evenimentele nu au putut fi încărcate.",
+    "PUBLISH_CONFIRM": "Ești sigur că vrei să publici acest eveniment?",
+    "PUBLISH_SUCCESS": "Evenimentul a fost publicat cu succes.",
+    "PUBLISH_ERROR": "Evenimentul nu a putut fi publicat. Încearcă din nou.",
     "EVENT_COMPLETED": "Eveniment finalizat cu succes!",
     "EVENT_COMPLETION_FAILED": "Nu s-a putut finaliza evenimentul."
   },

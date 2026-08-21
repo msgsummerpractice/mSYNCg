@@ -197,6 +197,9 @@
       "ALL": "Alle"
     },
     "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden.",
+    "PUBLISH_CONFIRM": "Möchtest du diese Veranstaltung wirklich veröffentlichen?",
+    "PUBLISH_SUCCESS": "Die Veranstaltung wurde erfolgreich veröffentlicht.",
+    "PUBLISH_ERROR": "Die Veranstaltung konnte nicht veröffentlicht werden. Bitte versuche es erneut.",
     "EVENT_COMPLETED": "Veranstaltung erfolgreich abgeschlossen!",
     "EVENT_COMPLETION_FAILED": "Die Veranstaltung konnte nicht abgeschlossen werden."
   },
