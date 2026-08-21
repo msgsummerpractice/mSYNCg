@@ -71,6 +71,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.getById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")
     @PatchMapping("/{id}/publish")
     public ResponseEntity<EventResponse> publishEvent(@PathVariable Integer id) {
         EventResponse response = eventService.publishEvent(id);

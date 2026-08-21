@@ -131,7 +131,6 @@ public class EventService implements EventServiceInterface {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Event", id));
         event.setStatus(EventStatus.PUBLISHED);
-        ;
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
     }
