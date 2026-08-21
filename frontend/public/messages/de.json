@@ -41,7 +41,8 @@
     "SIGN_IN_TITLE": "Melden Sie sich bei Ihrem Konto an",
     "SIGN_IN_SUBTITLE": "Geben Sie Ihre Anmeldedaten ein, um fortzufahren.",
     "LOGIN_SUCCESS": "Anmeldung erfolgreich!",
-    "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort."
+    "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort.",
+    "ACCOUNT_INACTIVE_ERROR": "Das Konto ist inaktiv. Bitte wenden Sie sich an einen Administrator."
   },
   "REGISTER": {
     "USER": {
