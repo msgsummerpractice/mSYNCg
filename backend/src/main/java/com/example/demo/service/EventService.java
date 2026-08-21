@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import java.util.Base64;
-
+import java.util.Optional;
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
@@ -140,5 +140,14 @@ public class EventService implements EventServiceInterface {
         event.setStatus(EventStatus.PUBLISHED);
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
+    }
+
+    public Event findEventById(Integer id) {
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if (eventOptional.isPresent()) {
+            return eventOptional.get();
+        } else {
+            throw new NotFoundException("Event", id);
+        }
     }
 }
