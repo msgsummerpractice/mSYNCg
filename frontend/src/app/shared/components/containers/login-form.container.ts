@@ -44,11 +44,9 @@ export class LoginFormContainer {
           this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
           this.router.navigate(['/home']);
         },
-        error: (err: any) => {
+        error: (err: HttpErrorResponse) => {
           const errorKey =
-            err instanceof HttpErrorResponse && err.status === 403
-              ? 'LOGIN.ACCOUNT_INACTIVE_ERROR'
-              : 'LOGIN.LOGIN_ERROR';
+            err.status === 403 ? 'LOGIN.ACCOUNT_INACTIVE_ERROR' : 'LOGIN.LOGIN_ERROR';
           this.toastService.showError(this.translateService.instant(errorKey));
         },
       });
