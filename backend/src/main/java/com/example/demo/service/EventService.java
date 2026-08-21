@@ -77,8 +77,7 @@ public class EventService implements EventServiceInterface {
 
     public EventViewResponse updateEvent(Integer eventId, EventRequest eventRequest) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found with id: " + eventId));
-        // TODO: I will change the exception to a custom one later
+                .orElseThrow(() -> new NotFoundException("Event not found with id: " + eventId, eventId));
 
         Event updatedEvent = modelMapper.map(eventRequest, Event.class);
 
