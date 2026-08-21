@@ -14,6 +14,7 @@ import com.example.demo.model.Location;
 import com.example.demo.model.User;
 import com.example.demo.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -53,12 +54,6 @@ public class EventServiceTests {
 
 	@Mock
 	private EventRepository eventRepository;
-
-	@Mock
-	private UserService userService;
-
-	@Mock
-	private UserService userService;
 
 	@Mock
 	private UserService userService;
@@ -268,17 +263,11 @@ public class EventServiceTests {
 	@Test
 	void createEvent_WhenUserIsMissing_ThrowsNotFoundException() {
 		EventRequest request = buildValidRequest(EventType.LOCAL);
-		EventResponse mappedResponse = new EventResponse(4L, "DRAFT");
-		Event mappedEvent = buildMappedEvent(request);
-		when(modelMapper.map(request, Event.class)).thenReturn(mappedEvent);
-		SecurityContextHolder.getContext()
-				.setAuthentication(new UsernamePasswordAuthenticationToken("unknown@example.com",
-						"password"));
-		when(userService.findByEmail("unknown@example.com")).thenReturn(null);
-		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-		when(modelMapper.map(eventCaptor.capture(), eq(EventResponse.class))).thenReturn(mappedResponse);
-
+		String username = "unknown@example.com";
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UsernamePasswordAuthenticationToken(username,
+						"password"));
 		when(userService.findByEmail(username))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
@@ -296,7 +285,6 @@ public class EventServiceTests {
 
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
 		when(userService.findByEmail(username))
-		when(userService.findByEmail(username))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
 		assertThrows(NotFoundException.class,
@@ -313,7 +301,6 @@ public class EventServiceTests {
 				.setAuthentication(new UsernamePasswordAuthenticationToken("organizer@example.com",
 						"password"));
 		when(modelMapper.map(request, Event.class)).thenReturn(buildMappedEvent(request));
-		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		when(userService.findByEmail("organizer@example.com")).thenReturn(new User());
 		ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
 		when(eventRepository.save(eventCaptor.capture()))
