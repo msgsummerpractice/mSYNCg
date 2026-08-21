@@ -134,7 +134,8 @@
       },
       "START_DATE": {
         "LABEL": "Startdatum",
-        "REQUIRED": "Startdatum ist erforderlich"
+        "REQUIRED": "Startdatum ist erforderlich",
+        "IN_PAST": "Das Startdatum darf nicht in der Vergangenheit liegen"
       },
       "START_TIME": {
         "LABEL": "Startzeit",
@@ -147,11 +148,13 @@
       },
       "END_TIME": {
         "LABEL": "Endzeit",
+        "PARTICIPATION": "Participation",
         "REQUIRED": "Endzeit ist erforderlich"
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Reg.-Start",
-        "REQUIRED": "Startdatum der Registrierung ist erforderlich"
+        "REQUIRED": "Startdatum der Registrierung ist erforderlich",
+        "IN_PAST": "Das Registrierungsstartdatum darf nicht in der Vergangenheit liegen"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Startzeit",
@@ -207,11 +210,16 @@
     },
     "TABLE": {
       "NAME": "Name",
+      "PARTICIPATION": "Teilnahme",
       "DATE": "Datum",
       "STATUS": "Status",
       "TYPE": "Typ",
       "LOCATION": "Standort",
       "ACTIONS": "Aktionen"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Angemeldet",
+      "CHECKED_IN": "Eingecheckt"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Filter zurücksetzen",

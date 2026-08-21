@@ -30,7 +30,11 @@ interface NavItems {
       aria-label="msg logo"
       (click)="navigate.emit('/home')"
     >
-      <img src="{{ logoUrl }}" alt="msg logo" class="h-8 w-8 brightness-0 invert sm:h-10 sm:w-10" />
+      <img
+        src="{{ logoUrl }}"
+        alt="msg logo"
+        class="h-10 w-10 brightness-0 invert sm:h-12 sm:w-12"
+      />
     </button>
     <span class="min-w-2 flex-1"></span>
     <div
