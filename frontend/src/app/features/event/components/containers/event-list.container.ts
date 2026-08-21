@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { EventListView } from '../views/event-list.view';
 import { EventCardContainer } from './event-card.container';
+import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventView } from '../../../../core/models/event.model';
@@ -15,15 +16,15 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 
 import { EventTypeEnum, EventStatusEnum } from '../../../../core/constants/event.constant';
 import { EventLocation } from '../../../../core/constants/location.constant';
-import { UserRole } from '../../../../core/constants/role.constant';
+import { UserRole, EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/role.constant';
 import { ToastService } from '../../../../core/services/toast.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-event-list-container',
   standalone: true,
-  imports: [EventListView, EventCardContainer],
+  imports: [EventListView, EventCardContainer, ButtonContainer, TranslatePipe],
   templateUrl: './event-list.container.html',
 })
 export class EventListContainer implements OnInit {
@@ -105,6 +106,11 @@ export class EventListContainer implements OnInit {
   isLoading = signal<boolean>(false);
 
   userRole = signal<UserRole | null>(this.authService.getRole());
+
+  canManageEvents = computed(() => {
+    const role = this.userRole();
+    return role !== null && EVENT_MANAGEMENT_ROLES.includes(role);
+  });
 
   pagedEvents = signal<EventView[]>([]);
   totalFilteredItems = signal<number>(0);

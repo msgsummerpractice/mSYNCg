@@ -41,6 +41,10 @@
   --mat-option-label-text-color: #000000 !important;
 }
 
+:host ::ng-deep .language-switcher-panel .mat-pseudo-checkbox {
+  display: none;
+}
+
 :host ::ng-deep .language-switcher-panel .mat-mdc-option:hover {
   background-color: #f0f0f0;
 }

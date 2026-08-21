@@ -190,13 +190,9 @@
   </section>
 </div>
 
-<div
-  class="fixed inset-x-0 bottom-6 z-30 grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-2"
->
-  <div></div>
-
+<div class="fixed inset-x-0 bottom-6 z-30 flex justify-center px-4 py-2">
   <mat-paginator
-    class="!w-auto !bg-transparent justify-self-center"
+    class="!w-auto !bg-transparent"
     [length]="resolvedTotalItems"
     [pageIndex]="pageIndex"
     [pageSize]="pageSize"
@@ -205,14 +201,4 @@
     (page)="pageChange.emit($event)"
   >
   </mat-paginator>
-
-  <div class="justify-self-end">
-    @if (canManageEvents) {
-    <app-button-container
-      [label]="'EVENT_LIST.BUTTONS.CREATE_EVENT' | translate"
-      variant="primary"
-      (clickEvent)="createEvent.emit()"
-    ></app-button-container>
-    }
-  </div>
 </div>

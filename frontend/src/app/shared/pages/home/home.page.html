@@ -21,13 +21,17 @@
             <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
               <mat-icon class="text-blue-600">event</mat-icon>
             </div>
-            <h3 class="mb-2 text-lg font-semibold text-brand-on-secondary"> Browse Events </h3>
+            <h3 class="mb-2 text-lg font-semibold text-brand-on-secondary">
+              {{ 'HOME.BROWSE_EVENTS.TITLE' | translate }}
+            </h3>
             <p class="text-sm text-gray-600">
-              Discover and explore all upcoming company events in your location.
+              {{ 'HOME.BROWSE_EVENTS.DESCRIPTION' | translate }}
             </p>
           </mat-card-content>
-          <mat-card-actions class="pt-4">
-            <button mat-stroked-button color="primary" class="w-full"> View Events </button>
+          <mat-card-actions class="!pt-4 justify-center">
+            <button mat-stroked-button color="primary" class="px-8" routerLink="/events">
+              {{ 'HOME.BROWSE_EVENTS.BUTTON' | translate }}
+            </button>
           </mat-card-actions>
         </mat-card>
       </div>
@@ -35,50 +39,50 @@
 
     <!-- Features Highlight Section -->
     <section class="rounded-lg bg-brand-primary px-6 py-8 text-white sm:px-10 sm:py-12">
-      <h2 class="mb-6 text-xl font-semibold sm:text-2xl"> Why mSYNCg? </h2>
+      <h2 class="mb-6 text-xl font-semibold sm:text-2xl">
+        {{ 'HOME.FEATURES_TITLE' | translate }}
+      </h2>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <div class="flex gap-3">
           <mat-icon class="shrink-0">done</mat-icon>
           <div>
-            <h3 class="font-semibold">Company Culture</h3>
-            <p class="text-sm text-gray-100"
-              >Connect with colleagues through company-hosted events</p
-            >
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_1.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_1.DESCRIPTION' | translate }}</p>
           </div>
         </div>
         <div class="flex gap-3">
           <mat-icon class="shrink-0">done</mat-icon>
           <div>
-            <h3 class="font-semibold">Easy Registration</h3>
-            <p class="text-sm text-gray-100">Sign up for events in just a few clicks</p>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_2.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_2.DESCRIPTION' | translate }}</p>
           </div>
         </div>
         <div class="flex gap-3">
           <mat-icon class="shrink-0">done</mat-icon>
           <div>
-            <h3 class="font-semibold">Stay Informed</h3>
-            <p class="text-sm text-gray-100">Never miss out on company events and updates</p>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_3.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_3.DESCRIPTION' | translate }}</p>
           </div>
         </div>
         <div class="flex gap-3">
           <mat-icon class="shrink-0">done</mat-icon>
           <div>
-            <h3 class="font-semibold">Build Connections</h3>
-            <p class="text-sm text-gray-100">Meet colleagues from different teams and locations</p>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_4.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_4.DESCRIPTION' | translate }}</p>
           </div>
         </div>
         <div class="flex gap-3">
           <mat-icon class="shrink-0">done</mat-icon>
           <div>
-            <h3 class="font-semibold">Multiple Locations</h3>
-            <p class="text-sm text-gray-100">Events across all .msg office locations</p>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_5.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_5.DESCRIPTION' | translate }}</p>
           </div>
         </div>
         <div class="flex gap-3">
           <mat-icon class="shrink-0">done</mat-icon>
           <div>
-            <h3 class="font-semibold">Central Hub</h3>
-            <p class="text-sm text-gray-100">Your go-to platform for all company events</p>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_6.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_6.DESCRIPTION' | translate }}</p>
           </div>
         </div>
       </div>
