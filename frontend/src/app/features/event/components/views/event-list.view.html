@@ -172,11 +172,13 @@
                 mat-icon-button
                 type="button"
                 class="!h-9 !w-9"
+                [disabled]="!canCompleteEvent(event.id)"
                 [matTooltip]="'EVENT_LIST.BUTTONS.COMPLETE' | translate"
                 [attr.aria-label]="'EVENT_LIST.BUTTONS.COMPLETE' | translate"
                 (click)="completeEvent.emit(event.id)"
               >
                 <mat-icon class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
+                [class.!text-gray-400]="!canCompleteEvent(event.id)"
                   >check_circle</mat-icon
                 >
               </button>

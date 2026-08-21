@@ -19,6 +19,7 @@ import { UserRole } from '../../../../core/constants/role.constant';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 import { OnInit } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-event-list-container',
@@ -213,9 +214,26 @@ export class EventListContainer implements OnInit {
     this.toastService.showSuccess('Event published!');
   }
 
+  canCompleteEvent = (eventId: number): boolean => {
+    const event = this.pagedEvents().find((e) => e.id === eventId);
+    if (!event || event.status !== EventStatusEnum.PUBLISHED) {
+      return false;
+    }
+    const endTime = Date.parse(event.endTime);
+    return Number.isFinite(endTime) && endTime < Date.now();
+  };
+
   onCompleteEvent(eventId: number): void {
-    // TODO: Implement backend call to complete event
-    this.toastService.showSuccess('Event completed!');
+    this.eventService.completeEvent(eventId).subscribe({
+      next: () => {
+        const successMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETED');
+        this.toastService.showSuccess(successMessage);
+      },
+      error: () => {
+        const failureMessage = this.translateService.instant('EVENT_LIST.EVENT_COMPLETION_FAILED');
+        this.toastService.showError(failureMessage);
+      },
+    });
   }
 
   private handleLoadError(): void {

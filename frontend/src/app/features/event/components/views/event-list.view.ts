@@ -11,7 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
-
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
@@ -72,6 +71,7 @@ export class EventListView {
   @Input() pageIndex = 0;
   @Input() pageSize = 10;
   @Input() pageSizeOptions: number[] = [10, 20, 50];
+  @Input() canCompleteEvent: (eventId: number) => boolean = () => false;
 
   @Input() isLoading = false;
 
