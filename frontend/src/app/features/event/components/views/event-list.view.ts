@@ -112,6 +112,10 @@ export class EventListView {
     return event.status === EventStatusEnum.PUBLISHED;
   }
 
+  isEditable(event: EventView): boolean {
+    return event.status === EventStatusEnum.DRAFT;
+  }
+
   onDateChange(date: Date | null): void {
     this.startTimeChange.emit(formatDate(date));
   }

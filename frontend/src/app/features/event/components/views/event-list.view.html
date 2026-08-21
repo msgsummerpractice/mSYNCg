@@ -144,11 +144,14 @@
                 mat-icon-button
                 type="button"
                 class="!h-9 !w-9"
+                [disabled]="!isEditable(event)"
                 [matTooltip]="'EVENT_LIST.BUTTONS.EDIT' | translate"
                 [attr.aria-label]="'EVENT_LIST.BUTTONS.EDIT' | translate"
                 (click)="editEvent.emit(event.id)"
               >
-                <mat-icon class="!text-[20px] !leading-5 !text-[var(--color-primary)]"
+                <mat-icon
+                  class="!text-[20px] !leading-5"
+                  [ngClass]="isEditable(event) ? '!text-[var(--color-primary)]' : '!text-gray-400'"
                   >edit</mat-icon
                 >
               </button>
