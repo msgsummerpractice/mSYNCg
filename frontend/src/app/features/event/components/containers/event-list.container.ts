@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { merge, Subject } from 'rxjs';
+import { EMPTY, merge, Subject } from 'rxjs';
 import { debounceTime, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -118,6 +118,7 @@ export class EventListContainer implements OnInit {
   isLoading = signal<boolean>(false);
 
   userRole = signal<UserRole | null>(this.authService.getRole());
+  currentUserId = signal<number | null>(null);
 
   canManageEvents = computed(() => {
     const role = this.userRole();
@@ -287,13 +288,20 @@ export class EventListContainer implements OnInit {
   }
 
   private getEventsForCurrentUser(filters: EventFilterParams) {
-    if (this.userRole() === UserRole.PARTICIPANT) {
-      // TODO: use getEligibleEvents(filters) when the backend endpoint is implemented
-      // return this.eventService.getEligibleEvents(filters);
-
+    if (this.userRole() !== UserRole.PARTICIPANT) {
       return this.eventService.getEvents(filters);
     }
 
-    return this.eventService.getEvents(filters);
+    return this.authService.loadCurrentUser().pipe(
+      switchMap((user) => {
+        if (!user) {
+          return EMPTY;
+        }
+
+        this.currentUserId.set(user.id);
+
+        return this.eventService.getEligibleEvents(user.id, filters);
+      })
+    );
   }
 }

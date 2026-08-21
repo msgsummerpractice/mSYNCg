@@ -48,7 +48,10 @@ export class EventService {
     return this.http.get<PageResponse<EventView>>(this.eventsUrl, { params });
   }
 
-  getEligibleEvents(filters: EventFilterParams): Observable<PageResponse<EventView>> {
+  getEligibleEvents(
+    userId: number,
+    filters: EventFilterParams
+  ): Observable<PageResponse<EventView>> {
     let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
 
     if (filters.name) {
@@ -71,7 +74,9 @@ export class EventService {
       params = params.append('location', location);
     });
 
-    return this.http.get<PageResponse<EventView>>(`${this.eventsUrl}/eligible`, { params });
+    return this.http.get<PageResponse<EventView>>(`${this.eventsUrl}/eligible/${userId}`, {
+      params,
+    });
   }
 
   getEvent(id: number): Observable<Event> {
