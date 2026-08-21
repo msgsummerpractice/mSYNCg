@@ -41,6 +41,7 @@ export interface EventView {
   id: number;
   name: string;
   startTime: string;
+  endTime: string;
   status: EventStatusEnum;
   type: EventTypeEnum;
   location: LocationEnum;

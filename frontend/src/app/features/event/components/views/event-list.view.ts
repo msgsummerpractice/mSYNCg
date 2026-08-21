@@ -11,7 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
-
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
@@ -102,6 +101,25 @@ export class EventListView {
 
   get displayedColumnKeys(): string[] {
     return [...this.columns.map((column) => column.key), 'actions'];
+  }
+
+  getEndTime(eventId: number): string {
+    const event = this.events.find((e) => e.id === eventId);
+    return event ? event.endTime : '';
+  }
+
+  isCompleted(eventId: number): boolean {
+    const event = this.events.find((e) => e.id === eventId);
+    if (event?.status === EventStatusEnum.COMPLETED) {
+      return true;
+    }
+    return false;
+  }
+
+  canCompleteEvent(eventId: number): boolean {
+    const endTime = Date.parse(this.getEndTime(eventId));
+    const status = this.events.find((e) => e.id === eventId)?.status;
+    return status === EventStatusEnum.PUBLISHED && !this.isCompleted(eventId) && Number.isFinite(endTime) && endTime < Date.now();
   }
 
   getLocationLabelKey(location: EventLocation): string {
