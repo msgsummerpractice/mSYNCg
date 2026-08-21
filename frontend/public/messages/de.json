@@ -1,6 +1,7 @@
 {
   "BUTTONS": {
-    "SUBMIT": "Senden"
+    "SUBMIT": "Senden",
+    "CANCEL": "Abbrechen"
   },
   "CONFIRMATION_DIALOG": {
     "TITLE": "Bestätigung",

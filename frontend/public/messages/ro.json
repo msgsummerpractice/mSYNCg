@@ -1,6 +1,7 @@
 {
   "BUTTONS": {
-    "SUBMIT": "Trimite"
+    "SUBMIT": "Trimite",
+    "CANCEL": "Anulează"
   },
   "CONFIRMATION_DIALOG": {
     "TITLE": "Confirmare",

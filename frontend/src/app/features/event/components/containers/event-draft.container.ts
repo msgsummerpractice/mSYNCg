@@ -1,6 +1,7 @@
 import { DestroyRef, inject, signal } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -17,6 +18,7 @@ export abstract class EventDraftContainer {
   private readonly eventService = inject(EventService);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
+  private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
   readonly selectedType = signal<EventTypeEnum | null>(null);
@@ -124,6 +126,7 @@ export abstract class EventDraftContainer {
         this.toastService.showSuccess(
           this.translate.instant('REGISTER.EVENT.MESSAGES.SUCCESS.SAVE')
         );
+        this.router.navigateByUrl('/events');
       },
       error: () => {
         this.toastService.showError(this.translate.instant('REGISTER.EVENT.MESSAGES.ERROR.SAVE'));
@@ -137,6 +140,10 @@ export abstract class EventDraftContainer {
     if (errorKey !== null) {
       this.toastService.showError(this.translate.instant(errorKey));
     }
+  }
+
+  handleCancel(): void {
+    this.router.navigateByUrl('/events');
   }
 
   private configureFieldsForType(type: EventTypeEnum | null): void {
