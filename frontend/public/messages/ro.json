@@ -19,7 +19,37 @@
     "ADMIN_CHANGE_ERROR": "Schimbarea rolului unui utilizator Admin nu este permisă."
   },
   "HOME": {
-    "WELCOME": "Bine ai venit la mSYNCg !"
+    "WELCOME": "Bine ai venit la mSYNCg !",
+    "BROWSE_EVENTS": {
+      "TITLE": "Explorează Evenimentele",
+      "DESCRIPTION": "Descoperă și explorează toate viitoarele evenimente ale companiei din locația ta.",
+      "BUTTON": "Vezi Evenimentele"
+    },
+    "FEATURES_TITLE": "De ce mSYNCg?",
+    "FEATURE_1": {
+      "TITLE": "Cultura Companiei",
+      "DESCRIPTION": "Conectează-te cu colegii prin evenimente organizate de companie"
+    },
+    "FEATURE_2": {
+      "TITLE": "Înregistrare Ușoară",
+      "DESCRIPTION": "Înregistrează-te la evenimente în doar câțiva clicuri"
+    },
+    "FEATURE_3": {
+      "TITLE": "Rămâi Informat",
+      "DESCRIPTION": "Nu rata niciodată evenimentele și actualizările companiei"
+    },
+    "FEATURE_4": {
+      "TITLE": "Construiește Conexiuni",
+      "DESCRIPTION": "Întâlnește colegi din diferite echipe și locații"
+    },
+    "FEATURE_5": {
+      "TITLE": "Locații Multiple",
+      "DESCRIPTION": "Evenimente la toate sediile .msg"
+    },
+    "FEATURE_6": {
+      "TITLE": "Hub Central",
+      "DESCRIPTION": "Platforma ta de referință pentru toate evenimentele companiei"
+    }
   },
   "LOGIN": {
     "TITLE": "Autentificare",
@@ -188,7 +218,8 @@
       "VIEW": "Vezi",
       "EDIT": "Editează",
       "PUBLISH": "Publică",
-      "COMPLETE": "Finalizează"
+      "COMPLETE": "Finalizează",
+      "CREATE_EVENT": "Creează eveniment"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Târgu Mureș",
@@ -215,7 +246,7 @@
       "EMAIL": "Email",
       "EMAIL_PLACEHOLDER": "Caută email...",
       "ROLES": "Roluri",
-      "LOCATIONS": "Locații",
+      "LOCATIONS": "Locație",
       "STATUS": "Status"
     },
     "STATUS": {

@@ -240,35 +240,6 @@ body {
   --mdc-outlined-text-field-caret-color: var(--color-primary);
 }
 
-/* Admin filters: make select overlays readable on brand background */
-.admin-filter-panel.mat-mdc-select-panel {
-  background-color: var(--color-primary) !important;
-}
-
-.admin-filter-panel .mat-mdc-option {
-  --mat-option-label-text-color: var(--color-on-primary);
-}
-
-.admin-filter-panel .mdc-list-item__primary-text,
-.admin-filter-panel .mat-pseudo-checkbox {
-  color: var(--color-on-primary) !important;
-}
-
-.admin-filter-panel .mat-pseudo-checkbox {
-  border-color: var(--color-on-primary) !important;
-}
-
-.admin-filter-panel .mat-pseudo-checkbox.mat-pseudo-checkbox-checked,
-.admin-filter-panel .mat-pseudo-checkbox.mat-pseudo-checkbox-indeterminate {
-  background-color: var(--color-on-primary) !important;
-  border-color: var(--color-on-primary) !important;
-}
-
-.admin-filter-panel .mat-pseudo-checkbox.mat-pseudo-checkbox-checked::after,
-.admin-filter-panel .mat-pseudo-checkbox.mat-pseudo-checkbox-indeterminate::after {
-  color: var(--color-primary) !important;
-}
-
 /* Keep admin filter field outlines always visible (normal + hover + focus). */
 .admin-filters
   .mdc-text-field--outlined:not(.mdc-text-field--disabled)

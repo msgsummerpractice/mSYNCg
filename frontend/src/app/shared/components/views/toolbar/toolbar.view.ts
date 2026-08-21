@@ -28,6 +28,7 @@ interface NavItems {
     <button
       class="shrink-0 px-1 py-1 font-medium text-brand-on-primary font-ui cursor-pointer sm:px-3 sm:py-2"
       aria-label="msg logo"
+      (click)="navigate.emit('/home')"
     >
       <img src="{{ logoUrl }}" alt="msg logo" class="h-8 w-8 brightness-0 invert sm:h-10 sm:w-10" />
     </button>
@@ -60,6 +61,10 @@ interface NavItems {
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
   @Output() logout = new EventEmitter<void>();
+  @Input() navItems: NavItems[] = [
+    { label: 'Events', route: '/events' },
+    { label: 'Users', route: '/admin/users' },
+  ];
   @Input()
   userName: string = '';
   @Input() showNavigation: boolean = true;
@@ -67,11 +72,6 @@ export class ToolbarView {
   @Input() showLogoutButton: boolean = false;
   readonly iconUrl: string = '/assets/icons/user-icon.png';
   readonly logoUrl: string = '/assets/icons/msg_logo_color.svg';
-
-  navItems: NavItems[] = [
-    { label: 'Events', route: '/events' },
-    { label: 'Users', route: '/admin/users' },
-  ];
 
   handleEventClick(route: string): void {
     this.navigate.emit(route);

@@ -1,3 +1,16 @@
+<div class="mb-8 flex items-center justify-between">
+  <h1 class="text-3xl font-semibold text-gray-900">{{ 'EVENT_LIST.TITLE' | translate }}</h1>
+
+  @if (canCreateEvents()) {
+  <app-button-container
+    [label]="'EVENT_LIST.BUTTONS.CREATE_EVENT' | translate"
+    variant="primary"
+    size="lg"
+    (clickEvent)="onCreateEvent()"
+  ></app-button-container>
+  }
+</div>
+
 <app-event-list-view
   [events]="pagedEvents()"
   [columns]="tableColumns"

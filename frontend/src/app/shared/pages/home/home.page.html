@@ -1,11 +1,91 @@
-<div class="min-h-[calc(100dvh-64px)] bg-gray-100">
-  <main class="p-4 sm:p-10">
-    <h1 class="mb-5 text-xl font-semibold text-[#6f1d2b] sm:mb-6 sm:text-2xl">
-      {{ 'HOME.WELCOME' | translate }}
-    </h1>
+<div class="min-h-[calc(100dvh-64px)] bg-gradient-to-b from-white to-gray-50">
+  <main class="mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-12">
+    <!-- Welcome Section -->
+    <section class="mb-12">
+      <h1 class="mb-2 text-3xl font-bold text-brand-on-secondary sm:text-4xl">
+        {{ 'HOME.WELCOME' | translate }}
+      </h1>
+      <p class="mb-4 text-lg text-gray-600 sm:text-xl"> {{ 'LOGIN.TAGLINE' | translate }} </p>
+      <p class="text-base text-gray-500 sm:text-lg"> {{ 'LOGIN.DESCRIPTION' | translate }} </p>
+    </section>
 
-    <section>
-      <h2 class="mb-4 text-sm font-semibold sm:text-base"></h2>
+    <!-- Quick Actions Section -->
+    <section class="mb-12">
+      <h2 class="mb-6 text-xl font-semibold text-brand-on-secondary sm:text-2xl">
+        {{ 'EVENT_LIST.TITLE' | translate }}
+      </h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Browse Events Card -->
+        <mat-card class="flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <mat-card-content class="pb-0">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+              <mat-icon class="text-blue-600">event</mat-icon>
+            </div>
+            <h3 class="mb-2 text-lg font-semibold text-brand-on-secondary">
+              {{ 'HOME.BROWSE_EVENTS.TITLE' | translate }}
+            </h3>
+            <p class="text-sm text-gray-600">
+              {{ 'HOME.BROWSE_EVENTS.DESCRIPTION' | translate }}
+            </p>
+          </mat-card-content>
+          <mat-card-actions class="!pt-4 justify-center">
+            <button mat-stroked-button color="primary" class="px-8" routerLink="/events">
+              {{ 'HOME.BROWSE_EVENTS.BUTTON' | translate }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- Features Highlight Section -->
+    <section class="rounded-lg bg-brand-primary px-6 py-8 text-white sm:px-10 sm:py-12">
+      <h2 class="mb-6 text-xl font-semibold sm:text-2xl">
+        {{ 'HOME.FEATURES_TITLE' | translate }}
+      </h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="flex gap-3">
+          <mat-icon class="shrink-0">done</mat-icon>
+          <div>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_1.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_1.DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <mat-icon class="shrink-0">done</mat-icon>
+          <div>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_2.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_2.DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <mat-icon class="shrink-0">done</mat-icon>
+          <div>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_3.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_3.DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <mat-icon class="shrink-0">done</mat-icon>
+          <div>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_4.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_4.DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <mat-icon class="shrink-0">done</mat-icon>
+          <div>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_5.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_5.DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <mat-icon class="shrink-0">done</mat-icon>
+          <div>
+            <h3 class="font-semibold">{{ 'HOME.FEATURE_6.TITLE' | translate }}</h3>
+            <p class="text-sm text-gray-100">{{ 'HOME.FEATURE_6.DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </div>

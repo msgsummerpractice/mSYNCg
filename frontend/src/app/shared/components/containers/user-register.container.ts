@@ -23,6 +23,7 @@ import { LocationEnum } from '../../../core/models/location.model';
 import { ToastService } from '../../../core/services/toast.service';
 import { finalize } from 'rxjs/internal/operators/finalize';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserLocation } from '../../../core/constants/location.constant';
 
 @Component({
   selector: 'user-register-container',
@@ -55,7 +56,7 @@ export class UserRegisterContainer {
       email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', [Validators.required, Validators.minLength(8)]),
       confirmPassword: this.fb.control('', [Validators.required]),
-      location: this.fb.control<LocationEnum | null>(null, Validators.required),
+      location: this.fb.control<UserLocation | null>(null, Validators.required),
     },
     { validators: passwordMatchValidator }
   );

@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-semibold text-gray-900">{{ 'USER_LIST.TITLE' | translate }}</h1>
   </div>
   <div
-    class="grid w-full min-w-0 grid-cols-1 items-start gap-3 overflow-x-hidden p-3 sm:gap-4 sm:p-4 lg:grid-cols-[20rem_minmax(0,1fr)]"
+    class="grid w-full min-w-0 grid-cols-1 items-start gap-3 overflow-x-hidden p-3 pb-24 sm:gap-4 sm:p-4 lg:grid-cols-[20rem_minmax(0,1fr)]"
   >
     <aside
       class="admin-filters self-start rounded-xl bg-[var(--color-on-primary)] p-3 text-[var(--color-primary)] shadow-lg sm:p-4 [--mat-sys-on-surface:var(--color-primary)] [--mat-sys-on-surface-variant:var(--color-primary)] [--mat-sys-primary:var(--color-primary)] [--mdc-outlined-text-field-outline-color:var(--color-primary)] [--mdc-outlined-text-field-hover-outline-color:var(--color-primary)] [--mdc-outlined-text-field-focus-outline-color:var(--color-primary)] [--mdc-outlined-text-field-caret-color:var(--color-primary)] [--mdc-outlined-text-field-input-text-color:var(--color-primary)] [--mdc-outlined-text-field-label-text-color:var(--color-primary)] [--mdc-outlined-text-field-focus-label-text-color:var(--color-primary)] [--mat-select-enabled-trigger-text-color:var(--color-primary)] [--mat-select-enabled-arrow-color:var(--color-primary)] [&_.mat-mdc-input-element]:!text-[var(--color-primary)] [&_.mdc-floating-label]:!text-[var(--color-primary)] [&_.mat-mdc-select-value-text]:!text-[var(--color-primary)] [&_.mat-mdc-select-arrow]:!text-[var(--color-primary)] [&_input:focus]:!outline-none"
@@ -47,7 +47,6 @@
           <mat-label>{{ 'USER_LIST.FIELDS.ROLES' | translate }}</mat-label>
           <mat-select
             multiple
-            panelClass="admin-filter-panel"
             [value]="selectedRoles"
             (selectionChange)="roleChange.emit($event.value)"
           >
@@ -61,7 +60,6 @@
           <mat-label>{{ 'USER_LIST.FIELDS.LOCATIONS' | translate }}</mat-label>
           <mat-select
             multiple
-            panelClass="admin-filter-panel"
             [value]="selectedLocations"
             (selectionChange)="locationChange.emit($event.value)"
           >
@@ -75,7 +73,6 @@
           <mat-label>{{ 'USER_LIST.FIELDS.STATUS' | translate }}</mat-label>
           <mat-select
             multiple
-            panelClass="admin-filter-panel"
             [value]="selectedStatuses"
             (selectionChange)="statusChange.emit($event.value)"
           >
@@ -103,12 +100,15 @@
           <th mat-header-cell *matHeaderCellDef> {{ col.label | translate }} </th>
 
           <td mat-cell *matCellDef="let row">
-            <generic-cell-view [column]="col" [row]="row" (valueChanged)="onCellValueChanged($event)">
+            <generic-cell-view
+              [column]="col"
+              [row]="row"
+              (valueChanged)="onCellValueChanged($event)"
+            >
             </generic-cell-view>
           </td>
         </ng-container>
-      }
-        @if (isLoading) {
+        } @if (isLoading) {
         <div class="absolute inset-0 z-10 flex items-center justify-center bg-brand-surface/70">
           <mat-spinner diameter="48" aria-label="Loading users"></mat-spinner>
         </div>
@@ -140,19 +140,19 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumnKeys;"></tr>
         </table>
       </div>
-
-      <div class="mt-2 flex min-w-0 justify-center overflow-x-auto">
-        <mat-paginator
-          class="!w-auto rounded-xl bg-brand-surface"
-          [length]="resolvedTotalItems"
-          [pageIndex]="pageIndex"
-          [pageSize]="pageSize"
-          [pageSizeOptions]="pageSizeOptions"
-          [showFirstLastButtons]="true"
-          (page)="pageChange.emit($event)"
-        >
-        </mat-paginator>
-      </div>
     </section>
   </div>
+</div>
+
+<div class="fixed inset-x-0 bottom-6 z-30 flex justify-center px-4 py-2">
+  <mat-paginator
+    class="!w-auto !bg-transparent"
+    [length]="resolvedTotalItems"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="true"
+    (page)="pageChange.emit($event)"
+  >
+  </mat-paginator>
 </div>
