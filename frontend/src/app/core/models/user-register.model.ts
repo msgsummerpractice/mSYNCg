@@ -1,5 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
+import { UserLocation } from '../constants/location.constant';
 
 export type UserRegisterForm = {
   firstName: FormControl<string>;
@@ -7,7 +8,7 @@ export type UserRegisterForm = {
   email: FormControl<string>;
   password: FormControl<string>;
   confirmPassword: FormControl<string>;
-  location: FormControl<LocationEnum | null>;
+  location: FormControl<UserLocation | null>;
 };
 
 export interface UserRegisterRequest {
@@ -15,7 +16,7 @@ export interface UserRegisterRequest {
   lastName: string;
   email: string;
   password: string;
-  location: LocationEnum;
+  location: UserLocation;
   imageBase64?: string;
 }
 

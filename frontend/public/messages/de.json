@@ -19,7 +19,37 @@
     "ADMIN_CHANGE_ERROR": "Die Änderung der Rolle eines Admin-Benutzers ist nicht erlaubt."
   },
   "HOME": {
-    "WELCOME": "Willkommen bei mSYNCg !"
+    "WELCOME": "Willkommen bei mSYNCg !",
+    "BROWSE_EVENTS": {
+      "TITLE": "Events durchsuchen",
+      "DESCRIPTION": "Entdecken Sie alle kommenden Unternehmensveranstaltungen an Ihrem Standort.",
+      "BUTTON": "Events anzeigen"
+    },
+    "FEATURES_TITLE": "Warum mSYNCg?",
+    "FEATURE_1": {
+      "TITLE": "Unternehmenskultur",
+      "DESCRIPTION": "Verbinden Sie sich mit Kollegen durch unternehmensveranstaltete Events"
+    },
+    "FEATURE_2": {
+      "TITLE": "Einfache Anmeldung",
+      "DESCRIPTION": "Melden Sie sich mit nur wenigen Klicks für Events an"
+    },
+    "FEATURE_3": {
+      "TITLE": "Bleiben Sie informiert",
+      "DESCRIPTION": "Verpassen Sie keine Unternehmensveranstaltungen und Updates"
+    },
+    "FEATURE_4": {
+      "TITLE": "Verbindungen aufbauen",
+      "DESCRIPTION": "Treffen Sie Kollegen aus verschiedenen Teams und Standorten"
+    },
+    "FEATURE_5": {
+      "TITLE": "Mehrere Standorte",
+      "DESCRIPTION": "Events an allen .msg Bürostandorten"
+    },
+    "FEATURE_6": {
+      "TITLE": "Zentrale Plattform",
+      "DESCRIPTION": "Ihre Anlaufstelle für alle Unternehmensveranstaltungen"
+    }
   },
   "LOGIN": {
     "TITLE": "Anmelden",
@@ -188,7 +218,8 @@
       "VIEW": "Anzeigen",
       "EDIT": "Bearbeiten",
       "PUBLISH": "Veröffentlichen",
-      "COMPLETE": "Abschließen"
+      "COMPLETE": "Abschließen",
+      "CREATE_EVENT": "Veranstaltung erstellen"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",
@@ -197,6 +228,9 @@
       "ALL": "Alle"
     },
     "LOAD_ERROR": "Die Veranstaltungen konnten nicht geladen werden.",
+    "PUBLISH_CONFIRM": "Möchtest du diese Veranstaltung wirklich veröffentlichen?",
+    "PUBLISH_SUCCESS": "Die Veranstaltung wurde erfolgreich veröffentlicht.",
+    "PUBLISH_ERROR": "Die Veranstaltung konnte nicht veröffentlicht werden. Bitte versuche es erneut.",
     "EVENT_COMPLETED": "Veranstaltung erfolgreich abgeschlossen!",
     "EVENT_COMPLETION_FAILED": "Die Veranstaltung konnte nicht abgeschlossen werden."
   },
@@ -212,7 +246,7 @@
       "EMAIL": "E-Mail",
       "EMAIL_PLACEHOLDER": "E-Mail suchen...",
       "ROLES": "Rollen",
-      "LOCATIONS": "Standorte",
+      "LOCATIONS": "Standort",
       "STATUS": "Status"
     },
     "STATUS": {

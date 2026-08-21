@@ -62,6 +62,10 @@ export class EventService {
     return this.http.put<EventResponse>(`${this.eventsUrl}/${id}`, this.toDraftPayload(event));
   }
 
+  publishEvent(id: number): Observable<EventResponse> {
+    return this.http.patch<EventResponse>(`${this.eventsUrl}/${id}/publish`, {});
+  }
+
   completeEvent(id: number): Observable<EventResponse> {
     return this.http.patch<EventResponse>(`${this.eventsUrl}/${id}/complete`, {});
   }

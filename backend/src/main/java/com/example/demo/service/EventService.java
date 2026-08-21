@@ -18,6 +18,7 @@ import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.exceptions.MissingLocationException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
+import com.example.demo.model.EventStatus;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.model.EventType;
@@ -133,4 +134,11 @@ public class EventService implements EventServiceInterface {
         return response;
     }
 
+    public EventResponse publishEvent(Integer id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event", id));
+        event.setStatus(EventStatus.PUBLISHED);
+        eventRepository.save(event);
+        return modelMapper.map(event, EventResponse.class);
+    }
 }
