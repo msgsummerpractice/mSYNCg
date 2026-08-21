@@ -55,9 +55,10 @@ public class EventService implements EventServiceInterface {
 
         byte[] poster = null;
         if (eventRequest.getImage() != null && !eventRequest.getImage().isEmpty()) {
-            poster = Base64.getDecoder().decode(eventRequest.getImage());
+            poster = decoder.decode(eventRequest.getImage());
         }
 
+        event.setImage(poster);
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
         event.setImage(poster);
