@@ -99,6 +99,10 @@ export class EventListView {
     return this.userRole !== null && EVENT_MANAGEMENT_ROLES.includes(this.userRole);
   }
 
+  get showLocationFilter(): boolean {
+    return this.userRole !== UserRole.PARTICIPANT;
+  }
+
   get resolvedTotalItems(): number {
     return this.totalItems > 0 ? this.totalItems : this.events.length;
   }

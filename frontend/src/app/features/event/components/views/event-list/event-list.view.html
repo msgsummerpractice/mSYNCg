@@ -46,6 +46,7 @@
         </mat-select>
       </mat-form-field>
 
+      @if (showLocationFilter) {
       <mat-form-field class="w-full" appearance="outline">
         <mat-label> {{ 'EVENT_LIST.FIELDS.LOCATION' | translate }} </mat-label>
 
@@ -61,6 +62,7 @@
           }
         </mat-select>
       </mat-form-field>
+      }
 
       <mat-form-field class="w-full" appearance="outline">
         <mat-label> {{ 'EVENT_LIST.FIELDS.START_TIME' | translate }} </mat-label>

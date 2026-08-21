@@ -13,6 +13,6 @@ public interface EventServiceInterface {
 
     EventResponse create(EventRequest request, String username);
 
-    Page<EventViewResponse> getAll(EventSpec spec, Pageable pageable);
+    Page<EventViewResponse> getAll(EventSpec spec, Pageable pageable, Integer userId);
 
 }
