@@ -15,6 +15,7 @@ import { EventDraftContainer } from './event-draft.container';
       (posterSelected)="handlePosterSelected($event)"
       (submitEvent)="handleEventSubmit()"
       (invalidSubmit)="handleInvalidForm()"
+      (cancelEvent)="handleCancel()"
     />
   `,
 })

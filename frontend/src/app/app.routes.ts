@@ -61,27 +61,26 @@ export const routes: Routes = [
           },
         ],
       },
+      // Event creation
+      {
+        path: 'events/create',
+        canActivate: [eventManagementGuard],
+        loadComponent: () =>
+          import('./features/event/pages/event-creation.page').then(
+            ({ EventCreationPage }) => EventCreationPage
+          ),
+      },
+
+      // Event update
+      {
+        path: 'events/update/:id',
+        canActivate: [eventManagementGuard],
+        loadComponent: () =>
+          import('./features/event/pages/event-update.page').then(
+            ({ EventUpdatePage }) => EventUpdatePage
+          ),
+      },
     ],
-  },
-
-  // Event creation
-  {
-    path: 'events/create',
-    canActivate: [eventManagementGuard],
-    loadComponent: () =>
-      import('./features/event/pages/event-creation.page').then(
-        ({ EventCreationPage }) => EventCreationPage
-      ),
-  },
-
-  // Event update
-  {
-    path: 'events/update/:id',
-    canActivate: [eventManagementGuard],
-    loadComponent: () =>
-      import('./features/event/pages/event-update.page').then(
-        ({ EventUpdatePage }) => EventUpdatePage
-      ),
   },
 
   // Fallback

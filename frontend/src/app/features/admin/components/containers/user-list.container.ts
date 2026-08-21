@@ -8,14 +8,20 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
 import { UserFilterParams } from '../../../../core/models/user-filters.model';
-import { UserRole, USER_ROLE_DISPLAY_VALUES } from '../../../../core/constants/role.constant';
+import { UserRole, USER_ROLE_DISPLAY_VALUES, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
 import { UserLocation } from '../../../../core/constants/location.constant';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastContainer } from '../../../../shared/components/containers/toast.container';
+import { AuthService } from '../../../../core/services/auth.service';
+import { UserCellChangeEvent } from '../../../../core/models/layout.model';
+import { TableSelectOption } from '../../../../core/models/layout.model';
 
 @Component({
   selector: 'app-user-list-container',
-  imports: [UserListView],
+  imports: [UserListView, ToastContainer],
   templateUrl: 'user-list.container.html',
 })
 export class UserListContainer {
@@ -23,6 +29,8 @@ export class UserListContainer {
   private destroyRef = inject(DestroyRef);
   private toastService = inject(ToastService);
   private translateService = inject(TranslateService);
+  private readonly dialog = inject(MatDialog);
+  private authService = inject(AuthService);
 
   tableColumns: TableColumn<User>[] = [
     {
@@ -44,7 +52,14 @@ export class UserListContainer {
       key: 'role',
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
-      options: Object.values(USER_ROLE_DISPLAY_VALUES),
+      valueGetter: (row) =>
+      (Object.entries(USER_ROLE_DISPLAY_VALUES).find(
+        ([, display]) => display === row.role,
+      )?.[0] as UserRole) ?? row.role,
+      options: Object.values(UserRole).map((role) => ({
+        value: role,
+        label: USER_ROLE_DISPLAY_VALUES[role],
+      })),
     },
     {
       key: 'location',
@@ -58,6 +73,7 @@ export class UserListContainer {
     },
   ];
 
+  allUsers = signal<User[]>([]);
   roles = signal<UserRole[]>([
     UserRole.ADMIN,
     UserRole.HR_USER,
@@ -105,14 +121,62 @@ export class UserListContainer {
     statuses: this.selectedStatuses(),
   }));
 
-  constructor() {
-    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+  private searchParamsForInit = toObservable(this.searchParams);
+
+  private confirmRoleChange(event: UserCellChangeEvent): boolean {
+    return event.key === 'role';
+  }
+
+  private confirmStatusChange(event: UserCellChangeEvent): boolean {
+    return event.key === 'status';
+  }
+
+  private ifAdminTriesToModifyOwnRole(event: UserCellChangeEvent): boolean {
+    return (
+      event.row.email === this.authService.getEmail() &&
+      this.authService.getRole() === UserRole.ADMIN
+    );
+  }
+
+  private updateUserRoleInDialog(event: UserCellChangeEvent): void {
+    if (event.key === 'role') {
+      this.adminService.updateUserRole(event.row.id!, event.newValue).subscribe({
+        next: () => {
+          this.updateUserRole(event.row.id!, event.newValue);
+          const successMsg = this.translateService.instant('ROLE_UPDATE.SUCCESS');
+          this.toastService.showSuccess(successMsg, 5000);
+        },
+        error: () => {
+          this.updateUserRole(event.row.id!, event.oldValue);
+          const errorMsg = this.translateService.instant('ROLE_UPDATE.FAILURE');
+          this.toastService.showError(errorMsg);
+        },
+      });
       return;
     }
+  }
 
+  private updateUserStatusInDialog(event: UserCellChangeEvent): void {
+    if (event.key === 'status') {
+      this.adminService.updateUserStatus(event.row.id!, event.newValue).subscribe({
+        next: () => {
+          const successMsg = this.translateService.instant('STATUS_UPDATE.SUCCESS');
+          this.updateUserStatus(event.row.id!, event.newValue);
+          this.toastService.showSuccess(successMsg, 5000);
+        },
+        error: () => {
+          this.updateUserStatus(event.row.id!, event.oldValue);
+          const errorMsg = this.translateService.instant('STATUS_UPDATE.FAILURE');
+          this.toastService.showError(errorMsg);
+        },
+      });
+    }
+  }
+
+  ngOnInit(): void {
     this.isLoading.set(true);
 
-    toObservable(this.searchParams)
+    this.searchParamsForInit
       .pipe(
         debounceTime(750),
         tap(() => this.isLoading.set(true)),
@@ -121,7 +185,7 @@ export class UserListContainer {
             .getUsers(this.filterParams())
             .pipe(finalize(() => this.isLoading.set(false)))
         ),
-        takeUntilDestroyed()
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (response) => {
@@ -186,8 +250,62 @@ export class UserListContainer {
     this.loadUsers();
   }
 
-  onCellChange(event: { row: User; key: string; newValue: unknown }): void {
-    //TODO: Implement cell change logic, e.g., send an update request to the server
+  updateUserRole(userId: number, newRole: UserRole): void {
+    this.pagedUsers.update((users) => {
+      return users.map((user) => (user.id === userId ? { ...user, role: newRole } : user));
+    });
+  }
+
+  updateUserStatus(userId: number, newStatus: boolean): void {
+    this.pagedUsers.update((users) => {
+      return users.map((user) => (user.id === userId ? { ...user, status: newStatus } : user));
+    });
+  }
+
+  onCellChange(event: UserCellChangeEvent): void {
+    let isRoleChange = false;
+    let isStatusChange = false;
+
+    if (this.ifAdminTriesToModifyOwnRole(event)) {
+      const errorMsg = this.translateService.instant('ROLE_UPDATE.ADMIN_CHANGE_ERROR');
+      this.toastService.showError(errorMsg);
+      if (event.key === 'role') {
+        this.updateUserRole(event.row.id!, event.oldValue);
+      }
+      return;
+    } else {
+      isRoleChange = this.confirmRoleChange(event);
+      isStatusChange = this.confirmStatusChange(event);
+    }
+
+    if (!isRoleChange && !isStatusChange) return;
+
+    this.dialog
+      .open(ConfirmationDialogView, {
+        data: { message: this.translateService.instant('CONFIRMATION_DIALOG.MESSAGE') },
+        disableClose: true,
+        width: '70px',
+        maxWidth: '100px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          if (event.key === 'role') {
+            this.updateUserRole(event.row.id!, event.oldValue);
+          } else if (event.key === 'status') {
+            this.updateUserStatus(event.row.id!, event.oldValue);
+          }
+          return;
+        }
+
+        if (isRoleChange) {
+          this.updateUserRoleInDialog(event);
+        }
+
+        if (isStatusChange) {
+          this.updateUserStatusInDialog(event);
+        }
+      });
   }
 
   private loadUsers(): void {
