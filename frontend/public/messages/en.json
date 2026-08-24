@@ -77,7 +77,11 @@
   "USER_PROFILE":{
     "TITLE": "User Profile",
     "SUBTITLE": "Update your personal information",
-    
+    "ROLE": {
+      "LABEL": "Role",
+      "REQUIRED": "Role is required"
+    },
+
     "FIRST_NAME": {
       "LABEL": "First Name",
       "REQUIRED": "First name is required"

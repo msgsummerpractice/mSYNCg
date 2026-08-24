@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { User, UserProfileForm } from '../../../../core/models/user.model';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,8 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { UserRole } from '../../../../core/constants/role.constant';
 import { UserLocation } from '../../../../core/constants/location.constant';
 import { AuthService } from '../../../../core/services/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-user-profile-container',
@@ -45,16 +47,18 @@ export class UserProfileContainer {
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
   readonly posterName = signal<string | null>(null);
+  private readonly userService = inject(UserService);
   readonly posterPreviewUrl = signal<string | null>(null);
+  private readonly destroyRef = inject(DestroyRef);
   protected posterBase64: string | null = null;
   readonly isLoading = signal<boolean>(false);
 
   protected readonly userProfileGroup = this.fb.group<UserProfileForm>({
-    firstName: this.fb.control(null),
-    lastName: this.fb.control(null),
-    email: this.fb.control(null),
+    firstName: this.fb.control({ value: null, disabled: true }),
+    lastName: this.fb.control({ value: null, disabled: true }),
+    email: this.fb.control({ value: null, disabled: true }),
     location: this.fb.control(null),
-    role: this.fb.control(null),
+    role: this.fb.control({ value: null, disabled: true }),
     posterName: this.fb.control(null),
   });
 
@@ -75,7 +79,7 @@ export class UserProfileContainer {
   }
 
   handleCancel(): void {
-    this.router.navigate(['/profile-page']);
+    this.router.navigate(['/home']);
   }
 
   handlePosterSelected(file: File): void {
@@ -107,5 +111,43 @@ export class UserProfileContainer {
     this.toastService.showError(this.translate.instant('REGISTER.EVENT.FORM.INVALID'));
   }
 
-  handleEventSubmit(): void {}
+  handleEventSubmit(): void {
+    if (this.userProfileGroup.invalid) {
+      return;
+    }
+
+    const form = this.userProfileGroup.getRawValue();
+
+    const req = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      location: form.location,
+      role: form.role,
+      imageBase64: this.posterBase64,
+    };
+    const user = this.authService.currentUser();
+
+    if (!user) {
+      this.toastService.showError('User is not authenticated');
+      return;
+    }
+
+    const userId = user?.id;
+
+    this.userService
+      .updateUserProfile(userId, req)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          this.toastService.showSuccess(this.translate.instant('REGISTER.EVENT.FORM.SUCCESS'));
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.toastService.showError(this.translate.instant('REGISTER.EVENT.FORM.ERROR'));
+        },
+      });
+  }
 }

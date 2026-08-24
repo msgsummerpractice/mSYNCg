@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { UserProfileForm } from '../../../../core/models/user.model';
-import { AVAILABLE_LOCATIONS } from '../../../../core/models/location.model';
+import { UserLocation } from '../../../../core/constants/location.constant';
 import { GenericFormContainer } from '../../../../shared/components/containers/generic-form.container';
 
 @Component({
@@ -34,7 +34,7 @@ export class UserProfileView {
   @Output() submitEvent = new EventEmitter<void>();
   @Output() invalidSubmit = new EventEmitter<void>();
 
-  readonly locations = AVAILABLE_LOCATIONS;
+  readonly locations = Object.values(UserLocation);
   onPosterSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];

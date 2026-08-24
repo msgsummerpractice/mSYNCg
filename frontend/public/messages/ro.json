@@ -77,6 +77,10 @@
   "USER_PROFILE":{
     "TITLE": "Profil Utilizator",
     "SUBTITLE": "Actualizează-ți informațiile personale",
+    "ROLE": {
+      "LABEL": "Rol",
+      "REQUIRED": "Rolul este obligatoriu"
+    },
     "FIRST_NAME": {
       "LABEL": "Prenume",
       "REQUIRED": "Prenumele este obligatoriu"
