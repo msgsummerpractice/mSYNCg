@@ -74,6 +74,31 @@
     "LOGIN_ERROR": "Email sau parolă incorectă.",
     "ACCOUNT_INACTIVE_ERROR": "Contul este inactiv. Vă rugăm să contactați un administrator."
   },
+  "USER_PROFILE":{
+    "TITLE": "Profil Utilizator",
+    "SUBTITLE": "Actualizează-ți informațiile personale",
+    "FIRST_NAME": {
+      "LABEL": "Prenume",
+      "REQUIRED": "Prenumele este obligatoriu"
+    },
+    "LAST_NAME": {
+      "LABEL": "Nume de familie",
+      "REQUIRED": "Numele de familie este obligatoriu"
+    },
+    "EMAIL": {
+      "LABEL": "Adresă de email",
+      "REQUIRED": "Email-ul este obligatoriu"
+    },
+    "LOCATION": {
+      "LABEL": "Locație",
+      "REQUIRED": "Locația este obligatorie"
+    },
+    "POSTER": {
+      "LABEL": "Fotografie de profil",
+      "UPLOAD": "Încarcă fotografia de profil",
+      "INVALID": "Fotografia de profil trebuie să fie o imagine JPEG sau PNG și să nu depășească 5 MB"
+    }
+  },
   "REGISTER": {
     "USER": {
       "TITLE": "Creează un cont",

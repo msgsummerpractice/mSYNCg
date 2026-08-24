@@ -1,0 +1,73 @@
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-lg">
+        <div class="mb-6 flex items-start justify-between gap-4">
+            <div class="min-w-0">
+                <h1 class="text-3xl font-bold text-gray-900">
+                    {{ 'USER_PROFILE.TITLE' | translate }}
+                </h1>
+                <h2 class="mt-2 text-xl font-semibold text-gray-700">
+                    {{ 'USER_PROFILE.SUBTITLE' | translate }}
+                </h2>
+            </div>
+
+            <div class="h-30 w-30 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+                @if (posterPreviewUrl) {
+                <img [src]="posterPreviewUrl" alt="Profile picture" class="h-full w-full object-cover" />
+                } @else {
+                <div class="flex h-full w-full items-center justify-center text-xs font-medium text-gray-500">
+                    No photo
+                </div>
+                }
+            </div>
+        </div>
+
+        <app-generic-form-container [formGroup]="formGroup" [isLoading]="isLoading" (formSubmit)="submitEvent.emit()"
+            (invalidSubmit)="invalidSubmit.emit()">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>{{ 'USER_PROFILE.FIRST_NAME.LABEL' | translate }}</mat-label>
+                <input matInput formControlName="firstName" />
+                <mat-error *ngIf="formGroup.controls.firstName.hasError('required')">{{
+                    'USER_PROFILE.FIRST_NAME.REQUIRED' | translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>{{ 'USER_PROFILE.LAST_NAME.LABEL' | translate }}</mat-label>
+                <input matInput formControlName="lastName" />
+                <mat-error *ngIf="formGroup.controls.lastName.hasError('required')">{{ 'USER_PROFILE.LAST_NAME.REQUIRED'
+                    | translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>{{ 'USER_PROFILE.EMAIL.LABEL' | translate }}</mat-label>
+                <input matInput formControlName="email" />
+                <mat-error *ngIf="formGroup.controls.email.hasError('required')">{{ 'USER_PROFILE.EMAIL.REQUIRED' |
+                    translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>{{ 'USER_PROFILE.LOCATION.LABEL' | translate }}</mat-label>
+                <mat-select formControlName="location">
+                    <mat-option *ngFor="let location of locations" [value]="location">{{ location }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formGroup.controls.location.hasError('required')">{{ 'USER_PROFILE.LOCATION.REQUIRED'
+                    | translate }}</mat-error>
+            </mat-form-field>
+
+            <input #posterInput type="file" accept="image/jpeg,image/png" hidden (change)="onPosterSelected($event)" />
+
+            <button type="button" mat-stroked-button class="w-full py-5" (click)="posterInput.click()">
+                {{ 'USER_PROFILE.POSTER.UPLOAD' | translate }}
+            </button>
+
+            @if (posterName) {
+            <div class="rounded-lg bg-gray-50 px-4 py-3 text-center text-sm text-gray-600">
+                {{ posterName }}
+            </div>
+            }
+        </app-generic-form-container>
+
+        <button type="button" mat-stroked-button color="warn" class="w-full py-5 mt-3" (click)="cancelEvent.emit()">
+            {{ 'BUTTONS.CANCEL' | translate }}
+        </button>
+    </div>
+</main>

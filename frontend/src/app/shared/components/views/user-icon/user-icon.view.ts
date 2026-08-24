@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-icon-view',
-  imports: [NgStyle, MatIconModule, CommonModule],
+  imports: [NgStyle, MatIconModule, CommonModule, RouterLink],
   template: `
     <div class="flex min-w-0 items-center justify-center gap-1 sm:gap-2">
       <span
@@ -17,7 +18,12 @@ import { CommonModule } from '@angular/common';
         class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-8 sm:w-8"
         [ngStyle]="{ 'background-color': circleColor }"
       >
-        <img *ngIf="userImage" [src]="userImage" class="h-5 w-5 rounded-full sm:h-6 sm:w-6" />
+        <img
+          *ngIf="userImage"
+          [src]="userImage"
+          class="h-5 w-5 rounded-full sm:h-6 sm:w-6 hover:cursor-pointer"
+          [routerLink]="['/user-profile']"
+        />
         <div
           *ngIf="!userImage"
           class="flex items-center text-center text-xs font-bold sm:text-sm"
