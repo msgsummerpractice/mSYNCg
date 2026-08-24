@@ -59,7 +59,7 @@ export class CheckInDialogContainer {
         this.toastService.showSuccess(successMsg);
 
         setTimeout(() => {
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         }, 2000);
       },
       error: (error) => {

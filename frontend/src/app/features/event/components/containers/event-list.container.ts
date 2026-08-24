@@ -283,12 +283,20 @@ export class EventListContainer implements OnInit {
   };
 
   onCheckIn(eventId: number): void {
-    this.dialog.open(CheckInDialogContainer, {
-      width: '90vw',
-      maxWidth: '600px',
-      data: { eventId },
-      disableClose: true,
-    });
+    this.dialog
+      .open(CheckInDialogContainer, {
+        width: '90vw',
+        maxWidth: '600px',
+        data: { eventId },
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((checkedIn) => {
+        if (checkedIn) {
+          this.reload$.next();
+        }
+      });
   }
 
   canCompleteEvent = (eventId: number): boolean => {
