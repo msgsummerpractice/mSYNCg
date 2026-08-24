@@ -72,6 +72,9 @@ public class EventServiceTests {
 	@Mock
 	private ModelMapper modelMapper;
 
+	@Mock
+	private CheckInServiceInterface checkInService;
+
 	@InjectMocks
 	private EventService eventService;
 
@@ -554,6 +557,7 @@ public class EventServiceTests {
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(detailsResponse);
+		when(checkInService.getCodesForEvent(1)).thenReturn(Optional.empty());
 
 		EventDetailsResponse result = eventService.getById(1);
 
@@ -572,6 +576,7 @@ public class EventServiceTests {
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class))
 				.thenReturn(new EventDetailsResponse());
+		when(checkInService.getCodesForEvent(1)).thenReturn(Optional.empty());
 
 		EventDetailsResponse result = eventService.getById(1);
 
@@ -584,6 +589,7 @@ public class EventServiceTests {
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(new EventDetailsResponse());
+		when(checkInService.getCodesForEvent(1)).thenReturn(Optional.empty());
 
 		EventDetailsResponse result = eventService.getById(1);
 
