@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.dto.response.EventResponse;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +89,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.completeEvent(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")
     @PostMapping("/{eventId}/codes")
     public ResponseEntity<CheckInResponse> generateCheckInCodes(@PathVariable Integer eventId) {
         CheckInResponse response = checkInService.generateCodesForEvent(eventId);
