@@ -104,8 +104,8 @@
         }
       </div>
 
-      @if(event?.type === "INTERNAL" || event?.type === "LOCAL"){
       <div class="w-full text-xs text-gray-800">
+        @if(event?.type === "INTERNAL" || event?.type === "LOCAL"){
         <mat-checkbox class="form-checkbox" formControlName="GDPRConsent" [attr.aria-required]="true"
           [attr.aria-label]="'REGISTER_FOR_EVENT.GDPR' | translate">
           {{ 'REGISTER_FOR_EVENT.GDPR' | translate }}
@@ -120,8 +120,13 @@
           {{ 'REGISTER_FOR_EVENT.GDPR_REQUIRED' | translate }}
         </mat-error>
         }
+        } @else {
+        <mat-checkbox class="form-checkbox" formControlName="GDPRConsent"
+          [attr.aria-label]="'REGISTER_FOR_EVENT.GDPR' | translate">
+          {{ 'REGISTER_FOR_EVENT.GDPR' | translate }}
+        </mat-checkbox>
+        }
       </div>
-      }
     </app-generic-form-view>
   </div>
 </main>

@@ -1,4 +1,13 @@
-import { Component, computed, EventEmitter, Input, input, Output, output } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  Input,
+  input,
+  Output,
+  output,
+  signal,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -10,10 +19,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonContainer } from '../../../../../shared/components/containers/button.container';
 import { Event as AppEvent } from '../../../../../core/models/event.model';
 
-interface NavItem {
-  label: string;
-  route: string;
-}
 // Only jpg/jpeg and png are accepted; these are their fixed base64 prefixes
 function toImageSrc(value: string): string {
   // JPEG base64 starts with "/9j/", so URL detection must run before the leading-slash check
@@ -55,11 +60,11 @@ export class EventCardView {
   readonly qrCode = input<string | null>(null);
   readonly accessCode = input<string | null>(null);
   readonly isGeneratingCodes = input(false);
+  readonly now = signal(new Date());
 
   readonly close = output<void>();
+  @Input() event: Event | null = null;
   @Output() navigate = new EventEmitter<string>();
-
-  @Input() navItems: NavItem[] = [{ label: 'Register', route: '/register' }];
 
   readonly route = computed(() => '/events/' + this.eventData().id + '/register');
   readonly generateCodes = output<void>();
@@ -72,8 +77,19 @@ export class EventCardView {
     return qrCode ? toImageSrc(qrCode) : null;
   });
 
+  constructor() {
+    setInterval(() => this.now.set(new Date()), 60_000);
+  }
+
   handleEventClick(): void {
     this.navigate.emit(this.route());
   }
+
+  isRegistrationClosed(registrationEnd: Date | null): boolean {
+  return (
+    registrationEnd !== null &&
+    new Date(registrationEnd).getTime() < this.now().getTime()
+  );
+}
   readonly hasCodes = computed(() => !!this.qrCodeSrc() && !!this.accessCode());
 }

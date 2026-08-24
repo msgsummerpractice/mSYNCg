@@ -98,19 +98,20 @@ export interface EventRegisterResponse {
   date: Date;
   gdpr: boolean;
   photoConsent: boolean;
-  foodType: FoodTypeEnum | null;
+  foodPreference: FoodTypeEnum | null;
   accommodationDays: number | null;
   driverName: string | null;
   driverPhone: string | null;
 }
 
 export interface EventRegisterRequest {
+  userId: number | undefined;
   eventId: number;
+  date: string;
   gdpr: boolean;
   photoConsent: boolean;
-  foodType: FoodTypeEnum | null;
+  foodPreference: FoodTypeEnum | null;
   accommodationDays: number | null;
-  transportNeeded: boolean;
   driverName: string | null;
   driverPhone: string | null;
 }

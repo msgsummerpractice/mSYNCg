@@ -1,5 +1,5 @@
 export enum FoodTypeEnum {
-  NONE = 'None',
-  VEGETARIAN = 'Vegetarian',
-  VEGAN = 'Vegan',
+  NONE = 'NONE',
+  VEGETARIAN = 'VEGETARIAN',
+  VEGAN = 'VEGAN',
 }

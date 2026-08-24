@@ -13,6 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../../core/services/event.service';
 import { Event } from '../../../../core/models/event.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
+import { error } from 'console';
 @Component({
   selector: 'app-user-event-register-container',
   standalone: true,
@@ -38,6 +40,7 @@ export class UserEventRegisterContainer {
   private readonly router = inject(Router);
   private readonly eventService = inject(EventService);
   private readonly registrationService = inject(RegistrationService);
+  private readonly authService = inject(AuthService);
   readonly isLoading = signal(false);
   readonly foodProvided = signal<boolean | null>(null);
   readonly event = signal<Event | null>(null);
@@ -81,6 +84,14 @@ export class UserEventRegisterContainer {
         }
         this.eventFormGroup.get('foodType')?.updateValueAndValidity();
         this.foodProvided.set(event.foodProvided);
+
+        const gdprControl = this.eventFormGroup.get('GDPRConsent');
+        if (event.type === EventTypeEnum.INTERNAL || event.type === EventTypeEnum.LOCAL) {
+          gdprControl?.setValidators(Validators.requiredTrue);
+        } else {
+          gdprControl?.clearValidators();
+        }
+        gdprControl?.updateValueAndValidity();
       },
       error: () => {
         const errorMsg = 'Nope';
@@ -106,36 +117,40 @@ export class UserEventRegisterContainer {
       return;
     }
 
+    const userId = this.authService.currentUser()?.id;
+    if (userId === undefined) {
+      this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR'));
+      return;
+    }
+
     const form = this.eventFormGroup.getRawValue();
 
     this.isLoading.set(true);
 
     const req = {
+      userId,
       eventId,
+      date: new Date().toISOString(),
       gdpr: form.GDPRConsent,
       photoConsent: form.photoConsent,
-      foodType: form.foodType,
+      foodPreference: form.foodType,
       accommodationDays: form.accommodationDetails,
-      transportNeeded: form.transportNeeded,
       driverName: form.driverName,
       driverPhone: form.driverPhone,
     };
 
-    console.log('Submitting registration request:', req);
     this.registrationService
       .registerForEvent(req)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isLoading.set(false);
-          const successMsg = this.translate.instant('REGISTER_FOR_EVENT.SUCCESS');
-          this.toastService.showSuccess(successMsg);
+          this.toastService.showSuccess(this.translate.instant('REGISTER_FOR_EVENT.SUCCESS'));
           this.router.navigate(['/events']);
         },
-        error: () => {
+        error: (error) => {
           this.isLoading.set(false);
-          const errorMsg = this.translate.instant('REGISTER_FOR_EVENT.ERROR');
-          this.toastService.showError(errorMsg);
+          this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR'));
         },
       });
   }

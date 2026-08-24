@@ -21,7 +21,6 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { EventService } from '../../../../core/services/event.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
-
 @Component({
   selector: 'app-event-card-container',
   standalone: true,
@@ -29,7 +28,6 @@ import { ToastService } from '../../../../core/services/toast.service';
   template: `
     @if (event(); as eventData) {
       <app-event-card-view
-        [navItems]="navItems"
         [eventData]="eventData"
         (close)="close.emit()"
         (navigate)="navigate($event)"
