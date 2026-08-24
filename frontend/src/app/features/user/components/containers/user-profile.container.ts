@@ -84,7 +84,7 @@ export class UserProfileContainer {
 
   handlePosterSelected(file: File): void {
     if (!this.isValidPoster(file)) {
-      this.toastService.showError(this.translate.instant('REGISTER.EVENT.POSTER.INVALID'));
+      this.toastService.showError(this.translate.instant('USER_PROFILE.POSTER.INVALID'));
       return;
     }
 
@@ -108,7 +108,7 @@ export class UserProfileContainer {
   }
 
   handleInvalidForm(): void {
-    this.toastService.showError(this.translate.instant('REGISTER.EVENT.FORM.INVALID'));
+    this.toastService.showError(this.translate.instant('USER_PROFILE.EVENT.FORM.INVALID'));
   }
 
   handleEventSubmit(): void {
@@ -141,12 +141,12 @@ export class UserProfileContainer {
       .subscribe({
         next: () => {
           this.isLoading.set(false);
-          this.toastService.showSuccess(this.translate.instant('REGISTER.EVENT.FORM.SUCCESS'));
+          this.toastService.showSuccess(this.translate.instant('USER_PROFILE.EVENT.FORM.SUCCESS'));
           this.router.navigate(['/home']);
         },
         error: () => {
           this.isLoading.set(false);
-          this.toastService.showError(this.translate.instant('REGISTER.EVENT.FORM.ERROR'));
+          this.toastService.showError(this.translate.instant('USER_PROFILE.EVENT.FORM.ERROR'));
         },
       });
   }
