@@ -134,7 +134,8 @@
       },
       "START_DATE": {
         "LABEL": "Data de început",
-        "REQUIRED": "Data de început este obligatorie"
+        "REQUIRED": "Data de început este obligatorie",
+        "IN_PAST": "Data de început nu poate fi în trecut"
       },
       "START_TIME": {
         "LABEL": "Ora de început",
@@ -151,7 +152,8 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Start înscriere",
-        "REQUIRED": "Data de început a înregistrării este obligatorie"
+        "REQUIRED": "Data de început a înregistrării este obligatorie",
+        "IN_PAST": "Data de început a înscrierii nu poate fi în trecut"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Ora de start",
@@ -248,10 +250,15 @@
     "TABLE": {
       "NAME": "Nume",
       "DATE": "Dată",
+      "PARTICIPATION": "Participare",
       "STATUS": "Status",
       "TYPE": "Tip",
       "LOCATION": "Locație",
       "ACTIONS": "Acțiuni"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Înregistrat",
+      "CHECKED_IN": "Prezent la eveniment"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Resetează filtrele",
@@ -322,7 +329,11 @@
       "END_DATE": "Data de sfârșit",
       "REGISTRATION_START": "Începerea înscrierilor",
       "REGISTRATION_END": "Închiderea înscrierilor",
-      "FOOD_PROVIDED": "Masă inclusă"
+      "FOOD_PROVIDED": "Masă inclusă",
+      "GENERATE_CODES": "Generează coduri",
+      "GENERATE_CODES_ERROR": "Codurile nu au putut fi generate. Încercați din nou.",
+      "QR_CODE_ALT": "Cod QR al evenimentului",
+      "ACCESS_CODE": "Cod de acces"
     }
   }
 }

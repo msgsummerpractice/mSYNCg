@@ -33,12 +33,15 @@
             matInput
             class="pr-10"
             [matDatepicker]="startDatePicker"
+            [errorStateMatcher]="startDatePastErrorStateMatcher"
             formControlName="startDate"
           />
           <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #startDatePicker></mat-datepicker>
           @if (formGroup.controls.startDate.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.START_DATE.REQUIRED' | translate }}</mat-error>
+          } @if (formGroup.hasError('startDateInPast')) {
+          <mat-error>{{ 'REGISTER.EVENT.START_DATE.IN_PAST' | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -95,6 +98,7 @@
             matInput
             class="pr-10"
             [matDatepicker]="registrationStartDatePicker"
+            [errorStateMatcher]="registrationStartDatePastErrorStateMatcher"
             formControlName="registrationStartDate"
           />
           <mat-datepicker-toggle
@@ -104,6 +108,8 @@
           <mat-datepicker #registrationStartDatePicker></mat-datepicker>
           @if (formGroup.controls.registrationStartDate.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_START_DATE.REQUIRED' | translate }}</mat-error>
+          } @if (formGroup.hasError('registrationStartDateInPast')) {
+          <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_START_DATE.IN_PAST' | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -194,20 +200,20 @@
         }
       </mat-form-field>
       } @if ( selectedType === eventTypeEnum.LOCAL || selectedType === eventTypeEnum.INTERNAL ) {
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>{{ 'REGISTER.EVENT.FOOD_PROVIDED.LABEL' | translate }}</mat-label>
-        <mat-select formControlName="isFoodProvided">
-          <mat-option [value]="true"
-            >{{ 'REGISTER.EVENT.FOOD_PROVIDED.YES' | translate }}</mat-option
-          >
-          <mat-option [value]="false"
-            >{{ 'REGISTER.EVENT.FOOD_PROVIDED.NO' | translate }}</mat-option
-          >
-        </mat-select>
+      <div class="w-full">
+        <mat-checkbox
+          formControlName="isFoodProvided"
+          labelPosition="before"
+          class="w-full flex justify-between text-lg"
+        >
+          {{ 'REGISTER.EVENT.FOOD_PROVIDED.LABEL' | translate }}
+        </mat-checkbox>
         @if (formGroup.controls.isFoodProvided.hasError('required')) {
-        <mat-error> {{ 'REGISTER.EVENT.FOOD_PROVIDED.REQUIRED' | translate }} </mat-error>
+        <div class="text-red-600 text-sm mt-1">
+          {{ 'REGISTER.EVENT.FOOD_PROVIDED.REQUIRED' | translate }}
+        </div>
         }
-      </mat-form-field>
+      </div>
       }
 
       <input

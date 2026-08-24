@@ -97,6 +97,41 @@
         ></app-button-container>
       </div>
     </div>
+
+    @if (hasCodes() || canGenerateCodes()) {
+    <mat-card-actions class="!flex shrink-0 !justify-start border-t border-brand-muted !px-6 !py-4">
+      @if (hasCodes()) {
+      <div class="flex items-center gap-4">
+        <img
+          [src]="qrCodeSrc()"
+          [alt]="'EVENT.CARD.QR_CODE_ALT' | translate"
+          class="h-24 w-24 rounded-lg border border-brand-muted bg-white object-contain p-1"
+        />
+        <div>
+          <p class="text-xs font-medium tracking-wide text-brand-on-muted uppercase">
+            {{ 'EVENT.CARD.ACCESS_CODE' | translate }}
+          </p>
+          <p class="font-ui text-2xl font-semibold tracking-[0.3em] text-brand-on-surface">
+            {{ accessCode() }}
+          </p>
+        </div>
+      </div>
+      } @else {
+      <button
+        mat-flat-button
+        type="button"
+        [disabled]="isGeneratingCodes()"
+        (click)="generateCodes.emit()"
+      >
+        @if (isGeneratingCodes()) {
+        <mat-spinner diameter="18"></mat-spinner>
+        } @else {
+        <mat-icon>qr_code_2</mat-icon>
+        } {{ 'EVENT.CARD.GENERATE_CODES' | translate }}
+      </button>
+      }
+    </mat-card-actions>
+    }
   </mat-card>
 </div>
 }

@@ -1,4 +1,4 @@
-import { formatDate, parseDateTime } from '../../../../core/utils/date.util';
+import { formatDate, parseDateTime } from '../../../../../core/utils/date.util';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -13,21 +13,22 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { GenericCellView } from '../../../../shared/components/views/generic-cell.view';
-import { ButtonContainer } from '../../../../shared/components/containers/button.container';
+import { GenericCellView } from '../../../../../shared/components/views/generic-cell.view';
+import { ButtonContainer } from '../../../../../shared/components/containers/button.container';
 
-import { EventView } from '../../../../core/models/event.model';
-import { TableColumn } from '../../../../core/models/table.column.model';
+import { EventView } from '../../../../../core/models/event.model';
+import { TableColumn } from '../../../../../core/models/table.column.model';
 
-import { EventTypeEnum, EventStatusEnum } from '../../../../core/constants/event.constant';
+import { EventTypeEnum, EventStatusEnum } from '../../../../../core/constants/event.constant';
 import {
   EVENT_LOCATION_TRANSLATION_KEYS,
   EventLocation,
-} from '../../../../core/constants/location.constant';
-import { UserRole } from '../../../../core/constants/role.constant';
-import { EVENT_MANAGEMENT_ROLES } from '../../../../core/constants/role.constant';
+} from '../../../../../core/constants/location.constant';
+import { UserRole } from '../../../../../core/constants/role.constant';
+import { EVENT_MANAGEMENT_ROLES } from '../../../../../core/constants/role.constant';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { EventParticipationStatus } from '../../../../../core/models/event.model';
 
 @Component({
   selector: 'app-event-list-view',
@@ -52,6 +53,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   templateUrl: './event-list.view.html',
 })
 export class EventListView {
+  readonly EventParticipationStatus = EventParticipationStatus;
+
   @Input() events: EventView[] = [];
   @Input() columns: TableColumn<EventView>[] = [];
 
@@ -96,12 +99,18 @@ export class EventListView {
     return this.userRole !== null && EVENT_MANAGEMENT_ROLES.includes(this.userRole);
   }
 
+  get showLocationFilter(): boolean {
+    return this.userRole !== UserRole.PARTICIPANT;
+  }
+
   get resolvedTotalItems(): number {
     return this.totalItems > 0 ? this.totalItems : this.events.length;
   }
 
   get displayedColumnKeys(): string[] {
-    return [...this.columns.map((column) => column.key), 'actions'];
+    const keys = this.columns.map((column) => column.key);
+
+    return ['name', 'participation', ...keys.filter((key) => key !== 'name'), 'actions'];
   }
 
   getLocationLabelKey(location: EventLocation): string {

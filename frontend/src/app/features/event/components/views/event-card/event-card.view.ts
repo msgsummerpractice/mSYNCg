@@ -4,7 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonContainer } from '../../../../../shared/components/containers/button.container';
 import { Event as AppEvent } from '../../../../../core/models/event.model';
@@ -12,6 +13,23 @@ import { Event as AppEvent } from '../../../../../core/models/event.model';
 interface NavItem {
   label: string;
   route: string;
+}
+// Only jpg/jpeg and png are accepted; these are their fixed base64 prefixes
+function toImageSrc(value: string): string {
+  // JPEG base64 starts with "/9j/", so URL detection must run before the leading-slash check
+  if (/^(data:|https?:\/\/)/.test(value)) {
+    return value;
+  }
+
+  if (value.startsWith('iVBORw0KGgo')) {
+    return `data:image/png;base64,${value}`;
+  }
+
+  if (value.startsWith('/9j/')) {
+    return `data:image/jpeg;base64,${value}`;
+  }
+
+  return value;
 }
 
 @Component({
@@ -22,8 +40,10 @@ interface NavItem {
     MatCardModule,
     MatChipsModule,
     MatIconModule,
+    MatButton,
     MatIconButton,
     MatDividerModule,
+    MatProgressSpinnerModule,
     TranslatePipe,
     ButtonContainer,
   ],
@@ -31,33 +51,29 @@ interface NavItem {
 })
 export class EventCardView {
   readonly eventData = input.required<AppEvent>();
+  readonly canGenerateCodes = input(false);
+  readonly qrCode = input<string | null>(null);
+  readonly accessCode = input<string | null>(null);
+  readonly isGeneratingCodes = input(false);
+
   readonly close = output<void>();
   @Output() navigate = new EventEmitter<string>();
 
   @Input() navItems: NavItem[] = [{ label: 'Register', route: '/register' }];
 
   readonly route = computed(() => '/events/' + this.eventData().id + '/register');
+  readonly generateCodes = output<void>();
 
-  readonly posterSrc = computed(() => {
-    const image = this.eventData().image ?? '';
+  readonly posterSrc = computed(() => toImageSrc(this.eventData().image ?? ''));
 
-    // JPEG base64 starts with "/9j/", so URL detection must run before the leading-slash check
-    if (/^(data:|https?:\/\/)/.test(image)) {
-      return image;
-    }
+  readonly qrCodeSrc = computed(() => {
+    const qrCode = this.qrCode();
 
-    // Only jpg/jpeg and png are accepted; these are their fixed base64 prefixes
-    if (image.startsWith('iVBORw0KGgo')) {
-      return `data:image/png;base64,${image}`;
-    }
-    if (image.startsWith('/9j/')) {
-      return `data:image/jpeg;base64,${image}`;
-    }
-
-    return image;
+    return qrCode ? toImageSrc(qrCode) : null;
   });
 
   handleEventClick(): void {
     this.navigate.emit(this.route());
   }
+  readonly hasCodes = computed(() => !!this.qrCodeSrc() && !!this.accessCode());
 }
