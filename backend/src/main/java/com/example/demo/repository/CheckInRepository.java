@@ -6,7 +6,7 @@ import com.example.demo.model.CheckIn;
 
 import java.util.Optional;
 
-public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
+public interface CheckInRepository extends JpaRepository<CheckIn, Integer> {
 
     Optional<CheckIn> findByQrCode(String qrCode);
     Optional<CheckIn> findByCode(Long code);
