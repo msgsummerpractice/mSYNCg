@@ -5,12 +5,18 @@ import lombok.RequiredArgsConstructor;
 import com.example.demo.model.EventStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.criteria.Predicate;
 
 import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.List;
+
 import com.example.demo.dto.request.EventRequest;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
@@ -19,10 +25,12 @@ import com.example.demo.exceptions.MissingLocationException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
 import com.example.demo.model.EventStatus;
+import com.example.demo.model.Location;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.model.EventType;
 import com.example.demo.model.User;
+import com.example.demo.model.UserRole;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 @RequiredArgsConstructor
@@ -69,10 +77,35 @@ public class EventService implements EventServiceInterface {
     }
 
     @Override
-    public Page<EventViewResponse> getAll(EventSpec spec, Pageable pageable) {
-        Page<Event> eventsPage = eventRepository.findAll(spec, pageable);
+    public Page<EventViewResponse> getAll(EventSpec spec, Pageable pageable, Integer userId) {
+        Specification<Event> effectiveSpec = spec;
+
+        if (userId != null) {
+            User user = userService.findById(userId);
+            if (user.getRole() == UserRole.PARTICIPANT) {
+                Specification<Event> eligibility = eligibleForParticipant(user.getLocation());
+                effectiveSpec = spec == null ? eligibility : spec.and(eligibility);
+            }
+        }
+
+        Page<Event> eventsPage = eventRepository.findAll(effectiveSpec, pageable);
 
         return eventsPage.map(event -> modelMapper.map(event, EventViewResponse.class));
+    }
+
+    private Specification<Event> eligibleForParticipant(Location participantLocation) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(criteriaBuilder.equal(root.get("status"), EventStatus.PUBLISHED));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("registrationEnd"), LocalDateTime.now()));
+
+            if (participantLocation != null) {
+                predicates.add(root.get("location").in(participantLocation, Location.ALL));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     public EventViewResponse updateEvent(Integer eventId, EventRequest eventRequest) {
