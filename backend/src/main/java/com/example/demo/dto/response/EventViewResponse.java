@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.model.EventStatus;
+import com.example.demo.model.EventParticipationStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,5 @@ public class EventViewResponse {
     private EventStatus status;
     private EventType type;
     private Location location;
+    private EventParticipationStatus participationStatus;
 }

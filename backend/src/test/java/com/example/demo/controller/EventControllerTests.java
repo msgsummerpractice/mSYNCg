@@ -428,7 +428,7 @@ public class EventControllerTests {
 
         private EventViewResponse buildViewResponse() {
                 return new EventViewResponse(1, "Team event", null, null, EventStatus.PUBLISHED,
-                                EventType.EXTERNAL, Location.CLUJ_NAPOCA);
+                                EventType.EXTERNAL, Location.CLUJ_NAPOCA, null);
         }
 
         private EventRequest createEventRequest(String name) {
