@@ -40,6 +40,7 @@ public class EventService implements EventServiceInterface {
     private final EventRepository eventRepository;
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final CheckInServiceInterface checkInService;
     private final Base64.Decoder decoder = Base64.getDecoder();
     private final Base64.Encoder encoder = Base64.getEncoder();
 
@@ -136,6 +137,11 @@ public class EventService implements EventServiceInterface {
         response.setImage(event.getImage() != null
                 ? encoder.encodeToString(event.getImage())
                 : null);
+
+        checkInService.getCodesForEvent(id).ifPresent(codes -> {
+            response.setQrCode(codes.getQrCode());
+            response.setCode(codes.getCode());
+        });
 
         return response;
     }
