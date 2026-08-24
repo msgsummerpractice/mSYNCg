@@ -1,0 +1,161 @@
+<div class="flex h-full flex-col">
+  <div class="flex items-center justify-between border-b border-brand-muted px-6 py-4">
+    <h2 class="text-lg font-semibold text-brand-on-surface"> {{ 'CHECKIN.TITLE' | translate }} </h2>
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Close"
+      (click)="onCancel()"
+      [disabled]="isLoading()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+    @if (errorMessage() || cameraError()) {
+    <div class="mx-4 mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+      <div class="flex gap-2">
+        <mat-icon class="!h-5 !w-5 shrink-0">error</mat-icon>
+        <div>
+          <p class="font-semibold">{{ 'CHECKIN.ERROR.TITLE' | translate }}</p>
+          <p class="mt-1"> {{ errorMessage() || cameraError() }} </p>
+        </div>
+      </div>
+    </div>
+    } @if (successMessage()) {
+    <div class="mx-4 mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
+      <div class="flex gap-2">
+        <mat-icon class="!h-5 !w-5 shrink-0">check_circle</mat-icon>
+        <div>
+          <p class="font-semibold">{{ 'CHECKIN.SUCCESS.TITLE' | translate }}</p>
+          <p class="mt-1">{{ successMessage() }}</p>
+        </div>
+      </div>
+    </div>
+    } @if (canShowCamera()) {
+    <mat-tab-group
+      class="!flex-1 overflow-hidden [&_.mat-mdc-tab-header]:!border-b-0"
+      (selectedTabChange)="onTabChange($event.index === 0 ? 'camera' : 'manual')"
+    >
+      <mat-tab [label]="'CHECKIN.CAMERA.TAB' | translate">
+        <div class="flex flex-col items-center justify-center gap-4 p-6">
+          <div
+            class="relative w-full max-w-sm rounded-lg border-2 border-brand-muted bg-brand-muted"
+          >
+            @if (isLoading()) {
+            <div
+              class="absolute inset-0 z-20 flex items-center justify-center rounded-lg bg-brand-surface/70"
+            >
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            }
+
+            <video
+              #videoElement
+              class="w-full -scale-x-100 rounded-lg object-cover"
+              autoplay
+              playsinline
+              [style.display]="cameraActive() ? 'block' : 'none'"
+            ></video>
+
+            <canvas #canvasElement style="display: none"></canvas>
+
+            @if (!cameraActive()) {
+            <div class="flex h-64 items-center justify-center text-center">
+              <div class="flex flex-col gap-2">
+                <mat-icon class="mx-auto !h-10 !w-10 !text-2xl text-brand-on-muted">
+                  videocam
+                </mat-icon>
+                <p class="text-sm text-brand-on-muted">
+                  {{ 'CHECKIN.CAMERA.READY' | translate }}
+                </p>
+              </div>
+            </div>
+            }
+          </div>
+
+          <p class="text-center text-xs text-brand-on-muted">
+            {{ 'CHECKIN.CAMERA.INSTRUCTION' | translate }}
+          </p>
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'CHECKIN.MANUAL.TAB' | translate">
+        <div class="flex flex-col items-center justify-center gap-4 p-6">
+          <div class="w-full max-w-sm">
+            <mat-form-field class="w-full" appearance="outline">
+              <mat-label>{{ 'CHECKIN.MANUAL.CODE_LABEL' | translate }}</mat-label>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="manualCode"
+                (keyup.enter)="onManualSubmit()"
+                [disabled]="isLoading()"
+                placeholder="000000"
+                maxlength="6"
+                class="text-center text-2xl tracking-widest"
+              />
+              <mat-hint>{{ 'CHECKIN.MANUAL.CODE_HINT' | translate }}</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <button
+            mat-raised-button
+            color="primary"
+            class="w-full max-w-sm"
+            (click)="onManualSubmit()"
+            [disabled]="!manualCode() || isLoading()"
+          >
+            @if (isLoading()) {
+            <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+            } {{ 'CHECKIN.MANUAL.SUBMIT' | translate }}
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    } @else {
+    <div class="flex flex-col items-center justify-center gap-4 p-6">
+      <mat-icon class="!h-12 !w-12 !text-4xl text-brand-muted">videocam_off</mat-icon>
+      <p class="text-center text-sm text-brand-on-muted">
+        {{ 'CHECKIN.CAMERA.NOT_AVAILABLE' | translate }}
+      </p>
+
+      <div class="w-full max-w-sm">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>{{ 'CHECKIN.MANUAL.CODE_LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="manualCode"
+            (keyup.enter)="onManualSubmit()"
+            [disabled]="isLoading()"
+            placeholder="000000"
+            maxlength="6"
+            class="text-center text-2xl tracking-widest"
+          />
+          <mat-hint>{{ 'CHECKIN.MANUAL.CODE_HINT' | translate }}</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full max-w-sm"
+        (click)="onManualSubmit()"
+        [disabled]="!manualCode() || isLoading()"
+      >
+        @if (isLoading()) {
+        <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+        } {{ 'CHECKIN.MANUAL.SUBMIT' | translate }}
+      </button>
+    </div>
+    }
+  </div>
+
+  <div class="border-t border-brand-muted px-6 py-4">
+    <button mat-stroked-button class="w-full" (click)="onCancel()" [disabled]="isLoading()">
+      {{ 'CHECKIN.CANCEL' | translate }}
+    </button>
+  </div>
+</div>

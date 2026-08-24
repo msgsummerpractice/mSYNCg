@@ -227,7 +227,8 @@
       "EDIT": "Bearbeiten",
       "PUBLISH": "Veröffentlichen",
       "COMPLETE": "Abschließen",
-      "CREATE_EVENT": "Veranstaltung erstellen"
+      "CREATE_EVENT": "Veranstaltung erstellen",
+      "CHECK_IN": "Einchecken"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",
@@ -295,6 +296,35 @@
       "GENERATE_CODES_ERROR": "Codes konnten nicht generiert werden. Bitte versuchen Sie es erneut.",
       "QR_CODE_ALT": "QR-Code der Veranstaltung",
       "ACCESS_CODE": "Zugangscode"
+    }
+  },
+  "CHECKIN": {
+    "TITLE": "Veranstaltung Einchecken",
+    "CAMERA": {
+      "TAB": "QR-Code scannen",
+      "READY": "Bereit zum Scannen",
+      "INSTRUCTION": "Richten Sie Ihr Gerät auf den QR-Code zum Scannen",
+      "NOT_AVAILABLE": "Kamera nicht verfügbar. Verwenden Sie stattdessen die manuelle Eingabe."
+    },
+    "MANUAL": {
+      "TAB": "Manuelle Eingabe",
+      "CODE_LABEL": "6-stelliger Code",
+      "CODE_HINT": "Geben Sie den 6-stelligen Veranstaltungscode ein",
+      "SUBMIT": "Einchecken"
+    },
+    "CANCEL": "Abbrechen",
+    "SUCCESS": {
+      "TITLE": "Erfolg!",
+      "MESSAGE": "Sie haben sich erfolgreich bei der Veranstaltung eingecheckt."
+    },
+    "ERROR": {
+      "TITLE": "Einchecken fehlgeschlagen",
+      "DEFAULT": "Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      "INVALID_CODE": "Der Code ist ungültig. Bitte überprüfen Sie ihn und versuchen Sie es erneut.",
+      "NOT_REGISTERED": "Sie sind nicht für diese Veranstaltung registriert.",
+      "ALREADY_CHECKED_IN": "Sie sind bereits für diese Veranstaltung eingecheckt.",
+      "EVENT_COMPLETED": "Diese Veranstaltung wurde bereits abgeschlossen.",
+      "EVENT_PAST_END": "Das Einchecken ist für diese Veranstaltung nicht mehr möglich."
     }
   }
 }

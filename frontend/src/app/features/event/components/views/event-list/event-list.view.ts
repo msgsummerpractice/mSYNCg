@@ -94,6 +94,9 @@ export class EventListView {
   @Output() editEvent = new EventEmitter<number>();
   @Output() publishEvent = new EventEmitter<number>();
   @Output() completeEvent = new EventEmitter<number>();
+  @Output() checkIn = new EventEmitter<number>();
+
+  @Input() canCheckIn: (event: EventView) => boolean = () => false;
 
   get canManageEvents(): boolean {
     return this.userRole !== null && EVENT_MANAGEMENT_ROLES.includes(this.userRole);

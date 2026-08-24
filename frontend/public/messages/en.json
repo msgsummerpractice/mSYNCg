@@ -226,7 +226,8 @@
       "EDIT": "Edit",
       "PUBLISH": "Publish",
       "COMPLETE": "Complete",
-      "CREATE_EVENT": "Create Event"
+      "CREATE_EVENT": "Create Event",
+      "CHECK_IN": "Check in"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",
@@ -295,6 +296,35 @@
       "GENERATE_CODES_ERROR": "Codes could not be generated. Please try again.",
       "QR_CODE_ALT": "Event QR code",
       "ACCESS_CODE": "Access code"
+    }
+  },
+  "CHECKIN": {
+    "TITLE": "Event Check-in",
+    "CAMERA": {
+      "TAB": "Scan QR Code",
+      "READY": "Ready to scan",
+      "INSTRUCTION": "Point your device at the QR code to scan",
+      "NOT_AVAILABLE": "Camera not available. Please use manual entry instead."
+    },
+    "MANUAL": {
+      "TAB": "Manual Entry",
+      "CODE_LABEL": "6-digit Code",
+      "CODE_HINT": "Enter the 6-digit event code",
+      "SUBMIT": "Check in"
+    },
+    "CANCEL": "Cancel",
+    "SUCCESS": {
+      "TITLE": "Success!",
+      "MESSAGE": "You have successfully checked in to the event."
+    },
+    "ERROR": {
+      "TITLE": "Check-in Failed",
+      "DEFAULT": "An error occurred during check-in. Please try again.",
+      "INVALID_CODE": "The code is invalid. Please check and try again.",
+      "NOT_REGISTERED": "You are not registered for this event.",
+      "ALREADY_CHECKED_IN": "You are already checked in for this event.",
+      "EVENT_COMPLETED": "This event has already been completed.",
+      "EVENT_PAST_END": "Check-in is no longer available for this event."
     }
   }
 }

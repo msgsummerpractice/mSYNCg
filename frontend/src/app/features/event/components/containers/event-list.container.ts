@@ -11,6 +11,7 @@ import { EventListView } from '../views/event-list/event-list.view';
 import { EventCardContainer } from './event-card.container';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { PublishEventContainer } from './publish-event.container';
+import { CheckInDialogContainer } from './checkin-dialog.container';
 import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -258,6 +259,36 @@ export class EventListContainer implements OnInit {
 
   onPublishFinished(): void {
     this.publishingEventId.set(0);
+  }
+
+  canCheckIn = (event: EventView): boolean => {
+    if (event.status !== EventStatusEnum.PUBLISHED) {
+      return false;
+    }
+
+    if (!event.participationStatus) {
+      return false;
+    }
+
+    if (event.participationStatus === 'CHECKED_IN') {
+      return false;
+    }
+
+    const endTime = Date.parse(event.endTime);
+    if (!Number.isFinite(endTime) || endTime < Date.now()) {
+      return false;
+    }
+
+    return true;
+  };
+
+  onCheckIn(eventId: number): void {
+    this.dialog.open(CheckInDialogContainer, {
+      width: '90vw',
+      maxWidth: '600px',
+      data: { eventId },
+      disableClose: true,
+    });
   }
 
   canCompleteEvent = (eventId: number): boolean => {
