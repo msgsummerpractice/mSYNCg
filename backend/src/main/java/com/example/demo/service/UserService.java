@@ -16,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-
+import java.util.Optional;
 import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.model.Location;
@@ -95,14 +95,17 @@ public class UserService implements UserServiceInterface {
         return userRepository.findAllByLocation(location);
     }
 
-
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     public User findById(Integer id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User", id));
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            throw new NotFoundException("User", id);
+        }
     }
 
 }

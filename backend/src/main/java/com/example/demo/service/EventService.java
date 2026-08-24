@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.List;
 
 import com.example.demo.dto.request.EventRequest;
@@ -172,5 +173,14 @@ public class EventService implements EventServiceInterface {
         event.setStatus(EventStatus.PUBLISHED);
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
+    }
+
+    public Event findEventById(Integer id) {
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if (eventOptional.isPresent()) {
+            return eventOptional.get();
+        } else {
+            throw new NotFoundException("Event", id);
+        }
     }
 }
