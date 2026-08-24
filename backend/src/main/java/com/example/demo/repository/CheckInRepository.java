@@ -10,4 +10,5 @@ public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
 
     Optional<CheckIn> findByQrCode(String qrCode);
     Optional<CheckIn> findByCode(Long code);
+    Optional<CheckIn> findByEventId(Integer eventId);
 }

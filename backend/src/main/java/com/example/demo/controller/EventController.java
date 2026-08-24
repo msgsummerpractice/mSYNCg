@@ -5,10 +5,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.Authentication;
 
 import com.example.demo.dto.request.EventRequest;
+import com.example.demo.dto.response.CheckInResponse;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
+import com.example.demo.service.CheckInService;
 import com.example.demo.service.notification.EmailService;
 
 import org.springframework.data.domain.Page;
@@ -25,8 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.dto.response.EventResponse;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +42,8 @@ public class EventController {
     private final EventService eventService;
 
     private final EmailService emailService;
+
+    private final CheckInService checkInService;
 
     @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
     @PostMapping
@@ -87,4 +89,10 @@ public class EventController {
         return ResponseEntity.ok(eventService.completeEvent(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR_USER') or hasRole('MARKETING_ORGANIZER')")
+    @PostMapping("/{eventId}/codes")
+    public ResponseEntity<CheckInResponse> generateCheckInCodes(@PathVariable Integer eventId) {
+        CheckInResponse response = checkInService.generateCodesForEvent(eventId);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -26,4 +26,6 @@ public class EventDetailsResponse {
     private LocalDateTime registrationStart;
     private LocalDateTime registrationEnd;
     private String description;
+    private String qrCode;
+    private String code;
 }
