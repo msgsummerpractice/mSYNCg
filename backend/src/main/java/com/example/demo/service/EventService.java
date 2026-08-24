@@ -25,8 +25,12 @@ import com.example.demo.exceptions.MissingLocationException;
 import com.example.demo.filtering.events.EventSpec;
 import com.example.demo.model.Event;
 import com.example.demo.model.EventStatus;
+import com.example.demo.model.EventParticipationStatus;
 import com.example.demo.model.Location;
+import com.example.demo.model.RegistrationStatus;
+import com.example.demo.repository.AttendanceRecordRepository;
 import com.example.demo.repository.EventRepository;
+import com.example.demo.repository.RegistrationRepository;
 import com.example.demo.exceptions.EventCannotBeCompletedException;
 import com.example.demo.model.EventType;
 import com.example.demo.model.User;
@@ -41,6 +45,8 @@ public class EventService implements EventServiceInterface {
     private final ModelMapper modelMapper;
     private final UserService userService;
     private final CheckInServiceInterface checkInService;
+    private final AttendanceRecordRepository attendanceRecordRepository;
+    private final RegistrationRepository registrationRepository;
     private final Base64.Decoder decoder = Base64.getDecoder();
     private final Base64.Encoder encoder = Base64.getEncoder();
 
@@ -91,7 +97,37 @@ public class EventService implements EventServiceInterface {
 
         Page<Event> eventsPage = eventRepository.findAll(effectiveSpec, pageable);
 
-        return eventsPage.map(event -> modelMapper.map(event, EventViewResponse.class));
+        return eventsPage.map(event -> {
+            EventViewResponse response = modelMapper.map(event, EventViewResponse.class);
+            
+            if (userId != null) {
+                response.setParticipationStatus(
+                    getParticipationStatus(userId, event.getId())
+                );
+            }
+            
+            return response;
+        });
+    }
+
+    private EventParticipationStatus getParticipationStatus(Integer userId, Integer eventId) {
+    
+        boolean hasCheckedIn = attendanceRecordRepository.existsByUserIdAndEventId(userId, eventId);
+        if (hasCheckedIn) {
+            return EventParticipationStatus.CHECKED_IN;
+        }
+        
+        
+        boolean isRegistered = registrationRepository.existsByUserIdAndEventIdAndStatus(
+            userId, 
+            eventId, 
+            RegistrationStatus.REGISTERED
+        );
+        if (isRegistered) {
+            return EventParticipationStatus.REGISTERED;
+        }
+        
+        return null;  
     }
 
     private Specification<Event> eligibleForParticipant(Location participantLocation) {

@@ -28,8 +28,12 @@ export class EventService {
 
   private readonly eventsUrl = `${environment.apiUrl}/events`;
 
-  getEvents(filters: EventFilterParams): Observable<PageResponse<EventView>> {
+  getEvents(filters: EventFilterParams, userId?: number): Observable<PageResponse<EventView>> {
     let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
+
+    if (userId !== undefined) {
+      params = params.set('userId', userId);
+    }
 
     if (filters.name) {
       params = params.set('name', filters.name);
