@@ -74,6 +74,23 @@
     "LOGIN_ERROR": "Email sau parolă incorectă.",
     "ACCOUNT_INACTIVE_ERROR": "Contul este inactiv. Vă rugăm să contactați un administrator."
   },
+  "FORGOT_PASSWORD": {
+    "WELCOME": "Recuperare Parolă",
+    "TITLE": "Resetează Parola",
+    "DESCRIPTION": "Introdu adresa ta de email și îți vom trimite un link pentru resetarea parolei.",
+    "FORM_TITLE": "Ai uitat parola?",
+    "FORM_SUBTITLE": "Nicio problemă, îți vom trimite instrucțiuni de resetare.",
+    "EMAIL_LABEL": "Adresă de Email",
+    "EMAIL_PLACEHOLDER": "ion.popescu@exemplu.ro",
+    "EMAIL_REQUIRED": "Email-ul este obligatoriu",
+    "EMAIL_INVALID": "Introduceți o adresă de email validă",
+    "SUBMIT_BUTTON": "Trimite Link de Resetare",
+    "SUCCESS_MESSAGE": "Link-ul de resetare a parolei a fost trimis la adresa ta de email!",
+    "ERROR_MESSAGE": "Nu s-a putut trimite link-ul de resetare. Te rugăm să încerci din nou.",
+    "EMAIL_NOT_FOUND": "Nu a fost găsit niciun cont cu această adresă de email.",
+    "REMEMBER_PASSWORD": "Îți amintești parola?",
+    "BACK_TO_LOGIN": "Înapoi la autentificare"
+  },
   "REGISTER": {
     "USER": {
       "TITLE": "Creează un cont",

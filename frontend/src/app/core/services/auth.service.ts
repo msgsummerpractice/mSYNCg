@@ -39,6 +39,10 @@ export class AuthService {
     return this.http.post<UserRegisterResponse>(`${this.apiUrl}/users`, userData);
   }
 
+  forgotPassword(email: { email: string }): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/forgot-password`, email);
+  }
+
   getToken(): string | null {
     return isPlatformBrowser(this.platformId) ? localStorage.getItem(this.tokenKey) : null;
   }
