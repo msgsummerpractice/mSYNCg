@@ -289,7 +289,11 @@
       "END_DATE": "Data de sfârșit",
       "REGISTRATION_START": "Începerea înscrierilor",
       "REGISTRATION_END": "Închiderea înscrierilor",
-      "FOOD_PROVIDED": "Masă inclusă"
+      "FOOD_PROVIDED": "Masă inclusă",
+      "GENERATE_CODES": "Generează coduri",
+      "GENERATE_CODES_ERROR": "Codurile nu au putut fi generate. Încercați din nou.",
+      "QR_CODE_ALT": "Cod QR al evenimentului",
+      "ACCESS_CODE": "Cod de acces"
     }
   }
 }

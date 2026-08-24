@@ -66,6 +66,13 @@ export interface Event {
   registrationStart: Date | null;
   registrationEnd: Date | null;
   foodProvided: boolean | null;
+  qrCode?: string | null;
+  code?: string | null;
+}
+
+export interface EventCodesResponse {
+  qrCode: string;
+  code: string;
 }
 
 export interface EventResponse {
