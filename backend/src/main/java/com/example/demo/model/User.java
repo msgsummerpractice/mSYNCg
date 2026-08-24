@@ -84,9 +84,4 @@ public class User {
                 ", image=" + (image != null ? "[PREZENT]" : "[LIPSA]") +
                 '}';
     }
-
-    public User orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
-    }
 }
