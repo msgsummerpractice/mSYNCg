@@ -12,6 +12,7 @@ import { UserListContainer } from './features/admin/components/containers/user-l
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin-guard';
 import { eventManagementGuard } from './core/guards/event-management.guard';
+import { UserEventRegisterContainer } from './features/user/components/containers/user-event-register.container';
 
 export const routes: Routes = [
   // Default route
@@ -33,6 +34,11 @@ export const routes: Routes = [
   {
     path: 'eventcard/:id',
     component: EventCardContainer,
+  },
+  {
+    path: 'events/:id/register',
+    canActivate: [authGuard],
+    component: UserEventRegisterContainer,
   },
 
   // Protected application routes

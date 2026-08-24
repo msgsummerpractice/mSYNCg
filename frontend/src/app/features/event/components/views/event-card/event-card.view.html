@@ -88,6 +88,14 @@
           {{ ev.description }}
         </p>
       </mat-card-content>
+
+      <div class="flex w-full justify-end px-6 pb-6">
+        <app-button-container
+          [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
+          (clickEvent)="handleEventClick()"
+          variant="primary"
+        ></app-button-container>
+      </div>
     </div>
   </mat-card>
 </div>

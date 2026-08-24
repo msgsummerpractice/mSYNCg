@@ -1,9 +1,8 @@
 import { EventStatusEnum, EventTypeEnum } from '../constants/event.constant';
+import { FoodTypeEnum } from '../constants/food-type.constant';
 import { FormControl } from '@angular/forms';
 import { LocationEnum } from './location.model';
 import { EventLocation } from '../constants/location.constant';
-
-
 
 export const EVENT_TYPES = Object.values(EventTypeEnum);
 
@@ -21,6 +20,19 @@ export type EventForm = {
   type: FormControl<EventTypeEnum | null>;
   location: FormControl<LocationEnum | null>;
   isFoodProvided: FormControl<boolean | null>;
+};
+
+export type EventRegistrationForm = {
+  type: FormControl<EventTypeEnum | null>;
+  location: FormControl<LocationEnum | null>;
+  transportNeeded: FormControl<boolean>;
+  driverName: FormControl<string | null>;
+  driverPhone: FormControl<string | null>;
+  accommodationNeeded: FormControl<boolean>;
+  accommodationDetails: FormControl<number | null>;
+  photoConsent: FormControl<boolean>;
+  GDPRConsent: FormControl<boolean>;
+  foodType: FormControl<FoodTypeEnum | null>;
 };
 
 export interface EventDraftRequest {
@@ -65,6 +77,29 @@ export interface Event {
 export interface EventResponse {
   id: number;
   status: EventStatusEnum;
+}
+
+export interface EventRegisterResponse {
+  eventId: number;
+  userId: number;
+  date: Date;
+  gdpr: boolean;
+  photoConsent: boolean;
+  foodType: FoodTypeEnum | null;
+  accommodationDays: number | null;
+  driverName: string | null;
+  driverPhone: string | null;
+}
+
+export interface EventRegisterRequest {
+  eventId: number;
+  gdpr: boolean;
+  photoConsent: boolean;
+  foodType: FoodTypeEnum | null;
+  accommodationDays: number | null;
+  transportNeeded: boolean;
+  driverName: string | null;
+  driverPhone: string | null;
 }
 
 export interface EventFilterParams {

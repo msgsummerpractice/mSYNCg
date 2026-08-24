@@ -73,7 +73,7 @@ export class EventService {
   getEventById(id: number): Observable<Event> {
     return this.http.get<Event>(`${this.eventsUrl}/${id}`);
   }
-
+  
   private toEvent(payload: EventPayload): Event {
     return {
       ...payload,
