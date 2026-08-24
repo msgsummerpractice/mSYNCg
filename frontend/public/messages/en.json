@@ -85,7 +85,7 @@
     "EMAIL_REQUIRED": "Email is required",
     "EMAIL_INVALID": "Please enter a valid email address",
     "SUBMIT_BUTTON": "Send Reset Link",
-    "SUCCESS_MESSAGE": "Password reset link has been sent to your email!",
+    "SUCCESS_MESSAGE": "If an account exists for this email, you will receive a password reset link.",
     "ERROR_MESSAGE": "Unable to send reset link. Please try again.",
     "EMAIL_NOT_FOUND": "No account found with this email address.",
     "REMEMBER_PASSWORD": "Remember your password?",

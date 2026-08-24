@@ -52,11 +52,16 @@ export class ForgotPasswordFormContainer {
           this.router.navigate(['/login']);
         },
         error: (err: HttpErrorResponse) => {
-          const errorKey =
-            err.status === 404
-              ? 'FORGOT_PASSWORD.EMAIL_NOT_FOUND'
-              : 'FORGOT_PASSWORD.ERROR_MESSAGE';
-          this.toastService.showError(this.translateService.instant(errorKey));
+          if (err.status === 404) {
+            this.toastService.showSuccess(
+              this.translateService.instant('FORGOT_PASSWORD.SUCCESS_MESSAGE')
+            );
+            this.router.navigate(['/login']);
+          } else {
+            this.toastService.showError(
+              this.translateService.instant('FORGOT_PASSWORD.ERROR_MESSAGE')
+            );
+          }
         },
       });
   }
