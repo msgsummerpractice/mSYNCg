@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Optional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -43,6 +44,10 @@ public class CheckInService implements CheckInServiceInterface {
             throw new ValidationException("Event must be published to generate check-in codes.");
         }
 
+        if (checkInRepository.findByEventId(eventId).isPresent()) {
+            throw new ValidationException("Check-in codes have already been generated for this event.");
+        }
+
         int randomNum = 100000 + secureRandom.nextInt(900000);
 
         String qrPayload = "Event:" + event.getName() + "|ID:" + event.getId();
@@ -51,11 +56,19 @@ public class CheckInService implements CheckInServiceInterface {
 
         CheckIn checkIn = new CheckIn();
         checkIn.setEvent(event);
-        checkIn.setQrCode(base64QrImage);
+        checkIn.setQrCode(qrPayload);
         checkIn.setCode((long) randomNum);
         checkInRepository.save(checkIn);
 
         return new CheckInResponse(base64QrImage, String.valueOf(randomNum));
+    }
+
+    @Override
+    public Optional<CheckInResponse> getCodesForEvent(Integer eventId) {
+        return checkInRepository.findByEventId(eventId)
+                .map(checkIn -> new CheckInResponse(
+                        generateBase64QrCode(checkIn.getQrCode(), 300, 300),
+                        String.valueOf(checkIn.getCode())));
     }
 
     @Override
