@@ -3,7 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { Event, EventDraftRequest, EventResponse, EventView } from '../models/event.model';
+import {
+  Event,
+  EventCodesResponse,
+  EventDraftRequest,
+  EventResponse,
+  EventView,
+} from '../models/event.model';
 import { PageResponse } from '../models/page.model';
 import { EventFilterParams } from '../models/event.model';
 import { formatDateTime, parseDateTime } from '../utils/date.util';
@@ -22,8 +28,44 @@ export class EventService {
 
   private readonly eventsUrl = `${environment.apiUrl}/events`;
 
-  getEvents(filters: EventFilterParams): Observable<PageResponse<EventView>> {
+  getEvents(filters: EventFilterParams, userId?: number): Observable<PageResponse<EventView>> {
     let params = new HttpParams().set('page', filters.pageId).set('size', filters.pageSize);
+
+    if (userId !== undefined) {
+      params = params.set('userId', userId);
+    }
+
+    if (filters.name) {
+      params = params.set('name', filters.name);
+    }
+
+    if (filters.startTime) {
+      params = params.set('startTime', filters.startTime);
+    }
+
+    filters.types.forEach((type) => {
+      params = params.append('type', type);
+    });
+
+    filters.statuses.forEach((status) => {
+      params = params.append('status', status);
+    });
+
+    filters.locations.forEach((location) => {
+      params = params.append('location', location);
+    });
+
+    return this.http.get<PageResponse<EventView>>(this.eventsUrl, { params });
+  }
+
+  getEligibleEvents(
+    userId: number,
+    filters: EventFilterParams
+  ): Observable<PageResponse<EventView>> {
+    let params = new HttpParams()
+      .set('page', filters.pageId)
+      .set('size', filters.pageSize)
+      .set('userId', userId);
 
     if (filters.name) {
       params = params.set('name', filters.name);
@@ -72,6 +114,10 @@ export class EventService {
 
   getEventById(id: number): Observable<Event> {
     return this.http.get<Event>(`${this.eventsUrl}/${id}`);
+  }
+
+  generateEventCodes(eventId: number): Observable<EventCodesResponse> {
+    return this.http.post<EventCodesResponse>(`${this.eventsUrl}/${eventId}/codes`, { eventId });
   }
 
   private toEvent(payload: EventPayload): Event {

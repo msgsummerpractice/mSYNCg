@@ -26,7 +26,7 @@ public class Registration {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private EventStatus status;
+    private RegistrationStatus status;
 
     @Column(nullable = false, insertable = false)
     private LocalDateTime date;
@@ -54,23 +54,26 @@ public class Registration {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    private Driver driver;
+    @Column(name = "driver_name", length = 50)
+    private String driverName;
+
+    @Column(name = "driver_phone", length = 20)
+    private String driverPhone;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Registration that = (Registration) o;
-        return Objects.equals(id, that.id) && 
-               Objects.equals(status, that.status) && 
-               Objects.equals(date, that.date) && 
-               foodPreference == that.foodPreference && 
-               Objects.equals(accommodationDays, that.accommodationDays) && 
-               Objects.equals(gdpr, that.gdpr) && 
-               Objects.equals(photoConsent, that.photoConsent);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(date, that.date) &&
+                foodPreference == that.foodPreference &&
+                Objects.equals(accommodationDays, that.accommodationDays) &&
+                Objects.equals(gdpr, that.gdpr) &&
+                Objects.equals(photoConsent, that.photoConsent);
     }
 
     @Override

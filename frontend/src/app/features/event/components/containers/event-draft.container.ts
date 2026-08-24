@@ -224,6 +224,14 @@ export abstract class EventDraftContainer {
   }
 
   private getFirstInvalidErrorKey(): string | null {
+    if (this.eventFormGroup.hasError('startDateInPast')) {
+      return 'REGISTER.EVENT.START_DATE.IN_PAST';
+    }
+
+    if (this.eventFormGroup.hasError('registrationStartDateInPast')) {
+      return 'REGISTER.EVENT.REGISTRATION_START_DATE.IN_PAST';
+    }
+
     if (this.eventFormGroup.hasError('invalidDateRange')) {
       return 'REGISTER.EVENT.END_DATE.INVALID_RANGE';
     }

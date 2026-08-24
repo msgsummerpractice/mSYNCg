@@ -32,6 +32,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -361,6 +362,33 @@ public class UserServiceTests {
 		verify(userRepository).findByEmail("admin@example.com");
 		verify(userRepository, never()).save(user);
 		verify(modelMapper, never()).map(user, UserResponse.class);
+	}
+
+	@Test
+	void findById_whenUserExists_returnsUser() {
+		User user = new User();
+		user.setId(5);
+		when(userRepository.findById(5)).thenReturn(Optional.of(user));
+
+		assertSame(user, userService.findById(5));
+		verify(userRepository).findById(5);
+	}
+
+	@Test
+	void findById_whenUserDoesNotExist_throwsNotFoundException() {
+		when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.findById(99));
+
+		assertEquals("User with id 99 not found", exception.getMessage());
+	}
+
+	@Test
+	void findById_whenRepositoryFails_propagatesException() {
+		when(userRepository.findById(1))
+				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
+
+		assertThrows(DataAccessResourceFailureException.class, () -> userService.findById(1));
 	}
 
 

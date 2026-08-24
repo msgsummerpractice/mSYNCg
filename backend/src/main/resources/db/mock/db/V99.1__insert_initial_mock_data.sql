@@ -4,18 +4,14 @@ INSERT INTO users (first_name, last_name, email, password, location, status, rol
 ('Sonia','Damian','sonjadamian@gmail.com', '$2a$12$tiI8AUJKI5AkcN9OwuQ5yefBDUueYy9taKg5ggqncePWB0mc83bU.','TARGU_MURES',true,'HR_USER'),
 ('Dora', 'Gyurka', 'dora.gyurka25@gmail.com', '$2a$12$tiI8AUJKI5AkcN9OwuQ5yefBDUueYy9taKg5ggqncePWB0mc83bU.','TARGU_MURES',false, 'MARKETING_ORGANIZER');
 
-INSERT INTO drivers (name, telephone_nr) VALUES
-('Vasile Soferu', '0740123456'),
-('Mihai Viteazu', '0722987654');
-
 INSERT INTO events (name, status, type, location, start_time, end_time, food_provided, registration_start, registration_end, description, created_by) VALUES
 ('Summer Tech Camp', 'PUBLISHED', 'INTERNAL', 'ALL', '2026-08-20 10:00:00', '2026-08-22 18:00:00', true, '2026-08-01 00:00:00', '2026-08-15 23:59:59', 'Un workshop de vara despre tehnologie Java si React.', 1),
 ('Teambuilding 2026', 'DRAFT', 'LOCAL', 'TIMISOARA', '2026-09-10 14:00:00', '2026-09-12 12:00:00', true, '2026-08-20 00:00:00', '2026-09-01 23:59:59', 'Teambuilding anual pentru toata compania.', 1),
 ('Summer Nights 2026', 'DRAFT', 'EXTERNAL', 'TIMISOARA', '2026-09-10 14:00:00', '2026-09-12 12:00:00', false, '2026-08-20 00:00:00', '2026-09-01 23:59:59', 'O ultima seara de vara cu colegii.', 1);
 
-INSERT INTO registrations (user_id, event_id, status, driver_id, food_preference, accommodation_days, gdpr, photo_consent) VALUES
-(2, 1, 'COMPLETED', 1, 'VEGETARIAN', 2, true, true),
-(1, 2, 'PUBLISHED', null, 'NONE', 2, true, false);
+INSERT INTO registrations (user_id, event_id, status, driver_name, driver_phone, food_preference, accommodation_days, gdpr, photo_consent) VALUES
+(2, 1, 'REGISTERED', 'Vasile Soferu', '0740123456', 'VEGETARIAN', 2, true, true),
+(1, 2, 'WITHDRAWN', null, null, 'NONE', 2, true, false);
 
 INSERT INTO check_in (event_id, qr_code, code) VALUES
 (1, 'QR_SUMMER_TECH_12345', 12345),
