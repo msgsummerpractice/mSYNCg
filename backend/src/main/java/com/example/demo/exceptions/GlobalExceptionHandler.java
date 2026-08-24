@@ -183,6 +183,21 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 
+	@ExceptionHandler(RegistrationClosedException.class)
+	public ResponseEntity<ErrorResponse> handleRegistrationClosedException(
+			RegistrationClosedException exception,
+			HttpServletRequest request) {
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.CONFLICT.value(),
+				"Conflict",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> handleGenericException(
 			Exception exception,

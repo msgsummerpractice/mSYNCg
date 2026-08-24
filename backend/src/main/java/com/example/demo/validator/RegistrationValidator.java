@@ -1,5 +1,6 @@
 package com.example.demo.validator;
 
+import com.example.demo.exceptions.RegistrationClosedException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.model.Event;
 import com.example.demo.model.EventStatus;
@@ -28,6 +29,25 @@ public class RegistrationValidator {
         validatePhotoConsent(registration);
         validateFoodPreference(registration);
         validateInternalEventDetails(registration);
+    }
+
+    public void validateUpdate(Registration registration, LocalDateTime updateTime) {
+        Event event = registration.getEvent();
+
+        validateLocation(registration);
+        validateEventStatus(event);
+        validateRegistrationStillOpen(event, updateTime);
+        validateGdprConsent(registration);
+        validatePhotoConsent(registration);
+        validateFoodPreference(registration);
+        validateInternalEventDetails(registration);
+    }
+
+    private void validateRegistrationStillOpen(Event event, LocalDateTime updateTime) {
+        if (updateTime.isAfter(event.getRegistrationEnd())) {
+            throw new RegistrationClosedException(
+                    "Registration period has ended. The registration can only be deleted.");
+        }
     }
 
     private void validateDuplicateRegistration(Registration registration) {
