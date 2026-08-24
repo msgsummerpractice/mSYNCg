@@ -3,7 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { Event, EventDraftRequest, EventResponse, EventView } from '../models/event.model';
+import {
+  Event,
+  EventCodesResponse,
+  EventDraftRequest,
+  EventResponse,
+  EventView,
+} from '../models/event.model';
 import { PageResponse } from '../models/page.model';
 import { EventFilterParams } from '../models/event.model';
 import { formatDateTime, parseDateTime } from '../utils/date.util';
@@ -104,6 +110,10 @@ export class EventService {
 
   getEventById(id: number): Observable<Event> {
     return this.http.get<Event>(`${this.eventsUrl}/${id}`);
+  }
+
+  generateEventCodes(eventId: number): Observable<EventCodesResponse> {
+    return this.http.post<EventCodesResponse>(`${this.eventsUrl}/${eventId}/codes`, { eventId });
   }
 
   private toEvent(payload: EventPayload): Event {

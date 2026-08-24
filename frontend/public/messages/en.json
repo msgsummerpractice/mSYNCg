@@ -290,7 +290,11 @@
       "END_DATE": "End date",
       "REGISTRATION_START": "Registration opens",
       "REGISTRATION_END": "Registration closes",
-      "FOOD_PROVIDED": "Food provided"
+      "FOOD_PROVIDED": "Food provided",
+      "GENERATE_CODES": "Generate codes",
+      "GENERATE_CODES_ERROR": "Codes could not be generated. Please try again.",
+      "QR_CODE_ALT": "Event QR code",
+      "ACCESS_CODE": "Access code"
     }
   }
 }
