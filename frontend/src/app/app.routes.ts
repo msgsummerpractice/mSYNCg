@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-
+import { ResetPasswordPage } from './shared/pages/reset-password/reset-password.page';
 import { LoginPage } from './shared/pages/login/login.page';
 import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
@@ -34,6 +34,10 @@ export const routes: Routes = [
   {
     path: 'forgot-password',
     component: ForgotPasswordPage,
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordPage,
   },
   {
     path: 'eventcard/:id',

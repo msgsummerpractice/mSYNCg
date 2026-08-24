@@ -312,5 +312,27 @@
       "QR_CODE_ALT": "Cod QR al evenimentului",
       "ACCESS_CODE": "Cod de acces"
     }
+  },
+  "RESET_PASSWORD": {
+    "WELCOME": "Resetează parola",
+    "TITLE": "Alege o parolă nouă",
+    "DESCRIPTION": "Introdu și confirmă noua parolă pentru a-ți recâștiga accesul la cont.",
+    "FORM_TITLE": "Parolă nouă",
+    "FORM_SUBTITLE": "Noua parolă trebuie să conțină cel puțin 8 caractere.",
+    "PASSWORD_LABEL": "Parolă nouă",
+    "PASSWORD_PLACEHOLDER": "Introdu noua parolă",
+    "PASSWORD_REQUIRED": "Parola este obligatorie.",
+    "PASSWORD_MIN_LENGTH": "Parola trebuie să conțină cel puțin 8 caractere.",
+    "CONFIRM_PASSWORD_LABEL": "Confirmă parola nouă",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Confirmă noua parolă",
+    "CONFIRM_PASSWORD_REQUIRED": "Confirmarea parolei este obligatorie.",
+    "PASSWORDS_DO_NOT_MATCH": "Parolele nu coincid.",
+    "SUBMIT_BUTTON": "Resetează parola",
+    "SUCCESS_MESSAGE": "Parola a fost resetată cu succes.",
+    "INVALID_LINK": "Acest link de resetare a parolei nu este valid.",
+    "EXPIRED_LINK": "Acest link de resetare a parolei a expirat.",
+    "USED_LINK": "Acest link de resetare a parolei a fost deja utilizat.",
+    "ERROR_MESSAGE": "Parola nu a putut fi resetată. Încearcă din nou.",
+    "BACK_TO_LOGIN": "Înapoi la autentificare"
   }
 }

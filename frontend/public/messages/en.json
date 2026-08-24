@@ -313,5 +313,27 @@
       "QR_CODE_ALT": "Event QR code",
       "ACCESS_CODE": "Access code"
     }
+  },
+  "RESET_PASSWORD": {
+    "WELCOME": "Reset your password",
+    "TITLE": "Choose a new password",
+    "DESCRIPTION": "Enter and confirm your new password to regain access to your account.",
+    "FORM_TITLE": "New password",
+    "FORM_SUBTITLE": "Your new password must contain at least 8 characters.",
+    "PASSWORD_LABEL": "New password",
+    "PASSWORD_PLACEHOLDER": "Enter your new password",
+    "PASSWORD_REQUIRED": "Password is required.",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long.",
+    "CONFIRM_PASSWORD_LABEL": "Confirm new password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your new password",
+    "CONFIRM_PASSWORD_REQUIRED": "Please confirm your password.",
+    "PASSWORDS_DO_NOT_MATCH": "Passwords do not match.",
+    "SUBMIT_BUTTON": "Reset password",
+    "SUCCESS_MESSAGE": "Your password has been reset successfully.",
+    "INVALID_LINK": "This password reset link is invalid.",
+    "EXPIRED_LINK": "This password reset link has expired.",
+    "USED_LINK": "This password reset link has already been used.",
+    "ERROR_MESSAGE": "Unable to reset your password. Please try again.",
+    "BACK_TO_LOGIN": "Back to login"
   }
 }
