@@ -103,6 +103,86 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 
+	@ExceptionHandler(InvalidCheckInException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidCheckInException(
+			InvalidCheckInException exception,
+			HttpServletRequest request) {
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	@ExceptionHandler(UserNotRegisteredException.class)
+	public ResponseEntity<ErrorResponse> handleUserNotRegisteredException(
+			UserNotRegisteredException exception,
+			HttpServletRequest request) {
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	@ExceptionHandler(EventAlreadyCompletedException.class)
+	public ResponseEntity<ErrorResponse> handleEventAlreadyCompletedException(
+			EventAlreadyCompletedException exception,
+			HttpServletRequest request) {
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	@ExceptionHandler(EventCheckInExpiredException.class)
+	public ResponseEntity<ErrorResponse> handleEventCheckInExpiredException(
+			EventCheckInExpiredException exception,
+			HttpServletRequest request) {
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	@ExceptionHandler(AlreadyCheckedInException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyCheckedInException(
+			AlreadyCheckedInException exception,
+			HttpServletRequest request) {
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> handleGenericException(
 			Exception exception,
