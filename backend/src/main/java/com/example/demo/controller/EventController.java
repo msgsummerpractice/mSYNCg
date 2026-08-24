@@ -5,10 +5,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.Authentication;
 
 import com.example.demo.dto.request.EventRequest;
+import com.example.demo.dto.response.CheckInResponse;
 import com.example.demo.dto.response.EventDetailsResponse;
 import com.example.demo.dto.response.EventResponse;
 import com.example.demo.dto.response.EventViewResponse;
 import com.example.demo.service.EventService;
+import com.example.demo.service.CheckInService;
 import com.example.demo.service.notification.EmailService;
 
 import org.springframework.data.domain.Page;
@@ -42,6 +44,8 @@ public class EventController {
     private final EventService eventService;
 
     private final EmailService emailService;
+
+    private final CheckInService checkInService;
 
     @PreAuthorize("hasRole('MARKETING_ORGANIZER')")
     @PostMapping
@@ -87,4 +91,9 @@ public class EventController {
         return ResponseEntity.ok(eventService.completeEvent(id));
     }
 
+    @PostMapping("/{eventId}/codes")
+    public ResponseEntity<CheckInResponse> generateCheckInCodes(@PathVariable Integer eventId) {
+        CheckInResponse response = checkInService.generateCodesForEvent(eventId);
+        return ResponseEntity.ok(response);
+    }
 }
