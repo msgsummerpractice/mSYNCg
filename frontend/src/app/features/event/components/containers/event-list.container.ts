@@ -288,10 +288,6 @@ export class EventListContainer implements OnInit {
   }
 
   private getEventsForCurrentUser(filters: EventFilterParams) {
-    if (this.userRole() !== UserRole.PARTICIPANT) {
-      return this.eventService.getEvents(filters);
-    }
-
     return this.authService.loadCurrentUser().pipe(
       switchMap((user) => {
         if (!user) {
@@ -299,6 +295,10 @@ export class EventListContainer implements OnInit {
         }
 
         this.currentUserId.set(user.id);
+
+        if (this.userRole() !== UserRole.PARTICIPANT) {
+          return this.eventService.getEvents(filters, user.id);
+        }
 
         return this.eventService.getEligibleEvents(user.id, filters);
       })
