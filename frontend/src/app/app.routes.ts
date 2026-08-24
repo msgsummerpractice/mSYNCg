@@ -35,11 +35,6 @@ export const routes: Routes = [
     path: 'eventcard/:id',
     component: EventCardContainer,
   },
-  {
-    path: 'events/:id/register',
-    canActivate: [authGuard],
-    component: UserEventRegisterContainer,
-  },
 
   // Protected application routes
   {
@@ -75,6 +70,11 @@ export const routes: Routes = [
           import('./features/event/pages/event-creation.page').then(
             ({ EventCreationPage }) => EventCreationPage
           ),
+      },
+      {
+        path: 'events/:id/register',
+        canActivate: [authGuard],
+        component: UserEventRegisterContainer,
       },
 
       // Event update

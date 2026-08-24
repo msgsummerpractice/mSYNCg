@@ -77,7 +77,7 @@ export class EventCardView {
     return qrCode ? toImageSrc(qrCode) : null;
   });
 
-  constructor() {
+  ngOnInit() {
     setInterval(() => this.now.set(new Date()), 60_000);
   }
 
@@ -86,10 +86,7 @@ export class EventCardView {
   }
 
   isRegistrationClosed(registrationEnd: Date | null): boolean {
-  return (
-    registrationEnd !== null &&
-    new Date(registrationEnd).getTime() < this.now().getTime()
-  );
-}
+    return registrationEnd !== null && new Date(registrationEnd).getTime() < this.now().getTime();
+  }
   readonly hasCodes = computed(() => !!this.qrCodeSrc() && !!this.accessCode());
 }

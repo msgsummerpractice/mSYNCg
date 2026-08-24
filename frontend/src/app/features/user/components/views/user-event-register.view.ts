@@ -10,6 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { GenericFormView } from '../../../../shared/components/views/generic-form/generic-form.view';
 import { MatInputModule } from '@angular/material/input';
 import { Event } from '../../../../core/models/event.model';
+import { MatButton } from '@angular/material/button';
+import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
 @Component({
   selector: 'app-user-event-register-view',
   imports: [
@@ -21,6 +23,8 @@ import { Event } from '../../../../core/models/event.model';
     MatSlideToggle,
     MatError,
     ReactiveFormsModule,
+    MatButton,
+    ToolbarContainer,
   ],
   templateUrl: './user-event-register.view.html',
 })

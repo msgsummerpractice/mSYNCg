@@ -14,11 +14,11 @@ import { EventService } from '../../../../core/services/event.service';
 import { Event } from '../../../../core/models/event.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
-import { error } from 'console';
+import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
 @Component({
   selector: 'app-user-event-register-container',
   standalone: true,
-  imports: [UserEventRegisterView],
+  imports: [UserEventRegisterView, ToolbarContainer],
   template: `
     <app-user-event-register-view
       [formGroup]="eventFormGroup"
@@ -58,7 +58,7 @@ export class UserEventRegisterContainer {
     foodType: this.fb.control<FoodTypeEnum | null>(null),
   });
 
-  constructor() {
+  ngOnInit() {
     this.setUpConditionValidation();
 
     const eventId = Number(this.route.snapshot.paramMap.get('id'));
@@ -156,8 +156,7 @@ export class UserEventRegisterContainer {
   }
 
   handleCancel(): void {
-    const evId = this.route.snapshot.paramMap.get('id');
-    this.router.navigate([`/events/${evId}/register`]);
+    this.router.navigate([`/events`]);
   }
 
   private setUpConditionValidation(): void {
