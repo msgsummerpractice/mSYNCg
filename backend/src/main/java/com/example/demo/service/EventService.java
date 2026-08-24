@@ -100,7 +100,6 @@ public class EventService implements EventServiceInterface {
         return eventsPage.map(event -> {
             EventViewResponse response = modelMapper.map(event, EventViewResponse.class);
             
-            // Populate participation status if userId is provided
             if (userId != null) {
                 response.setParticipationStatus(
                     getParticipationStatus(userId, event.getId())
@@ -112,13 +111,13 @@ public class EventService implements EventServiceInterface {
     }
 
     private EventParticipationStatus getParticipationStatus(Integer userId, Integer eventId) {
-        // Check if user has checked in to the event
+    
         boolean hasCheckedIn = attendanceRecordRepository.existsByUserIdAndEventId(userId, eventId);
         if (hasCheckedIn) {
             return EventParticipationStatus.CHECKED_IN;
         }
         
-        // Check if user is registered (with REGISTERED status)
+        
         boolean isRegistered = registrationRepository.existsByUserIdAndEventIdAndStatus(
             userId, 
             eventId, 
@@ -128,7 +127,7 @@ public class EventService implements EventServiceInterface {
             return EventParticipationStatus.REGISTERED;
         }
         
-        return null;  // Not registered or checked in
+        return null;  
     }
 
     private Specification<Event> eligibleForParticipant(Location participantLocation) {
