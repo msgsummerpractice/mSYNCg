@@ -19,6 +19,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/frontend",
             "assets": [
               {
                 "glob": "**/*",
@@ -30,18 +31,23 @@
                 "output": "/assets"
               }
             ],
-            "styles": ["src/material-theme.scss", "src/styles.css"],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "security": {
-              "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "styles": ["src/material-theme.scss", "src/styles.css"]
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": true,
+                "fonts": {
+                  "inline": false
+                }
+              },
               "budgets": [
                 {
                   "type": "initial",
