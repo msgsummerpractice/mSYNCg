@@ -28,6 +28,7 @@ export interface CurrentUser {
   email: string;
   role: UserRole;
   location: UserLocation;
+  imageBase64: string | null;
 }
 
 export interface EditProfileResponse {
@@ -36,7 +37,7 @@ export interface EditProfileResponse {
   email: string;
   location: UserLocation;
   role: UserRole;
-  posterName: string | null;
+  imageBase64: string | null;
 }
 
 export interface EditProfileRequest {

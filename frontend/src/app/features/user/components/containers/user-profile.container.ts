@@ -33,7 +33,6 @@ import { UserService } from '../../../../core/services/user.service';
       [formGroup]="userProfileGroup"
       (submitEvent)="handleEventSubmit()"
       (invalidSubmit)="handleInvalidForm()"
-      [posterName]="posterName()"
       [posterPreviewUrl]="posterPreviewUrl()"
       [isLoading]="isLoading()"
       (posterSelectedEvent)="handlePosterSelected($event)"
@@ -46,7 +45,6 @@ export class UserProfileContainer {
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
-  readonly posterName = signal<string | null>(null);
   private readonly userService = inject(UserService);
   readonly posterPreviewUrl = signal<string | null>(null);
   private readonly destroyRef = inject(DestroyRef);
@@ -63,19 +61,29 @@ export class UserProfileContainer {
   });
 
   ngOnInit(): void {
-    this.authService.loadCurrentUser().subscribe((user) => {
-      if (!user) {
-        return;
-      }
+    const user = this.authService.currentUser();
 
-      this.userProfileGroup.patchValue({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        location: user.location,
+    if (!user) {
+      return;
+    }
+
+    this.userService
+      .getUserProfile(user.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((profile) => {
+        if (profile.imageBase64) {
+          this.posterBase64 = profile.imageBase64;
+          this.posterPreviewUrl.set(`data:image/jpeg;base64,${profile.imageBase64}`);
+        }
+
+        this.userProfileGroup.patchValue({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: profile.email,
+          location: profile.location,
+          role: profile.role,
+        });
       });
-    });
   }
 
   handleCancel(): void {
@@ -93,7 +101,6 @@ export class UserProfileContainer {
     reader.onload = () => {
       const result = reader.result!.toString();
       this.posterBase64 = result.split(',')[1] ?? result;
-      this.posterName.set(file.name);
       this.posterPreviewUrl.set(result);
     };
 

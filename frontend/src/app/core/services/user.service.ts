@@ -14,4 +14,8 @@ export class UserService {
   updateUserProfile(userId: number, data: EditProfileRequest): Observable<EditProfileResponse> {
     return this.http.put<EditProfileResponse>(`${this.userUrl}/${userId}`, data);
   }
+
+  getUserProfile(userId: number): Observable<EditProfileResponse> {
+    return this.http.get<EditProfileResponse>(`${this.userUrl}/${userId}`);
+  }
 }
