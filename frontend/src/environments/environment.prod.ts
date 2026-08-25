@@ -1,5 +1,4 @@
 export const environment = {
-  // TODO: replace with the deployed backend base URL before going live
-  apiUrl: 'https://REPLACE-ME.example.com/api',
+  apiUrl: 'https://msyncg-backend.ashybeach-88b3ccc7.westeurope.azurecontainerapps.io',
   production: true,
 };
