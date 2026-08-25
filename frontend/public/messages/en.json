@@ -74,22 +74,6 @@
     "LOGIN_ERROR": "Invalid email or password.",
     "ACCOUNT_INACTIVE_ERROR": "Account is inactive. Please contact an administrator."
   },
-  "FORGOT_PASSWORD": {
-    "WELCOME": "Password Recovery",
-    "TITLE": "Reset Your Password",
-    "DESCRIPTION": "Enter your email address and we'll send you a link to reset your password.",
-    "FORM_TITLE": "Forgot your password?",
-    "FORM_SUBTITLE": "No worries, we'll send you reset instructions.",
-    "EMAIL_LABEL": "Email Address",
-    "EMAIL_PLACEHOLDER": "john.doe@example.com",
-    "EMAIL_REQUIRED": "Email is required",
-    "EMAIL_INVALID": "Please enter a valid email address",
-    "SUBMIT_BUTTON": "Send Reset Link",
-    "SUCCESS_MESSAGE": "If an account exists for this email, you will receive a password reset link.",
-    "ERROR_MESSAGE": "Unable to send reset link. Please try again.",
-    "EMAIL_NOT_FOUND": "No account found with this email address.",
-    "REMEMBER_PASSWORD": "Remember your password?",
-    "BACK_TO_LOGIN": "Back to login",
   "REGISTER_FOR_EVENT": {
     "TITLE": "Register for Event",
     "BUTTON": {
@@ -373,6 +357,23 @@
     "EXPIRED_LINK": "This password reset link has expired.",
     "USED_LINK": "This password reset link has already been used.",
     "ERROR_MESSAGE": "Unable to reset your password. Please try again.",
+    "BACK_TO_LOGIN": "Back to login"
+  },
+  "FORGOT_PASSWORD": {
+    "WELCOME": "Password Recovery",
+    "TITLE": "Reset Your Password",
+    "DESCRIPTION": "Enter your email address and we'll send you a link to reset your password.",
+    "FORM_TITLE": "Forgot your password?",
+    "FORM_SUBTITLE": "No worries, we'll send you reset instructions.",
+    "EMAIL_LABEL": "Email Address",
+    "EMAIL_PLACEHOLDER": "john.doe@example.com",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Please enter a valid email address",
+    "SUBMIT_BUTTON": "Send Reset Link",
+    "SUCCESS_MESSAGE": "If an account exists for this email, you will receive a password reset link.",
+    "ERROR_MESSAGE": "Unable to send reset link. Please try again.",
+    "EMAIL_NOT_FOUND": "No account found with this email address.",
+    "REMEMBER_PASSWORD": "Remember your password?",
     "BACK_TO_LOGIN": "Back to login"
   }
 }

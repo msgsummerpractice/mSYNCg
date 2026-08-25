@@ -74,22 +74,6 @@
     "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort.",
     "ACCOUNT_INACTIVE_ERROR": "Das Konto ist inaktiv. Bitte wenden Sie sich an einen Administrator."
   },
-  "FORGOT_PASSWORD": {
-    "WELCOME": "Passwort-Wiederherstellung",
-    "TITLE": "Setzen Sie Ihr Passwort zurück",
-    "DESCRIPTION": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
-    "FORM_TITLE": "Passwort vergessen?",
-    "FORM_SUBTITLE": "Keine Sorge, wir senden Ihnen Anweisungen zum Zurücksetzen.",
-    "EMAIL_LABEL": "E-Mail-Adresse",
-    "EMAIL_PLACEHOLDER": "johann.mueller@beispiel.de",
-    "EMAIL_REQUIRED": "E-Mail ist erforderlich",
-    "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "SUBMIT_BUTTON": "Link zum Zurücksetzen senden",
-    "SUCCESS_MESSAGE": "Falls ein Konto für diese E-Mail existiert, erhalten Sie einen Link zum Zurücksetzen des Passworts.",
-    "ERROR_MESSAGE": "Der Link zum Zurücksetzen konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
-    "EMAIL_NOT_FOUND": "Es wurde kein Konto mit dieser E-Mail-Adresse gefunden.",
-    "REMEMBER_PASSWORD": "Erinnern Sie sich an Ihr Passwort?",
-    "BACK_TO_LOGIN": "Zurück zur Anmeldung",
   "REGISTER_FOR_EVENT": {
     "TITLE": "Für Event registrieren",
     "BUTTON": {
@@ -374,6 +358,23 @@
     "EXPIRED_LINK": "Dieser Link zum Zurücksetzen des Passworts ist abgelaufen.",
     "USED_LINK": "Dieser Link zum Zurücksetzen des Passworts wurde bereits verwendet.",
     "ERROR_MESSAGE": "Das Passwort konnte nicht zurückgesetzt werden. Bitte versuche es erneut.",
+    "BACK_TO_LOGIN": "Zurück zur Anmeldung"
+  },
+  "FORGOT_PASSWORD": {
+    "WELCOME": "Passwort-Wiederherstellung",
+    "TITLE": "Setzen Sie Ihr Passwort zurück",
+    "DESCRIPTION": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "FORM_TITLE": "Passwort vergessen?",
+    "FORM_SUBTITLE": "Keine Sorge, wir senden Ihnen Anweisungen zum Zurücksetzen.",
+    "EMAIL_LABEL": "E-Mail-Adresse",
+    "EMAIL_PLACEHOLDER": "johann.mueller@beispiel.de",
+    "EMAIL_REQUIRED": "E-Mail ist erforderlich",
+    "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "SUBMIT_BUTTON": "Link zum Zurücksetzen senden",
+    "SUCCESS_MESSAGE": "Falls ein Konto für diese E-Mail existiert, erhalten Sie einen Link zum Zurücksetzen des Passworts.",
+    "ERROR_MESSAGE": "Der Link zum Zurücksetzen konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+    "EMAIL_NOT_FOUND": "Es wurde kein Konto mit dieser E-Mail-Adresse gefunden.",
+    "REMEMBER_PASSWORD": "Erinnern Sie sich an Ihr Passwort?",
     "BACK_TO_LOGIN": "Zurück zur Anmeldung"
   }
 }
