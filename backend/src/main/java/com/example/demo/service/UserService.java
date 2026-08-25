@@ -19,17 +19,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Base64;
 import java.util.List;
-
+import java.util.Optional;
 import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.dto.response.UpdateUserProfileResponse;
 import com.example.demo.dto.response.UserResponse;
-import com.example.demo.model.Location;
 import com.example.demo.model.User;
-import com.example.demo.model.UserRole;
 import com.example.demo.dto.request.UserRequest;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
@@ -165,6 +163,15 @@ public class UserService implements UserServiceInterface {
         }
 
         return "application/octet-stream";
+    }
+
+    public User findById(Integer id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            throw new NotFoundException("User", id);
+        }
     }
 
 }

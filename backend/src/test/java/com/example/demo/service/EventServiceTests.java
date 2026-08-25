@@ -12,7 +12,14 @@ import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.model.User;
+import com.example.demo.model.UserRole;
 import com.example.demo.repository.EventRepository;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +32,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -34,8 +42,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,6 +71,9 @@ public class EventServiceTests {
 
 	@Mock
 	private ModelMapper modelMapper;
+
+	@Mock
+	private CheckInServiceInterface checkInService;
 
 	@InjectMocks
 	private EventService eventService;
@@ -138,7 +152,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable)).thenReturn(eventsPage);
 		when(modelMapper.map(event, EventViewResponse.class)).thenReturn(viewResponse);
 
-		Page<EventViewResponse> result = eventService.getAll(spec, pageable);
+		Page<EventViewResponse> result = eventService.getAll(spec, pageable, null);
 
 		assertEquals(1, result.getTotalElements());
 		assertEquals(viewResponse, result.getContent().get(0));
@@ -198,7 +212,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<EventViewResponse> result = eventService.getAll(spec, pageable);
+		Page<EventViewResponse> result = eventService.getAll(spec, pageable, null);
 
 		assertTrue(result.getContent().isEmpty());
 		assertEquals(0, result.getTotalElements());
@@ -213,7 +227,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable);
+		eventService.getAll(spec, pageable, null);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
@@ -221,6 +235,146 @@ public class EventServiceTests {
 
 		assertEquals(spec, specCaptor.getValue());
 		assertEquals(pageable, pageableCaptor.getValue());
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void getEvents_whenUserIsParticipant_filtersByPublishedStatusOpenRegistrationAndLocation() {
+		EventSpec spec = (root, query, criteriaBuilder) -> null;
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userService.findById(7)).thenReturn(buildUser(UserRole.PARTICIPANT, Location.CLUJ_NAPOCA));
+		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(spec, pageable, 7);
+
+		Root<Event> root = mock(Root.class);
+		Path<Object> statusPath = mock(Path.class);
+		Path<Object> locationPath = mock(Path.class);
+		Path<LocalDateTime> registrationEndPath = mock(Path.class);
+		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+		when(root.<Object>get("status")).thenReturn(statusPath);
+		when(root.<Object>get("location")).thenReturn(locationPath);
+		when(root.<LocalDateTime>get("registrationEnd")).thenReturn(registrationEndPath);
+
+		LocalDateTime beforeCall = LocalDateTime.now();
+		captureSpecPassedToRepository(pageable).toPredicate(root, mock(CriteriaQuery.class), criteriaBuilder);
+		LocalDateTime afterCall = LocalDateTime.now();
+
+		verify(criteriaBuilder).equal(statusPath, EventStatus.PUBLISHED);
+		verify(locationPath).in(Location.CLUJ_NAPOCA, Location.ALL);
+
+		ArgumentCaptor<LocalDateTime> nowCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
+		verify(criteriaBuilder).greaterThanOrEqualTo(eq(registrationEndPath), nowCaptor.capture());
+		assertFalse(nowCaptor.getValue().isBefore(beforeCall));
+		assertFalse(nowCaptor.getValue().isAfter(afterCall));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void getEvents_whenParticipantHasNoLocation_doesNotFilterByLocation() {
+		EventSpec spec = (root, query, criteriaBuilder) -> null;
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userService.findById(7)).thenReturn(buildUser(UserRole.PARTICIPANT, null));
+		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(spec, pageable, 7);
+
+		Root<Event> root = mock(Root.class);
+		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
+
+		captureSpecPassedToRepository(pageable).toPredicate(root, mock(CriteriaQuery.class), criteriaBuilder);
+
+		verify(root, never()).get("location");
+		verify(root).get("status");
+		verify(root).get("registrationEnd");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void getEvents_whenUserIsParticipant_appliesEligibilitySpec() {
+		EventSpec spec = (root, query, criteriaBuilder) -> null;
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userService.findById(7)).thenReturn(buildUser(UserRole.PARTICIPANT, Location.CLUJ_NAPOCA));
+		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(spec, pageable, 7);
+
+		assertNotSame(spec, captureSpecPassedToRepository(pageable));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void getEvents_whenParticipantAndSpecIsNull_usesEligibilitySpecAlone() {
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userService.findById(7)).thenReturn(buildUser(UserRole.PARTICIPANT, Location.CLUJ_NAPOCA));
+		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(null, pageable, 7);
+
+		assertNotNull(captureSpecPassedToRepository(pageable));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void getEvents_whenUserIsNotParticipant_usesProvidedSpecOnly() {
+		EventSpec spec = (root, query, criteriaBuilder) -> null;
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userService.findById(9)).thenReturn(buildUser(UserRole.ADMIN, Location.CLUJ_NAPOCA));
+		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(spec, pageable, 9);
+
+		assertSame(spec, captureSpecPassedToRepository(pageable));
+	}
+
+	@Test
+	void getEvents_whenUserIdIsNull_doesNotLookUpUser() {
+		EventSpec spec = mock(EventSpec.class);
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(eventRepository.findAll(spec, pageable))
+				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
+
+		eventService.getAll(spec, pageable, null);
+
+		verifyNoInteractions(userService);
+	}
+
+	@Test
+	void getEvents_whenUserDoesNotExist_propagatesNotFoundException() {
+		EventSpec spec = mock(EventSpec.class);
+		Pageable pageable = PageRequest.of(0, 20);
+
+		when(userService.findById(404)).thenThrow(new NotFoundException("User", 404));
+
+		NotFoundException exception = assertThrows(NotFoundException.class,
+				() -> eventService.getAll(spec, pageable, 404));
+
+		assertEquals("User with id 404 not found", exception.getMessage());
+		verifyNoInteractions(eventRepository);
+	}
+
+	private User buildUser(UserRole role, Location location) {
+		User user = new User();
+		user.setRole(role);
+		user.setLocation(location);
+		return user;
+	}
+
+	private Specification<Event> captureSpecPassedToRepository(Pageable pageable) {
+		ArgumentCaptor<Specification<Event>> specCaptor = ArgumentCaptor.captor();
+		verify(eventRepository).findAll(specCaptor.capture(), eq(pageable));
+		return specCaptor.getValue();
 	}
 
 	@Test
@@ -262,7 +416,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<EventViewResponse> result = eventService.getAll(null, pageable);
+		Page<EventViewResponse> result = eventService.getAll(null, pageable, null);
 
 		assertTrue(result.getContent().isEmpty());
 		verify(eventRepository).findAll((EventSpec) isNull(), eq(pageable));
@@ -304,7 +458,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable));
+		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable, null));
 	}
 
 	@Test
@@ -403,6 +557,7 @@ public class EventServiceTests {
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(detailsResponse);
+		when(checkInService.getCodesForEvent(1)).thenReturn(Optional.empty());
 
 		EventDetailsResponse result = eventService.getById(1);
 
@@ -421,6 +576,7 @@ public class EventServiceTests {
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class))
 				.thenReturn(new EventDetailsResponse());
+		when(checkInService.getCodesForEvent(1)).thenReturn(Optional.empty());
 
 		EventDetailsResponse result = eventService.getById(1);
 
@@ -433,6 +589,7 @@ public class EventServiceTests {
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 		when(modelMapper.map(event, EventDetailsResponse.class)).thenReturn(new EventDetailsResponse());
+		when(checkInService.getCodesForEvent(1)).thenReturn(Optional.empty());
 
 		EventDetailsResponse result = eventService.getById(1);
 

@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-
+import { ResetPasswordPage } from './shared/pages/reset-password/reset-password.page';
 import { LoginPage } from './shared/pages/login/login.page';
 import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
+import { ForgotPasswordPage } from './shared/pages/forgot-password/forgot-password.page';
 import { EventCardContainer } from './features/event/components/containers/event-card.container';
 import { EventListPage } from './features/event/pages/event-list/event-list.page';
 
@@ -12,6 +13,7 @@ import { UserListContainer } from './features/admin/components/containers/user-l
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin-guard';
 import { eventManagementGuard } from './core/guards/event-management.guard';
+import { UserEventRegisterContainer } from './features/user/components/containers/user-event-register.container';
 
 export const routes: Routes = [
   // Default route
@@ -29,6 +31,14 @@ export const routes: Routes = [
   {
     path: 'register',
     component: UserRegisterPage,
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordPage,
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordPage,
   },
   {
     path: 'eventcard/:id',
@@ -69,6 +79,11 @@ export const routes: Routes = [
           import('./features/event/pages/event-creation.page').then(
             ({ EventCreationPage }) => EventCreationPage
           ),
+      },
+      {
+        path: 'events/:id/register',
+        canActivate: [authGuard],
+        component: UserEventRegisterContainer,
       },
 
       // Event update

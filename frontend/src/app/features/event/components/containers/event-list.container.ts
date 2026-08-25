@@ -3,14 +3,15 @@ import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { merge, Subject } from 'rxjs';
+import { EMPTY, merge, Subject } from 'rxjs';
 import { debounceTime, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { EventListView } from '../views/event-list.view';
+import { EventListView } from '../views/event-list/event-list.view';
 import { EventCardContainer } from './event-card.container';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { PublishEventContainer } from './publish-event.container';
+import { CheckInDialogContainer } from './checkin-dialog.container';
 import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -118,6 +119,7 @@ export class EventListContainer implements OnInit {
   isLoading = signal<boolean>(false);
 
   userRole = signal<UserRole | null>(this.authService.getRole());
+  currentUserId = signal<number | null>(null);
 
   canManageEvents = computed(() => {
     const role = this.userRole();
@@ -131,6 +133,12 @@ export class EventListContainer implements OnInit {
 
   readonly selectedEventId = signal<number | null>(null);
   readonly publishingEventId = signal<number>(0);
+
+  readonly selectedEventParticipationStatus = computed(
+    () =>
+      this.pagedEvents().find((event) => event.id === this.selectedEventId())
+        ?.participationStatus ?? null
+  );
 
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
@@ -159,7 +167,7 @@ export class EventListContainer implements OnInit {
       .pipe(
         tap(() => this.isLoading.set(true)),
         switchMap((filters) =>
-          this.eventService.getEvents(filters).pipe(finalize(() => this.isLoading.set(false)))
+          this.getEventsForCurrentUser(filters).pipe(finalize(() => this.isLoading.set(false)))
         ),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -259,6 +267,23 @@ export class EventListContainer implements OnInit {
     this.publishingEventId.set(0);
   }
 
+  onCheckIn(eventId: number): void {
+    this.dialog
+      .open(CheckInDialogContainer, {
+        width: '90vw',
+        maxWidth: '600px',
+        data: { eventId },
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((checkedIn) => {
+        if (checkedIn) {
+          this.reload$.next();
+        }
+      });
+  }
+
   canCompleteEvent = (eventId: number): boolean => {
     const event = this.pagedEvents().find((e) => e.id === eventId);
     if (!event || event.status !== EventStatusEnum.PUBLISHED) {
@@ -284,5 +309,23 @@ export class EventListContainer implements OnInit {
 
   private handleLoadError(): void {
     this.toastService.showError(this.translateService.instant('EVENT_LIST.LOAD_ERROR'));
+  }
+
+  private getEventsForCurrentUser(filters: EventFilterParams) {
+    return this.authService.loadCurrentUser().pipe(
+      switchMap((user) => {
+        if (!user) {
+          return EMPTY;
+        }
+
+        this.currentUserId.set(user.id);
+
+        if (this.userRole() !== UserRole.PARTICIPANT) {
+          return this.eventService.getEvents(filters, user.id);
+        }
+
+        return this.eventService.getEligibleEvents(user.id, filters);
+      })
+    );
   }
 }

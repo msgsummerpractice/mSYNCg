@@ -74,6 +74,46 @@
     "LOGIN_ERROR": "Invalid email or password.",
     "ACCOUNT_INACTIVE_ERROR": "Account is inactive. Please contact an administrator."
   },
+  "REGISTER_FOR_EVENT": {
+    "TITLE": "Register for Event",
+    "BUTTON": {
+      "LABEL": "Register Now"
+    },
+    "GDPR": "I agree to the GDPR terms",
+    "GDPR_REQUIRED": "You must agree to the GDPR terms to register",
+    "FOOD_PROVIDED": {
+      "LABEL": "Select the type of food",
+      "REQUIRED": "You must select the type of food"
+    },
+    "ACCOMMODATION_DETAILS": {
+      "LABEL": "Number of nights of accommodation needed",
+      "REQUIRED": "You must specify the number of nights of accommodation needed"
+    },
+    "TRANSPORT_NEEDED": {
+      "LABEL": "Do you need transport?",
+      "REQUIRED": "You must select if you need transport"
+    },
+    "ACCOMMODATION_NEEDED": {
+      "LABEL": "Do you need accommodation?",
+      "REQUIRED": "You must select if you need accommodation"
+    },
+    "DRIVER_NAME": {
+      "LABEL": "Driver's Name",
+      "REQUIRED": "You must provide the driver's name"
+    },
+    "DRIVER_PHONE": {
+      "LABEL": "Driver's Phone Number",
+      "REQUIRED": "You must provide the driver's phone number"
+    },
+    "INVALID_FORM": "Please fill all the necessary fields in the form before submitting.",
+    "REGISTRATION_SUCCESS": "You have successfully registered for the event!",
+    "PHOTO_CONSENT": {
+      "LABEL": "I consent to the use of my photos for event promotion",
+      "REQUIRED": "You must provide photo consent to register"
+    },
+    "ERROR": "An error occurred while processing your registration. Please try again later.",
+    "SUCCESS": "Registration successful! You will receive a confirmation email shortly."
+  },
   "REGISTER": {
     "USER": {
       "TITLE": "Create an Account",
@@ -134,7 +174,8 @@
       },
       "START_DATE": {
         "LABEL": "Start date",
-        "REQUIRED": "Start date is required"
+        "REQUIRED": "Start date is required",
+        "IN_PAST": "Start date cannot be in the past"
       },
       "START_TIME": {
         "LABEL": "Start time",
@@ -151,7 +192,8 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Registration start",
-        "REQUIRED": "Registration start date is required"
+        "REQUIRED": "Registration start date is required",
+        "IN_PAST": "Registration start date cannot be in the past"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Start time",
@@ -207,11 +249,16 @@
     },
     "TABLE": {
       "NAME": "Name",
+      "PARTICIPATION": "Participation",
       "DATE": "Date",
       "STATUS": "Status",
       "TYPE": "Type",
       "LOCATION": "Location",
       "ACTIONS": "Actions"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Registered",
+      "CHECKED_IN": "Checked in"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Reset filters",
@@ -219,7 +266,8 @@
       "EDIT": "Edit",
       "PUBLISH": "Publish",
       "COMPLETE": "Complete",
-      "CREATE_EVENT": "Create Event"
+      "CREATE_EVENT": "Create Event",
+      "CHECK_IN": "Check in"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Targu Mures",
@@ -234,6 +282,7 @@
     "EVENT_COMPLETED": "Event completed successfully!",
     "EVENT_COMPLETION_FAILED": "Failed to complete event."
   },
+
   "USER_LIST": {
     "TITLE": "Users",
     "FILTER_TITLE": "Filter users",
@@ -282,7 +331,81 @@
       "END_DATE": "End date",
       "REGISTRATION_START": "Registration opens",
       "REGISTRATION_END": "Registration closes",
-      "FOOD_PROVIDED": "Food provided"
+      "FOOD_PROVIDED": "Food provided",
+      "GENERATE_CODES": "Generate codes",
+      "GENERATE_CODES_ERROR": "Codes could not be generated. Please try again.",
+      "QR_CODE_ALT": "Event QR code",
+      "ACCESS_CODE": "Access code",
+      "CHECK_IN": "Check in",
+      "CHECKED_IN": "Checked in"
     }
+  },
+  "CHECKIN": {
+    "TITLE": "Event Check-in",
+    "CAMERA": {
+      "TAB": "Scan QR Code",
+      "READY": "Ready to scan",
+      "INSTRUCTION": "Point your device at the QR code to scan",
+      "NOT_AVAILABLE": "Camera not available. Please use manual entry instead."
+    },
+    "MANUAL": {
+      "TAB": "Manual Entry",
+      "CODE_LABEL": "6-digit Code",
+      "CODE_HINT": "Enter the 6-digit event code",
+      "SUBMIT": "Check in"
+    },
+    "CANCEL": "Cancel",
+    "SUCCESS": {
+      "TITLE": "Success!",
+      "MESSAGE": "You have successfully checked in to the event."
+    },
+    "ERROR": {
+      "TITLE": "Check-in Failed",
+      "DEFAULT": "An error occurred during check-in. Please try again.",
+      "INVALID_CODE": "The code is invalid. Please check and try again.",
+      "NOT_REGISTERED": "You are not registered for this event.",
+      "ALREADY_CHECKED_IN": "You are already checked in for this event.",
+      "EVENT_COMPLETED": "This event has already been completed.",
+      "EVENT_PAST_END": "Check-in is no longer available for this event."
+    }
+  },
+  "RESET_PASSWORD": {
+    "WELCOME": "Reset your password",
+    "TITLE": "Choose a new password",
+    "DESCRIPTION": "Enter and confirm your new password to regain access to your account.",
+    "FORM_TITLE": "New password",
+    "FORM_SUBTITLE": "Your new password must contain at least 8 characters.",
+    "PASSWORD_LABEL": "New password",
+    "PASSWORD_PLACEHOLDER": "Enter your new password",
+    "PASSWORD_REQUIRED": "Password is required.",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long.",
+    "CONFIRM_PASSWORD_LABEL": "Confirm new password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your new password",
+    "CONFIRM_PASSWORD_REQUIRED": "Please confirm your password.",
+    "PASSWORDS_DO_NOT_MATCH": "Passwords do not match.",
+    "SUBMIT_BUTTON": "Reset password",
+    "SUCCESS_MESSAGE": "Your password has been reset successfully.",
+    "INVALID_LINK": "This password reset link is invalid.",
+    "EXPIRED_LINK": "This password reset link has expired.",
+    "USED_LINK": "This password reset link has already been used.",
+    "ERROR_MESSAGE": "Unable to reset your password. Please try again.",
+    "BACK_TO_LOGIN": "Back to login"
+  },
+  "FORGOT_PASSWORD": {
+    "WELCOME": "Password Recovery",
+    "TITLE": "Reset Your Password",
+    "DESCRIPTION": "Enter your email address and we'll send you a link to reset your password.",
+    "FORM_TITLE": "Forgot your password?",
+    "FORM_SUBTITLE": "No worries, we'll send you reset instructions.",
+    "EMAIL_LABEL": "Email Address",
+    "EMAIL_PLACEHOLDER": "john.doe@example.com",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Please enter a valid email address",
+    "SUBMIT_BUTTON": "Send Reset Link",
+    "SUCCESS_MESSAGE": "If an account exists for this email, you will receive a password reset link.",
+    "ERROR_MESSAGE": "Unable to send reset link. Please try again.",
+    "EMAIL_NOT_FOUND": "No account found with this email address.",
+    "REMEMBER_PASSWORD": "Remember your password?",
+    "BACK_TO_LOGIN": "Back to login"
   }
 }

@@ -134,7 +134,8 @@
       },
       "START_DATE": {
         "LABEL": "Data de început",
-        "REQUIRED": "Data de început este obligatorie"
+        "REQUIRED": "Data de început este obligatorie",
+        "IN_PAST": "Data de început nu poate fi în trecut"
       },
       "START_TIME": {
         "LABEL": "Ora de început",
@@ -151,7 +152,8 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Start înscriere",
-        "REQUIRED": "Data de început a înregistrării este obligatorie"
+        "REQUIRED": "Data de început a înregistrării este obligatorie",
+        "IN_PAST": "Data de început a înscrierii nu poate fi în trecut"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Ora de start",
@@ -193,6 +195,46 @@
       }
     }
   },
+  "REGISTER_FOR_EVENT": {
+    "TITLE": "Înregistrează-te la eveniment",
+    "BUTTON": {
+      "LABEL": "Înregistrează-te"
+    },
+    "GDPR": "Sunt de acord cu termenii GDPR",
+    "GDPR_REQUIRED": "Trebuie să fii de acord cu termenii GDPR pentru a te înregistra",
+    "FOOD_PROVIDED": {
+      "LABEL": "Selectează tipul de mâncare",
+      "REQUIRED": "Trebuie să selectezi tipul de mâncare"
+    },
+    "TRANSPORT_NEEDED": {
+      "LABEL": "Ai nevoie de transport",
+      "REQUIRED": "Trebuie să selectezi dacă ai nevoie de transport"
+    },
+    "ACCOMMODATION_NEEDED": {
+      "LABEL": "Ai nevoie de cazare?",
+      "REQUIRED": "Trebuie să selectezi dacă ai nevoie de cazare"
+    },
+    "ACCOMMODATION_DETAILS": {
+      "LABEL": "Numărul de nopți de cazare necesare",
+      "REQUIRED": "Trebuie să specifici numărul de nopți de cazare necesare"
+    },
+    "DRIVER_NAME": {
+      "LABEL": "Numele șoferului",
+      "REQUIRED": "Trebuie să introduci numele șoferului"
+    },
+    "DRIVER_PHONE": {
+      "LABEL": "Numărul de telefon al șoferului",
+      "REQUIRED": "Trebuie să introduci numărul de telefon al șoferului"
+    },
+    "PHOTO_CONSENT": {
+      "LABEL": "Sunt de acord să fiu fotografiat la eveniment",
+      "REQUIRED": "Trebuie să fii de acord cu consimțământul pentru fotografiere"
+    },
+    "INVALID_FORM": "Te rugăm să completezi toate câmpurile necesare din formular înainte de a trimite.",
+    "REGISTRATION_SUCCESS": "Te-ai înregistrat cu succes la eveniment!",
+    "ERROR": "A apărut o eroare la procesarea înregistrării tale. Te rugăm să încerci din nou mai târziu.",
+    "SUCCESS": "Înregistrare reușită! Vei primi un email de confirmare în scurt timp."
+  },
   "EVENT_LIST": {
     "TITLE": "Evenimente",
     "FILTER_TITLE": "Filtrează evenimente",
@@ -208,10 +250,15 @@
     "TABLE": {
       "NAME": "Nume",
       "DATE": "Dată",
+      "PARTICIPATION": "Participare",
       "STATUS": "Status",
       "TYPE": "Tip",
       "LOCATION": "Locație",
       "ACTIONS": "Acțiuni"
+    },
+    "PARTICIPATION": {
+      "REGISTERED": "Înregistrat",
+      "CHECKED_IN": "Prezent la eveniment"
     },
     "BUTTONS": {
       "RESET_FILTERS": "Resetează filtrele",
@@ -219,7 +266,8 @@
       "EDIT": "Editează",
       "PUBLISH": "Publică",
       "COMPLETE": "Finalizează",
-      "CREATE_EVENT": "Creează eveniment"
+      "CREATE_EVENT": "Creează eveniment",
+      "CHECK_IN": "Verifica intrarea"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Târgu Mureș",
@@ -282,7 +330,81 @@
       "END_DATE": "Data de sfârșit",
       "REGISTRATION_START": "Începerea înscrierilor",
       "REGISTRATION_END": "Închiderea înscrierilor",
-      "FOOD_PROVIDED": "Masă inclusă"
+      "FOOD_PROVIDED": "Masă inclusă",
+      "GENERATE_CODES": "Generează coduri",
+      "GENERATE_CODES_ERROR": "Codurile nu au putut fi generate. Încercați din nou.",
+      "QR_CODE_ALT": "Cod QR al evenimentului",
+      "ACCESS_CODE": "Cod de acces",
+      "CHECK_IN": "Verifică intrarea",
+      "CHECKED_IN": "Intrare verificată"
     }
+  },
+  "CHECKIN": {
+    "TITLE": "Verificare intrare Eveniment",
+    "CAMERA": {
+      "TAB": "Scanează codul QR",
+      "READY": "Gata pentru scanare",
+      "INSTRUCTION": "Îndreptați dispozitivul către codul QR pentru a scana",
+      "NOT_AVAILABLE": "Cameră indisponibilă. Utilizați introducerea manuală în schimb."
+    },
+    "MANUAL": {
+      "TAB": "Introducere manuală",
+      "CODE_LABEL": "Cod din 6 cifre",
+      "CODE_HINT": "Introduceți codul evenimentului din 6 cifre",
+      "SUBMIT": "Verifica intrarea"
+    },
+    "CANCEL": "Anulează",
+    "SUCCESS": {
+      "TITLE": "Succes!",
+      "MESSAGE": "Ați intrat cu succes la eveniment."
+    },
+    "ERROR": {
+      "TITLE": "Verificarea intrării a eșuat",
+      "DEFAULT": "A apărut o eroare la verificarea intrării. Încercați din nou.",
+      "INVALID_CODE": "Codul este invalid. Verificați și încercați din nou.",
+      "NOT_REGISTERED": "Nu sunteți înregistrat la acest eveniment.",
+      "ALREADY_CHECKED_IN": "Ați deja intrat la acest eveniment.",
+      "EVENT_COMPLETED": "Acest eveniment a fost deja finalizat.",
+      "EVENT_PAST_END": "Verificarea intrării nu mai este disponibilă pentru acest eveniment."
+    }
+  },
+  "RESET_PASSWORD": {
+    "WELCOME": "Resetează parola",
+    "TITLE": "Alege o parolă nouă",
+    "DESCRIPTION": "Introdu și confirmă noua parolă pentru a-ți recâștiga accesul la cont.",
+    "FORM_TITLE": "Parolă nouă",
+    "FORM_SUBTITLE": "Noua parolă trebuie să conțină cel puțin 8 caractere.",
+    "PASSWORD_LABEL": "Parolă nouă",
+    "PASSWORD_PLACEHOLDER": "Introdu noua parolă",
+    "PASSWORD_REQUIRED": "Parola este obligatorie.",
+    "PASSWORD_MIN_LENGTH": "Parola trebuie să conțină cel puțin 8 caractere.",
+    "CONFIRM_PASSWORD_LABEL": "Confirmă parola nouă",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Confirmă noua parolă",
+    "CONFIRM_PASSWORD_REQUIRED": "Confirmarea parolei este obligatorie.",
+    "PASSWORDS_DO_NOT_MATCH": "Parolele nu coincid.",
+    "SUBMIT_BUTTON": "Resetează parola",
+    "SUCCESS_MESSAGE": "Parola a fost resetată cu succes.",
+    "INVALID_LINK": "Acest link de resetare a parolei nu este valid.",
+    "EXPIRED_LINK": "Acest link de resetare a parolei a expirat.",
+    "USED_LINK": "Acest link de resetare a parolei a fost deja utilizat.",
+    "ERROR_MESSAGE": "Parola nu a putut fi resetată. Încearcă din nou.",
+    "BACK_TO_LOGIN": "Înapoi la autentificare"
+  },
+  "FORGOT_PASSWORD": {
+    "WELCOME": "Recuperare Parolă",
+    "TITLE": "Resetează Parola",
+    "DESCRIPTION": "Introdu adresa ta de email și îți vom trimite un link pentru resetarea parolei.",
+    "FORM_TITLE": "Ai uitat parola?",
+    "FORM_SUBTITLE": "Nicio problemă, îți vom trimite instrucțiuni de resetare.",
+    "EMAIL_LABEL": "Adresă de Email",
+    "EMAIL_PLACEHOLDER": "ion.popescu@exemplu.ro",
+    "EMAIL_REQUIRED": "Email-ul este obligatoriu",
+    "EMAIL_INVALID": "Introduceți o adresă de email validă",
+    "SUBMIT_BUTTON": "Trimite Link de Resetare",
+    "SUCCESS_MESSAGE": "Dacă există un cont pentru acest email, vei primi un link de resetare a parolei.",
+    "ERROR_MESSAGE": "Nu s-a putut trimite link-ul de resetare. Te rugăm să încerci din nou.",
+    "EMAIL_NOT_FOUND": "Nu a fost găsit niciun cont cu această adresă de email.",
+    "REMEMBER_PASSWORD": "Îți amintești parola?",
+    "BACK_TO_LOGIN": "Înapoi la autentificare"
   }
 }

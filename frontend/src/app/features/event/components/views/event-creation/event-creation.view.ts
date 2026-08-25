@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +20,7 @@ import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
@@ -49,6 +51,12 @@ export class EventCreationView {
   };
   readonly registrationRangeErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.parent?.hasError('invalidRegistrationDateRange'),
+  };
+  readonly startDatePastErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.parent?.hasError('startDateInPast'),
+  };
+  readonly registrationStartDatePastErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control) => !!control?.parent?.hasError('registrationStartDateInPast'),
   };
 
   onPosterSelected(event: Event): void {
