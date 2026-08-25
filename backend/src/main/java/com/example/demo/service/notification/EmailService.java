@@ -36,14 +36,22 @@ public class EmailService {
     @Value("classpath:templates/event-invitation.html")
     private Resource templateResource;
 
+    @Value("classpath:templates/reset-password.html")
+    private Resource passwordResetTemplateResource;
+
     @Value("${app.frontend-url}/events")
     private String eventsUrl;
 
+    @Value("${app.frontend-url}/reset-password")
+    private String resetPasswordUrl;
+
     private String htmlTemplate;
+    private String passwordResetHtmlTemplate;
 
     @PostConstruct
     public void init() throws IOException {
         htmlTemplate = new String(templateResource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        passwordResetHtmlTemplate = new String(passwordResetTemplateResource.getInputStream().readAllBytes(),StandardCharsets.UTF_8);
     }
 
     public EmailContent createEmail(Integer eventId) {
@@ -87,6 +95,23 @@ public class EmailService {
             emailSender.sendOne(user.getEmail(), content);
         }
     }
+
+    @Async("emailExecutor")
+        public void sendPasswordResetEmail(String email, String rawToken) {
+
+        String resetLink = resetPasswordUrl + "?token=" + rawToken;
+
+        String html = passwordResetHtmlTemplate.formatted(resetLink);
+
+        EmailContent content = new EmailContent(
+                "Reset your password",
+                html,
+                null,
+                null
+        );
+
+        emailSender.sendOne(email, content);
+        }
 
     public record EmailContent(String subject, String html, byte[] poster, Location location) {}
 }
