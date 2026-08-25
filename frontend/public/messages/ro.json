@@ -195,6 +195,46 @@
       }
     }
   },
+  "REGISTER_FOR_EVENT": {
+    "TITLE": "Înregistrează-te la eveniment",
+    "BUTTON": {
+      "LABEL": "Înregistrează-te"
+    },
+    "GDPR": "Sunt de acord cu termenii GDPR",
+    "GDPR_REQUIRED": "Trebuie să fii de acord cu termenii GDPR pentru a te înregistra",
+    "FOOD_PROVIDED": {
+      "LABEL": "Selectează tipul de mâncare",
+      "REQUIRED": "Trebuie să selectezi tipul de mâncare"
+    },
+    "TRANSPORT_NEEDED": {
+      "LABEL": "Ai nevoie de transport",
+      "REQUIRED": "Trebuie să selectezi dacă ai nevoie de transport"
+    },
+    "ACCOMMODATION_NEEDED": {
+      "LABEL": "Ai nevoie de cazare?",
+      "REQUIRED": "Trebuie să selectezi dacă ai nevoie de cazare"
+    },
+    "ACCOMMODATION_DETAILS": {
+      "LABEL": "Numărul de nopți de cazare necesare",
+      "REQUIRED": "Trebuie să specifici numărul de nopți de cazare necesare"
+    },
+    "DRIVER_NAME": {
+      "LABEL": "Numele șoferului",
+      "REQUIRED": "Trebuie să introduci numele șoferului"
+    },
+    "DRIVER_PHONE": {
+      "LABEL": "Numărul de telefon al șoferului",
+      "REQUIRED": "Trebuie să introduci numărul de telefon al șoferului"
+    },
+    "PHOTO_CONSENT": {
+      "LABEL": "Sunt de acord să fiu fotografiat la eveniment",
+      "REQUIRED": "Trebuie să fii de acord cu consimțământul pentru fotografiere"
+    },
+    "INVALID_FORM": "Te rugăm să completezi toate câmpurile necesare din formular înainte de a trimite.",
+    "REGISTRATION_SUCCESS": "Te-ai înregistrat cu succes la eveniment!",
+    "ERROR": "A apărut o eroare la procesarea înregistrării tale. Te rugăm să încerci din nou mai târziu.",
+    "SUCCESS": "Înregistrare reușită! Vei primi un email de confirmare în scurt timp."
+  },
   "EVENT_LIST": {
     "TITLE": "Evenimente",
     "FILTER_TITLE": "Filtrează evenimente",

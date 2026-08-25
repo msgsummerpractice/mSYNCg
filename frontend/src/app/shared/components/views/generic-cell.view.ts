@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TableColumn } from '../../../core/models/table.column.model';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CellChangeEvent } from '../../../core/models/layout.model';
 
 @Component({
   selector: 'generic-cell-view',
   standalone: true,
-  imports: [CommonModule, MatSelectModule, MatFormFieldModule, MatSlideToggleModule],
+  imports: [CommonModule, MatSelectModule, MatFormFieldModule, MatCheckboxModule],
   template: `
     @switch (column.type) {
       @case ('dropdown') {
@@ -27,8 +27,8 @@ import { CellChangeEvent } from '../../../core/models/layout.model';
       }
 
       @case ('switch') {
-        <mat-slide-toggle [checked]="!!displayValue" (change)="onSwitchChange($event.checked)">
-        </mat-slide-toggle>
+        <mat-checkbox color="primary" [checked]="!!displayValue" (change)="onSwitchChange($event.checked)">
+        </mat-checkbox>
       }
 
       @default {

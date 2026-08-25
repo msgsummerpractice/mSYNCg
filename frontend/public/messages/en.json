@@ -74,6 +74,46 @@
     "LOGIN_ERROR": "Invalid email or password.",
     "ACCOUNT_INACTIVE_ERROR": "Account is inactive. Please contact an administrator."
   },
+  "REGISTER_FOR_EVENT": {
+    "TITLE": "Register for Event",
+    "BUTTON": {
+      "LABEL": "Register Now"
+    },
+    "GDPR": "I agree to the GDPR terms",
+    "GDPR_REQUIRED": "You must agree to the GDPR terms to register",
+    "FOOD_PROVIDED": {
+      "LABEL": "Select the type of food",
+      "REQUIRED": "You must select the type of food"
+    },
+    "ACCOMMODATION_DETAILS": {
+      "LABEL": "Number of nights of accommodation needed",
+      "REQUIRED": "You must specify the number of nights of accommodation needed"
+    },
+    "TRANSPORT_NEEDED": {
+      "LABEL": "Do you need transport?",
+      "REQUIRED": "You must select if you need transport"
+    },
+    "ACCOMMODATION_NEEDED": {
+      "LABEL": "Do you need accommodation?",
+      "REQUIRED": "You must select if you need accommodation"
+    },
+    "DRIVER_NAME": {
+      "LABEL": "Driver's Name",
+      "REQUIRED": "You must provide the driver's name"
+    },
+    "DRIVER_PHONE": {
+      "LABEL": "Driver's Phone Number",
+      "REQUIRED": "You must provide the driver's phone number"
+    },
+    "INVALID_FORM": "Please fill all the necessary fields in the form before submitting.",
+    "REGISTRATION_SUCCESS": "You have successfully registered for the event!",
+    "PHOTO_CONSENT": {
+      "LABEL": "I consent to the use of my photos for event promotion",
+      "REQUIRED": "You must provide photo consent to register"
+    },
+    "ERROR": "An error occurred while processing your registration. Please try again later.",
+    "SUCCESS": "Registration successful! You will receive a confirmation email shortly."
+  },
   "REGISTER": {
     "USER": {
       "TITLE": "Create an Account",

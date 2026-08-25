@@ -19,8 +19,8 @@ import { UserRole } from '../../../../core/constants/role.constant';
 import { Event as AppEvent, EventStatusEnum } from '../../../../core/models/event.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventService } from '../../../../core/services/event.service';
+import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
-
 @Component({
   selector: 'app-event-card-container',
   standalone: true,
@@ -28,6 +28,9 @@ import { ToastService } from '../../../../core/services/toast.service';
   template: `
     @if (event(); as eventData) {
       <app-event-card-view
+        [eventData]="eventData"
+        (close)="close.emit()"
+        (navigate)="navigate($event)"
         [eventData]="eventData"
         [canGenerateCodes]="canGenerateCodes()"
         [qrCode]="qrCode()"
@@ -46,6 +49,7 @@ export class EventCardContainer {
   private readonly toastService = inject(ToastService);
   private readonly translateService = inject(TranslateService);
   private readonly platformId = inject(PLATFORM_ID);
+  private router = inject(Router);
 
   readonly event = signal<AppEvent | null>(null);
   readonly isLoading = signal(false);
@@ -117,5 +121,9 @@ export class EventCardContainer {
         this.qrCode.set(event?.qrCode ?? null);
         this.accessCode.set(event?.code ?? null);
       });
+  }
+
+  navigate(route: string): void {
+    this.router.navigate([route]);
   }
 }
