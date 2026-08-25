@@ -54,7 +54,7 @@ export class UserProfileContainer {
     lastName: this.fb.control(null),
     email: this.fb.control(null),
     location: this.fb.control(null),
-    role: this.fb.control(null),
+    role: this.fb.control({ value: null, disabled: true }),
     posterName: this.fb.control(null),
   });
 
@@ -113,7 +113,7 @@ export class UserProfileContainer {
   }
 
   handleInvalidForm(): void {
-    this.toastService.showError(this.translate.instant('USER_PROFILE.EVENT.FORM.INVALID'));
+    this.toastService.showError(this.translate.instant('USER_PROFILE.FORM.INVALID'));
   }
 
   handleEventSubmit(): void {
@@ -146,12 +146,12 @@ export class UserProfileContainer {
       .subscribe({
         next: () => {
           this.isLoading.set(false);
-          this.toastService.showSuccess(this.translate.instant('USER_PROFILE.EVENT.FORM.SUCCESS'));
+          this.toastService.showSuccess(this.translate.instant('USER_PROFILE.FORM.SUCCESS'));
           this.router.navigate(['/home']);
         },
         error: () => {
           this.isLoading.set(false);
-          this.toastService.showError(this.translate.instant('USER_PROFILE.EVENT.FORM.ERROR'));
+          this.toastService.showError(this.translate.instant('USER_PROFILE.FORM.ERROR'));
         },
       });
   }
