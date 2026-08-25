@@ -2,6 +2,7 @@ package com.example.demo.validator;
 
 import com.example.demo.exceptions.RegistrationClosedException;
 import com.example.demo.exceptions.ValidationException;
+import com.example.demo.model.RegistrationStatus;
 import com.example.demo.model.Event;
 import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
@@ -51,8 +52,8 @@ public class RegistrationValidator {
     }
 
     private void validateDuplicateRegistration(Registration registration) {
-        if (registrationRepository.existsByUserIdAndEventId(
-                registration.getUser().getId(), registration.getEvent().getId())) {
+        if (registrationRepository.existsByUserIdAndEventIdAndStatus(
+                registration.getUser().getId(), registration.getEvent().getId(), RegistrationStatus.REGISTERED)) {
             throw new ValidationException("eventId", "User is already registered for this event.");
         }
     }

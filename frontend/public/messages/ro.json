@@ -266,7 +266,8 @@
       "EDIT": "Editează",
       "PUBLISH": "Publică",
       "COMPLETE": "Finalizează",
-      "CREATE_EVENT": "Creează eveniment"
+      "CREATE_EVENT": "Creează eveniment",
+      "CHECK_IN": "Verifica intrarea"
     },
     "LOCATIONS": {
       "TARGU_MURES": "Târgu Mureș",
@@ -333,7 +334,38 @@
       "GENERATE_CODES": "Generează coduri",
       "GENERATE_CODES_ERROR": "Codurile nu au putut fi generate. Încercați din nou.",
       "QR_CODE_ALT": "Cod QR al evenimentului",
-      "ACCESS_CODE": "Cod de acces"
+      "ACCESS_CODE": "Cod de acces",
+      "CHECK_IN": "Verifică intrarea",
+      "CHECKED_IN": "Intrare verificată"
+    }
+  },
+  "CHECKIN": {
+    "TITLE": "Verificare intrare Eveniment",
+    "CAMERA": {
+      "TAB": "Scanează codul QR",
+      "READY": "Gata pentru scanare",
+      "INSTRUCTION": "Îndreptați dispozitivul către codul QR pentru a scana",
+      "NOT_AVAILABLE": "Cameră indisponibilă. Utilizați introducerea manuală în schimb."
+    },
+    "MANUAL": {
+      "TAB": "Introducere manuală",
+      "CODE_LABEL": "Cod din 6 cifre",
+      "CODE_HINT": "Introduceți codul evenimentului din 6 cifre",
+      "SUBMIT": "Verifica intrarea"
+    },
+    "CANCEL": "Anulează",
+    "SUCCESS": {
+      "TITLE": "Succes!",
+      "MESSAGE": "Ați intrat cu succes la eveniment."
+    },
+    "ERROR": {
+      "TITLE": "Verificarea intrării a eșuat",
+      "DEFAULT": "A apărut o eroare la verificarea intrării. Încercați din nou.",
+      "INVALID_CODE": "Codul este invalid. Verificați și încercați din nou.",
+      "NOT_REGISTERED": "Nu sunteți înregistrat la acest eveniment.",
+      "ALREADY_CHECKED_IN": "Ați deja intrat la acest eveniment.",
+      "EVENT_COMPLETED": "Acest eveniment a fost deja finalizat.",
+      "EVENT_PAST_END": "Verificarea intrării nu mai este disponibilă pentru acest eveniment."
     }
   },
   "RESET_PASSWORD": {
