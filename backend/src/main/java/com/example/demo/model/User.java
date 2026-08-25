@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -47,6 +48,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 25)
     private UserRole role;
+
+    @Column(name = "reset_token_hash", length = 64)
+    private String resetTokenHash;
+
+    @Column(name = "reset_token_expires_at")
+    private LocalDateTime resetTokenExpiresAt;
 
     @Override
     public boolean equals(Object o) {

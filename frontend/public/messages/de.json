@@ -114,7 +114,8 @@
   "REGISTER_FOR_EVENT": {
     "TITLE": "Für Event registrieren",
     "BUTTON": {
-      "LABEL": "Jetzt registrieren"
+      "LABEL": "Jetzt registrieren",
+      "UPDATE_LABEL": "Registrierung aktualisieren"
     },
     "GDPR": "Ich stimme den GDPR-Bedingungen zu",
     "GDPR_REQUIRED": "Sie müssen den GDPR-Bedingungen zustimmen, um sich zu registrieren",
@@ -150,7 +151,14 @@
     "REGISTRATION_SUCCESS": "Sie haben sich erfolgreich für die Veranstaltung registriert!",
 
     "ERROR": "Bei der Verarbeitung Ihrer Registrierung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-    "SUCCESS": "Registrierung erfolgreich! Sie erhalten in Kürze eine Bestätigungs-E-Mail."
+    "SUCCESS": "Registrierung erfolgreich! Sie erhalten in Kürze eine Bestätigungs-E-Mail.",
+    "WITHDRAW": {
+      "BUTTON": {
+        "LABEL": "Registrierung zurückziehen"
+      },
+      "SUCCESS": "Ihre Registrierung wurde zurückgezogen.",
+      "ERROR": "Beim Zurückziehen Ihrer Registrierung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut."
+    }
   },
   "REGISTER": {
     "USER": {
