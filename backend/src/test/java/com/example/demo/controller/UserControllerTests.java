@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.UpdateUserProfileRequest;
 import com.example.demo.dto.request.UserRequest;
+import com.example.demo.dto.response.UpdateUserProfileResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.exceptions.GlobalExceptionHandler;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.filtering.users.UserSpec;
 import com.example.demo.model.Location;
@@ -31,11 +34,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -220,6 +225,106 @@ public class UserControllerTests {
 		mockMvc.perform(get("/api/users"))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+	}
+
+	@Test
+	void getUserProfile_WhenUserExists_ReturnsOkWithProfile() throws Exception {
+		UpdateUserProfileResponse response = buildProfileResponse();
+
+		when(userService.getProfile(1)).thenReturn(response);
+
+		mockMvc.perform(get("/api/users/1/profile"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.firstName").value("Ada"))
+				.andExpect(jsonPath("$.email").value("ada@example.com"))
+				.andExpect(jsonPath("$.role").value(UserRole.PARTICIPANT.getDisplayValue()));
+
+		verify(userService).getProfile(1);
+	}
+
+	@Test
+	void getUserProfile_WhenUserDoesNotExist_ReturnsNotFound() throws Exception {
+		when(userService.getProfile(99)).thenThrow(new NotFoundException("User", 99));
+
+		mockMvc.perform(get("/api/users/99/profile"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("User with id 99 not found"));
+	}
+
+	@Test
+	void getUserProfile_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+		when(userService.getProfile(1)).thenThrow(new RuntimeException("Database unavailable"));
+
+		mockMvc.perform(get("/api/users/1/profile"))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+	}
+
+	@Test
+	void updateUserProfile_WhenRequestIsValid_ReturnsOkWithUpdatedProfile() throws Exception {
+		UpdateUserProfileResponse response = buildProfileResponse();
+		ArgumentCaptor<UpdateUserProfileRequest> requestCaptor = ArgumentCaptor
+				.forClass(UpdateUserProfileRequest.class);
+
+		when(userService.updateProfile(eq(1), requestCaptor.capture())).thenReturn(response);
+
+		mockMvc.perform(put("/api/users/1/profile")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(profileRequestJson("Ada", "Lovelace", "ada@example.com", CLUJ_NAPOCA_JSON,
+						UserRole.PARTICIPANT.getDisplayValue())))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.firstName").value("Ada"))
+				.andExpect(jsonPath("$.email").value("ada@example.com"));
+
+		verify(userService).updateProfile(eq(1), requestCaptor.capture());
+		assertEquals("Ada", requestCaptor.getValue().getFirstName());
+	}
+
+	@Test
+	void updateUserProfile_WhenUserDoesNotExist_ReturnsNotFound() throws Exception {
+		when(userService.updateProfile(eq(99), any(UpdateUserProfileRequest.class)))
+				.thenThrow(new NotFoundException("User", 99));
+
+		mockMvc.perform(put("/api/users/99/profile")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(profileRequestJson("Ada", "Lovelace", "ada@example.com", CLUJ_NAPOCA_JSON,
+						UserRole.PARTICIPANT.getDisplayValue())))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.error").value("Not Found"))
+				.andExpect(jsonPath("$.message").value("User with id 99 not found"));
+	}
+
+	@Test
+	void updateUserProfile_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
+		when(userService.updateProfile(eq(1), any(UpdateUserProfileRequest.class)))
+				.thenThrow(new RuntimeException("Database unavailable"));
+
+		mockMvc.perform(put("/api/users/1/profile")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(profileRequestJson("Ada", "Lovelace", "ada@example.com", CLUJ_NAPOCA_JSON,
+						UserRole.PARTICIPANT.getDisplayValue())))
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.error").value("Internal Server Error"));
+	}
+
+	private String profileRequestJson(String firstName, String lastName, String email, String location, String role) {
+		return """
+				{
+				  "firstName": "%s",
+				  "lastName": "%s",
+				  "email": "%s",
+				  "location": "%s",
+				  "role": "%s"
+				}
+				""".formatted(firstName, lastName, email, location, role);
+	}
+
+	private UpdateUserProfileResponse buildProfileResponse() {
+		return new UpdateUserProfileResponse(1, "Ada", "Lovelace", "ada@example.com",
+				Location.CLUJ_NAPOCA, UserRole.PARTICIPANT, true, null, null);
 	}
 
 	private String validRequestJson() {
