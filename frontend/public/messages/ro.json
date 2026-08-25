@@ -198,7 +198,8 @@
   "REGISTER_FOR_EVENT": {
     "TITLE": "Înregistrează-te la eveniment",
     "BUTTON": {
-      "LABEL": "Înregistrează-te"
+      "LABEL": "Înregistrează-te",
+      "UPDATE_LABEL": "Actualizează înregistrarea"
     },
     "GDPR": "Sunt de acord cu termenii GDPR",
     "GDPR_REQUIRED": "Trebuie să fii de acord cu termenii GDPR pentru a te înregistra",
@@ -233,7 +234,14 @@
     "INVALID_FORM": "Te rugăm să completezi toate câmpurile necesare din formular înainte de a trimite.",
     "REGISTRATION_SUCCESS": "Te-ai înregistrat cu succes la eveniment!",
     "ERROR": "A apărut o eroare la procesarea înregistrării tale. Te rugăm să încerci din nou mai târziu.",
-    "SUCCESS": "Înregistrare reușită! Vei primi un email de confirmare în scurt timp."
+    "SUCCESS": "Înregistrare reușită! Vei primi un email de confirmare în scurt timp.",
+    "WITHDRAW": {
+      "BUTTON": {
+        "LABEL": "Retrage înregistrarea"
+      },
+      "SUCCESS": "Înregistrarea ta a fost retrasă.",
+      "ERROR": "A apărut o eroare la retragerea înregistrării tale. Te rugăm să încerci din nou mai târziu."
+    }
   },
   "EVENT_LIST": {
     "TITLE": "Evenimente",

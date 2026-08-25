@@ -77,7 +77,8 @@
   "REGISTER_FOR_EVENT": {
     "TITLE": "Register for Event",
     "BUTTON": {
-      "LABEL": "Register Now"
+      "LABEL": "Register Now",
+      "UPDATE_LABEL": "Update Registration"
     },
     "GDPR": "I agree to the GDPR terms",
     "GDPR_REQUIRED": "You must agree to the GDPR terms to register",
@@ -112,7 +113,14 @@
       "REQUIRED": "You must provide photo consent to register"
     },
     "ERROR": "An error occurred while processing your registration. Please try again later.",
-    "SUCCESS": "Registration successful! You will receive a confirmation email shortly."
+    "SUCCESS": "Registration successful! You will receive a confirmation email shortly.",
+    "WITHDRAW": {
+      "BUTTON": {
+        "LABEL": "Withdraw Registration"
+      },
+      "SUCCESS": "Your registration has been withdrawn.",
+      "ERROR": "An error occurred while withdrawing your registration. Please try again later."
+    }
   },
   "REGISTER": {
     "USER": {

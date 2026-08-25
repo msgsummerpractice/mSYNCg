@@ -88,7 +88,7 @@ public class RegistrationServiceTests {
     }
 
     @Test
-    void createRegistration_whenGdprAndPhotoConsentAreNull_setsBothToFalse() {
+    void createRegistration_whenGdprIsNull_setsGdprToFalseAndKeepsPhotoConsentNull() {
         RegistrationRequest request = buildRequest();
         Registration mappedRegistration = new Registration();
         User user = createUser(1);
@@ -107,7 +107,7 @@ public class RegistrationServiceTests {
         registrationService.createRegistration(request);
 
         assertFalse(mappedRegistration.getGdpr());
-        assertFalse(mappedRegistration.getPhotoConsent());
+        assertEquals(null, mappedRegistration.getPhotoConsent());
         verify(registrationValidator).validate(eq(mappedRegistration), any(LocalDateTime.class));
     }
 
@@ -235,7 +235,7 @@ public class RegistrationServiceTests {
     }
 
     @Test
-    void updateRegistration_whenGdprAndPhotoConsentAreNull_setsBothToFalse() {
+    void updateRegistration_whenGdprIsNull_setsGdprToFalseAndKeepsPhotoConsentNull() {
         Registration registration = buildExistingRegistration();
         RegistrationRequest request = buildRequest();
 
@@ -245,7 +245,7 @@ public class RegistrationServiceTests {
         registrationService.updateRegistration(request);
 
         assertFalse(registration.getGdpr());
-        assertFalse(registration.getPhotoConsent());
+        assertEquals(null, registration.getPhotoConsent());
     }
 
     @Test

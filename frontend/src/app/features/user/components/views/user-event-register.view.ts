@@ -33,10 +33,12 @@ export class UserEventRegisterView {
   @Input() isLoading = false;
   @Input() foodProvided: boolean | null = null;
   @Input() event: Event | null = null;
+  @Input() showWithdraw = false;
 
   @Output() submitEvent = new EventEmitter<void>();
   @Output() invalidSubmit = new EventEmitter<void>();
   @Output() cancelEvent = new EventEmitter<void>();
+  @Output() withdrawEvent = new EventEmitter<void>();
 
   readonly eventTypes = EVENT_TYPES;
   readonly foodPreferences = Object.values(FoodTypeEnum);

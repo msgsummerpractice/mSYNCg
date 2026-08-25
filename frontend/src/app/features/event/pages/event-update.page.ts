@@ -7,8 +7,6 @@ import { ToolbarView } from '../../../shared/components/views/toolbar/toolbar.vi
   selector: 'app-event-update-page',
   standalone: true,
   imports: [EventUpdateContainer, ToolbarView, LanguageSwitcherContainer],
-  template: `
-    <app-event-update-container></app-event-update-container>
-  `,
+  template: ` <app-event-update-container></app-event-update-container> `,
 })
 export class EventUpdatePage {}
