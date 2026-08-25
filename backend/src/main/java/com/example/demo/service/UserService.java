@@ -3,7 +3,9 @@ package com.example.demo.service;
 import com.example.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
-
+import com.example.demo.model.Location;
+import com.example.demo.model.UserRole;
+import com.example.demo.dto.request.UpdateUserProfileRequest;
 import com.example.demo.exceptions.CannotChangeOwnRoleException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.ValidationException;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 
 import com.example.demo.dto.response.UserViewResponse;
+import com.example.demo.dto.response.UpdateUserProfileResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.model.Location;
 import com.example.demo.model.User;
@@ -95,9 +98,19 @@ public class UserService implements UserServiceInterface {
         return userRepository.findAllByLocation(location);
     }
 
-
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public UpdateUserProfileResponse updateProfile(Integer id, UpdateUserProfileRequest userRequest) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User", id));
+
+        user.setLocation(userRequest.getLocation());
+
+        User updatedUser = userRepository.save(user);
+
+        return modelMapper.map(updatedUser, UpdateUserProfileResponse.class);
     }
 
 }
