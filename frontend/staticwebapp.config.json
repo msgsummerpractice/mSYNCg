@@ -1,6 +1,111 @@
 {
+  "trailingSlash": "auto",
+  "routes": [
+    {
+      "route": "/",
+      "redirect": "/login",
+      "statusCode": 302
+    },
+    {
+      "route": "/index.html",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "route": "/messages/*",
+      "headers": {
+        "Cache-Control": "public, max-age=3600, must-revalidate"
+      }
+    },
+    {
+      "route": "/assets/*",
+      "headers": {
+        "Cache-Control": "public, max-age=604800, must-revalidate"
+      }
+    },
+    {
+      "route": "/*.{js,mjs,css}",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/login",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/register",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/forgot-password",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/reset-password",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/eventcard/*",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/home",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/events",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/events/*",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/admin/*",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/.auth/*",
+      "statusCode": 404
+    }
+  ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/messages/*", "*.{css,js,mjs,ico,png,jpg,jpeg,svg,webp,woff,woff2}"]
+    "exclude": [
+      "/assets/*",
+      "/messages/*",
+      "/*.{css,js,mjs,map,ico,png,jpg,jpeg,gif,svg,webp,woff,woff2,ttf,eot,json,txt,webmanifest}"
+    ]
+  },
+  "responseOverrides": {
+    "401": {
+      "redirect": "/login",
+      "statusCode": 302
+    },
+    "403": {
+      "redirect": "/events",
+      "statusCode": 302
+    },
+    "404": {
+      "rewrite": "/index.html",
+      "statusCode": 200
+    }
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=(), payment=()",
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload"
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".webmanifest": "application/manifest+json",
+    ".svg": "image/svg+xml",
+    ".ico": "image/x-icon",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2"
   }
 }
