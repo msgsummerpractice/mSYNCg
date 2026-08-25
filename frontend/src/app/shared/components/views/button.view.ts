@@ -8,6 +8,7 @@ import { ButtonVariant, ButtonSize } from '../containers/button.container';
   template: ` <button
     type="button"
     (click)="handleClick()"
+    [disabled]="disabled"
     [class]="buttonClasses"
     class="ml-1 inline-flex max-w-full shrink-0 items-center justify-center whitespace-nowrap font-medium text-brand-on-primary font-ui cursor-pointer sm:ml-3"
     aria-label="action button"
@@ -21,6 +22,7 @@ export class ButtonView {
   @Input() label: string = '';
   @Input() variant: ButtonVariant = 'toolbar';
   @Input() size: ButtonSize = 'md';
+  @Input() disabled: boolean = false;
 
   @Output() clickEvent = new EventEmitter<void>();
 

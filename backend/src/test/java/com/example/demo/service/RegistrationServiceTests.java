@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.RegistrationRequest;
+import com.example.demo.dto.response.RegistrationDetailsResponse;
 import com.example.demo.dto.response.RegistrationResponse;
+import com.example.demo.exceptions.NotFoundException;
+import com.example.demo.exceptions.RegistrationClosedException;
 import com.example.demo.exceptions.ValidationException;
 import com.example.demo.model.Event;
 import com.example.demo.model.EventStatus;
@@ -14,6 +17,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.RegistrationRepository;
 import com.example.demo.validator.RegistrationValidator;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -152,6 +156,182 @@ public class RegistrationServiceTests {
 
         assertEquals("photoConsent", thrown.getField());
         verify(registrationRepository, never()).save(any(Registration.class));
+    }
+
+    @Test
+    void getRegistration_whenRegistrationExists_returnsMappedDetails() {
+        Registration registration = buildExistingRegistration();
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+
+        RegistrationDetailsResponse response = registrationService.getRegistration(2, 1);
+
+        assertEquals(registration.getDate(), response.getDate());
+        assertEquals(FoodPreference.VEGAN, response.getFoodPreference());
+        assertEquals(3, response.getAccommodationDays());
+        assertTrue(response.getGdpr());
+        assertTrue(response.getPhotoConsent());
+        assertEquals(1, response.getUserId());
+        assertEquals(2, response.getEventId());
+        assertEquals("Jane Driver", response.getDriverName());
+        assertEquals("0700000000", response.getDriverPhone());
+        assertTrue(response.getEditable());
+    }
+
+    @Test
+    void getRegistration_whenRegistrationPeriodHasEnded_marksResponseAsNotEditable() {
+        Registration registration = buildExistingRegistration();
+        registration.getEvent().setRegistrationEnd(LocalDateTime.now().minusDays(1));
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+
+        assertFalse(registrationService.getRegistration(2, 1).getEditable());
+    }
+
+    @Test
+    void getRegistration_whenRegistrationIsMissingOrWithdrawn_throwsNotFoundException() {
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.empty());
+
+        NotFoundException thrown = assertThrows(
+                NotFoundException.class,
+                () -> registrationService.getRegistration(2, 1));
+
+        assertEquals("Registration for user 1 and event 2 not found", thrown.getMessage());
+    }
+
+    @Test
+    void updateRegistration_whenRequestIsValid_updatesEveryFieldAndSaves() {
+        Registration registration = buildExistingRegistration();
+        RegistrationRequest request = buildRequest();
+        request.setFoodPreference(FoodPreference.VEGETARIAN);
+        request.setAccommodationDays(5);
+        request.setGdpr(true);
+        request.setPhotoConsent(true);
+        request.setDriverName("John Driver");
+        request.setDriverPhone("0711111111");
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+
+        RegistrationDetailsResponse response = registrationService.updateRegistration(request);
+
+        assertEquals(request.getDate(), registration.getDate());
+        assertEquals(FoodPreference.VEGETARIAN, registration.getFoodPreference());
+        assertEquals(5, registration.getAccommodationDays());
+        assertTrue(registration.getGdpr());
+        assertTrue(registration.getPhotoConsent());
+        assertEquals("John Driver", registration.getDriverName());
+        assertEquals("0711111111", registration.getDriverPhone());
+        assertEquals(RegistrationStatus.REGISTERED, registration.getStatus());
+
+        assertEquals(FoodPreference.VEGETARIAN, response.getFoodPreference());
+        assertTrue(response.getEditable());
+
+        verify(registrationValidator).validateUpdate(eq(registration), any(LocalDateTime.class));
+        verify(registrationRepository).save(registration);
+    }
+
+    @Test
+    void updateRegistration_whenGdprAndPhotoConsentAreNull_setsBothToFalse() {
+        Registration registration = buildExistingRegistration();
+        RegistrationRequest request = buildRequest();
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+
+        registrationService.updateRegistration(request);
+
+        assertFalse(registration.getGdpr());
+        assertFalse(registration.getPhotoConsent());
+    }
+
+    @Test
+    void updateRegistration_whenRegistrationIsMissingOrWithdrawn_throwsNotFoundException() {
+        RegistrationRequest request = buildRequest();
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> registrationService.updateRegistration(request));
+
+        verify(registrationRepository, never()).save(any(Registration.class));
+    }
+
+    @Test
+    void updateRegistration_whenRegistrationPeriodHasEnded_propagatesExceptionAndDoesNotSave() {
+        Registration registration = buildExistingRegistration();
+        RegistrationRequest request = buildRequest();
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+        org.mockito.Mockito.doThrow(new RegistrationClosedException(
+                "Registration period has ended. The registration can only be deleted."))
+                .when(registrationValidator)
+                .validateUpdate(any(Registration.class), any(LocalDateTime.class));
+
+        RegistrationClosedException thrown = assertThrows(
+                RegistrationClosedException.class,
+                () -> registrationService.updateRegistration(request));
+
+        assertEquals("Registration period has ended. The registration can only be deleted.", thrown.getMessage());
+        verify(registrationRepository, never()).save(any(Registration.class));
+    }
+
+    @Test
+    void deleteRegistration_whenRegistrationExists_setsStatusToWithdrawnAndSaves() {
+        Registration registration = buildExistingRegistration();
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+
+        registrationService.deleteRegistration(2, 1);
+
+        assertEquals(RegistrationStatus.WITHDRAWN, registration.getStatus());
+        verify(registrationRepository).save(registration);
+        verify(registrationRepository, never()).delete(any(Registration.class));
+    }
+
+    @Test
+    void deleteRegistration_whenRegistrationIsMissingOrWithdrawn_throwsNotFoundException() {
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> registrationService.deleteRegistration(2, 1));
+
+        verify(registrationRepository, never()).save(any(Registration.class));
+    }
+
+    @Test
+    void deleteRegistration_whenRegistrationPeriodHasEnded_stillWithdrawsRegistration() {
+        Registration registration = buildExistingRegistration();
+        registration.getEvent().setRegistrationEnd(LocalDateTime.now().minusDays(1));
+
+        when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(Optional.of(registration));
+
+        registrationService.deleteRegistration(2, 1);
+
+        assertEquals(RegistrationStatus.WITHDRAWN, registration.getStatus());
+        verify(registrationRepository).save(registration);
+    }
+
+    private Registration buildExistingRegistration() {
+        Registration registration = new Registration();
+        registration.setId(10);
+        registration.setStatus(RegistrationStatus.REGISTERED);
+        registration.setDate(LocalDateTime.of(2026, 8, 20, 9, 0));
+        registration.setFoodPreference(FoodPreference.VEGAN);
+        registration.setAccommodationDays(3);
+        registration.setGdpr(true);
+        registration.setPhotoConsent(true);
+        registration.setDriverName("Jane Driver");
+        registration.setDriverPhone("0700000000");
+        registration.setUser(createUser(1));
+        registration.setEvent(createEvent(2));
+        return registration;
     }
 
     private RegistrationRequest buildRequest() {

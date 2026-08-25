@@ -13,6 +13,7 @@ export type ButtonSize = 'md' | 'lg';
       [label]="label"
       [variant]="variant"
       [size]="size"
+      [disabled]="disabled"
       (clickEvent)="handleClick()"
     ></app-button-view>
   `,
@@ -21,6 +22,7 @@ export class ButtonContainer {
   @Input() label: string = '';
   @Input() variant: ButtonVariant = 'toolbar';
   @Input() size: ButtonSize = 'md';
+  @Input() disabled: boolean = false;
 
   @Output() clickEvent = new EventEmitter<void>();
 
