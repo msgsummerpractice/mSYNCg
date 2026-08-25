@@ -74,6 +74,43 @@
     "LOGIN_ERROR": "Ungültige E-Mail-Adresse oder ungültiges Passwort.",
     "ACCOUNT_INACTIVE_ERROR": "Das Konto ist inaktiv. Bitte wenden Sie sich an einen Administrator."
   },
+  "USER_PROFILE":{
+    "TITLE": "Benutzerprofil",
+    "SUBTITLE": "Aktualisieren Sie Ihre persönlichen Informationen", 
+    "EVENT": {
+      "FORM": {
+        "INVALID": "Bitte korrigieren Sie die Fehler im Formular.",
+        "SUCCESS": "Profil erfolgreich aktualisiert!",
+        "ERROR": "Beim Aktualisieren des Profils ist ein Fehler aufgetreten."
+      }
+    },
+    "ROLE": {
+      "LABEL": "Rolle",
+      "REQUIRED": "Rolle ist erforderlich"
+    },
+    "FIRST_NAME": {
+      "LABEL": "Vorname",
+      "REQUIRED": "Vorname ist erforderlich"
+    },
+    "LAST_NAME": {
+      "LABEL": "Nachname",
+      "REQUIRED": "Nachname ist erforderlich"
+    },
+    "EMAIL": {
+      "LABEL": "E-Mail-Adresse",
+      "REQUIRED": "E-Mail ist erforderlich",
+      "INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+    },
+    "LOCATION": {
+      "LABEL": "Standort",
+      "REQUIRED": "Standort ist erforderlich"
+    },
+    "POSTER": {
+      "LABEL": "Profilbild",
+      "UPLOAD": "Profilbild hochladen",
+      "INVALID": "Das Profilbild muss eine JPEG- oder PNG-Datei sein und darf nicht größer als 5 MB sein"
+    },
+
   "REGISTER_FOR_EVENT": {
     "TITLE": "Für Event registrieren",
     "BUTTON": {

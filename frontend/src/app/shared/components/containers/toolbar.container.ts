@@ -1,9 +1,11 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToolbarView } from '../views/toolbar/toolbar.view';
 import { Router } from '@angular/router';
 import { LanguageSwitcherContainer } from './language-switcher.container';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../core/constants/role.constant';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-toolbar-container',
@@ -11,6 +13,7 @@ import { UserRole } from '../../../core/constants/role.constant';
   template: `<app-toolbar-view
     [userName]="userName()"
     [navItems]="navItems"
+    [iconUrl]="iconUrl"
     [showUserIcon]="isLoggedIn"
     [showLogoutButton]="isLoggedIn"
     (navigate)="navigate($event)"
@@ -21,6 +24,9 @@ import { UserRole } from '../../../core/constants/role.constant';
 export class ToolbarContainer implements OnInit {
   private router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly userService = inject(UserService);
+  readonly iconUrl = this.userService.profileImageUrlSignal;
 
   readonly userName = computed(() => {
     const user = this.authService.currentUser();
@@ -31,6 +37,26 @@ export class ToolbarContainer implements OnInit {
     if (this.isLoggedIn && !this.authService.currentUser()) {
       this.authService.loadCurrentUser().subscribe();
     }
+
+    this.authService
+      .loadCurrentUser()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        if (!user) {
+          return;
+        }
+
+        this.userService
+          .getUserProfile(user.id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((profile) => {
+            if (profile && profile.imageMimeType) {
+              this.iconUrl.set(`data:${profile.imageMimeType};base64,${profile.imageBase64}`);
+            } else {
+              this.iconUrl.set('');
+            }
+          });
+      });
   }
 
   get navItems(): { label: string; route: string }[] {
