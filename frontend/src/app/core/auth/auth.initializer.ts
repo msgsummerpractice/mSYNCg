@@ -16,6 +16,5 @@ export function initializeAuth(): Promise<void> {
     return Promise.resolve();
   }
 
-  // Repopulate the in-memory current user signal on app start/reload, not just after login.
   return firstValueFrom(authService.loadCurrentUser()).then(() => undefined);
 }
