@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.request.ForgotPasswordRequest;
 import com.example.demo.dto.request.LogInRequest;
+import com.example.demo.dto.request.ResetPasswordRequest;
 import com.example.demo.dto.response.CurrentUserResponse;
 import com.example.demo.dto.response.LogInResponse;
 import com.example.demo.service.AuthService;
@@ -45,6 +47,24 @@ public class AuthController {
 
     return ResponseEntity.ok(response);
 }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+
+        authService.forgotPassword(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+
+        authService.resetPassword(request);
+
+        return ResponseEntity.ok().build();
+    }
    
     
 }
