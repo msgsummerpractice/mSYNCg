@@ -15,7 +15,7 @@ import { adminGuard } from './core/guards/admin-guard';
 import { eventManagementGuard } from './core/guards/event-management.guard';
 import { UserProfileContainer } from './features/user/components/containers/user-profile.container';
 import { UserEventRegisterContainer } from './features/user/components/containers/user-event-register.container';
-
+import { LoggedInGuard } from './core/guards/loggedin.guard';
 export const routes: Routes = [
   // Default route
   {
@@ -28,6 +28,7 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginPage,
+    canActivate: [LoggedInGuard],
   },
   {
     path: 'register',
