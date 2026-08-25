@@ -378,8 +378,9 @@
       "QR_CODE_ALT": "Cod QR al evenimentului",
       "ACCESS_CODE": "Cod de acces",
       "CHECK_IN": "Verifică intrarea",
-      "CHECKED_IN": "Intrare verificată"
-    }
+      "CHECKED_IN": "Intrare verificată",
+      "REGISTRATION_CLOSED": "Înscrieri închise"
+      }
   },
   "CHECKIN": {
     "TITLE": "Verificare intrare Eveniment",
@@ -448,5 +449,12 @@
     "EMAIL_NOT_FOUND": "Nu a fost găsit niciun cont cu această adresă de email.",
     "REMEMBER_PASSWORD": "Îți amintești parola?",
     "BACK_TO_LOGIN": "Înapoi la autentificare"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "Elemente pe pagină",
+    "NEXT_PAGE": "Pagina următoare",
+    "PREVIOUS_PAGE": "Pagina anterioară",
+    "FIRST_PAGE": "Prima pagină",
+    "LAST_PAGE": "Ultima pagină"
   }
 }

@@ -381,8 +381,9 @@
       "QR_CODE_ALT": "Event QR code",
       "ACCESS_CODE": "Access code",
       "CHECK_IN": "Check in",
-      "CHECKED_IN": "Checked in"
-    }
+      "CHECKED_IN": "Checked in",
+      "REGISTRATION_CLOSED": "Registration closed"
+      }
   },
   "CHECKIN": {
     "TITLE": "Event Check-in",
@@ -451,5 +452,12 @@
     "EMAIL_NOT_FOUND": "No account found with this email address.",
     "REMEMBER_PASSWORD": "Remember your password?",
     "BACK_TO_LOGIN": "Back to login"
+  },
+  "PAGINATOR": {
+        "ITEMS_PER_PAGE": "Items per page",
+        "NEXT_PAGE": "Next page",
+        "PREVIOUS_PAGE": "Previous page",
+        "FIRST_PAGE": "First page",
+        "LAST_PAGE": "Last page"
   }
 }

@@ -54,7 +54,7 @@ export class UserProfileContainer {
     lastName: this.fb.control(null),
     email: this.fb.control(null),
     location: this.fb.control(null),
-    role: this.fb.control(null),
+    role: this.fb.control({ value: null, disabled: true }),
     posterName: this.fb.control(null),
   });
 
