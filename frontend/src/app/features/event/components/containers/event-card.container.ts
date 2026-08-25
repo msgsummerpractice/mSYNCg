@@ -1,4 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   computed,
@@ -147,10 +148,21 @@ export class EventCardContainer {
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.isLoading.set(false))
       )
-      .subscribe((event) => {
-        this.event.set(event);
-        this.qrCode.set(event?.qrCode ?? null);
-        this.accessCode.set(event?.code ?? null);
+      .subscribe({
+        next: (event) => {
+          this.event.set(event);
+          this.qrCode.set(event?.qrCode ?? null);
+          this.accessCode.set(event?.code ?? null);
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 401 || error.status === 403) {
+            this.authService.logout();
+            this.router.navigate(['/login']);
+            return;
+          }
+
+          this.toastService.showError(this.translateService.instant('EVENT_LIST.LOAD_ERROR'));
+        },
       });
   }
 
