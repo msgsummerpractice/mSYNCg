@@ -77,13 +77,11 @@
   "USER_PROFILE":{
     "TITLE": "Benutzerprofil",
     "SUBTITLE": "Aktualisieren Sie Ihre persönlichen Informationen", 
-    "EVENT": {
-      "FORM": {
+    "FORM": {
         "INVALID": "Bitte korrigieren Sie die Fehler im Formular.",
         "SUCCESS": "Profil erfolgreich aktualisiert!",
         "ERROR": "Beim Aktualisieren des Profils ist ein Fehler aufgetreten."
-      }
-    },
+      },
     "ROLE": {
       "LABEL": "Rolle",
       "REQUIRED": "Rolle ist erforderlich"
@@ -109,7 +107,8 @@
       "LABEL": "Profilbild",
       "UPLOAD": "Profilbild hochladen",
       "INVALID": "Das Profilbild muss eine JPEG- oder PNG-Datei sein und darf nicht größer als 5 MB sein"
-    },
+    }
+  },
 
   "REGISTER_FOR_EVENT": {
     "TITLE": "Für Event registrieren",
@@ -383,8 +382,9 @@
       "QR_CODE_ALT": "QR-Code der Veranstaltung",
       "ACCESS_CODE": "Zugangscode",
       "CHECK_IN": "Einchecken",
-      "CHECKED_IN": "Eingecheckt"
-    }
+      "CHECKED_IN": "Eingecheckt",
+      "REGISTRATION_CLOSED": "Anmeldung geschlossen"
+      }
   },
   "CHECKIN": {
     "TITLE": "Veranstaltung Einchecken",
@@ -453,5 +453,12 @@
     "EMAIL_NOT_FOUND": "Es wurde kein Konto mit dieser E-Mail-Adresse gefunden.",
     "REMEMBER_PASSWORD": "Erinnern Sie sich an Ihr Passwort?",
     "BACK_TO_LOGIN": "Zurück zur Anmeldung"
+  },
+  "PAGINATOR": {
+      "ITEMS_PER_PAGE": "Elemente pro Seite",
+      "NEXT_PAGE": "Nächste Seite",
+      "PREVIOUS_PAGE": "Vorherige Seite",
+      "FIRST_PAGE": "Erste Seite",
+      "LAST_PAGE": "Letzte Seite"
   }
 }

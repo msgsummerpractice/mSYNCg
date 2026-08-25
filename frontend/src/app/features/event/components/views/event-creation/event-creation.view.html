@@ -1,15 +1,11 @@
 <main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-lg">
+  <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg">
     <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
       {{ 'REGISTER.EVENT.TITLE' | translate }}
     </h1>
 
-    <app-generic-form-container
-      [formGroup]="formGroup"
-      [isLoading]="isLoading"
-      (formSubmit)="submitEvent.emit()"
-      (invalidSubmit)="invalidSubmit.emit()"
-    >
+    <app-generic-form-container [formGroup]="formGroup" [isLoading]="isLoading" (formSubmit)="submitEvent.emit()"
+      (invalidSubmit)="invalidSubmit.emit()">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>{{ 'REGISTER.EVENT.EVENT_TITLE.LABEL' | translate }}</mat-label>
         <input matInput formControlName="title" />
@@ -29,13 +25,8 @@
       <div class="flex flex-col gap-4 w-full sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.START_DATE.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matDatepicker]="startDatePicker"
-            [errorStateMatcher]="startDatePastErrorStateMatcher"
-            formControlName="startDate"
-          />
+          <input matInput class="pr-10" [matDatepicker]="startDatePicker"
+            [errorStateMatcher]="startDatePastErrorStateMatcher" formControlName="startDate" />
           <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #startDatePicker></mat-datepicker>
           @if (formGroup.controls.startDate.hasError('required')) {
@@ -47,12 +38,7 @@
 
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.START_TIME.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matTimepicker]="startTimePicker"
-            formControlName="startTime"
-          />
+          <input matInput class="pr-10" [matTimepicker]="startTimePicker" formControlName="startTime" />
           <mat-timepicker-toggle matIconSuffix [for]="startTimePicker"></mat-timepicker-toggle>
           <mat-timepicker #startTimePicker></mat-timepicker>
           @if (formGroup.controls.startTime.hasError('required')) {
@@ -64,13 +50,8 @@
       <div class="flex flex-col gap-4 w-full sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.END_DATE.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matDatepicker]="endDatePicker"
-            [errorStateMatcher]="eventRangeErrorStateMatcher"
-            formControlName="endDate"
-          />
+          <input matInput class="pr-10" [matDatepicker]="endDatePicker"
+            [errorStateMatcher]="eventRangeErrorStateMatcher" formControlName="endDate" />
           <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #endDatePicker></mat-datepicker>
           @if (formGroup.controls.endDate.hasError('required')) {
@@ -94,17 +75,9 @@
       <div class="flex flex-col gap-4 w-full sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_START_DATE.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matDatepicker]="registrationStartDatePicker"
-            [errorStateMatcher]="registrationStartDatePastErrorStateMatcher"
-            formControlName="registrationStartDate"
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="registrationStartDatePicker"
-          ></mat-datepicker-toggle>
+          <input matInput class="pr-10" [matDatepicker]="registrationStartDatePicker"
+            [errorStateMatcher]="registrationStartDatePastErrorStateMatcher" formControlName="registrationStartDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="registrationStartDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #registrationStartDatePicker></mat-datepicker>
           @if (formGroup.controls.registrationStartDate.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_START_DATE.REQUIRED' | translate }}</mat-error>
@@ -115,16 +88,9 @@
 
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_START_TIME.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matTimepicker]="registrationStartTimePicker"
-            formControlName="registrationStartTime"
-          />
-          <mat-timepicker-toggle
-            matIconSuffix
-            [for]="registrationStartTimePicker"
-          ></mat-timepicker-toggle>
+          <input matInput class="pr-10" [matTimepicker]="registrationStartTimePicker"
+            formControlName="registrationStartTime" />
+          <mat-timepicker-toggle matIconSuffix [for]="registrationStartTimePicker"></mat-timepicker-toggle>
           <mat-timepicker #registrationStartTimePicker></mat-timepicker>
           @if (formGroup.controls.registrationStartTime.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_START_TIME.REQUIRED' | translate }}</mat-error>
@@ -135,17 +101,9 @@
       <div class="flex flex-col gap-4 w-full sm:flex-row">
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_END_DATE.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matDatepicker]="registrationEndDatePicker"
-            [errorStateMatcher]="registrationRangeErrorStateMatcher"
-            formControlName="registrationEndDate"
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="registrationEndDatePicker"
-          ></mat-datepicker-toggle>
+          <input matInput class="pr-10" [matDatepicker]="registrationEndDatePicker"
+            [errorStateMatcher]="registrationRangeErrorStateMatcher" formControlName="registrationEndDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="registrationEndDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #registrationEndDatePicker></mat-datepicker>
           @if (formGroup.controls.registrationEndDate.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_END_DATE.REQUIRED' | translate }}</mat-error>
@@ -156,16 +114,9 @@
 
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>{{ 'REGISTER.EVENT.REGISTRATION_END_TIME.LABEL' | translate }}</mat-label>
-          <input
-            matInput
-            class="pr-10"
-            [matTimepicker]="registrationEndTimePicker"
-            formControlName="registrationEndTime"
-          />
-          <mat-timepicker-toggle
-            matIconSuffix
-            [for]="registrationEndTimePicker"
-          ></mat-timepicker-toggle>
+          <input matInput class="pr-10" [matTimepicker]="registrationEndTimePicker"
+            formControlName="registrationEndTime" />
+          <mat-timepicker-toggle matIconSuffix [for]="registrationEndTimePicker"></mat-timepicker-toggle>
           <mat-timepicker #registrationEndTimePicker></mat-timepicker>
           @if (formGroup.controls.registrationEndTime.hasError('required')) {
           <mat-error>{{ 'REGISTER.EVENT.REGISTRATION_END_TIME.REQUIRED' | translate }}</mat-error>
@@ -201,11 +152,8 @@
       </mat-form-field>
       } @if ( selectedType === eventTypeEnum.LOCAL || selectedType === eventTypeEnum.INTERNAL ) {
       <div class="w-full">
-        <mat-checkbox
-          formControlName="isFoodProvided"
-          labelPosition="before"
-          class="w-full flex justify-between text-lg"
-        >
+        <mat-checkbox formControlName="isFoodProvided" labelPosition="before"
+          class="w-full flex justify-between text-lg">
           {{ 'REGISTER.EVENT.FOOD_PROVIDED.LABEL' | translate }}
         </mat-checkbox>
         @if (formGroup.controls.isFoodProvided.hasError('required')) {
@@ -216,13 +164,7 @@
       </div>
       }
 
-      <input
-        #posterInput
-        type="file"
-        accept="image/jpeg,image/png"
-        hidden
-        (change)="onPosterSelected($event)"
-      />
+      <input #posterInput type="file" accept="image/jpeg,image/png" hidden (change)="onPosterSelected($event)" />
 
       <button type="button" mat-stroked-button class="w-full py-5" (click)="posterInput.click()">
         {{ 'REGISTER.EVENT.POSTER.UPLOAD' | translate }}
@@ -235,13 +177,7 @@
       }
     </app-generic-form-container>
 
-    <button
-      type="button"
-      mat-stroked-button
-      color="warn"
-      class="w-full py-5 mt-3"
-      (click)="cancelEvent.emit()"
-    >
+    <button type="button" mat-stroked-button color="warn" class="w-full py-5 mt-3" (click)="cancelEvent.emit()">
       {{ 'BUTTONS.CANCEL' | translate }}
     </button>
   </div>
