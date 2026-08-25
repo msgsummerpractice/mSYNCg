@@ -77,12 +77,10 @@
   "USER_PROFILE":{
     "TITLE": "User Profile",
     "SUBTITLE": "Update your personal information",
-    "EVENT":{
-      "FORM": {
+    "FORM": {
         "INVALID": "Please correct the errors in the form.",
         "SUCCESS": "Profile updated successfully!",
         "ERROR": "An error occurred while updating the profile."
-      }
     },
     "ROLE": {
       "LABEL": "Role",

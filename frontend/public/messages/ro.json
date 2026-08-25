@@ -77,12 +77,10 @@
   "USER_PROFILE":{
     "TITLE": "Profil Utilizator",
     "SUBTITLE": "Actualizează-ți informațiile personale",
-    "EVENT":{
-      "FORM": {
+    "FORM": {
         "INVALID": "Vă rugăm să corectați erorile din formular.",
         "SUCCESS": "Profilul a fost actualizat cu succes!",
         "ERROR": "A apărut o eroare la actualizarea profilului."
-      }
     },
     "ROLE": {
       "LABEL": "Rol",
