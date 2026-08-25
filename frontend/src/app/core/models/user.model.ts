@@ -37,6 +37,7 @@ export interface EditProfileResponse {
   email: string;
   location: UserLocation;
   role: UserRole;
+  imageMimeType: string | null;
   imageBase64: string | null;
 }
 

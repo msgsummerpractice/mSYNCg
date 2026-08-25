@@ -9,8 +9,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { UserProfileView } from '../views/user-profile.view';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
-import { UserRole } from '../../../../core/constants/role.constant';
-import { UserLocation } from '../../../../core/constants/location.constant';
 import { AuthService } from '../../../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '../../../../core/services/user.service';
@@ -52,11 +50,11 @@ export class UserProfileContainer {
   readonly isLoading = signal<boolean>(false);
 
   protected readonly userProfileGroup = this.fb.group<UserProfileForm>({
-    firstName: this.fb.control({ value: null, disabled: true }),
-    lastName: this.fb.control({ value: null, disabled: true }),
-    email: this.fb.control({ value: null, disabled: true }),
+    firstName: this.fb.control(null),
+    lastName: this.fb.control(null),
+    email: this.fb.control(null),
     location: this.fb.control(null),
-    role: this.fb.control({ value: null, disabled: true }),
+    role: this.fb.control(null),
     posterName: this.fb.control(null),
   });
 
@@ -73,7 +71,7 @@ export class UserProfileContainer {
       .subscribe((profile) => {
         if (profile.imageBase64) {
           this.posterBase64 = profile.imageBase64;
-          this.posterPreviewUrl.set(`data:image/jpeg;base64,${profile.imageBase64}`);
+          this.posterPreviewUrl.set(`data:${profile.imageMimeType};base64,${profile.imageBase64}`);
         }
 
         this.userProfileGroup.patchValue({

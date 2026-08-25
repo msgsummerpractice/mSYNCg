@@ -1,5 +1,5 @@
-<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-    <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-lg">
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-6">
+    <div class="bg-white p-4 rounded-xl shadow-2xl w-full max-w-lg">
         <input #posterInput type="file" accept="image/jpeg,image/png" hidden (change)="onPosterSelected($event)" />
 
         <div class="mb-6 flex items-start justify-between gap-4">
@@ -12,7 +12,7 @@
                 </h2>
             </div>
             <button type="button" (click)="posterInput.click()"
-                class="hover:cursor-pointer h-30 w-30 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+                class="hover:cursor-pointer h-25 w-25 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
                 aria-label="Change profile picture">
                 @if (posterPreviewUrl) {
                 <img [src]="posterPreviewUrl" alt="Profile picture" class="h-full w-full object-cover" />
@@ -76,7 +76,7 @@
             </mat-form-field>
         </app-generic-form-container>
 
-        <button type="button" mat-stroked-button color="warn" class="w-full py-5 mt-3" (click)="cancelEvent.emit()">
+        <button type="button" mat-stroked-button color="warn" class="w-full py-3 mt-2" (click)="cancelEvent.emit()">
             {{ 'BUTTONS.CANCEL' | translate }}
         </button>
     </div>
