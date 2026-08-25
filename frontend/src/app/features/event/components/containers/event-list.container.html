@@ -29,7 +29,6 @@
   [isLoading]="isLoading()"
   [userRole]="userRole()"
   [canCompleteEvent]="canCompleteEvent"
-  [canCheckIn]="canCheckIn"
   (nameSearchChange)="onNameSearchChange($event)"
   (typeChange)="onTypeChange($event)"
   (statusChange)="onStatusChange($event)"
@@ -41,13 +40,14 @@
   (editEvent)="onEditEvent($event)"
   (publishEvent)="onPublishEvent($event)"
   (completeEvent)="onCompleteEvent($event)"
-  (checkIn)="onCheckIn($event)"
 >
 </app-event-list-view>
 
 @if (selectedEventId(); as eventId) {
 <app-event-card-container
   [eventId]="eventId"
+  [participationStatus]="selectedEventParticipationStatus()"
+  (checkIn)="onCheckIn($event)"
   (close)="onCloseEventCard()"
 ></app-event-card-container>
 }

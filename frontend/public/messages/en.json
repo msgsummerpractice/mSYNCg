@@ -335,7 +335,9 @@
       "GENERATE_CODES": "Generate codes",
       "GENERATE_CODES_ERROR": "Codes could not be generated. Please try again.",
       "QR_CODE_ALT": "Event QR code",
-      "ACCESS_CODE": "Access code"
+      "ACCESS_CODE": "Access code",
+      "CHECK_IN": "Check in",
+      "CHECKED_IN": "Checked in"
     }
   },
   "CHECKIN": {

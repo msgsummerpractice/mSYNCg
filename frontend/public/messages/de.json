@@ -336,7 +336,9 @@
       "GENERATE_CODES": "Codes generieren",
       "GENERATE_CODES_ERROR": "Codes konnten nicht generiert werden. Bitte versuchen Sie es erneut.",
       "QR_CODE_ALT": "QR-Code der Veranstaltung",
-      "ACCESS_CODE": "Zugangscode"
+      "ACCESS_CODE": "Zugangscode",
+      "CHECK_IN": "Einchecken",
+      "CHECKED_IN": "Eingecheckt"
     }
   },
   "CHECKIN": {

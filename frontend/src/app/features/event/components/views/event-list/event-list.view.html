@@ -226,23 +226,6 @@
                   >
                 </button>
               </span>
-
-              <span [matTooltip]="'EVENT_LIST.BUTTONS.CHECK_IN' | translate">
-                <button
-                  mat-icon-button
-                  type="button"
-                  class="!h-9 !w-9"
-                  [disabled]="!canCheckIn(event)"
-                  [attr.aria-label]="'EVENT_LIST.BUTTONS.CHECK_IN' | translate"
-                  (click)="checkIn.emit(event.id)"
-                >
-                  <mat-icon
-                    class="!text-[20px] !leading-5"
-                    [ngClass]="canCheckIn(event) ? '!text-[var(--color-primary)]' : '!text-gray-400'"
-                    >check_in</mat-icon
-                  >
-                </button>
-              </span>
             </div>
           </td>
         </ng-container>

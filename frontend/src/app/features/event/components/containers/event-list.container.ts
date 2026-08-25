@@ -134,6 +134,12 @@ export class EventListContainer implements OnInit {
   readonly selectedEventId = signal<number | null>(null);
   readonly publishingEventId = signal<number>(0);
 
+  readonly selectedEventParticipationStatus = computed(
+    () =>
+      this.pagedEvents().find((event) => event.id === this.selectedEventId())
+        ?.participationStatus ?? null
+  );
+
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
     types: this.selectedTypes(),
@@ -260,27 +266,6 @@ export class EventListContainer implements OnInit {
   onPublishFinished(): void {
     this.publishingEventId.set(0);
   }
-
-  canCheckIn = (event: EventView): boolean => {
-    if (event.status !== EventStatusEnum.PUBLISHED) {
-      return false;
-    }
-
-    if (!event.participationStatus) {
-      return false;
-    }
-
-    if (event.participationStatus === 'CHECKED_IN') {
-      return false;
-    }
-
-    const endTime = Date.parse(event.endTime);
-    if (!Number.isFinite(endTime) || endTime < Date.now()) {
-      return false;
-    }
-
-    return true;
-  };
 
   onCheckIn(eventId: number): void {
     this.dialog

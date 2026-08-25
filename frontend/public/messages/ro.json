@@ -334,7 +334,9 @@
       "GENERATE_CODES": "Generează coduri",
       "GENERATE_CODES_ERROR": "Codurile nu au putut fi generate. Încercați din nou.",
       "QR_CODE_ALT": "Cod QR al evenimentului",
-      "ACCESS_CODE": "Cod de acces"
+      "ACCESS_CODE": "Cod de acces",
+      "CHECK_IN": "Verifică intrarea",
+      "CHECKED_IN": "Intrare verificată"
     }
   },
   "CHECKIN": {
