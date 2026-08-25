@@ -33,10 +33,6 @@ public class RegistrationService implements RegistrationServiceInterface {
             registration.setGdpr(false);
         }
 
-        if (registration.getPhotoConsent() == null) {
-            registration.setPhotoConsent(false);
-        }
-
         registrationValidator.validate(registration, LocalDateTime.now());
 
         registration.setStatus(RegistrationStatus.REGISTERED);
@@ -61,7 +57,7 @@ public class RegistrationService implements RegistrationServiceInterface {
         registration.setFoodPreference(request.getFoodPreference());
         registration.setAccommodationDays(request.getAccommodationDays());
         registration.setGdpr(Boolean.TRUE.equals(request.getGdpr()));
-        registration.setPhotoConsent(Boolean.TRUE.equals(request.getPhotoConsent()));
+        registration.setPhotoConsent(request.getPhotoConsent());
         registration.setDriverName(request.getDriverName());
         registration.setDriverPhone(request.getDriverPhone());
 

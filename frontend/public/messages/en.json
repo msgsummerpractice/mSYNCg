@@ -74,10 +74,49 @@
     "LOGIN_ERROR": "Invalid email or password.",
     "ACCOUNT_INACTIVE_ERROR": "Account is inactive. Please contact an administrator."
   },
+  "USER_PROFILE":{
+    "TITLE": "User Profile",
+    "SUBTITLE": "Update your personal information",
+    "EVENT":{
+      "FORM": {
+        "INVALID": "Please correct the errors in the form.",
+        "SUCCESS": "Profile updated successfully!",
+        "ERROR": "An error occurred while updating the profile."
+      }
+    },
+    "ROLE": {
+      "LABEL": "Role",
+      "REQUIRED": "Role is required"
+    },
+
+    "FIRST_NAME": {
+      "LABEL": "First Name",
+      "REQUIRED": "First name is required"
+    },
+    "LAST_NAME": {
+      "LABEL": "Last Name",
+      "REQUIRED": "Last name is required"
+    },
+    "EMAIL": {
+      "LABEL": "Email Address",
+      "REQUIRED": "Email is required"
+    },
+    "LOCATION": {
+      "LABEL": "Location",
+      "REQUIRED": "Location is required"
+    },
+    "POSTER": {
+      "LABEL": "Profile Picture",
+      "UPLOAD": "Upload profile picture",
+      "INVALID": "The profile picture must be a JPEG or PNG image no larger than 5 MB"
+    }
+  },
+  
   "REGISTER_FOR_EVENT": {
     "TITLE": "Register for Event",
     "BUTTON": {
-      "LABEL": "Register Now"
+      "LABEL": "Register Now",
+      "UPDATE_LABEL": "Update Registration"
     },
     "GDPR": "I agree to the GDPR terms",
     "GDPR_REQUIRED": "You must agree to the GDPR terms to register",
@@ -112,7 +151,14 @@
       "REQUIRED": "You must provide photo consent to register"
     },
     "ERROR": "An error occurred while processing your registration. Please try again later.",
-    "SUCCESS": "Registration successful! You will receive a confirmation email shortly."
+    "SUCCESS": "Registration successful! You will receive a confirmation email shortly.",
+    "WITHDRAW": {
+      "BUTTON": {
+        "LABEL": "Withdraw Registration"
+      },
+      "SUCCESS": "Your registration has been withdrawn.",
+      "ERROR": "An error occurred while withdrawing your registration. Please try again later."
+    }
   },
   "REGISTER": {
     "USER": {

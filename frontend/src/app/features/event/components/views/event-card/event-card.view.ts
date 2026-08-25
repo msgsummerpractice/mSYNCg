@@ -70,6 +70,7 @@ export class EventCardView {
   @Output() navigate = new EventEmitter<string>();
 
   readonly route = computed(() => '/events/' + this.eventData().id + '/register');
+  readonly updateRoute = computed(() => '/events/' + this.eventData().id + '/register/update');
   readonly generateCodes = output<void>();
   readonly checkIn = output<void>();
 
@@ -87,6 +88,10 @@ export class EventCardView {
 
   handleEventClick(): void {
     this.navigate.emit(this.route());
+  }
+
+  handleUpdateRegistrationClick(): void {
+    this.navigate.emit(this.updateRoute());
   }
 
   isRegistrationClosed(registrationEnd: Date | null): boolean {

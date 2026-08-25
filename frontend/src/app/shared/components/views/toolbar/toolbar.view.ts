@@ -1,4 +1,4 @@
-import { Component, Output, Input } from '@angular/core';
+import { Component, Output, Input, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,7 +50,7 @@ interface NavItems {
       <ng-content select="app-language-switcher"></ng-content>
       <app-user-icon-container
         *ngIf="showUserIcon"
-        [userImage]="iconUrl"
+        [userImage]="iconUrl()"
         [userName]="userName"
       ></app-user-icon-container>
       <app-button-container
@@ -65,6 +65,7 @@ interface NavItems {
 export class ToolbarView {
   @Output() navigate = new EventEmitter<string>();
   @Output() logout = new EventEmitter<void>();
+  @Input() iconUrl = signal<string>('');
   @Input() navItems: NavItems[] = [
     { label: 'Events', route: '/events' },
     { label: 'Users', route: '/admin/users' },
@@ -74,7 +75,6 @@ export class ToolbarView {
   @Input() showNavigation: boolean = true;
   @Input() showUserIcon: boolean = true;
   @Input() showLogoutButton: boolean = false;
-  readonly iconUrl: string = '/assets/icons/user-icon.png';
   readonly logoUrl: string = '/assets/icons/msg_logo_color.svg';
 
   handleEventClick(route: string): void {
