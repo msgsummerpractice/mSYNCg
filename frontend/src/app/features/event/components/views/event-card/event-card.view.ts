@@ -60,6 +60,9 @@ export class EventCardView {
   readonly qrCode = input<string | null>(null);
   readonly accessCode = input<string | null>(null);
   readonly isGeneratingCodes = input(false);
+  readonly isRegistered = input(false);
+  readonly isCheckedIn = input(false);
+  readonly canCheckIn = input(false);
   readonly now = signal(new Date());
 
   readonly close = output<void>();
@@ -68,6 +71,7 @@ export class EventCardView {
 
   readonly route = computed(() => '/events/' + this.eventData().id + '/register');
   readonly generateCodes = output<void>();
+  readonly checkIn = output<void>();
 
   readonly posterSrc = computed(() => toImageSrc(this.eventData().image ?? ''));
 

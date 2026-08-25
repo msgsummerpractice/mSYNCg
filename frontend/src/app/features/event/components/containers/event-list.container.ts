@@ -11,6 +11,7 @@ import { EventListView } from '../views/event-list/event-list.view';
 import { EventCardContainer } from './event-card.container';
 import { ButtonContainer } from '../../../../shared/components/containers/button.container';
 import { PublishEventContainer } from './publish-event.container';
+import { CheckInDialogContainer } from './checkin-dialog.container';
 import { ConfirmationDialogView } from '../../../../shared/components/views/confirmation-dialog/confirmation-dialog.view';
 import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -132,6 +133,12 @@ export class EventListContainer implements OnInit {
 
   readonly selectedEventId = signal<number | null>(null);
   readonly publishingEventId = signal<number>(0);
+
+  readonly selectedEventParticipationStatus = computed(
+    () =>
+      this.pagedEvents().find((event) => event.id === this.selectedEventId())
+        ?.participationStatus ?? null
+  );
 
   private filterParams = computed<EventFilterParams>(() => ({
     name: this.nameQuery().trim(),
@@ -258,6 +265,23 @@ export class EventListContainer implements OnInit {
 
   onPublishFinished(): void {
     this.publishingEventId.set(0);
+  }
+
+  onCheckIn(eventId: number): void {
+    this.dialog
+      .open(CheckInDialogContainer, {
+        width: '90vw',
+        maxWidth: '600px',
+        data: { eventId },
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((checkedIn) => {
+        if (checkedIn) {
+          this.reload$.next();
+        }
+      });
   }
 
   canCompleteEvent = (eventId: number): boolean => {
