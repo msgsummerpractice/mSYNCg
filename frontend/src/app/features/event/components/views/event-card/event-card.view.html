@@ -88,6 +88,31 @@
           {{ ev.description }}
         </p>
       </mat-card-content>
+
+      <div class="flex w-full justify-end px-6 pb-6">
+        @if (isCheckedIn()) {
+        <span
+          class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700"
+        >
+          <mat-icon class="!h-5 !w-5 !text-xl !leading-5">check_circle</mat-icon>
+          {{ 'EVENT.CARD.CHECKED_IN' | translate }}
+        </span>
+        } @else if (isRegistered()) {
+        <app-button-container
+          [label]="'EVENT.CARD.CHECK_IN' | translate"
+          (clickEvent)="checkIn.emit()"
+          variant="primary"
+          [disabled]="!canCheckIn()"
+        ></app-button-container>
+        } @else {
+        <app-button-container
+          [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
+          (clickEvent)="handleEventClick()"
+          variant="primary"
+          [disabled]="isRegistrationClosed(ev.registrationEnd)"
+        ></app-button-container>
+        }
+      </div>
     </div>
 
     @if (hasCodes() || canGenerateCodes()) {

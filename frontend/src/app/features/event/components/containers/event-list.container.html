@@ -46,6 +46,8 @@
 @if (selectedEventId(); as eventId) {
 <app-event-card-container
   [eventId]="eventId"
+  [participationStatus]="selectedEventParticipationStatus()"
+  (checkIn)="onCheckIn($event)"
   (close)="onCloseEventCard()"
 ></app-event-card-container>
 }

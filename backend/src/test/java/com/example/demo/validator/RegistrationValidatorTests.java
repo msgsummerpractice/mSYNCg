@@ -12,6 +12,7 @@ import com.example.demo.model.EventType;
 import com.example.demo.model.FoodPreference;
 import com.example.demo.model.Location;
 import com.example.demo.model.Registration;
+import com.example.demo.model.RegistrationStatus;
 import com.example.demo.model.User;
 import com.example.demo.repository.RegistrationRepository;
 import java.time.LocalDateTime;
@@ -44,7 +45,8 @@ class RegistrationValidatorTests {
     @Test
     void validate_whenUserIsAlreadyRegistered_rejectsEventId() {
         Registration registration = createRegistration();
-        when(registrationRepository.existsByUserIdAndEventId(1, 2)).thenReturn(true);
+        when(registrationRepository.existsByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
+                .thenReturn(true);
 
         ValidationException exception = assertThrows(
                 ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
