@@ -1,7 +1,8 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { RegistrationService } from '../../../../core/services/registration.service';
 import { UserEventRegisterView } from '../views/user-event-register.view';
-import { EventRegistrationForm } from '../../../../core/models/event.model';
+import { EventRegisterResponse, EventRegistrationForm } from '../../../../core/models/event.model';
+import { DeleteRegistrationRequest } from '../../../../core/models/registration.model';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { FoodTypeEnum } from '../../../../core/constants/food-type.constant';
 import { EventTypeEnum } from '../../../../core/constants/event.constant';
@@ -15,7 +16,7 @@ import { Event } from '../../../../core/models/event.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 @Component({
-  selector: 'app-user-event-register-container',
+  selector: 'app-user-register-update-container',
   standalone: true,
   imports: [UserEventRegisterView],
   template: `
@@ -24,13 +25,15 @@ import { AuthService } from '../../../../core/services/auth.service';
       [isLoading]="isLoading()"
       [event]="event()"
       [foodProvided]="foodProvided()"
+      [showWithdraw]="true"
       (submitEvent)="handleEventSubmit()"
       (invalidSubmit)="handleInvalidForm()"
       (cancelEvent)="handleCancel()"
+      (withdrawEvent)="handleWithdraw()"
     />
   `,
 })
-export class UserEventRegisterContainer implements OnInit {
+export class UserRegisterUpdateContainer implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   private readonly toastService = inject(ToastService);
@@ -57,6 +60,8 @@ export class UserEventRegisterContainer implements OnInit {
     foodType: this.fb.control<FoodTypeEnum | null>(null),
   });
 
+  private eventId: number | null = null;
+
   ngOnInit() {
     this.setUpConditionValidation();
 
@@ -65,6 +70,8 @@ export class UserEventRegisterContainer implements OnInit {
     if (!Number.isInteger(eventId)) {
       return;
     }
+
+    this.eventId = eventId;
 
     this.eventService.getEvent(eventId).subscribe({
       next: (event) => {
@@ -91,10 +98,11 @@ export class UserEventRegisterContainer implements OnInit {
           gdprControl?.clearValidators();
         }
         gdprControl?.updateValueAndValidity();
+
+        this.loadRegistration();
       },
       error: () => {
-        const errorMsg = 'Nope';
-        this.toastService.showError(errorMsg);
+        this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR'));
       },
     });
   }
@@ -107,12 +115,7 @@ export class UserEventRegisterContainer implements OnInit {
   }
 
   handleEventSubmit() {
-    if (this.eventFormGroup.invalid) {
-      return;
-    }
-
-    const eventId = Number(this.route.snapshot.paramMap.get('id'));
-    if (!Number.isInteger(eventId)) {
+    if (this.eventFormGroup.invalid || this.eventId === null) {
       return;
     }
 
@@ -128,7 +131,7 @@ export class UserEventRegisterContainer implements OnInit {
 
     const req = {
       userId,
-      eventId,
+      eventId: this.eventId,
       date: new Date().toISOString(),
       gdpr: form.GDPRConsent,
       photoConsent: form.photoConsent,
@@ -139,7 +142,7 @@ export class UserEventRegisterContainer implements OnInit {
     };
 
     this.registrationService
-      .registerForEvent(req)
+      .updateRegistration(req)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -147,7 +150,7 @@ export class UserEventRegisterContainer implements OnInit {
           this.toastService.showSuccess(this.translate.instant('REGISTER_FOR_EVENT.SUCCESS'));
           this.router.navigate(['/events']);
         },
-        error: (error) => {
+        error: () => {
           this.isLoading.set(false);
           this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR'));
         },
@@ -156,6 +159,61 @@ export class UserEventRegisterContainer implements OnInit {
 
   handleCancel(): void {
     this.router.navigate([`/events`]);
+  }
+
+  handleWithdraw(): void {
+    const userId = this.authService.currentUser()?.id;
+
+    if (userId === undefined || this.eventId === null) {
+      return;
+    }
+
+    const request: DeleteRegistrationRequest = { eventId: this.eventId, userId };
+
+    this.isLoading.set(true);
+
+    this.registrationService
+      .withdrawRegistration(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          this.toastService.showSuccess(
+            this.translate.instant('REGISTER_FOR_EVENT.WITHDRAW.SUCCESS')
+          );
+          this.router.navigate(['/events']);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.WITHDRAW.ERROR'));
+        },
+      });
+  }
+
+  private loadRegistration(): void {
+    const userId = this.authService.currentUser()?.id;
+
+    if (userId === undefined || this.eventId === null) {
+      return;
+    }
+
+    this.registrationService.getRegistration(this.eventId, userId).subscribe({
+      next: (registration) => this.fillForm(registration),
+      error: () => this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR')),
+    });
+  }
+
+  private fillForm(registration: EventRegisterResponse): void {
+    this.eventFormGroup.patchValue({
+      transportNeeded: !!registration.driverName || !!registration.driverPhone,
+      driverName: registration.driverName,
+      driverPhone: registration.driverPhone,
+      accommodationNeeded: registration.accommodationDays !== null,
+      accommodationDetails: registration.accommodationDays,
+      photoConsent: registration.photoConsent,
+      GDPRConsent: registration.gdpr,
+      foodType: registration.foodPreference,
+    });
   }
 
   private setUpConditionValidation(): void {

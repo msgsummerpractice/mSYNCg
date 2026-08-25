@@ -88,8 +88,8 @@ public class RegistrationValidator {
     }
 
     private void validatePhotoConsent(Registration registration) {
-        if (!Boolean.TRUE.equals(registration.getPhotoConsent())) {
-            throw new ValidationException("photoConsent", "Photo consent must be acknowledged.");
+        if (registration.getPhotoConsent() == null) {
+            throw new ValidationException("photoConsent", "Photo consent notice must be acknowledged.");
         }
     }
 

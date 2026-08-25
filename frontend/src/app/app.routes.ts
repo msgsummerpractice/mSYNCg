@@ -13,7 +13,10 @@ import { UserListContainer } from './features/admin/components/containers/user-l
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin-guard';
 import { eventManagementGuard } from './core/guards/event-management.guard';
+import { UserProfileContainer } from './features/user/components/containers/user-profile.container';
 import { UserEventRegisterContainer } from './features/user/components/containers/user-event-register.container';
+import { LoggedInGuard } from './core/guards/loggedin.guard';
+import { UserRegisterUpdateContainer } from './features/user/components/containers/user-register-update.container';
 
 export const routes: Routes = [
   // Default route
@@ -27,6 +30,7 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginPage,
+    canActivate: [LoggedInGuard],
   },
   {
     path: 'register',
@@ -85,6 +89,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
         component: UserEventRegisterContainer,
       },
+      {
+        path: 'events/:id/register/update',
+        canActivate: [authGuard],
+        component: UserRegisterUpdateContainer,
+      },
 
       // Event update
       {
@@ -95,6 +104,12 @@ export const routes: Routes = [
             ({ EventUpdatePage }) => EventUpdatePage
           ),
       },
+        {
+          path: 'user-profile',
+          component: UserProfileContainer,
+          canActivate: [authGuard],
+        },
+
     ],
   },
 

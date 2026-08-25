@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.UpdateUserProfileRequest;
 import com.example.demo.dto.request.UserRequest;
+import com.example.demo.dto.response.UpdateUserProfileResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.UserViewResponse;
 import com.example.demo.exceptions.CannotChangeOwnRoleException;
@@ -44,7 +46,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
@@ -256,12 +257,10 @@ public class UserServiceTests {
 		when(userRepository.save(user)).thenReturn(user);
 		when(modelMapper.map(user, UserResponse.class)).thenReturn(mappedResponse);
 
-		UserResponse response =
-				userService.updateUserRole(
-						1,
-						UserRole.ADMIN,
-						"authenticated@example.com"
-				);
+		UserResponse response = userService.updateUserRole(
+				1,
+				UserRole.ADMIN,
+				"authenticated@example.com");
 
 		assertNotNull(response);
 		assertEquals(UserRole.ADMIN, user.getRole());
@@ -274,18 +273,17 @@ public class UserServiceTests {
 
 	@Test
 	void updateUserRole_whenUserDoesNotExist_throwsException() {
-			when(userRepository.findById(99)).thenReturn(Optional.empty());
+		when(userRepository.findById(99)).thenReturn(Optional.empty());
 
-			NotFoundException exception = assertThrows(
-					NotFoundException.class,
-					() -> userService.updateUserRole(99, UserRole.ADMIN, "authenticated@example.com")
-			);
+		NotFoundException exception = assertThrows(
+				NotFoundException.class,
+				() -> userService.updateUserRole(99, UserRole.ADMIN, "authenticated@example.com"));
 
-			assertEquals("User with id 99 not found", exception.getMessage());
+		assertEquals("User with id 99 not found", exception.getMessage());
 
-			verify(userRepository).findById(99);
-			verifyNoMoreInteractions(userRepository);
-			verifyNoInteractions(modelMapper);
+		verify(userRepository).findById(99);
+		verifyNoMoreInteractions(userRepository);
+		verifyNoInteractions(modelMapper);
 	}
 
 	@Test
@@ -316,14 +314,13 @@ public class UserServiceTests {
 
 		NotFoundException exception = assertThrows(
 				NotFoundException.class,
-				() -> userService.updateUserStatus(99, false)
-		);
+				() -> userService.updateUserStatus(99, false));
 
 		assertEquals("User with id 99 not found", exception.getMessage());
 
 		verify(userRepository).findById(99);
 		verifyNoMoreInteractions(userRepository);
-		verifyNoInteractions(modelMapper);		
+		verifyNoInteractions(modelMapper);
 	}
 
 	@Test
@@ -349,14 +346,11 @@ public class UserServiceTests {
 				() -> userService.updateUserRole(
 						1,
 						UserRole.PARTICIPANT,
-						"admin@example.com"
-				)
-		);
+						"admin@example.com"));
 
 		assertEquals(
 				"Admin cannot change their own role.",
-				exception.getMessage()
-		);
+				exception.getMessage());
 
 		verify(userRepository).findById(1);
 		verify(userRepository).findByEmail("admin@example.com");
@@ -365,6 +359,158 @@ public class UserServiceTests {
 	}
 
 	@Test
+	void updateProfile_whenUserExists_updatesAndReturnsProfile() {
+		User user = new User();
+		user.setId(1);
+		user.setFirstName("Ada");
+		user.setLastName("Lovelace");
+		user.setEmail("ada@example.com");
+		user.setLocation(Location.CLUJ_NAPOCA);
+		user.setRole(UserRole.PARTICIPANT);
+		user.setStatus(true);
+
+		UpdateUserProfileRequest request = new UpdateUserProfileRequest();
+		request.setFirstName("Grace");
+		request.setLastName("Hopper");
+		request.setEmail("grace@example.com");
+		request.setLocation(Location.TARGU_MURES);
+		request.setRole(UserRole.ADMIN);
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.save(user)).thenReturn(user);
+
+		UpdateUserProfileResponse response = userService.updateProfile(1, request);
+
+		assertNotNull(response);
+		assertEquals(1, response.getId());
+		assertEquals("Grace", response.getFirstName());
+		assertEquals("Hopper", response.getLastName());
+		assertEquals("grace@example.com", response.getEmail());
+		assertEquals(Location.TARGU_MURES, response.getLocation());
+		assertEquals(UserRole.ADMIN, response.getRole());
+		assertEquals(Boolean.TRUE, response.getStatus());
+
+		verify(userRepository).findById(1);
+		verify(userRepository).save(user);
+	}
+
+	@Test
+	void updateProfile_whenImageBase64Provided_decodesAndDetectsPngMimeType() {
+		User user = new User();
+		user.setId(1);
+		user.setStatus(true);
+
+		byte[] pngBytes = { (byte) 0x89, 0x50, 0x4E, 0x47, 0x01, 0x02, 0x03, 0x04 };
+		String encodedImage = java.util.Base64.getEncoder().encodeToString(pngBytes);
+
+		UpdateUserProfileRequest request = new UpdateUserProfileRequest();
+		request.setFirstName("Ada");
+		request.setLastName("Lovelace");
+		request.setEmail("ada@example.com");
+		request.setLocation(Location.CLUJ_NAPOCA);
+		request.setRole(UserRole.PARTICIPANT);
+		request.setImageBase64(encodedImage);
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.save(user)).thenReturn(user);
+
+		UpdateUserProfileResponse response = userService.updateProfile(1, request);
+
+		assertEquals(encodedImage, response.getImageBase64());
+		assertEquals("image/png", response.getImageMimeType());
+	}
+
+	@Test
+	void updateProfile_whenImageBase64IsBlank_doesNotUpdateImage() {
+		User user = new User();
+		user.setId(1);
+		user.setStatus(true);
+
+		UpdateUserProfileRequest request = new UpdateUserProfileRequest();
+		request.setFirstName("Ada");
+		request.setLastName("Lovelace");
+		request.setEmail("ada@example.com");
+		request.setLocation(Location.CLUJ_NAPOCA);
+		request.setRole(UserRole.PARTICIPANT);
+		request.setImageBase64("   ");
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.save(user)).thenReturn(user);
+
+		UpdateUserProfileResponse response = userService.updateProfile(1, request);
+
+		assertNull(response.getImageBase64());
+		assertNull(user.getImage());
+	}
+
+	@Test
+	void updateProfile_whenUserDoesNotExist_throwsException() {
+		UpdateUserProfileRequest request = new UpdateUserProfileRequest();
+
+		when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(
+				NotFoundException.class,
+				() -> userService.updateProfile(99, request));
+
+		assertEquals("User with id 99 not found", exception.getMessage());
+
+		verify(userRepository).findById(99);
+		verify(userRepository, never()).save(org.mockito.ArgumentMatchers.any());
+	}
+
+	@Test
+	void getProfile_whenUserExists_returnsProfileWithoutImage() {
+		User user = new User();
+		user.setId(1);
+		user.setFirstName("Ada");
+		user.setLastName("Lovelace");
+		user.setEmail("ada@example.com");
+		user.setLocation(Location.CLUJ_NAPOCA);
+		user.setRole(UserRole.PARTICIPANT);
+		user.setStatus(true);
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
+		UpdateUserProfileResponse response = userService.getProfile(1);
+
+		assertNotNull(response);
+		assertEquals(1, response.getId());
+		assertEquals("Ada", response.getFirstName());
+		assertEquals("ada@example.com", response.getEmail());
+		assertNull(response.getImageBase64());
+		assertNull(response.getImageMimeType());
+
+		verify(userRepository).findById(1);
+	}
+
+	@Test
+	void getProfile_whenUserHasImage_returnsProfileWithEncodedImage() {
+		User user = new User();
+		user.setId(1);
+		user.setStatus(true);
+		user.setImage(new byte[] { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF });
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
+		UpdateUserProfileResponse response = userService.getProfile(1);
+
+		assertNotNull(response.getImageBase64());
+		assertEquals("image/jpeg", response.getImageMimeType());
+	}
+
+	@Test
+	void getProfile_whenUserDoesNotExist_throwsException() {
+		when(userRepository.findById(99)).thenReturn(Optional.empty());
+
+		NotFoundException exception = assertThrows(
+				NotFoundException.class,
+				() -> userService.getProfile(99));
+
+		assertEquals("User with id 99 not found", exception.getMessage());
+
+		verify(userRepository).findById(99);
+	}
 	void findById_whenUserExists_returnsUser() {
 		User user = new User();
 		user.setId(5);

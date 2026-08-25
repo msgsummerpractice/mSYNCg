@@ -68,12 +68,20 @@ class RegistrationValidatorTests {
     @Test
     void validate_whenPhotoConsentIsNotAcknowledged_rejectsPhotoConsent() {
         Registration registration = createRegistration();
-        registration.setPhotoConsent(false);
+        registration.setPhotoConsent(null);
 
         ValidationException exception = assertThrows(
                 ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
 
         assertEquals("photoConsent", exception.getField());
+    }
+
+    @Test
+    void validate_whenPhotoConsentIsDeclined_doesNotThrow() {
+        Registration registration = createRegistration();
+        registration.setPhotoConsent(false);
+
+        assertDoesNotThrow(() -> registrationValidator.validate(registration, LocalDateTime.now()));
     }
 
     @Test

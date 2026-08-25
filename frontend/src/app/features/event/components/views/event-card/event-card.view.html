@@ -98,12 +98,20 @@
           {{ 'EVENT.CARD.CHECKED_IN' | translate }}
         </span>
         } @else if (isRegistered()) {
-        <app-button-container
-          [label]="'EVENT.CARD.CHECK_IN' | translate"
-          (clickEvent)="checkIn.emit()"
-          variant="primary"
-          [disabled]="!canCheckIn()"
-        ></app-button-container>
+        <div class="flex flex-wrap items-center justify-end gap-3">
+          <app-button-container
+            [label]="'REGISTER_FOR_EVENT.BUTTON.UPDATE_LABEL' | translate"
+            (clickEvent)="handleUpdateRegistrationClick()"
+            variant="primary"
+            [disabled]="isRegistrationClosed(ev.registrationEnd)"
+          ></app-button-container>
+          <app-button-container
+            [label]="'EVENT.CARD.CHECK_IN' | translate"
+            (clickEvent)="checkIn.emit()"
+            variant="primary"
+            [disabled]="!canCheckIn()"
+          ></app-button-container>
+        </div>
         } @else {
         <app-button-container
           [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
