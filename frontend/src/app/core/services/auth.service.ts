@@ -9,6 +9,7 @@ import { LoginRequest, LoginResponse } from '../models/user-login.model';
 import { UserRegisterRequest, UserRegisterResponse } from '../models/user-register.model';
 import { CurrentUser } from '../models/user.model';
 import { USER_ROLES, UserRole } from '../constants/role.constant';
+import { ResetPasswordRequest } from '../models/reset-password.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -37,6 +38,14 @@ export class AuthService {
 
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
     return this.http.post<UserRegisterResponse>(`${this.apiUrl}/users`, userData);
+  }
+
+  forgotPassword(email: { email: string }): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/forgot-password`, email);
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/reset-password`, request);
   }
 
   getToken(): string | null {

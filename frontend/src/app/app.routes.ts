@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-
+import { ResetPasswordPage } from './shared/pages/reset-password/reset-password.page';
 import { LoginPage } from './shared/pages/login/login.page';
 import { HomePage } from './shared/pages/home/home.page';
 import { MainLayoutPage } from './shared/pages/main-layout/main-layout.page';
 import UserRegisterPage from './shared/pages/user-register.page';
+import { ForgotPasswordPage } from './shared/pages/forgot-password/forgot-password.page';
 import { EventCardContainer } from './features/event/components/containers/event-card.container';
 import { EventListPage } from './features/event/pages/event-list/event-list.page';
 
@@ -30,6 +31,14 @@ export const routes: Routes = [
   {
     path: 'register',
     component: UserRegisterPage,
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordPage,
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordPage,
   },
   {
     path: 'eventcard/:id',

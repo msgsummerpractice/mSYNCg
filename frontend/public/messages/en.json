@@ -336,5 +336,44 @@
       "QR_CODE_ALT": "Event QR code",
       "ACCESS_CODE": "Access code"
     }
+  },
+  "RESET_PASSWORD": {
+    "WELCOME": "Reset your password",
+    "TITLE": "Choose a new password",
+    "DESCRIPTION": "Enter and confirm your new password to regain access to your account.",
+    "FORM_TITLE": "New password",
+    "FORM_SUBTITLE": "Your new password must contain at least 8 characters.",
+    "PASSWORD_LABEL": "New password",
+    "PASSWORD_PLACEHOLDER": "Enter your new password",
+    "PASSWORD_REQUIRED": "Password is required.",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long.",
+    "CONFIRM_PASSWORD_LABEL": "Confirm new password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your new password",
+    "CONFIRM_PASSWORD_REQUIRED": "Please confirm your password.",
+    "PASSWORDS_DO_NOT_MATCH": "Passwords do not match.",
+    "SUBMIT_BUTTON": "Reset password",
+    "SUCCESS_MESSAGE": "Your password has been reset successfully.",
+    "INVALID_LINK": "This password reset link is invalid.",
+    "EXPIRED_LINK": "This password reset link has expired.",
+    "USED_LINK": "This password reset link has already been used.",
+    "ERROR_MESSAGE": "Unable to reset your password. Please try again.",
+    "BACK_TO_LOGIN": "Back to login"
+  },
+  "FORGOT_PASSWORD": {
+    "WELCOME": "Password Recovery",
+    "TITLE": "Reset Your Password",
+    "DESCRIPTION": "Enter your email address and we'll send you a link to reset your password.",
+    "FORM_TITLE": "Forgot your password?",
+    "FORM_SUBTITLE": "No worries, we'll send you reset instructions.",
+    "EMAIL_LABEL": "Email Address",
+    "EMAIL_PLACEHOLDER": "john.doe@example.com",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Please enter a valid email address",
+    "SUBMIT_BUTTON": "Send Reset Link",
+    "SUCCESS_MESSAGE": "If an account exists for this email, you will receive a password reset link.",
+    "ERROR_MESSAGE": "Unable to send reset link. Please try again.",
+    "EMAIL_NOT_FOUND": "No account found with this email address.",
+    "REMEMBER_PASSWORD": "Remember your password?",
+    "BACK_TO_LOGIN": "Back to login"
   }
 }
