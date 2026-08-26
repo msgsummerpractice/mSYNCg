@@ -15,15 +15,11 @@ import { RouterLink } from '@angular/router';
         {{ userName }}
       </span>
       <div
-        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-8 sm:w-8"
+        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-8 sm:w-8 hover:cursor-pointer"
         [ngStyle]="{ 'background-color': circleColor }"
+        [routerLink]="['/user-profile']"
       >
-        <img
-          *ngIf="userImage"
-          [src]="userImage"
-          class="h-5 w-5 rounded-full sm:h-6 sm:w-6 hover:cursor-pointer"
-          [routerLink]="['/user-profile']"
-        />
+        <img *ngIf="userImage" [src]="userImage" class="h-5 w-5 rounded-full sm:h-6 sm:w-6 " />
         <div
           *ngIf="!userImage"
           class="flex items-center text-center text-xs font-bold sm:text-sm"

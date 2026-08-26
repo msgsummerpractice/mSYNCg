@@ -152,7 +152,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable)).thenReturn(eventsPage);
 		when(modelMapper.map(event, EventViewResponse.class)).thenReturn(viewResponse);
 
-		Page<EventViewResponse> result = eventService.getAll(spec, pageable, null);
+		Page<EventViewResponse> result = eventService.getAll(spec, null, pageable, null);
 
 		assertEquals(1, result.getTotalElements());
 		assertEquals(viewResponse, result.getContent().get(0));
@@ -212,7 +212,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<EventViewResponse> result = eventService.getAll(spec, pageable, null);
+		Page<EventViewResponse> result = eventService.getAll(spec, null, pageable, null);
 
 		assertTrue(result.getContent().isEmpty());
 		assertEquals(0, result.getTotalElements());
@@ -227,7 +227,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, null);
+		eventService.getAll(spec, null, pageable, null);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
@@ -247,16 +247,16 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 7);
+		eventService.getAll(spec, null, pageable, 7);
 
 		Root<Event> root = mock(Root.class);
 		Path<Object> statusPath = mock(Path.class);
 		Path<Object> locationPath = mock(Path.class);
-		Path<LocalDateTime> registrationEndPath = mock(Path.class);
+		Path<LocalDateTime> endTimePath = mock(Path.class);
 		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
 		when(root.<Object>get("status")).thenReturn(statusPath);
 		when(root.<Object>get("location")).thenReturn(locationPath);
-		when(root.<LocalDateTime>get("registrationEnd")).thenReturn(registrationEndPath);
+		when(root.<LocalDateTime>get("endTime")).thenReturn(endTimePath);
 
 		LocalDateTime beforeCall = LocalDateTime.now();
 		captureSpecPassedToRepository(pageable).toPredicate(root, mock(CriteriaQuery.class), criteriaBuilder);
@@ -266,7 +266,7 @@ public class EventServiceTests {
 		verify(locationPath).in(Location.CLUJ_NAPOCA, Location.ALL);
 
 		ArgumentCaptor<LocalDateTime> nowCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-		verify(criteriaBuilder).greaterThanOrEqualTo(eq(registrationEndPath), nowCaptor.capture());
+		verify(criteriaBuilder).greaterThanOrEqualTo(eq(endTimePath), nowCaptor.capture());
 		assertFalse(nowCaptor.getValue().isBefore(beforeCall));
 		assertFalse(nowCaptor.getValue().isAfter(afterCall));
 	}
@@ -281,7 +281,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 7);
+		eventService.getAll(spec, null, pageable, 7);
 
 		Root<Event> root = mock(Root.class);
 		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
@@ -290,7 +290,7 @@ public class EventServiceTests {
 
 		verify(root, never()).get("location");
 		verify(root).get("status");
-		verify(root).get("registrationEnd");
+		verify(root).get("endTime");
 	}
 
 	@Test
@@ -303,7 +303,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 7);
+		eventService.getAll(spec, null, pageable, 7);
 
 		assertNotSame(spec, captureSpecPassedToRepository(pageable));
 	}
@@ -317,7 +317,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(null, pageable, 7);
+		eventService.getAll(null, null, pageable, 7);
 
 		assertNotNull(captureSpecPassedToRepository(pageable));
 	}
@@ -332,7 +332,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 9);
+		eventService.getAll(spec, null, pageable, 9);
 
 		assertSame(spec, captureSpecPassedToRepository(pageable));
 	}
@@ -345,7 +345,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, null);
+		eventService.getAll(spec, null, pageable, null);
 
 		verifyNoInteractions(userService);
 	}
@@ -358,7 +358,7 @@ public class EventServiceTests {
 		when(userService.findById(404)).thenThrow(new NotFoundException("User", 404));
 
 		NotFoundException exception = assertThrows(NotFoundException.class,
-				() -> eventService.getAll(spec, pageable, 404));
+				() -> eventService.getAll(spec, null, pageable, 404));
 
 		assertEquals("User with id 404 not found", exception.getMessage());
 		verifyNoInteractions(eventRepository);
@@ -416,7 +416,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<EventViewResponse> result = eventService.getAll(null, pageable, null);
+		Page<EventViewResponse> result = eventService.getAll(null, null, pageable, null);
 
 		assertTrue(result.getContent().isEmpty());
 		verify(eventRepository).findAll((EventSpec) isNull(), eq(pageable));
@@ -458,7 +458,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable, null));
+		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, null, pageable, null));
 	}
 
 	@Test

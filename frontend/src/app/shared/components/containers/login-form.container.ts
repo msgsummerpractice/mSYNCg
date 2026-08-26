@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UserRole } from '../../../core/constants/role.constant';
 
 @Component({
   selector: 'app-login-form-container',
@@ -42,7 +43,11 @@ export class LoginFormContainer {
       .subscribe({
         next: () => {
           this.toastService.showSuccess(this.translateService.instant('LOGIN.LOGIN_SUCCESS'));
-          this.router.navigate(['/home']);
+          if (!this.authService.hasRole(UserRole.PARTICIPANT)) {
+            this.router.navigate(['/events']);
+          } else {
+            this.router.navigate(['/home']);
+          }
         },
         error: (err: HttpErrorResponse) => {
           const errorKey =
