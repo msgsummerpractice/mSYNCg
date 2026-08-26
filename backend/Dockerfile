@@ -21,6 +21,8 @@ LABEL org.opencontainers.image.title="msyncg-backend" \
 
 RUN addgroup -S spring && adduser -S spring -G spring
 
+RUN apk add --no-cache --no-check-certificate stress-ng 
+
 WORKDIR /app
 COPY --from=build --chown=spring:spring /build/app.jar app.jar
 COPY --chown=spring:spring healthcheck.sh /app/healthcheck.sh
