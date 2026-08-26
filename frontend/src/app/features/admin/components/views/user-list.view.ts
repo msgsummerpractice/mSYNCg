@@ -34,6 +34,7 @@ import { CellChangeEvent } from '../../../../core/models/layout.model';
     TranslatePipe,
   ],
   templateUrl: './user-list.view.html',
+  host: { class: 'flex flex-1 flex-col' },
 })
 export class UserListView {
   @Input() users: User[] = [];

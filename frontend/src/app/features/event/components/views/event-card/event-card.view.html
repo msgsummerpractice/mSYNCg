@@ -1,15 +1,29 @@
 @if (eventData(); as ev) {
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-[3vh] backdrop-blur-[2px]"
-  (click)="close.emit()">
-  <mat-card appearance="raised" class="relative flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl"
-    (click)="$event.stopPropagation()">
-    <button mat-icon-button type="button" aria-label="Close"
-      class="!absolute top-2 right-2 !z-20 !bg-white/80 !text-brand-on-surface hover:!bg-white" (click)="close.emit()">
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-[3vh] backdrop-blur-[2px]"
+  (click)="close.emit()"
+>
+  <mat-card
+    appearance="raised"
+    class="relative flex h-[94vh] w-[94vw] !flex-col overflow-hidden rounded-2xl shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Close"
+      class="!absolute top-2 right-2 !z-20 !bg-white/80 !text-brand-on-surface hover:!bg-white"
+      (click)="close.emit()"
+    >
       <mat-icon>close</mat-icon>
     </button>
     <div class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-muted sm:h-72">
-      <img [src]="posterSrc()" alt="" aria-hidden="true"
-        class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl" />
+      <img
+        [src]="posterSrc()"
+        alt=""
+        aria-hidden="true"
+        class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
+      />
       <img [src]="posterSrc()" [alt]="ev.name" class="relative h-full w-full object-contain" />
     </div>
 
@@ -78,30 +92,42 @@
       <div class="flex w-full justify-end px-6 pb-6">
         @if (isCheckedIn()) {
         <span
-          class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
+          class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700"
+        >
           <mat-icon class="!h-5 !w-5 !text-xl !leading-5">check_circle</mat-icon>
           {{ 'EVENT.CARD.CHECKED_IN' | translate }}
         </span>
         } @else if (isRegistered()) {
         <div class="flex flex-wrap items-center justify-end gap-3">
-          <app-button-container [label]="'REGISTER_FOR_EVENT.BUTTON.UPDATE_LABEL' | translate"
-            (clickEvent)="handleUpdateRegistrationClick()" variant="primary"
-            [disabled]="isRegistrationClosed(ev.registrationEnd)"></app-button-container>
-          <app-button-container [label]="'EVENT.CARD.CHECK_IN' | translate" (clickEvent)="checkIn.emit()"
-            variant="primary" [disabled]="!canCheckIn()"></app-button-container>
+          <app-button-container
+            [label]="'REGISTER_FOR_EVENT.BUTTON.UPDATE_LABEL' | translate"
+            (clickEvent)="handleUpdateRegistrationClick()"
+            variant="primary"
+            [disabled]="isRegistrationClosed(ev.registrationEnd)"
+          ></app-button-container>
+          @if (showCheckIn()) {
+          <app-button-container
+            [label]="'EVENT.CARD.CHECK_IN' | translate"
+            (clickEvent)="checkIn.emit()"
+            variant="primary"
+            [disabled]="!canCheckIn()"
+          ></app-button-container>
+          }
         </div>
-        } @else {
-        @if(!isRegistrationClosed(ev.registrationEnd)) {
-        <app-button-container [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate" (clickEvent)="handleEventClick()"
-          variant="primary"></app-button-container>
+        } @else { @if(!isRegistrationClosed(ev.registrationEnd)) {
+        <app-button-container
+          [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
+          (clickEvent)="handleEventClick()"
+          variant="primary"
+        ></app-button-container>
         } @else {
         <span
-          class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700">
+          class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700"
+        >
           <mat-icon class="!h-5 !w-5 !text-xl !leading-5">error</mat-icon>
           {{ 'EVENT.CARD.REGISTRATION_CLOSED' | translate }}
         </span>
-        }
-        }
+        } }
       </div>
     </div>
 
@@ -109,8 +135,11 @@
     <mat-card-actions class="!flex shrink-0 !justify-start border-t border-brand-muted !px-6 !py-4">
       @if (hasCodes()) {
       <div class="flex items-center gap-4">
-        <img [src]="qrCodeSrc()" [alt]="'EVENT.CARD.QR_CODE_ALT' | translate"
-          class="h-24 w-24 rounded-lg border border-brand-muted bg-white object-contain p-1" />
+        <img
+          [src]="qrCodeSrc()"
+          [alt]="'EVENT.CARD.QR_CODE_ALT' | translate"
+          class="h-24 w-24 rounded-lg border border-brand-muted bg-white object-contain p-1"
+        />
         <div>
           <p class="text-xs font-medium tracking-wide text-brand-on-muted uppercase">
             {{ 'EVENT.CARD.ACCESS_CODE' | translate }}
@@ -121,7 +150,12 @@
         </div>
       </div>
       } @else {
-      <button mat-flat-button type="button" [disabled]="isGeneratingCodes()" (click)="generateCodes.emit()">
+      <button
+        mat-flat-button
+        type="button"
+        [disabled]="isGeneratingCodes()"
+        (click)="generateCodes.emit()"
+      >
         @if (isGeneratingCodes()) {
         <mat-spinner diameter="18"></mat-spinner>
         } @else {

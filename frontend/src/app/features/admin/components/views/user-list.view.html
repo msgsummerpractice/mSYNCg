@@ -3,9 +3,11 @@
     <h1 class="text-3xl font-semibold text-gray-900">{{ 'USER_LIST.TITLE' | translate }}</h1>
   </div>
   <div
-    class="grid w-full min-w-0 grid-cols-1 items-start gap-3 overflow-x-hidden p-3 pb-24 sm:gap-4 sm:p-4 lg:grid-cols-[20rem_minmax(0,1fr)]">
+    class="grid w-full min-w-0 grid-cols-1 items-start gap-3 overflow-x-hidden p-3 sm:gap-4 sm:p-4 lg:grid-cols-[20rem_minmax(0,1fr)]"
+  >
     <aside
-      class="admin-filters self-start rounded-xl bg-[var(--color-on-primary)] p-3 text-[var(--color-primary)] shadow-xl sm:p-4 [--mat-sys-on-surface:var(--color-primary)] [--mat-sys-on-surface-variant:var(--color-primary)] [--mat-sys-primary:var(--color-primary)] [--mdc-outlined-text-field-outline-color:var(--color-primary)] [--mdc-outlined-text-field-hover-outline-color:var(--color-primary)] [--mdc-outlined-text-field-focus-outline-color:var(--color-primary)] [--mdc-outlined-text-field-caret-color:var(--color-primary)] [--mdc-outlined-text-field-input-text-color:var(--color-primary)] [--mdc-outlined-text-field-label-text-color:var(--color-primary)] [--mdc-outlined-text-field-focus-label-text-color:var(--color-primary)] [--mat-select-enabled-trigger-text-color:var(--color-primary)] [--mat-select-enabled-arrow-color:var(--color-primary)] [&_.mat-mdc-input-element]:!text-[var(--color-primary)] [&_.mdc-floating-label]:!text-[var(--color-primary)] [&_.mat-mdc-select-value-text]:!text-[var(--color-primary)] [&_.mat-mdc-select-arrow]:!text-[var(--color-primary)] [&_input:focus]:!outline-none">
+      class="admin-filters self-start rounded-xl bg-[var(--color-on-primary)] p-3 text-[var(--color-primary)] shadow-xl sm:p-4 [--mat-sys-on-surface:var(--color-primary)] [--mat-sys-on-surface-variant:var(--color-primary)] [--mat-sys-primary:var(--color-primary)] [--mdc-outlined-text-field-outline-color:var(--color-primary)] [--mdc-outlined-text-field-hover-outline-color:var(--color-primary)] [--mdc-outlined-text-field-focus-outline-color:var(--color-primary)] [--mdc-outlined-text-field-caret-color:var(--color-primary)] [--mdc-outlined-text-field-input-text-color:var(--color-primary)] [--mdc-outlined-text-field-label-text-color:var(--color-primary)] [--mdc-outlined-text-field-focus-label-text-color:var(--color-primary)] [--mat-select-enabled-trigger-text-color:var(--color-primary)] [--mat-select-enabled-arrow-color:var(--color-primary)] [&_.mat-mdc-input-element]:!text-[var(--color-primary)] [&_.mdc-floating-label]:!text-[var(--color-primary)] [&_.mat-mdc-select-value-text]:!text-[var(--color-primary)] [&_.mat-mdc-select-arrow]:!text-[var(--color-primary)] [&_input:focus]:!outline-none"
+    >
       <div class="mb-4 flex items-center justify-between">
         <h2 class="text-lg font-semibold">{{ 'USER_LIST.FILTER_TITLE' | translate }}</h2>
       </div>
@@ -13,25 +15,41 @@
       <div class="flex flex-col gap-3">
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'USER_LIST.FIELDS.FIRST_NAME' | translate }}</mat-label>
-          <input matInput [value]="firstNameQuery" (input)="firstNameSearchChange.emit($any($event.target).value)"
-            [placeholder]="'USER_LIST.FIELDS.FIRST_NAME_PLACEHOLDER' | translate" />
+          <input
+            matInput
+            [value]="firstNameQuery"
+            (input)="firstNameSearchChange.emit($any($event.target).value)"
+            [placeholder]="'USER_LIST.FIELDS.FIRST_NAME_PLACEHOLDER' | translate"
+          />
         </mat-form-field>
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'USER_LIST.FIELDS.LAST_NAME' | translate }}</mat-label>
-          <input matInput [value]="lastNameQuery" (input)="lastNameSearchChange.emit($any($event.target).value)"
-            [placeholder]="'USER_LIST.FIELDS.LAST_NAME_PLACEHOLDER' | translate" />
+          <input
+            matInput
+            [value]="lastNameQuery"
+            (input)="lastNameSearchChange.emit($any($event.target).value)"
+            [placeholder]="'USER_LIST.FIELDS.LAST_NAME_PLACEHOLDER' | translate"
+          />
         </mat-form-field>
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'USER_LIST.FIELDS.EMAIL' | translate }}</mat-label>
-          <input matInput [value]="emailQuery" (input)="emailSearchChange.emit($any($event.target).value)"
-            [placeholder]="'USER_LIST.FIELDS.EMAIL_PLACEHOLDER' | translate" />
+          <input
+            matInput
+            [value]="emailQuery"
+            (input)="emailSearchChange.emit($any($event.target).value)"
+            [placeholder]="'USER_LIST.FIELDS.EMAIL_PLACEHOLDER' | translate"
+          />
         </mat-form-field>
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'USER_LIST.FIELDS.ROLES' | translate }}</mat-label>
-          <mat-select multiple [value]="selectedRoles" (selectionChange)="roleChange.emit($event.value)">
+          <mat-select
+            multiple
+            [value]="selectedRoles"
+            (selectionChange)="roleChange.emit($event.value)"
+          >
             @for (role of roles; track role) {
             <mat-option [value]="role">{{ getRoleLabelKey(role) | translate }}</mat-option>
             }
@@ -40,7 +58,11 @@
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'USER_LIST.FIELDS.LOCATIONS' | translate }}</mat-label>
-          <mat-select multiple [value]="selectedLocations" (selectionChange)="locationChange.emit($event.value)">
+          <mat-select
+            multiple
+            [value]="selectedLocations"
+            (selectionChange)="locationChange.emit($event.value)"
+          >
             @for (loc of locations; track loc) {
             <mat-option [value]="loc">{{ getLocationLabelKey(loc) | translate }}</mat-option>
             }
@@ -49,27 +71,40 @@
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>{{ 'USER_LIST.FIELDS.STATUS' | translate }}</mat-label>
-          <mat-select multiple [value]="selectedStatuses" (selectionChange)="statusChange.emit($event.value)">
+          <mat-select
+            multiple
+            [value]="selectedStatuses"
+            (selectionChange)="statusChange.emit($event.value)"
+          >
             <mat-option [value]="true">{{ 'USER_LIST.STATUS.ACTIVE' | translate }}</mat-option>
             <mat-option [value]="false">{{ 'USER_LIST.STATUS.INACTIVE' | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <div class="mt-4 flex justify-end">
-          <app-button-container [label]="'USER_LIST.BUTTONS.RESET_FILTERS' | translate"
-            (clickEvent)="resetFilters.emit()"></app-button-container>
+          <app-button-container
+            [label]="'USER_LIST.BUTTONS.RESET_FILTERS' | translate"
+            (clickEvent)="resetFilters.emit()"
+          ></app-button-container>
         </div>
       </div>
     </aside>
 
     <section class="min-w-0">
-      <div class="relative overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8" [attr.aria-busy]="isLoading">
+      <div
+        class="relative overflow-x-auto rounded-xl bg-brand-surface mat-elevation-z8"
+        [attr.aria-busy]="isLoading"
+      >
         @for (col of columns; track col.key) {
         <ng-container [matColumnDef]="col.key">
           <th mat-header-cell *matHeaderCellDef> {{ col.label | translate }} </th>
 
           <td mat-cell *matCellDef="let row">
-            <generic-cell-view [column]="col" [row]="row" (valueChanged)="onCellValueChanged($event)">
+            <generic-cell-view
+              [column]="col"
+              [row]="row"
+              (valueChanged)="onCellValueChanged($event)"
+            >
             </generic-cell-view>
           </td>
         </ng-container>
@@ -79,14 +114,23 @@
         </div>
         }
 
-        <table mat-table [dataSource]="users" class="min-w-[48rem] w-full transition-[filter,opacity] duration-200"
-          [class.opacity-40]="isLoading" [class.grayscale]="isLoading">
+        <table
+          mat-table
+          [dataSource]="users"
+          class="min-w-[48rem] w-full transition-[filter,opacity] duration-200"
+          [class.opacity-40]="isLoading"
+          [class.grayscale]="isLoading"
+        >
           @for (col of columns; track col.key) {
           <ng-container [matColumnDef]="col.key">
             <th mat-header-cell *matHeaderCellDef> {{ col.label | translate }} </th>
 
             <td mat-cell *matCellDef="let row">
-              <generic-cell-view [column]="col" [row]="row" (valueChanged)="onCellValueChanged($event)">
+              <generic-cell-view
+                [column]="col"
+                [row]="row"
+                (valueChanged)="onCellValueChanged($event)"
+              >
               </generic-cell-view>
             </td>
           </ng-container>
@@ -100,9 +144,15 @@
   </div>
 </div>
 
-<div class="fixed inset-x-0 bottom-6 z-30 flex justify-center px-4 py-2">
-  <mat-paginator class="!w-auto !bg-transparent" [length]="resolvedTotalItems" [pageIndex]="pageIndex"
-    [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true"
-    (page)="pageChange.emit($event)">
+<div class="mt-auto flex justify-center px-4 pb-6 pt-2">
+  <mat-paginator
+    class="!w-auto !bg-transparent"
+    [length]="resolvedTotalItems"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="true"
+    (page)="pageChange.emit($event)"
+  >
   </mat-paginator>
 </div>

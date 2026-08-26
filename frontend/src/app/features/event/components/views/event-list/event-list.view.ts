@@ -51,6 +51,7 @@ import { EventParticipationStatus } from '../../../../../core/models/event.model
     MatNativeDateModule,
   ],
   templateUrl: './event-list.view.html',
+  host: { class: 'flex flex-1 flex-col' },
 })
 export class EventListView {
   readonly EventParticipationStatus = EventParticipationStatus;
