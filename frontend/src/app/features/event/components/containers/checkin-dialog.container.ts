@@ -66,13 +66,25 @@ export class CheckInDialogContainer {
         this.isLoading.set(false);
 
         let errorMsg = this.translateService.instant('CHECKIN.ERROR.DEFAULT');
+        const backendMsg: string | undefined = error.error?.message;
 
         if (error.status === 400) {
-          errorMsg = this.translateService.instant('CHECKIN.ERROR.INVALID_CODE');
+          if (backendMsg?.includes('not started')) {
+            errorMsg = this.translateService.instant('CHECKIN.ERROR.EVENT_NOT_STARTED');
+          } else if (backendMsg?.includes('not registered')) {
+            errorMsg = this.translateService.instant('CHECKIN.ERROR.NOT_REGISTERED');
+          } else if (backendMsg?.includes('already checked in')) {
+            errorMsg = this.translateService.instant('CHECKIN.ERROR.ALREADY_CHECKED_IN');
+          } else if (backendMsg?.includes('already completed')) {
+            errorMsg = this.translateService.instant('CHECKIN.ERROR.EVENT_COMPLETED');
+          } else if (backendMsg?.includes('already ended')) {
+            errorMsg = this.translateService.instant('CHECKIN.ERROR.EVENT_PAST_END');
+          } else {
+            errorMsg = this.translateService.instant('CHECKIN.ERROR.INVALID_CODE');
+          }
         } else if (error.status === 403) {
           errorMsg = this.translateService.instant('CHECKIN.ERROR.NOT_REGISTERED');
         } else if (error.status === 409) {
-          const backendMsg = error.error?.message;
           if (backendMsg?.includes('already')) {
             errorMsg = this.translateService.instant('CHECKIN.ERROR.ALREADY_CHECKED_IN');
           } else if (backendMsg?.includes('completed')) {
@@ -82,8 +94,8 @@ export class CheckInDialogContainer {
           } else {
             errorMsg = backendMsg || this.translateService.instant('CHECKIN.ERROR.DEFAULT');
           }
-        } else if (error.error?.message) {
-          errorMsg = error.error.message;
+        } else if (backendMsg) {
+          errorMsg = backendMsg;
         }
 
         this.errorMessage.set(errorMsg);
