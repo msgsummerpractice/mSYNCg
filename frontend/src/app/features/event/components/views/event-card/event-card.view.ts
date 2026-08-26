@@ -95,8 +95,12 @@ export class EventCardView {
     this.navigate.emit(this.updateRoute());
   }
 
-  isRegistrationClosed(registrationEnd: Date | null): boolean {
-    return registrationEnd !== null && new Date(registrationEnd).getTime() < this.now().getTime();
+  isRegistrationClosed(event: AppEvent): boolean {
+    const now = this.now().getTime();
+    const start = event.registrationStart ? new Date(event.registrationStart).getTime() : null;
+    const end = event.registrationEnd ? new Date(event.registrationEnd).getTime() : null;
+
+    return (start !== null && now < start) || (end !== null && now > end);
   }
   readonly hasCodes = computed(() => !!this.qrCodeSrc() && !!this.accessCode());
 }
