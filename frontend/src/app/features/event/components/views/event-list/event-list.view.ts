@@ -123,7 +123,9 @@ export class EventListView {
   }
 
   isPublished(event: EventView): boolean {
-    return event.status === EventStatusEnum.PUBLISHED;
+    return (
+      event.status === EventStatusEnum.PUBLISHED || event.status === EventStatusEnum.COMPLETED
+    );
   }
 
   isEditable(event: EventView): boolean {
