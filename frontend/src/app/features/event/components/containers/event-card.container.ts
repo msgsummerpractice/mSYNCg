@@ -54,6 +54,7 @@ function normalizeLocation(location: string): string {
         [canCheckIn]="canCheckIn()"
         [showCheckIn]="showCheckIn()"
         [canRegister]="canRegister()"
+        [canUpdateRegistration]="canUpdateRegistration()"
         (generateCodes)="onGenerateCodes()"
         (checkIn)="onCheckIn()"
         (navigate)="navigate($event)"
@@ -88,6 +89,10 @@ export class EventCardContainer {
     () => this.participationStatus() === EventParticipationStatus.CHECKED_IN
   );
 
+  readonly canUpdateRegistration = computed(
+    () => this.isRegistered() && this.event()?.status === EventStatusEnum.PUBLISHED
+  );
+
   readonly showCheckIn = computed(() => {
     const event = this.event();
     const endTime = event?.endTime ? new Date(event.endTime).getTime() : NaN;
@@ -113,7 +118,13 @@ export class EventCardContainer {
   }
 
   readonly canRegister = computed(() => {
-    const eventLocation = this.event()?.location;
+    const event = this.event();
+
+    if (event?.status !== EventStatusEnum.PUBLISHED) {
+      return false;
+    }
+
+    const eventLocation = event.location;
 
     if (!eventLocation) {
       return false;
