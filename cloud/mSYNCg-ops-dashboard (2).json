@@ -8,6 +8,27 @@
             "position": {
               "x": 0,
               "y": 0,
+              "colSpan": 15,
+              "rowSpan": 1
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "content": "__Backend Informations__\n\nInformations about CPU usage, Memory usage, Request Count, Replica Count\n",
+                  "title": "",
+                  "subtitle": "",
+                  "markdownSource": 1,
+                  "markdownUri": ""
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 1,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -108,7 +129,7 @@
           {
             "position": {
               "x": 5,
-              "y": 0,
+              "y": 1,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -209,7 +230,7 @@
           {
             "position": {
               "x": 10,
-              "y": 0,
+              "y": 1,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -414,6 +435,27 @@
             "position": {
               "x": 0,
               "y": 10,
+              "colSpan": 10,
+              "rowSpan": 1
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "content": "__Frontend Informations__\n\nInformations about Site Hits, Request Count based on code(400/500)\n",
+                  "title": "",
+                  "subtitle": "",
+                  "markdownSource": 1,
+                  "markdownUri": ""
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 11,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -490,7 +532,7 @@
           {
             "position": {
               "x": 5,
-              "y": 10,
+              "y": 11,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -588,7 +630,28 @@
           {
             "position": {
               "x": 0,
-              "y": 15,
+              "y": 16,
+              "colSpan": 15,
+              "rowSpan": 1
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "content": "__DB Informations__\n\nInformations about DB Memory usage, CPU usage, and Connections\n",
+                  "title": "",
+                  "subtitle": "",
+                  "markdownSource": 1,
+                  "markdownUri": ""
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 17,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -665,7 +728,7 @@
           {
             "position": {
               "x": 5,
-              "y": 15,
+              "y": 17,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -742,7 +805,7 @@
           {
             "position": {
               "x": 10,
-              "y": 15,
+              "y": 17,
               "colSpan": 5,
               "rowSpan": 4
             },
@@ -892,16 +955,16 @@
                 "value": "Past 24 hours"
               },
               "filteredPartIds": [
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa4cf",
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa580",
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa764",
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa61d",
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa629",
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa91c",
-                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3faa09",
-                "StartboardPart-MonitorChartPart-c3a77c79-b04d-4f4f-b632-0ec8660f0387",
-                "StartboardPart-MonitorChartPart-c3a77c79-b04d-4f4f-b632-0ec8660f0545",
-                "StartboardPart-MonitorChartPart-343e68aa-f972-49ad-ae5c-af6464b0d402"
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381354",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381356",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381358",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc38135a",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc38135c",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc38135e",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381360",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381362",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381364",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381366"
               ]
             }
           }
