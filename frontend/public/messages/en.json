@@ -74,13 +74,13 @@
     "LOGIN_ERROR": "Invalid email or password.",
     "ACCOUNT_INACTIVE_ERROR": "Account is inactive. Please contact an administrator."
   },
-  "USER_PROFILE":{
+  "USER_PROFILE": {
     "TITLE": "User Profile",
     "SUBTITLE": "Update your personal information",
     "FORM": {
-        "INVALID": "Please correct the errors in the form.",
-        "SUCCESS": "Profile updated successfully!",
-        "ERROR": "An error occurred while updating the profile."
+      "INVALID": "Please correct the errors in the form.",
+      "SUCCESS": "Profile updated successfully!",
+      "ERROR": "An error occurred while updating the profile."
     },
     "ROLE": {
       "LABEL": "Role",
@@ -109,7 +109,7 @@
       "INVALID": "The profile picture must be a JPEG or PNG image no larger than 5 MB"
     }
   },
-  
+
   "REGISTER_FOR_EVENT": {
     "TITLE": "Register for Event",
     "BUTTON": {
@@ -383,7 +383,7 @@
       "CHECK_IN": "Check in",
       "CHECKED_IN": "Checked in",
       "REGISTRATION_CLOSED": "Registration closed"
-      }
+    }
   },
   "CHECKIN": {
     "TITLE": "Event Check-in",
@@ -411,7 +411,8 @@
       "NOT_REGISTERED": "You are not registered for this event.",
       "ALREADY_CHECKED_IN": "You are already checked in for this event.",
       "EVENT_COMPLETED": "This event has already been completed.",
-      "EVENT_PAST_END": "Check-in is no longer available for this event."
+      "EVENT_PAST_END": "Check-in is no longer available for this event.",
+      "EVENT_NOT_STARTED": "Check-in is not available yet. The event has not started."
     }
   },
   "RESET_PASSWORD": {
@@ -454,10 +455,10 @@
     "BACK_TO_LOGIN": "Back to login"
   },
   "PAGINATOR": {
-        "ITEMS_PER_PAGE": "Items per page",
-        "NEXT_PAGE": "Next page",
-        "PREVIOUS_PAGE": "Previous page",
-        "FIRST_PAGE": "First page",
-        "LAST_PAGE": "Last page"
+    "ITEMS_PER_PAGE": "Items per page",
+    "NEXT_PAGE": "Next page",
+    "PREVIOUS_PAGE": "Previous page",
+    "FIRST_PAGE": "First page",
+    "LAST_PAGE": "Last page"
   }
 }
