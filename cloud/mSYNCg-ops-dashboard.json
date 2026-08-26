@@ -924,6 +924,127 @@
                 }
               }
             }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 22,
+              "colSpan": 6,
+              "rowSpan": 1
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "content": "__Cost Management__\n\nCost Management for mSYNCg",
+                  "title": "",
+                  "subtitle": "",
+                  "markdownSource": 1,
+                  "markdownUri": ""
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 23,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "scope",
+                  "value": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg"
+                },
+                {
+                  "name": "scopeName",
+                  "value": "mSYNCg"
+                },
+                {
+                  "name": "view",
+                  "value": {
+                    "displayName": "mSYNCg-budget-dashboard",
+                    "scope": "subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg",
+                    "createdOn": "2026-08-26T12:27:31.4136477Z",
+                    "modifiedOn": "2026-08-26T12:27:50.0787856Z",
+                    "query": {
+                      "type": "ActualCost",
+                      "dataSet": {
+                        "granularity": "Daily",
+                        "aggregation": {
+                          "totalCost": {
+                            "name": "Cost",
+                            "function": "Sum"
+                          },
+                          "totalCostUSD": {
+                            "name": "CostUSD",
+                            "function": "Sum"
+                          }
+                        },
+                        "sorting": [
+                          {
+                            "direction": "ascending",
+                            "name": "UsageDate"
+                          }
+                        ],
+                        "grouping": [
+                          {
+                            "type": "Dimension",
+                            "name": "ResourceId"
+                          }
+                        ]
+                      },
+                      "timeframe": "None"
+                    },
+                    "dateRange": "ThisMonth",
+                    "currency": "EUR",
+                    "chart": "Area",
+                    "accumulated": "false",
+                    "metric": "ActualCost",
+                    "kpis": [
+                      {
+                        "type": "Budget",
+                        "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.Consumption/budgets/msyncg-budget",
+                        "enabled": true,
+                        "extendedProperties": {
+                          "name": "msyncg-budget",
+                          "amount": 100,
+                          "timeGrain": "Monthly",
+                          "type": "bff82f66-027a-4464-a242-3e971760bb2e"
+                        }
+                      },
+                      {
+                        "type": "Forecast",
+                        "enabled": true
+                      }
+                    ],
+                    "pivots": [
+                      {
+                        "type": "Dimension",
+                        "name": "ServiceName"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceLocation"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceId"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "externalState",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_CostManagement/PartType/CostAnalysisPinPart"
+            }
           }
         ]
       }
@@ -955,16 +1076,16 @@
                 "value": "Past 24 hours"
               },
               "filteredPartIds": [
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381354",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381356",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381358",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc38135a",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc38135c",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc38135e",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381360",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381362",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381364",
-                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381366"
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381aaa",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381aac",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381aae",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381ab0",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381ab2",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381ab6",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381ab8",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381abc",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381abe",
+                "StartboardPart-MonitorChartPart-68aacd34-4c6a-46b3-a7bd-34bcdc381ac0"
               ]
             }
           }
