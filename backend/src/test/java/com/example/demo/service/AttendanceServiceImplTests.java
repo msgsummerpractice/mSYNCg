@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.exceptions.AlreadyCheckedInException;
 import com.example.demo.exceptions.EventAlreadyCompletedException;
 import com.example.demo.exceptions.EventCheckInExpiredException;
+import com.example.demo.exceptions.EventNotStartedException;
 import com.example.demo.exceptions.InvalidCheckInException;
 import com.example.demo.exceptions.UserNotRegisteredException;
 import com.example.demo.model.AttendanceRecord;
@@ -184,6 +185,26 @@ public class AttendanceServiceImplTests {
     }
 
     @Test
+    void checkIn_whenEventNotStarted_throwsEventNotStartedException() {
+        String qrCode = "Event:Test Event|ID:1";
+        CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
+        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        event.setStartTime(LocalDateTime.now().plusHours(1));
+        User user = createUser(1, "test@example.com");
+        checkIn.setEvent(event);
+
+        mockAuthentication(user.getEmail());
+        when(checkInRepository.findByQrCode(qrCode)).thenReturn(Optional.of(checkIn));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+        when(registrationRepository.existsByUserIdAndEventIdAndStatus(
+                user.getId(), event.getId(), RegistrationStatus.REGISTERED)).thenReturn(true);
+
+        assertThrows(EventNotStartedException.class, () -> attendanceService.checkIn(qrCode));
+
+        verify(attendanceRecordRepository, never()).save(any(AttendanceRecord.class));
+    }
+
+    @Test
     void checkIn_whenEventExpired_throwsEventCheckInExpiredException() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
@@ -266,6 +287,7 @@ public class AttendanceServiceImplTests {
         Event event = new Event();
         event.setId(id);
         event.setStatus(status);
+        event.setStartTime(LocalDateTime.now().minusHours(1));
         event.setEndTime(endTime);
         return event;
     }

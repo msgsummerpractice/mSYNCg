@@ -41,6 +41,7 @@ import { ToastService } from '../../../../core/services/toast.service';
         [isRegistered]="isRegistered()"
         [isCheckedIn]="isCheckedIn()"
         [canCheckIn]="canCheckIn()"
+        [showCheckIn]="showCheckIn()"
         (generateCodes)="onGenerateCodes()"
         (checkIn)="onCheckIn()"
         (navigate)="navigate($event)"
@@ -75,7 +76,7 @@ export class EventCardContainer {
     () => this.participationStatus() === EventParticipationStatus.CHECKED_IN
   );
 
-  readonly canCheckIn = computed(() => {
+  readonly showCheckIn = computed(() => {
     const event = this.event();
     const endTime = event?.endTime ? new Date(event.endTime).getTime() : NaN;
 
@@ -86,6 +87,13 @@ export class EventCardContainer {
       Number.isFinite(endTime) &&
       endTime >= Date.now()
     );
+  });
+
+  readonly canCheckIn = computed(() => {
+    const event = this.event();
+    const startTime = event?.startTime ? new Date(event.startTime).getTime() : NaN;
+
+    return this.showCheckIn() && Number.isFinite(startTime) && startTime <= Date.now();
   });
 
   onCheckIn(): void {
