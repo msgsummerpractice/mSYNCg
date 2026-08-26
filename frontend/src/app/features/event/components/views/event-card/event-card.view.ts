@@ -63,6 +63,7 @@ export class EventCardView {
   readonly isRegistered = input(false);
   readonly isCheckedIn = input(false);
   readonly canCheckIn = input(false);
+  readonly showCheckIn = input(false);
   readonly now = signal(new Date());
 
   readonly close = output<void>();
