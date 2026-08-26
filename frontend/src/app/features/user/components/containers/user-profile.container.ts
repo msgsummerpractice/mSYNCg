@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { UserService } from '../../../../core/services/user.service';
 
 @Component({
@@ -23,7 +24,6 @@ import { UserService } from '../../../../core/services/user.service';
     MatButtonModule,
     ReactiveFormsModule,
     UserProfileView,
-    UserProfileContainer,
   ],
   template: `
     <app-user-profile-view
@@ -33,6 +33,7 @@ import { UserService } from '../../../../core/services/user.service';
       (invalidSubmit)="handleInvalidForm()"
       [posterPreviewUrl]="posterPreviewUrl()"
       [isLoading]="isLoading()"
+      [isDataLoading]="isDataLoading()"
       (posterSelectedEvent)="handlePosterSelected($event)"
     ></app-user-profile-view>
   `,
@@ -48,6 +49,7 @@ export class UserProfileContainer {
   private readonly destroyRef = inject(DestroyRef);
   protected posterBase64: string | null = null;
   readonly isLoading = signal<boolean>(false);
+  readonly isDataLoading = signal<boolean>(false);
 
   protected readonly userProfileGroup = this.fb.group<UserProfileForm>({
     firstName: this.fb.control(null),
@@ -65,9 +67,14 @@ export class UserProfileContainer {
       return;
     }
 
+    this.isDataLoading.set(true);
+
     this.userService
       .getUserProfile(user.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isDataLoading.set(false))
+      )
       .subscribe((profile) => {
         if (profile.imageBase64) {
           this.posterBase64 = profile.imageBase64;
