@@ -8,6 +8,7 @@ import { FoodTypeEnum } from '../../../../core/constants/food-type.constant';
 import { EventTypeEnum } from '../../../../core/constants/event.constant';
 import { LocationEnum } from '../../../../core/models/location.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../../../core/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
@@ -24,6 +25,7 @@ import { formatDateTime } from '../../../../core/utils/date.util';
     <app-user-event-register-view
       [formGroup]="eventFormGroup"
       [isLoading]="isLoading()"
+      [isDataLoading]="isDataLoading()"
       [event]="event()"
       [foodProvided]="foodProvided()"
       [showWithdraw]="true"
@@ -45,6 +47,7 @@ export class UserRegisterUpdateContainer implements OnInit {
   private readonly registrationService = inject(RegistrationService);
   private readonly authService = inject(AuthService);
   readonly isLoading = signal(false);
+  readonly isDataLoading = signal(false);
   readonly foodProvided = signal<boolean | null>(null);
   readonly event = signal<Event | null>(null);
 
@@ -73,6 +76,7 @@ export class UserRegisterUpdateContainer implements OnInit {
     }
 
     this.eventId = eventId;
+    this.isDataLoading.set(true);
 
     this.eventService.getEvent(eventId).subscribe({
       next: (event) => {
@@ -103,6 +107,7 @@ export class UserRegisterUpdateContainer implements OnInit {
         this.loadRegistration();
       },
       error: () => {
+        this.isDataLoading.set(false);
         this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR'));
       },
     });
@@ -195,13 +200,18 @@ export class UserRegisterUpdateContainer implements OnInit {
     const userId = this.authService.currentUser()?.id;
 
     if (userId === undefined || this.eventId === null) {
+      this.isDataLoading.set(false);
       return;
     }
 
-    this.registrationService.getRegistration(this.eventId, userId).subscribe({
-      next: (registration) => this.fillForm(registration),
-      error: () => this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR')),
-    });
+    this.registrationService
+      .getRegistration(this.eventId, userId)
+      .pipe(finalize(() => this.isDataLoading.set(false)))
+      .subscribe({
+        next: (registration) => this.fillForm(registration),
+        error: () =>
+          this.toastService.showError(this.translate.instant('REGISTER_FOR_EVENT.ERROR')),
+      });
   }
 
   private fillForm(registration: EventRegisterResponse): void {

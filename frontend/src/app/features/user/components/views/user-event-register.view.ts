@@ -11,6 +11,7 @@ import { GenericFormView } from '../../../../shared/components/views/generic-for
 import { MatInputModule } from '@angular/material/input';
 import { Event } from '../../../../core/models/event.model';
 import { MatButton } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToolbarContainer } from '../../../../shared/components/containers/toolbar.container';
 @Component({
   selector: 'app-user-event-register-view',
@@ -24,6 +25,7 @@ import { ToolbarContainer } from '../../../../shared/components/containers/toolb
     MatError,
     ReactiveFormsModule,
     MatButton,
+    MatProgressSpinnerModule,
     ToolbarContainer,
   ],
   templateUrl: './user-event-register.view.html',
@@ -31,6 +33,7 @@ import { ToolbarContainer } from '../../../../shared/components/containers/toolb
 export class UserEventRegisterView {
   @Input({ required: true }) formGroup!: FormGroup;
   @Input() isLoading = false;
+  @Input() isDataLoading = false;
   @Input() foodProvided: boolean | null = null;
   @Input() event: Event | null = null;
   @Input() showWithdraw = false;
