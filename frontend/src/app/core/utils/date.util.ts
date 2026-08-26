@@ -14,13 +14,8 @@ export function formatDateTime(value: Date | null): string {
     return '';
   }
 
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, '0');
-  const day = String(value.getDate()).padStart(2, '0');
-  const hours = String(value.getHours()).padStart(2, '0');
-  const minutes = String(value.getMinutes()).padStart(2, '0');
-
-  return `${year}-${month}-${day}T${hours}:${minutes}:00`;
+  // Convert to UTC ISO 8601 string
+  return new Date(value).toISOString();
 }
 
 export function parseDateTime(value: string | null | undefined): Date | null {

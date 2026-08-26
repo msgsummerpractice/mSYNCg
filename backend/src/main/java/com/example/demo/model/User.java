@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
-
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -53,22 +52,24 @@ public class User {
     private String resetTokenHash;
 
     @Column(name = "reset_token_expires_at")
-    private LocalDateTime resetTokenExpiresAt;
+    private Instant resetTokenExpiresAt;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && 
-               Objects.equals(firstName, user.firstName) && 
-               Objects.equals(lastName, user.lastName) && 
-               Objects.equals(email, user.email) && 
-               Objects.equals(password, user.password) && 
-               location == user.location && 
-               Objects.equals(status, user.status) && 
-               role == user.role &&
-               Arrays.equals(image, user.image);
+        return Objects.equals(id, user.id) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                location == user.location &&
+                Objects.equals(status, user.status) &&
+                role == user.role &&
+                Arrays.equals(image, user.image);
     }
 
     @Override

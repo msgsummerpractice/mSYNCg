@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +42,6 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-
     @Override
     public String login(LogInRequest logInRequest) {
 
@@ -69,19 +68,18 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-     @Override
+    @Override
     public CurrentUserResponse getCurrentUser(String email) {
 
-    User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
 
         return new CurrentUserResponse(
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getRole()
-        );
-       
+                user.getRole());
+
     }
 
     @Override
@@ -98,15 +96,13 @@ public class AuthServiceImpl implements AuthService {
 
         user.setResetTokenHash(tokenHash);
         user.setResetTokenExpiresAt(
-                LocalDateTime.now().plusMinutes(RESET_TOKEN_EXPIRATION_MINUTES)
-        );
+                Instant.now().plusSeconds(RESET_TOKEN_EXPIRATION_MINUTES * 60));
 
         userRepository.save(user);
 
         emailService.sendPasswordResetEmail(
                 user.getEmail(),
-                rawToken
-        );
+                rawToken);
     }
 
     @Override
@@ -116,19 +112,16 @@ public class AuthServiceImpl implements AuthService {
         String tokenHash = passwordResetService.hashToken(request.getToken());
 
         User user = userRepository.findByResetTokenHash(tokenHash)
-                .orElseThrow(() ->
-                        new ValidationException("token", "Invalid reset token.")
-                );
+                .orElseThrow(() -> new ValidationException("token", "Invalid reset token."));
 
-        LocalDateTime expiration = user.getResetTokenExpiresAt();
+        Instant expiration = user.getResetTokenExpiresAt();
 
-        if (expiration == null || !expiration.isAfter(LocalDateTime.now())) {
+        if (expiration == null || !expiration.isAfter(Instant.now())) {
             throw new ValidationException("token", "Reset token has expired.");
         }
 
         user.setPassword(
-                passwordEncoder.encode(request.getNewPassword())
-        );
+                passwordEncoder.encode(request.getNewPassword()));
 
         user.setResetTokenHash(null);
         user.setResetTokenExpiresAt(null);

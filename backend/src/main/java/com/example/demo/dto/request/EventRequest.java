@@ -3,7 +3,7 @@ package com.example.demo.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
@@ -33,10 +33,10 @@ public class EventRequest {
     private Location location;
 
     @NotNull(message = "Event start time cannot be blank")
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @NotNull(message = "Event end time cannot be blank")
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     private Boolean foodProvided;
 
@@ -44,10 +44,10 @@ public class EventRequest {
     private String description;
 
     @NotNull(message = "Event registration start time cannot be blank")
-    private LocalDateTime registrationStart;
+    private Instant registrationStart;
 
     @NotNull(message = "Event registration end time cannot be blank")
-    private LocalDateTime registrationEnd;
+    private Instant registrationEnd;
 
     @MaxFileSize(value = 5000000, message = "Poster file size exceeds the maximum limit of 5MB.")
     @ImageType(allowedTypes = { "image/jpeg",

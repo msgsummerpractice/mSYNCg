@@ -36,7 +36,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -100,10 +100,10 @@ public class EventServiceTests {
 				Base64.getEncoder().encodeToString(pngImage));
 		request.setType(type);
 		request.setLocation(Location.CLUJ_NAPOCA);
-		request.setStartTime(LocalDateTime.of(2026, 9, 1, 9, 0));
-		request.setEndTime(LocalDateTime.of(2026, 9, 1, 12, 0));
-		request.setRegistrationStart(LocalDateTime.of(2026, 8, 15, 9, 0));
-		request.setRegistrationEnd(LocalDateTime.of(2026, 8, 31, 18, 0));
+		request.setStartTime(Instant.parse("2026-09-01T09:00:00Z"));
+		request.setEndTime(Instant.parse("2026-09-01T12:00:00Z"));
+		request.setRegistrationStart(Instant.parse("2026-08-15T09:00:00Z"));
+		request.setRegistrationEnd(Instant.parse("2026-08-31T18:00:00Z"));
 		request.setDescription("Internal event for the engineering team");
 		request.setFoodProvided(true);
 		return request;
@@ -120,7 +120,7 @@ public class EventServiceTests {
 		return event;
 	}
 
-	private Event createEvent(Integer id, EventStatus status, LocalDateTime endTime) {
+	private Event createEvent(Integer id, EventStatus status, Instant endTime) {
 		Event event = createEvent(id);
 		event.setStatus(status);
 		event.setEndTime(endTime);
@@ -252,20 +252,20 @@ public class EventServiceTests {
 		Root<Event> root = mock(Root.class);
 		Path<Object> statusPath = mock(Path.class);
 		Path<Object> locationPath = mock(Path.class);
-		Path<LocalDateTime> endTimePath = mock(Path.class);
+		Path<Instant> endTimePath = mock(Path.class);
 		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
 		when(root.<Object>get("status")).thenReturn(statusPath);
 		when(root.<Object>get("location")).thenReturn(locationPath);
-		when(root.<LocalDateTime>get("endTime")).thenReturn(endTimePath);
+		when(root.<Instant>get("endTime")).thenReturn(endTimePath);
 
-		LocalDateTime beforeCall = LocalDateTime.now();
+		Instant beforeCall = Instant.now();
 		captureSpecPassedToRepository(pageable).toPredicate(root, mock(CriteriaQuery.class), criteriaBuilder);
-		LocalDateTime afterCall = LocalDateTime.now();
+		Instant afterCall = Instant.now();
 
 		verify(criteriaBuilder).equal(statusPath, EventStatus.PUBLISHED);
 		verify(locationPath).in(Location.CLUJ_NAPOCA, Location.ALL);
 
-		ArgumentCaptor<LocalDateTime> nowCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
+		ArgumentCaptor<Instant> nowCaptor = ArgumentCaptor.forClass(Instant.class);
 		verify(criteriaBuilder).greaterThanOrEqualTo(eq(endTimePath), nowCaptor.capture());
 		assertFalse(nowCaptor.getValue().isBefore(beforeCall));
 		assertFalse(nowCaptor.getValue().isAfter(afterCall));
@@ -660,7 +660,7 @@ public class EventServiceTests {
 
 	@Test
 	void completeEvent_whenEventAlreadyCompleted_throwsEventCannotBeCompletedException() {
-		Event event = createEvent(1, EventStatus.COMPLETED, LocalDateTime.now().minusDays(1));
+		Event event = createEvent(1, EventStatus.COMPLETED, Instant.now().minusSeconds(86400));
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 
@@ -674,7 +674,7 @@ public class EventServiceTests {
 
 	@Test
 	void completeEvent_whenEndTimeIsInFuture_throwsEventCannotBeCompletedException() {
-		Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusDays(1));
+		Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(86400));
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 
@@ -688,7 +688,7 @@ public class EventServiceTests {
 
 	@Test
 	void completeEvent_whenEventEnded_setsStatusToCompleted() {
-		Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().minusDays(1));
+		Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().minusSeconds(86400));
 
 		EventDetailsResponse response = new EventDetailsResponse();
 		response.setId(1);
