@@ -1,0 +1,919 @@
+{
+  "properties": {
+    "lenses": [
+      {
+        "order": 0,
+        "parts": [
+          {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "UsageNanoCores",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "CPU Usage",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "CpuPercentage",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "CPU Usage Percentage (Preview)",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "UsageNanoCores",
+                          "aggregationType": 3,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "CPU Usage",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "CpuPercentage",
+                          "aggregationType": 3,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "CPU Usage Percentage (Preview)",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        }
+                      ],
+                      "title": "CPU_Usage [BE]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 5,
+              "y": 0,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "MemoryPercentage",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Memory Percentage (Preview)",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "MemoryPercentage",
+                          "aggregationType": 3,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Memory Percentage (Preview)",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "WorkingSetBytes",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Memory Working Set Bytes",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "WorkingSetBytes",
+                          "aggregationType": 3,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Memory Working Set Bytes",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        }
+                      ],
+                      "title": "Memory_Usage [BE]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 10,
+              "y": 0,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "ResponseTime",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Average Response Time (Preview)",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        }
+                      ],
+                      "title": "Response Time [BE]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 5,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "Replicas",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Replica Count",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        }
+                      ],
+                      "title": "Replica_Count [BE]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 5,
+              "y": 5,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.App/containerApps/msyncg-backend"
+                          },
+                          "name": "Requests",
+                          "aggregationType": 1,
+                          "namespace": "microsoft.app/containerapps",
+                          "metricVisualization": {
+                            "displayName": "Requests",
+                            "resourceDisplayName": "msyncg-backend"
+                          }
+                        }
+                      ],
+                      "title": "Request_Count [BE]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              },
+              "filters": {
+                "MsPortalFx_TimeRange": {
+                  "model": {
+                    "format": "utc",
+                    "granularity": "1m",
+                    "relative": "1440m"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 10,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.Web/staticSites/mSYNCg-static-web-app"
+                          },
+                          "name": "SiteHits",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.web/staticsites",
+                          "metricVisualization": {
+                            "displayName": "SiteHits",
+                            "resourceDisplayName": "mSYNCg-static-web-app"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.Web/staticSites/mSYNCg-static-web-app"
+                          },
+                          "name": "CdnRequestCount",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.web/staticsites",
+                          "metricVisualization": {
+                            "displayName": "CdnRequestCount",
+                            "resourceDisplayName": "mSYNCg-static-web-app"
+                          }
+                        }
+                      ],
+                      "title": "Site_Hits and Request_Count [FE]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 5,
+              "y": 10,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.Web/staticSites/mSYNCg-static-web-app"
+                          },
+                          "name": "CdnRequestCount",
+                          "aggregationType": 1,
+                          "namespace": "microsoft.web/staticsites",
+                          "metricVisualization": {
+                            "displayName": "CdnRequestCount",
+                            "resourceDisplayName": "mSYNCg-static-web-app"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.Web/staticSites/mSYNCg-static-web-app"
+                          },
+                          "name": "CdnPercentageOf5XX",
+                          "aggregationType": 7,
+                          "namespace": "microsoft.web/staticsites",
+                          "metricVisualization": {
+                            "displayName": "CdnPercentageOf5XX",
+                            "resourceDisplayName": "mSYNCg-static-web-app"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.Web/staticSites/mSYNCg-static-web-app"
+                          },
+                          "name": "CdnPercentageOf4XX",
+                          "aggregationType": 7,
+                          "namespace": "microsoft.web/staticsites",
+                          "metricVisualization": {
+                            "displayName": "CdnPercentageOf4XX",
+                            "resourceDisplayName": "mSYNCg-static-web-app"
+                          }
+                        }
+                      ],
+                      "title": "400_500 response counts",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              },
+              "filters": {
+                "MsPortalFx_TimeRange": {
+                  "model": {
+                    "format": "utc",
+                    "granularity": "1m",
+                    "relative": "1440m"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 0,
+              "y": 15,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "memory_percent",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "Memory percent",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "memory_percent",
+                          "aggregationType": 3,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "Memory percent",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        }
+                      ],
+                      "title": "Memory_Usage [DB]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 5,
+              "y": 15,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "options",
+                  "isOptional": true
+                },
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "cpu_percent",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "CPU percent",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "cpu_percent",
+                          "aggregationType": 3,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "CPU percent",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        }
+                      ],
+                      "title": "CPU_Usage [DB]",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "position": {
+              "x": 10,
+              "y": 15,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "sharedTimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "options",
+                  "value": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "connections_failed",
+                          "aggregationType": 1,
+                          "metricVisualization": {
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "connections_succeeded",
+                          "aggregationType": 1,
+                          "metricVisualization": {
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        }
+                      ],
+                      "title": "DB Connections",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2
+                      },
+                      "openBladeOnClick": {
+                        "openBlade": true
+                      }
+                    }
+                  },
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+              "settings": {
+                "content": {
+                  "options": {
+                    "chart": {
+                      "metrics": [
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "connections_failed",
+                          "aggregationType": 1,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "Failed Connections",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "connections_succeeded",
+                          "aggregationType": 1,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "Succeeded Connections",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        },
+                        {
+                          "resourceMetadata": {
+                            "id": "/subscriptions/bff82f66-027a-4464-a242-3e971760bb2e/resourceGroups/mSYNCg/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-msyncg"
+                          },
+                          "name": "is_db_alive",
+                          "aggregationType": 4,
+                          "namespace": "microsoft.dbforpostgresql/flexibleservers",
+                          "metricVisualization": {
+                            "displayName": "Database Is Alive",
+                            "resourceDisplayName": "psql-msyncg"
+                          }
+                        }
+                      ],
+                      "title": "DB Connections",
+                      "titleKind": 2,
+                      "visualization": {
+                        "chartType": 2,
+                        "legendVisualization": {
+                          "isVisible": true,
+                          "position": 2,
+                          "hideHoverCard": false,
+                          "hideLabelNames": true
+                        },
+                        "axisVisualization": {
+                          "x": {
+                            "isVisible": true,
+                            "axisType": 2
+                          },
+                          "y": {
+                            "isVisible": true,
+                            "axisType": 1
+                          }
+                        },
+                        "disablePinning": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "model": {
+        "timeRange": {
+          "value": {
+            "relative": {
+              "duration": 24,
+              "timeUnit": 1
+            }
+          },
+          "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+        },
+        "filterLocale": {
+          "value": "en-us"
+        },
+        "filters": {
+          "value": {
+            "MsPortalFx_TimeRange": {
+              "model": {
+                "format": "utc",
+                "granularity": "auto",
+                "relative": "24h"
+              },
+              "displayCache": {
+                "name": "UTC Time",
+                "value": "Past 24 hours"
+              },
+              "filteredPartIds": [
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa4cf",
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa580",
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa764",
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa61d",
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa629",
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3fa91c",
+                "StartboardPart-MonitorChartPart-b5eb0007-cce3-4867-a082-e7a8fc3faa09",
+                "StartboardPart-MonitorChartPart-c3a77c79-b04d-4f4f-b632-0ec8660f0387",
+                "StartboardPart-MonitorChartPart-c3a77c79-b04d-4f4f-b632-0ec8660f0545",
+                "StartboardPart-MonitorChartPart-343e68aa-f972-49ad-ae5c-af6464b0d402"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "name": "mSYNCg-ops-dashboard",
+  "type": "Microsoft.Portal/dashboards",
+  "location": "INSERT LOCATION",
+  "tags": {
+    "hidden-title": "mSYNCg-ops-dashboard"
+  },
+  "apiVersion": "2022-12-01-preview"
+}
