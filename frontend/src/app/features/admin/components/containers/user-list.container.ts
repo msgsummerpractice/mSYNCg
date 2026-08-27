@@ -276,6 +276,8 @@ export class UserListContainer {
       this.toastService.showError(errorMsg);
       if (event.key === 'role') {
         this.updateUserRole(event.row.id!, event.oldValue);
+      } else if (event.key === 'status') {
+        this.updateUserStatus(event.row.id!, event.oldValue);
       }
       return;
     } else {
