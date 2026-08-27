@@ -1,0 +1,42 @@
+Create query: top failing endpoints
+ContainerAppConsoleLogs_CL
+| where ContainerAppName_s == "msyncg-backend"
+| where TimeGenerated > ago(24h)
+| where Log_s has "HTTP_REQUEST"
+| parse Log_s with * "method=" Method " path=" Path " status=" Status:int " durationMs=" DurationMs:int
+| where Status >= 400
+| summarize FailCount = count() by Path, Status
+| order by FailCount desc
+
+Create query: exception count by type
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(24h)
+| where Log_s has "Exception" or Log_s has "Error"
+| extend ExceptionType = extract(@"(\w+(?:Exception|Error))", 1, Log_s)
+| where isnotempty(ExceptionType)
+| summarize Count = count() by ExceptionType, ContainerAppName_s
+| order by Count desc
+| take 25
+
+Create query: slowest API routes (p95/p99)
+ContainerAppConsoleLogs_CL
+| where ContainerAppName_s == "msyncg-backend"
+| where TimeGenerated > ago(24h)
+| where Log_s has "HTTP_REQUEST"
+| parse Log_s with * "method=" Method " path=" Path " status=" Status:int " durationMs=" DurationMs:int
+| extend Path = replace_regex(Path, @"/\d+", "/{id}")
+| summarize
+    Requests = count(),
+    P95 = percentile(DurationMs, 95),
+    P99 = percentile(DurationMs, 99)
+    by ContainerAppName_s, Method, Path
+| order by P95 desc
+| take 25
+
+Create query: service restarts and revisions
+ContainerAppSystemLogs_CL
+| where TimeGenerated > ago(7d)
+| where Reason_s has_any ("BackOff", "ContainerTerminated", "Unhealthy", "Killing", "Started", "Created", "Scheduled")
+    or Type_s == "Normal" and Log_s has_any ("Revision", "revision")
+| project TimeGenerated, ContainerAppName_s, RevisionName_s, ReplicaName_s, Reason_s, Type_s, Log_s
+| order by TimeGenerated desc
