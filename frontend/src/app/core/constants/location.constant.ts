@@ -1,7 +1,7 @@
 export enum UserLocation {
-  CLUJ_NAPOCA = 'Cluj-Napoca',
-  TARGU_MURES = 'Târgu Mureș',
-  TIMISOARA = 'Timișoara',
+  CLUJ_NAPOCA = 'CLUJ_NAPOCA',
+  TARGU_MURES = 'TARGU_MURES',
+  TIMISOARA = 'TIMISOARA',
 }
 
 export const USER_LOCATION_TRANSLATION_KEYS: Record<UserLocation, string> = {

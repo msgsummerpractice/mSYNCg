@@ -1,193 +1,208 @@
 <main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-  <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg">
-    <app-generic-form-view
-      [formGroup]="formGroup"
-      [isLoading]="isLoading"
-      [submitLabel]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
-      (formSubmit)="submitEvent.emit()"
-      (invalidSubmit)="invalidSubmit.emit()"
-    >
-      <div class="min-w-0">
-        <h2 class="text-lg font-semibold text-gray-950 sm:text-xl">
-          {{ 'REGISTER_FOR_EVENT.TITLE' | translate }}
-        </h2>
-      </div>
-
-      @if (event?.foodProvided) {
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>{{ 'REGISTER_FOR_EVENT.FOOD_PROVIDED.LABEL' | translate }}</mat-label>
-        <mat-select formControlName="foodType">
-          @for (foodType of foodPreferences; track foodType) {
-          <mat-option [value]="foodType">{{ foodType }}</mat-option>
-          }
-        </mat-select>
-        @if (formGroup.controls['foodType'].hasError('required')) {
-        <mat-error>{{ 'REGISTER_FOR_EVENT.FOOD_PROVIDED.REQUIRED' | translate }}</mat-error>
-        }
-      </mat-form-field>
-      } @if(event?.type === "INTERNAL"){
-      <div class="w-full">
-        <div class="mb-2 text-sm text-gray-800">
-          {{ 'REGISTER_FOR_EVENT.TRANSPORT_NEEDED.LABEL' | translate }}
-          <span aria-hidden="true">*</span>
-        </div>
-
-        <mat-slide-toggle
-          formControlName="transportNeeded"
-          [attr.aria-label]="'REGISTER_FOR_EVENT.TRANSPORT_NEEDED' | translate"
-        >
-        </mat-slide-toggle>
-
-        @if(formGroup.controls['transportNeeded'].value === true){
-        <mat-form-field
-          appearance="outline"
-          class="w-full mt-2"
-          subscriptSizing="dynamic"
-          floatLabel="always"
-        >
-          <mat-label>{{ 'REGISTER_FOR_EVENT.DRIVER_NAME.LABEL' | translate }}</mat-label>
-
-          <input
-            id="driverName"
-            matInput
-            type="text"
-            [formControl]="$any(formGroup.controls['driverName'])"
-            [placeholder]="'REGISTER_FOR_EVENT.DRIVER_NAME.LABEL' | translate"
-          />
-          @if ( formGroup.controls['driverName'].touched &&
-          formGroup.controls['driverName'].hasError('required') ) {
-          <mat-error>{{ 'REGISTER_FOR_EVENT.DRIVER_NAME.REQUIRED' | translate }}</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field
-          appearance="outline"
-          class="w-full mt-2"
-          subscriptSizing="dynamic"
-          floatLabel="always"
-        >
-          <mat-label>{{ 'REGISTER_FOR_EVENT.DRIVER_PHONE.LABEL' | translate }}</mat-label>
-
-          <input
-            id="driverPhone"
-            matInput
-            type="text"
-            [formControl]="$any(formGroup.controls['driverPhone'])"
-            [placeholder]="'REGISTER_FOR_EVENT.DRIVER_PHONE.LABEL' | translate"
-          />
-          @if ( formGroup.controls['driverPhone'].touched &&
-          formGroup.controls['driverPhone'].hasError('required') ) {
-          <mat-error>{{ 'REGISTER_FOR_EVENT.DRIVER_PHONE.REQUIRED' | translate }}</mat-error>
-          }
-        </mat-form-field>
-        }
-      </div>
-
-      <div class="w-full">
-        <div class="mb-2 text-sm text-gray-800">
-          {{ 'REGISTER_FOR_EVENT.ACCOMMODATION_NEEDED.LABEL' | translate }}
-          <span aria-hidden="true">*</span>
-        </div>
-
-        <mat-slide-toggle
-          formControlName="accommodationNeeded"
-          [attr.aria-label]="'REGISTER_FOR_EVENT.ACCOMMODATION_NEEDED.LABEL' | translate"
-        >
-        </mat-slide-toggle>
-
-        @if(formGroup.controls['accommodationNeeded'].value === true){
-        <mat-form-field
-          appearance="outline"
-          class="w-full mt-2"
-          subscriptSizing="dynamic"
-          floatLabel="always"
-        >
-          <mat-label>{{ 'REGISTER_FOR_EVENT.ACCOMMODATION_DETAILS.LABEL' | translate }}</mat-label>
-
-          <input
-            id="accommodationDetails"
-            matInput
-            type="text"
-            [formControl]="$any(formGroup.controls['accommodationDetails'])"
-            [placeholder]="'REGISTER_FOR_EVENT.ACCOMMODATION_DETAILS.LABEL' | translate"
-          />
-          @if ( formGroup.controls['accommodationDetails'].touched &&
-          formGroup.controls['accommodationDetails'].hasError('required') ) {
-          <mat-error
-            >{{ 'REGISTER_FOR_EVENT.ACCOMMODATION_DETAILS.REQUIRED' | translate }}</mat-error
-          >
-          }
-        </mat-form-field>
-        }
-      </div>
-      }
-
-      <div class="mt-8 w-full text-xs text-gray-800">
-        <mat-checkbox
-          class="form-checkbox"
-          formControlName="photoConsent"
-          [attr.aria-required]="true"
-          [attr.aria-label]="'REGISTER_FOR_EVENT.PHOTO_CONSENT.LABEL' | translate"
-        >
-          {{ 'REGISTER_FOR_EVENT.PHOTO_CONSENT.LABEL' | translate }}
-          <span aria-hidden="true"></span>
-        </mat-checkbox>
-
-        @if ( formGroup.controls['photoConsent'].hasError('required') &&
-        formGroup.controls['photoConsent'].touched ) {
-        <mat-error class="block">
-          {{ 'REGISTER_FOR_EVENT.PHOTO_CONSENT.REQUIRED' | translate }}
-        </mat-error>
-        }
-      </div>
-
-      <div class="w-full text-xs text-gray-800">
-        @if(event?.type === "INTERNAL" || event?.type === "LOCAL"){
-        <mat-checkbox
-          class="form-checkbox"
-          formControlName="GDPRConsent"
-          [attr.aria-required]="true"
-          [attr.aria-label]="'REGISTER_FOR_EVENT.GDPR' | translate"
-        >
-          {{ 'REGISTER_FOR_EVENT.GDPR' | translate }}
-          <span aria-hidden="true">*</span>
-        </mat-checkbox>
-
-        @if ( formGroup.controls['GDPRConsent'].hasError('required') &&
-        formGroup.controls['GDPRConsent'].touched ) {
-        <mat-error class="block"> {{ 'REGISTER_FOR_EVENT.GDPR_REQUIRED' | translate }} </mat-error>
-        } } @else {
-        <mat-checkbox
-          class="form-checkbox"
-          formControlName="GDPRConsent"
-          [attr.aria-label]="'REGISTER_FOR_EVENT.GDPR' | translate"
-        >
-          {{ 'REGISTER_FOR_EVENT.GDPR' | translate }}
-        </mat-checkbox>
-        }
-      </div>
-    </app-generic-form-view>
-
-    <button
-      type="button"
-      mat-stroked-button
-      color="warn"
-      class="w-full py-5 mt-3"
-      (click)="cancelEvent.emit()"
-    >
-      {{ 'BUTTONS.CANCEL' | translate }}
-    </button>
-
-    @if (showWithdraw) {
-    <button
-      type="button"
-      mat-stroked-button
-      color="warn"
-      class="w-full py-5 mt-3"
-      (click)="withdrawEvent.emit()"
-    >
-      {{ 'REGISTER_FOR_EVENT.WITHDRAW.BUTTON.LABEL' | translate }}
-    </button>
+  <div
+    class="relative bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg"
+    [attr.aria-busy]="isDataLoading"
+  >
+    @if (isDataLoading) {
+    <div class="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/70">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
     }
+
+    <div [class.opacity-40]="isDataLoading" [class.pointer-events-none]="isDataLoading">
+      <app-generic-form-view
+        [formGroup]="formGroup"
+        [isLoading]="isLoading"
+        [submitLabel]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
+        (formSubmit)="submitEvent.emit()"
+        (invalidSubmit)="invalidSubmit.emit()"
+      >
+        <div class="min-w-0">
+          <h2 class="text-lg font-semibold text-gray-950 sm:text-xl">
+            {{ 'REGISTER_FOR_EVENT.TITLE' | translate }}
+          </h2>
+        </div>
+
+        @if (event?.foodProvided) {
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'REGISTER_FOR_EVENT.FOOD_PROVIDED.LABEL' | translate }}</mat-label>
+          <mat-select formControlName="foodType">
+            @for (foodType of foodPreferences; track foodType) {
+            <mat-option [value]="foodType">{{ foodType }}</mat-option>
+            }
+          </mat-select>
+          @if (formGroup.controls['foodType'].hasError('required')) {
+          <mat-error>{{ 'REGISTER_FOR_EVENT.FOOD_PROVIDED.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+        } @if(event?.type === "INTERNAL"){
+        <div class="w-full">
+          <div class="mb-2 text-sm text-gray-800">
+            {{ 'REGISTER_FOR_EVENT.TRANSPORT_NEEDED.LABEL' | translate }}
+            <span aria-hidden="true">*</span>
+          </div>
+
+          <mat-slide-toggle
+            formControlName="transportNeeded"
+            [attr.aria-label]="'REGISTER_FOR_EVENT.TRANSPORT_NEEDED' | translate"
+          >
+          </mat-slide-toggle>
+
+          @if(formGroup.controls['transportNeeded'].value === true){
+          <mat-form-field
+            appearance="outline"
+            class="w-full mt-2"
+            subscriptSizing="dynamic"
+            floatLabel="always"
+          >
+            <mat-label>{{ 'REGISTER_FOR_EVENT.DRIVER_NAME.LABEL' | translate }}</mat-label>
+
+            <input
+              id="driverName"
+              matInput
+              type="text"
+              [formControl]="$any(formGroup.controls['driverName'])"
+              [placeholder]="'REGISTER_FOR_EVENT.DRIVER_NAME.LABEL' | translate"
+            />
+            @if ( formGroup.controls['driverName'].touched &&
+            formGroup.controls['driverName'].hasError('required') ) {
+            <mat-error>{{ 'REGISTER_FOR_EVENT.DRIVER_NAME.REQUIRED' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="outline"
+            class="w-full mt-2"
+            subscriptSizing="dynamic"
+            floatLabel="always"
+          >
+            <mat-label>{{ 'REGISTER_FOR_EVENT.DRIVER_PHONE.LABEL' | translate }}</mat-label>
+
+            <input
+              id="driverPhone"
+              matInput
+              type="text"
+              [formControl]="$any(formGroup.controls['driverPhone'])"
+              [placeholder]="'REGISTER_FOR_EVENT.DRIVER_PHONE.LABEL' | translate"
+            />
+            @if ( formGroup.controls['driverPhone'].touched &&
+            formGroup.controls['driverPhone'].hasError('required') ) {
+            <mat-error>{{ 'REGISTER_FOR_EVENT.DRIVER_PHONE.REQUIRED' | translate }}</mat-error>
+            }
+          </mat-form-field>
+          }
+        </div>
+
+        <div class="w-full">
+          <div class="mb-2 text-sm text-gray-800">
+            {{ 'REGISTER_FOR_EVENT.ACCOMMODATION_NEEDED.LABEL' | translate }}
+            <span aria-hidden="true">*</span>
+          </div>
+
+          <mat-slide-toggle
+            formControlName="accommodationNeeded"
+            [attr.aria-label]="'REGISTER_FOR_EVENT.ACCOMMODATION_NEEDED.LABEL' | translate"
+          >
+          </mat-slide-toggle>
+
+          @if(formGroup.controls['accommodationNeeded'].value === true){
+          <mat-form-field
+            appearance="outline"
+            class="w-full mt-2"
+            subscriptSizing="dynamic"
+            floatLabel="always"
+          >
+            <mat-label
+              >{{ 'REGISTER_FOR_EVENT.ACCOMMODATION_DETAILS.LABEL' | translate }}</mat-label
+            >
+
+            <input
+              id="accommodationDetails"
+              matInput
+              type="text"
+              [formControl]="$any(formGroup.controls['accommodationDetails'])"
+              [placeholder]="'REGISTER_FOR_EVENT.ACCOMMODATION_DETAILS.LABEL' | translate"
+            />
+            @if ( formGroup.controls['accommodationDetails'].touched &&
+            formGroup.controls['accommodationDetails'].hasError('required') ) {
+            <mat-error
+              >{{ 'REGISTER_FOR_EVENT.ACCOMMODATION_DETAILS.REQUIRED' | translate }}</mat-error
+            >
+            }
+          </mat-form-field>
+          }
+        </div>
+        }
+
+        <div class="mt-8 w-full text-xs text-gray-800">
+          <mat-checkbox
+            class="form-checkbox"
+            formControlName="photoConsent"
+            [attr.aria-required]="true"
+            [attr.aria-label]="'REGISTER_FOR_EVENT.PHOTO_CONSENT.LABEL' | translate"
+          >
+            {{ 'REGISTER_FOR_EVENT.PHOTO_CONSENT.LABEL' | translate }}
+            <span aria-hidden="true"></span>
+          </mat-checkbox>
+
+          @if ( formGroup.controls['photoConsent'].hasError('required') &&
+          formGroup.controls['photoConsent'].touched ) {
+          <mat-error class="block">
+            {{ 'REGISTER_FOR_EVENT.PHOTO_CONSENT.REQUIRED' | translate }}
+          </mat-error>
+          }
+        </div>
+
+        <div class="w-full text-xs text-gray-800">
+          @if(event?.type === "INTERNAL" || event?.type === "LOCAL"){
+          <mat-checkbox
+            class="form-checkbox"
+            formControlName="GDPRConsent"
+            [attr.aria-required]="true"
+            [attr.aria-label]="'REGISTER_FOR_EVENT.GDPR' | translate"
+          >
+            {{ 'REGISTER_FOR_EVENT.GDPR' | translate }}
+            <span aria-hidden="true">*</span>
+          </mat-checkbox>
+
+          @if ( formGroup.controls['GDPRConsent'].hasError('required') &&
+          formGroup.controls['GDPRConsent'].touched ) {
+          <mat-error class="block">
+            {{ 'REGISTER_FOR_EVENT.GDPR_REQUIRED' | translate }}
+          </mat-error>
+          } } @else {
+          <mat-checkbox
+            class="form-checkbox"
+            formControlName="GDPRConsent"
+            [attr.aria-label]="'REGISTER_FOR_EVENT.GDPR' | translate"
+          >
+            {{ 'REGISTER_FOR_EVENT.GDPR' | translate }}
+          </mat-checkbox>
+          }
+        </div>
+      </app-generic-form-view>
+
+      <button
+        type="button"
+        mat-stroked-button
+        color="warn"
+        class="w-full py-5 mt-3"
+        (click)="cancelEvent.emit()"
+      >
+        {{ 'BUTTONS.CANCEL' | translate }}
+      </button>
+
+      @if (showWithdraw) {
+      <button
+        type="button"
+        mat-stroked-button
+        color="warn"
+        class="w-full py-5 mt-3"
+        (click)="withdrawEvent.emit()"
+      >
+        {{ 'REGISTER_FOR_EVENT.WITHDRAW.BUTTON.LABEL' | translate }}
+      </button>
+      }
+    </div>
   </div>
 </main>

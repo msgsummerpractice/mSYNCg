@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorStateMatcher, provideNativeDateAdapter } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EventForm, EVENT_TYPES } from '../../../../../core/models/event.model';
@@ -26,6 +27,7 @@ import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
     MatInputModule,
     MatSelectModule,
     MatTimepickerModule,
+    MatProgressSpinnerModule,
     TranslatePipe,
     GenericFormContainer,
   ],
@@ -35,6 +37,7 @@ import { AVAILABLE_LOCATIONS } from '../../../../../core/models/location.model';
 export class EventCreationView {
   @Input({ required: true }) formGroup!: FormGroup<EventForm>;
   @Input() isLoading = false;
+  @Input() isDataLoading = false;
   @Input() selectedType: EventTypeEnum | null = null;
   @Input() posterName: string | null = null;
 

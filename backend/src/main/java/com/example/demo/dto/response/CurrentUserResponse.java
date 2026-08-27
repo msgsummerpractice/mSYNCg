@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.model.Location;
 import com.example.demo.model.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -16,4 +17,5 @@ public class CurrentUserResponse {
     private String lastName;
     private String email;
     private UserRole role;
+    private Location location;
 }

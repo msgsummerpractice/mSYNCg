@@ -1,83 +1,108 @@
 <main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-6">
-    <div class="bg-white p-4 rounded-xl shadow-2xl w-full max-w-lg">
-        <input #posterInput type="file" accept="image/jpeg,image/png" hidden (change)="onPosterSelected($event)" />
-
-        <div class="mb-6 flex items-start justify-between gap-4">
-            <div class="min-w-0">
-                <h1 class="text-3xl font-bold text-gray-900">
-                    {{ 'USER_PROFILE.TITLE' | translate }}
-                </h1>
-                <h2 class="mt-2 text-xl font-semibold text-gray-700">
-                    {{ 'USER_PROFILE.SUBTITLE' | translate }}
-                </h2>
-            </div>
-            <button type="button" (click)="posterInput.click()"
-                class="hover:cursor-pointer h-25 w-25 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
-                aria-label="Change profile picture">
-                @if (posterPreviewUrl) {
-                <img [src]="posterPreviewUrl" alt="Profile picture" class="h-full w-full object-cover" />
-                } @else {
-                <div class="flex h-full w-full items-center justify-center text-xs font-medium text-gray-500">
-                    No photo
-                </div>
-                }
-            </button>
-        </div>
-
-        <app-generic-form-container [formGroup]="formGroup" [isLoading]="isLoading" (formSubmit)="submitEvent.emit()"
-            (invalidSubmit)="invalidSubmit.emit()">
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>{{ 'USER_PROFILE.FIRST_NAME.LABEL' | translate }}</mat-label>
-                <input matInput formControlName="firstName" />
-                @if (formGroup.controls.firstName.hasError('required')) {
-                <mat-error>{{
-                    'USER_PROFILE.FIRST_NAME.REQUIRED' | translate }}</mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>{{ 'USER_PROFILE.LAST_NAME.LABEL' | translate }}</mat-label>
-                <input matInput formControlName="lastName" />
-                @if (formGroup.controls.lastName.hasError('required')) {
-                <mat-error>{{ 'USER_PROFILE.LAST_NAME.REQUIRED'
-                    | translate }}</mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>{{ 'USER_PROFILE.EMAIL.LABEL' | translate }}</mat-label>
-                <input matInput formControlName="email" />
-                @if (formGroup.controls.email.hasError('required')) {
-                <mat-error>{{ 'USER_PROFILE.EMAIL.REQUIRED' |
-                    translate }}</mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>{{ 'USER_PROFILE.LOCATION.LABEL' | translate }}</mat-label>
-                <mat-select formControlName="location">
-                    @for(location of locations; track location) {
-                    <mat-option [value]="location">{{ location }}</mat-option>
-                    }
-                </mat-select>
-                @if (formGroup.controls.location.hasError('required')) {
-                <mat-error>{{ 'USER_PROFILE.LOCATION.REQUIRED'
-                    | translate }}</mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>{{ 'USER_PROFILE.ROLE.LABEL' | translate }}</mat-label>
-                <input matInput formControlName="role" />
-                @if (formGroup.controls.role.hasError('required')) {
-                <mat-error>{{ 'USER_PROFILE.ROLE.REQUIRED' |
-                    translate }}</mat-error>
-                }
-            </mat-form-field>
-        </app-generic-form-container>
-
-        <button type="button" mat-stroked-button color="warn" class="w-full py-3 mt-2" (click)="cancelEvent.emit()">
-            {{ 'BUTTONS.CANCEL' | translate }}
-        </button>
+  <div
+    class="relative bg-white p-4 rounded-xl shadow-2xl w-full max-w-lg"
+    [attr.aria-busy]="isDataLoading"
+  >
+    @if (isDataLoading) {
+    <div class="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/70">
+      <mat-spinner diameter="48"></mat-spinner>
     </div>
+    }
+
+    <div [class.opacity-40]="isDataLoading" [class.pointer-events-none]="isDataLoading">
+      <input
+        #posterInput
+        type="file"
+        accept="image/jpeg,image/png"
+        hidden
+        (change)="onPosterSelected($event)"
+      />
+
+      <div class="mb-6 flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <h1 class="text-3xl font-bold text-gray-900"> {{ 'USER_PROFILE.TITLE' | translate }} </h1>
+          <h2 class="mt-2 text-xl font-semibold text-gray-700">
+            {{ 'USER_PROFILE.SUBTITLE' | translate }}
+          </h2>
+        </div>
+        <button
+          type="button"
+          (click)="posterInput.click()"
+          class="hover:cursor-pointer h-25 w-25 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+          aria-label="Change profile picture"
+        >
+          @if (posterPreviewUrl) {
+          <img [src]="posterPreviewUrl" alt="Profile picture" class="h-full w-full object-cover" />
+          } @else {
+          <div
+            class="flex h-full w-full items-center justify-center text-xs font-medium text-gray-500"
+          >
+            No photo
+          </div>
+          }
+        </button>
+      </div>
+
+      <app-generic-form-container
+        [formGroup]="formGroup"
+        [isLoading]="isLoading"
+        (formSubmit)="submitEvent.emit()"
+        (invalidSubmit)="invalidSubmit.emit()"
+      >
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_PROFILE.FIRST_NAME.LABEL' | translate }}</mat-label>
+          <input matInput formControlName="firstName" />
+          @if (formGroup.controls.firstName.hasError('required')) {
+          <mat-error>{{ 'USER_PROFILE.FIRST_NAME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_PROFILE.LAST_NAME.LABEL' | translate }}</mat-label>
+          <input matInput formControlName="lastName" />
+          @if (formGroup.controls.lastName.hasError('required')) {
+          <mat-error>{{ 'USER_PROFILE.LAST_NAME.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_PROFILE.EMAIL.LABEL' | translate }}</mat-label>
+          <input matInput formControlName="email" />
+          @if (formGroup.controls.email.hasError('required')) {
+          <mat-error>{{ 'USER_PROFILE.EMAIL.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_PROFILE.LOCATION.LABEL' | translate }}</mat-label>
+          <mat-select formControlName="location">
+            @for(location of locations; track location) {
+            <mat-option [value]="location">{{ location }}</mat-option>
+            }
+          </mat-select>
+          @if (formGroup.controls.location.hasError('required')) {
+          <mat-error>{{ 'USER_PROFILE.LOCATION.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ 'USER_PROFILE.ROLE.LABEL' | translate }}</mat-label>
+          <input matInput formControlName="role" />
+          @if (formGroup.controls.role.hasError('required')) {
+          <mat-error>{{ 'USER_PROFILE.ROLE.REQUIRED' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </app-generic-form-container>
+
+      <button
+        type="button"
+        mat-stroked-button
+        color="warn"
+        class="w-full py-3 mt-2"
+        (click)="cancelEvent.emit()"
+      >
+        {{ 'BUTTONS.CANCEL' | translate }}
+      </button>
+    </div>
+  </div>
 </main>

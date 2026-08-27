@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,6 +16,7 @@ import { EventDraftContainer } from './event-draft.container';
     <app-event-creation-view
       [formGroup]="eventFormGroup"
       [isLoading]="isLoading()"
+      [isDataLoading]="isDataLoading()"
       [selectedType]="selectedType()"
       [posterName]="posterName()"
       (posterSelected)="handlePosterSelected($event)"
@@ -31,6 +32,8 @@ export class EventUpdateContainer extends EventDraftContainer implements OnInit 
   private readonly toast = inject(ToastService);
   private readonly translation = inject(TranslateService);
 
+  readonly isDataLoading = signal(false);
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -41,11 +44,11 @@ export class EventUpdateContainer extends EventDraftContainer implements OnInit 
   }
 
   private loadEvent(id: number): void {
-    this.isLoading.set(true);
+    this.isDataLoading.set(true);
 
     this.events
       .getEvent(id)
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(finalize(() => this.isDataLoading.set(false)))
       .subscribe({
         next: (event) => this.fillForm(event),
         error: () =>
