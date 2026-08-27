@@ -3,7 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
@@ -29,7 +29,7 @@ public class Registration {
     private RegistrationStatus status;
 
     @Column(nullable = false, insertable = false)
-    private LocalDateTime date;
+    private Instant date;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "food_preference", length = 50)

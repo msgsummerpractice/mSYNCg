@@ -2,7 +2,7 @@ package com.example.demo.dto.response;
 
 import com.example.demo.model.Location;
 import com.example.demo.model.UserRole;
-
+import com.example.demo.model.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

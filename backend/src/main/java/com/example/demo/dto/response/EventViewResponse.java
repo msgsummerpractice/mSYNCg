@@ -1,6 +1,6 @@
 package com.example.demo.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.model.EventStatus;
@@ -18,8 +18,8 @@ import lombok.Setter;
 public class EventViewResponse {
     private Integer id;
     private String name;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Instant startTime;
+    private Instant endTime;
     private EventStatus status;
     private EventType type;
     private Location location;

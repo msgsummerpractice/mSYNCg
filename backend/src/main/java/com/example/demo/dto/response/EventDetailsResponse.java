@@ -1,6 +1,6 @@
 package com.example.demo.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.example.demo.model.EventStatus;
 import com.example.demo.model.EventType;
@@ -20,11 +20,11 @@ public class EventDetailsResponse {
     private EventType type;
     private Location location;
     private String image;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Instant startTime;
+    private Instant endTime;
     private Boolean foodProvided;
-    private LocalDateTime registrationStart;
-    private LocalDateTime registrationEnd;
+    private Instant registrationStart;
+    private Instant registrationEnd;
     private String description;
     private String qrCode;
     private String code;

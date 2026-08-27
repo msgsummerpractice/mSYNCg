@@ -15,7 +15,7 @@ public enum Location {
         this.displayValue = displayValue;
     }
 
-    @JsonValue 
+    @JsonValue
     public String getDisplayValue() {
         return displayValue;
     }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate;
 
 import org.modelmapper.ModelMapper;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
@@ -78,7 +78,7 @@ public class EventService implements EventServiceInterface {
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
         event.setImage(poster);
-        event.setCreatedAt(LocalDateTime.now());
+        event.setCreatedAt(Instant.now());
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
     }
@@ -146,7 +146,7 @@ public class EventService implements EventServiceInterface {
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(criteriaBuilder.equal(root.get("status"), EventStatus.PUBLISHED));
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), LocalDateTime.now()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), Instant.now()));
 
             if (participantLocation != null) {
                 predicates.add(root.get("location").in(participantLocation, Location.ALL));
@@ -202,7 +202,7 @@ public class EventService implements EventServiceInterface {
                     "Event is already completed.");
         }
 
-        if (event.getEndTime().isAfter(LocalDateTime.now())) {
+        if (event.getEndTime().isAfter(Instant.now())) {
             throw new EventCannotBeCompletedException(
                     "Event cannot be completed before its end time.");
         }

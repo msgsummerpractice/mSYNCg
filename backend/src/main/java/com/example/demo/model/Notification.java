@@ -3,7 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
@@ -25,7 +25,7 @@ public class Notification {
     private Integer id;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @Column(nullable = false, length = 255)
     private String message;
@@ -42,12 +42,14 @@ public class Notification {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Notification that = (Notification) o;
-        return Objects.equals(id, that.id) && 
-               Objects.equals(startTime, that.startTime) && 
-               Objects.equals(message, that.message);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(startTime, that.startTime) &&
+                Objects.equals(message, that.message);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -123,14 +123,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     private void validateEventStartTime(Event event) {
 
-        if (event.getStartTime().isAfter(LocalDateTime.now())) {
+        if (event.getStartTime().isAfter(Instant.now())) {
             throw new EventNotStartedException();
         }
     }
 
     private void validateEventEndTime(Event event) {
 
-        if (event.getEndTime().isBefore(LocalDateTime.now())) {
+        if (event.getEndTime().isBefore(Instant.now())) {
             throw new EventCheckInExpiredException();
         }
     }
