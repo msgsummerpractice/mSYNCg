@@ -28,12 +28,8 @@ public class EmailSender {
 
     private final JavaMailSender mailSender;
 
-    @Retryable(
-            retryFor = { MailException.class },
-            noRetryFor = { MailParseException.class, MailAuthenticationException.class },
-            maxAttempts = 3,
-            backoff = @Backoff(delay = 2000, multiplier = 2.0)
-    )
+    @Retryable(retryFor = { MailException.class }, noRetryFor = { MailParseException.class,
+            MailAuthenticationException.class }, maxAttempts = 3, backoff = @Backoff(delay = 2000, multiplier = 2.0))
     public void sendOne(String to, EmailContent content) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
@@ -57,7 +53,7 @@ public class EmailSender {
 
     @Recover
     public void recover(MailException e, String to, EmailContent content) {
-        log.warn("Giving up on email to {} after retries: {}", to, e.getMessage());
+        log.warn("Giving up on email delivery after retries for recipient={}", to);
     }
 
     private static String detectImageMime(byte[] bytes) {
