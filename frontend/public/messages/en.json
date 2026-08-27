@@ -207,7 +207,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Create/Update Event Draft",
+      "TITLE": "Event Draft",
       "EVENT_TITLE": {
         "LABEL": "Title",
         "REQUIRED": "Title is required"
@@ -236,8 +236,7 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Registration start",
-        "REQUIRED": "Registration start date is required",
-        "IN_PAST": "Registration start date cannot be in the past"
+        "REQUIRED": "Registration start date is required"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Start time",

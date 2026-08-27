@@ -233,7 +233,7 @@ export abstract class EventDraftContainer {
     }
 
     if (this.eventFormGroup.hasError('registrationStartDateInPast')) {
-      return 'REGISTER.EVENT.REGISTRATION_START_DATE.IN_PAST';
+      return 'REGISTER.EVENT.START_DATE.IN_PAST';
     }
 
     if (this.eventFormGroup.hasError('invalidDateRange')) {

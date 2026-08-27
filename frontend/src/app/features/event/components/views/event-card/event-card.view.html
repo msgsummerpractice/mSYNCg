@@ -35,7 +35,7 @@
           >
             {{ ev.name }}
           </mat-card-title>
-          <mat-card-subtitle class="mt-1 !flex items-center gap-2 text-brand-on-muted">
+          <mat-card-subtitle class="mt-4 !flex items-center gap-2 text-brand-on-muted">
             <mat-icon class="!h-5 !w-5 !text-xl !leading-5">place</mat-icon>
             <span class="font-base text-sm">{{ ev.location }}</span>
           </mat-card-subtitle>
@@ -84,7 +84,7 @@
       </div>
 
       <mat-card-content class="!px-6 !pb-6">
-        <div class="mb-4 flex flex-wrap gap-2">
+        <div class="mt-4 mb-4 flex flex-wrap gap-2">
           <mat-chip-set class="lg:pb-6">
             <mat-chip class="chip-static" highlighted>{{ ev.type }}</mat-chip>
             <mat-chip class="chip-static">{{ ev.status }}</mat-chip>

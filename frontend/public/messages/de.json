@@ -208,7 +208,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Veranstaltungsentwurf erstellen/aktualisieren",
+      "TITLE": "Veranstaltungsentwurf",
       "EVENT_TITLE": {
         "LABEL": "Titel",
         "REQUIRED": "Titel ist erforderlich"
@@ -238,8 +238,7 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Reg.-Start",
-        "REQUIRED": "Startdatum der Registrierung ist erforderlich",
-        "IN_PAST": "Das Registrierungsstartdatum darf nicht in der Vergangenheit liegen"
+        "REQUIRED": "Startdatum der Registrierung ist erforderlich"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Startzeit",
