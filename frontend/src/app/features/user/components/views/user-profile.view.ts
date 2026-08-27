@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { UserProfileForm } from '../../../../core/models/user.model';
 import { UserLocation } from '../../../../core/constants/location.constant';
@@ -19,7 +20,7 @@ import { GenericFormContainer } from '../../../../shared/components/containers/g
     MatButtonModule,
     ReactiveFormsModule,
     GenericFormContainer,
-    UserProfileView,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './user-profile.view.html',
 })
@@ -28,6 +29,7 @@ export class UserProfileView {
   @Input() posterPreviewUrl: string | null = null;
   @Input({ required: true }) formGroup!: FormGroup<UserProfileForm>;
   @Input() isLoading = false;
+  @Input() isDataLoading = false;
 
   @Output() cancelEvent = new EventEmitter<void>();
   @Output() posterSelectedEvent = new EventEmitter<File>();

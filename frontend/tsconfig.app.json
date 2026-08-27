@@ -8,5 +8,11 @@
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/server.ts",
+    "src/main.server.ts",
+    "src/app/app.config.server.ts",
+    "src/app/app.routes.server.ts"
+  ]
 }

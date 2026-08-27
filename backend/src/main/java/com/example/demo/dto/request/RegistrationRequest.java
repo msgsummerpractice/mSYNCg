@@ -1,7 +1,7 @@
 package com.example.demo.dto.request;
 
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import com.example.demo.model.FoodPreference;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.Setter;
 public class RegistrationRequest {
 
     @NotNull(message = "Date is required")
-    private LocalDateTime date;
+    private Instant date;
 
     private FoodPreference foodPreference;
 

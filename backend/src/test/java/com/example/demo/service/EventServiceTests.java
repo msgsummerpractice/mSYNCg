@@ -36,7 +36,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -100,10 +100,10 @@ public class EventServiceTests {
 				Base64.getEncoder().encodeToString(pngImage));
 		request.setType(type);
 		request.setLocation(Location.CLUJ_NAPOCA);
-		request.setStartTime(LocalDateTime.of(2026, 9, 1, 9, 0));
-		request.setEndTime(LocalDateTime.of(2026, 9, 1, 12, 0));
-		request.setRegistrationStart(LocalDateTime.of(2026, 8, 15, 9, 0));
-		request.setRegistrationEnd(LocalDateTime.of(2026, 8, 31, 18, 0));
+		request.setStartTime(Instant.parse("2026-09-01T09:00:00Z"));
+		request.setEndTime(Instant.parse("2026-09-01T12:00:00Z"));
+		request.setRegistrationStart(Instant.parse("2026-08-15T09:00:00Z"));
+		request.setRegistrationEnd(Instant.parse("2026-08-31T18:00:00Z"));
 		request.setDescription("Internal event for the engineering team");
 		request.setFoodProvided(true);
 		return request;
@@ -120,7 +120,7 @@ public class EventServiceTests {
 		return event;
 	}
 
-	private Event createEvent(Integer id, EventStatus status, LocalDateTime endTime) {
+	private Event createEvent(Integer id, EventStatus status, Instant endTime) {
 		Event event = createEvent(id);
 		event.setStatus(status);
 		event.setEndTime(endTime);
@@ -152,7 +152,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable)).thenReturn(eventsPage);
 		when(modelMapper.map(event, EventViewResponse.class)).thenReturn(viewResponse);
 
-		Page<EventViewResponse> result = eventService.getAll(spec, pageable, null);
+		Page<EventViewResponse> result = eventService.getAll(spec, null, pageable, null);
 
 		assertEquals(1, result.getTotalElements());
 		assertEquals(viewResponse, result.getContent().get(0));
@@ -212,7 +212,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<EventViewResponse> result = eventService.getAll(spec, pageable, null);
+		Page<EventViewResponse> result = eventService.getAll(spec, null, pageable, null);
 
 		assertTrue(result.getContent().isEmpty());
 		assertEquals(0, result.getTotalElements());
@@ -227,7 +227,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, null);
+		eventService.getAll(spec, null, pageable, null);
 
 		ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
 		ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
@@ -247,26 +247,26 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 7);
+		eventService.getAll(spec, null, pageable, 7);
 
 		Root<Event> root = mock(Root.class);
 		Path<Object> statusPath = mock(Path.class);
 		Path<Object> locationPath = mock(Path.class);
-		Path<LocalDateTime> registrationEndPath = mock(Path.class);
+		Path<Instant> endTimePath = mock(Path.class);
 		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
 		when(root.<Object>get("status")).thenReturn(statusPath);
 		when(root.<Object>get("location")).thenReturn(locationPath);
-		when(root.<LocalDateTime>get("registrationEnd")).thenReturn(registrationEndPath);
+		when(root.<Instant>get("endTime")).thenReturn(endTimePath);
 
-		LocalDateTime beforeCall = LocalDateTime.now();
+		Instant beforeCall = Instant.now();
 		captureSpecPassedToRepository(pageable).toPredicate(root, mock(CriteriaQuery.class), criteriaBuilder);
-		LocalDateTime afterCall = LocalDateTime.now();
+		Instant afterCall = Instant.now();
 
 		verify(criteriaBuilder).equal(statusPath, EventStatus.PUBLISHED);
 		verify(locationPath).in(Location.CLUJ_NAPOCA, Location.ALL);
 
-		ArgumentCaptor<LocalDateTime> nowCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-		verify(criteriaBuilder).greaterThanOrEqualTo(eq(registrationEndPath), nowCaptor.capture());
+		ArgumentCaptor<Instant> nowCaptor = ArgumentCaptor.forClass(Instant.class);
+		verify(criteriaBuilder).greaterThanOrEqualTo(eq(endTimePath), nowCaptor.capture());
 		assertFalse(nowCaptor.getValue().isBefore(beforeCall));
 		assertFalse(nowCaptor.getValue().isAfter(afterCall));
 	}
@@ -281,7 +281,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 7);
+		eventService.getAll(spec, null, pageable, 7);
 
 		Root<Event> root = mock(Root.class);
 		CriteriaBuilder criteriaBuilder = mock(CriteriaBuilder.class);
@@ -290,7 +290,7 @@ public class EventServiceTests {
 
 		verify(root, never()).get("location");
 		verify(root).get("status");
-		verify(root).get("registrationEnd");
+		verify(root).get("endTime");
 	}
 
 	@Test
@@ -303,7 +303,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 7);
+		eventService.getAll(spec, null, pageable, 7);
 
 		assertNotSame(spec, captureSpecPassedToRepository(pageable));
 	}
@@ -317,7 +317,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(null, pageable, 7);
+		eventService.getAll(null, null, pageable, 7);
 
 		assertNotNull(captureSpecPassedToRepository(pageable));
 	}
@@ -332,7 +332,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(any(Specification.class), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, 9);
+		eventService.getAll(spec, null, pageable, 9);
 
 		assertSame(spec, captureSpecPassedToRepository(pageable));
 	}
@@ -345,7 +345,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		eventService.getAll(spec, pageable, null);
+		eventService.getAll(spec, null, pageable, null);
 
 		verifyNoInteractions(userService);
 	}
@@ -358,7 +358,7 @@ public class EventServiceTests {
 		when(userService.findById(404)).thenThrow(new NotFoundException("User", 404));
 
 		NotFoundException exception = assertThrows(NotFoundException.class,
-				() -> eventService.getAll(spec, pageable, 404));
+				() -> eventService.getAll(spec, null, pageable, 404));
 
 		assertEquals("User with id 404 not found", exception.getMessage());
 		verifyNoInteractions(eventRepository);
@@ -416,7 +416,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll((EventSpec) isNull(), eq(pageable)))
 				.thenReturn(new PageImpl<>(List.of(), pageable, 0));
 
-		Page<EventViewResponse> result = eventService.getAll(null, pageable, null);
+		Page<EventViewResponse> result = eventService.getAll(null, null, pageable, null);
 
 		assertTrue(result.getContent().isEmpty());
 		verify(eventRepository).findAll((EventSpec) isNull(), eq(pageable));
@@ -458,7 +458,7 @@ public class EventServiceTests {
 		when(eventRepository.findAll(spec, pageable))
 				.thenThrow(new DataAccessResourceFailureException("Database unavailable"));
 
-		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, pageable, null));
+		assertThrows(DataAccessResourceFailureException.class, () -> eventService.getAll(spec, null, pageable, null));
 	}
 
 	@Test
@@ -660,7 +660,7 @@ public class EventServiceTests {
 
 	@Test
 	void completeEvent_whenEventAlreadyCompleted_throwsEventCannotBeCompletedException() {
-		Event event = createEvent(1, EventStatus.COMPLETED, LocalDateTime.now().minusDays(1));
+		Event event = createEvent(1, EventStatus.COMPLETED, Instant.now().minusSeconds(86400));
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 
@@ -674,7 +674,7 @@ public class EventServiceTests {
 
 	@Test
 	void completeEvent_whenEndTimeIsInFuture_throwsEventCannotBeCompletedException() {
-		Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusDays(1));
+		Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(86400));
 
 		when(eventRepository.findById(1)).thenReturn(Optional.of(event));
 
@@ -688,7 +688,7 @@ public class EventServiceTests {
 
 	@Test
 	void completeEvent_whenEventEnded_setsStatusToCompleted() {
-		Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().minusDays(1));
+		Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().minusSeconds(86400));
 
 		EventDetailsResponse response = new EventDetailsResponse();
 		response.setId(1);

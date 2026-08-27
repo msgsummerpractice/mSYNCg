@@ -15,7 +15,7 @@ import com.example.demo.model.Registration;
 import com.example.demo.model.RegistrationStatus;
 import com.example.demo.model.User;
 import com.example.demo.repository.RegistrationRepository;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class RegistrationValidatorTests {
     void validate_whenRegistrationMeetsAllRules_doesNotThrow() {
         Registration registration = createRegistration();
 
-        assertDoesNotThrow(() -> registrationValidator.validate(registration, LocalDateTime.now()));
+        assertDoesNotThrow(() -> registrationValidator.validate(registration, Instant.now()));
     }
 
     @Test
@@ -49,7 +49,7 @@ class RegistrationValidatorTests {
                 .thenReturn(true);
 
         ValidationException exception = assertThrows(
-                ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
+                ValidationException.class, () -> registrationValidator.validate(registration, Instant.now()));
 
         assertEquals("eventId", exception.getField());
     }
@@ -57,10 +57,10 @@ class RegistrationValidatorTests {
     @Test
     void validate_whenRegistrationHasClosed_rejectsServerTime() {
         Registration registration = createRegistration();
-        registration.getEvent().setRegistrationEnd(LocalDateTime.now().minusSeconds(1));
+        registration.getEvent().setRegistrationEnd(Instant.now().minusSeconds(1));
 
         ValidationException exception = assertThrows(
-                ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
+                ValidationException.class, () -> registrationValidator.validate(registration, Instant.now()));
 
         assertEquals("date", exception.getField());
     }
@@ -71,7 +71,7 @@ class RegistrationValidatorTests {
         registration.setPhotoConsent(null);
 
         ValidationException exception = assertThrows(
-                ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
+                ValidationException.class, () -> registrationValidator.validate(registration, Instant.now()));
 
         assertEquals("photoConsent", exception.getField());
     }
@@ -81,7 +81,7 @@ class RegistrationValidatorTests {
         Registration registration = createRegistration();
         registration.setPhotoConsent(false);
 
-        assertDoesNotThrow(() -> registrationValidator.validate(registration, LocalDateTime.now()));
+        assertDoesNotThrow(() -> registrationValidator.validate(registration, Instant.now()));
     }
 
     @Test
@@ -91,7 +91,7 @@ class RegistrationValidatorTests {
         registration.setFoodPreference(null);
 
         ValidationException exception = assertThrows(
-                ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
+                ValidationException.class, () -> registrationValidator.validate(registration, Instant.now()));
 
         assertEquals("foodPreference", exception.getField());
     }
@@ -104,7 +104,7 @@ class RegistrationValidatorTests {
         registration.setDriverName("Jane Driver");
 
         ValidationException exception = assertThrows(
-                ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
+                ValidationException.class, () -> registrationValidator.validate(registration, Instant.now()));
 
         assertEquals("driverName", exception.getField());
     }
@@ -117,13 +117,13 @@ class RegistrationValidatorTests {
         registration.setAccommodationDays(0);
 
         ValidationException exception = assertThrows(
-                ValidationException.class, () -> registrationValidator.validate(registration, LocalDateTime.now()));
+                ValidationException.class, () -> registrationValidator.validate(registration, Instant.now()));
 
         assertEquals("accommodationDays", exception.getField());
     }
 
     private Registration createRegistration() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         User user = new User();
         user.setId(1);
         user.setLocation(Location.CLUJ_NAPOCA);
@@ -134,8 +134,8 @@ class RegistrationValidatorTests {
         event.setStatus(EventStatus.PUBLISHED);
         event.setType(EventType.EXTERNAL);
         event.setFoodProvided(false);
-        event.setRegistrationStart(now.minusHours(1));
-        event.setRegistrationEnd(now.plusHours(1));
+        event.setRegistrationStart(now.minusSeconds(3600));
+        event.setRegistrationEnd(now.plusSeconds(3600));
 
         Registration registration = new Registration();
         registration.setUser(user);

@@ -16,7 +16,7 @@ import com.example.demo.model.RegistrationStatus;
 import com.example.demo.model.User;
 import com.example.demo.repository.RegistrationRepository;
 import com.example.demo.validator.RegistrationValidator;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,7 +82,7 @@ public class RegistrationServiceTests {
         assertEquals(user, savedRegistration.getUser());
         assertEquals(event, savedRegistration.getEvent());
 
-        verify(registrationValidator).validate(eq(savedRegistration), any(LocalDateTime.class));
+        verify(registrationValidator).validate(eq(savedRegistration), any(Instant.class));
         verify(registrationRepository).save(savedRegistration);
         verify(modelMapper).map(mappedRegistration, RegistrationResponse.class);
     }
@@ -108,7 +108,7 @@ public class RegistrationServiceTests {
 
         assertFalse(mappedRegistration.getGdpr());
         assertEquals(null, mappedRegistration.getPhotoConsent());
-        verify(registrationValidator).validate(eq(mappedRegistration), any(LocalDateTime.class));
+        verify(registrationValidator).validate(eq(mappedRegistration), any(Instant.class));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class RegistrationServiceTests {
                 "Photo consent must be acknowledged.");
         org.mockito.Mockito.doThrow(validationException)
                 .when(registrationValidator)
-                .validate(any(Registration.class), any(LocalDateTime.class));
+                .validate(any(Registration.class), any(Instant.class));
 
         ValidationException thrown = assertThrows(
                 ValidationException.class,
@@ -182,7 +182,7 @@ public class RegistrationServiceTests {
     @Test
     void getRegistration_whenRegistrationPeriodHasEnded_marksResponseAsNotEditable() {
         Registration registration = buildExistingRegistration();
-        registration.getEvent().setRegistrationEnd(LocalDateTime.now().minusDays(1));
+        registration.getEvent().setRegistrationEnd(Instant.now().minusSeconds(86400));
 
         when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
                 .thenReturn(Optional.of(registration));
@@ -230,7 +230,7 @@ public class RegistrationServiceTests {
         assertEquals(FoodPreference.VEGETARIAN, response.getFoodPreference());
         assertTrue(response.getEditable());
 
-        verify(registrationValidator).validateUpdate(eq(registration), any(LocalDateTime.class));
+        verify(registrationValidator).validateUpdate(eq(registration), any(Instant.class));
         verify(registrationRepository).save(registration);
     }
 
@@ -270,7 +270,7 @@ public class RegistrationServiceTests {
         org.mockito.Mockito.doThrow(new RegistrationClosedException(
                 "Registration period has ended. The registration can only be deleted."))
                 .when(registrationValidator)
-                .validateUpdate(any(Registration.class), any(LocalDateTime.class));
+                .validateUpdate(any(Registration.class), any(Instant.class));
 
         RegistrationClosedException thrown = assertThrows(
                 RegistrationClosedException.class,
@@ -307,7 +307,7 @@ public class RegistrationServiceTests {
     @Test
     void deleteRegistration_whenRegistrationPeriodHasEnded_stillWithdrawsRegistration() {
         Registration registration = buildExistingRegistration();
-        registration.getEvent().setRegistrationEnd(LocalDateTime.now().minusDays(1));
+        registration.getEvent().setRegistrationEnd(Instant.now().minusSeconds(86400));
 
         when(registrationRepository.findByUserIdAndEventIdAndStatus(1, 2, RegistrationStatus.REGISTERED))
                 .thenReturn(Optional.of(registration));
@@ -322,7 +322,7 @@ public class RegistrationServiceTests {
         Registration registration = new Registration();
         registration.setId(10);
         registration.setStatus(RegistrationStatus.REGISTERED);
-        registration.setDate(LocalDateTime.of(2026, 8, 20, 9, 0));
+        registration.setDate(Instant.parse("2026-08-20T09:00:00Z"));
         registration.setFoodPreference(FoodPreference.VEGAN);
         registration.setAccommodationDays(3);
         registration.setGdpr(true);
@@ -336,7 +336,7 @@ public class RegistrationServiceTests {
 
     private RegistrationRequest buildRequest() {
         RegistrationRequest request = new RegistrationRequest();
-        request.setDate(LocalDateTime.of(2026, 9, 1, 10, 0));
+        request.setDate(Instant.parse("2026-09-01T10:00:00Z"));
         request.setFoodPreference(FoodPreference.NONE);
         request.setAccommodationDays(2);
         request.setGdpr(null);
@@ -361,8 +361,8 @@ public class RegistrationServiceTests {
         event.setType(EventType.EXTERNAL);
         event.setStatus(EventStatus.PUBLISHED);
         event.setLocation(Location.CLUJ_NAPOCA);
-        event.setRegistrationStart(LocalDateTime.now().minusDays(1));
-        event.setRegistrationEnd(LocalDateTime.now().plusDays(1));
+        event.setRegistrationStart(Instant.now().minusSeconds(86400));
+        event.setRegistrationEnd(Instant.now().plusSeconds(86400));
         return event;
     }
 }

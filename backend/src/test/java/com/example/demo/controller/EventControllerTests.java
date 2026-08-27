@@ -109,10 +109,10 @@ public class EventControllerTests {
         void createEvent_WhenNameIsNull_ReturnsBadRequest() throws Exception {
                 mockMvc.perform(post("/api/events")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestJson(null, "LOCAL", "Cluj-Napoca", "2026-09-01T09:00:00",
-                                                "2026-09-01T12:00:00", true,
-                                                "Internal event for the engineering team", "2026-08-15T09:00:00",
-                                                "2026-08-31T18:00:00")))
+                                .content(requestJson(null, "LOCAL", "Cluj-Napoca", "2026-09-01T09:00:00Z",
+                                                "2026-09-01T12:00:00Z", true,
+                                                "Internal event for the engineering team", "2026-08-15T09:00:00Z",
+                                                "2026-08-31T18:00:00Z")))
                                 .andExpect(status().isBadRequest())
                                 .andExpect(jsonPath("$.status").value(400))
                                 .andExpect(jsonPath("$.fieldErrors[0].field").value("name"))
@@ -126,7 +126,8 @@ public class EventControllerTests {
         void getEvents_WhenNoResults_ReturnsEmptyPage() throws Exception {
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture(), nullable(Integer.class)))
+                when(eventService.getAll(specCaptor.capture(), nullable(List.class), pageableCaptor.capture(),
+                                nullable(Integer.class)))
                                 .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
                 mockMvc.perform(get("/api/events").param("name", "Nobody"))
@@ -141,7 +142,8 @@ public class EventControllerTests {
         void getEvents_whenPaginationParamsProvided_forwardsPageableToService() throws Exception {
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture(), nullable(Integer.class)))
+                when(eventService.getAll(specCaptor.capture(), nullable(List.class), pageableCaptor.capture(),
+                                nullable(Integer.class)))
                                 .thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
 
                 mockMvc.perform(get("/api/events").param("page", "2").param("size", "5"))
@@ -173,12 +175,12 @@ public class EventControllerTests {
                                   "name": "Engineering Meetup",
                                   "type": "LOCAL",
                                   "location": "Cluj-Napoca",
-                                  "startTime": "2026-09-01T09:00:00",
-                                  "endTime": "2026-09-01T12:00:00",
+                                  "startTime": "2026-09-01T09:00:00Z",
+                                  "endTime": "2026-09-01T12:00:00Z",
                                   "foodProvided": true,
                                   "description": "Internal event for the engineering team",
-                                  "registrationStart": "2026-08-15T09:00:00",
-                                  "registrationEnd": "2026-08-31T18:00:00",
+                                  "registrationStart": "2026-08-15T09:00:00Z",
+                                  "registrationEnd": "2026-08-31T18:00:00Z",
                                   "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
                                 }
                                 """;
@@ -188,7 +190,8 @@ public class EventControllerTests {
         void getEvents_WhenPaginationParamsProvided_ForwardsPageableToService() throws Exception {
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture(), nullable(Integer.class)))
+                when(eventService.getAll(specCaptor.capture(), nullable(List.class), pageableCaptor.capture(),
+                                nullable(Integer.class)))
                                 .thenReturn(new PageImpl<>(List.of(), PageRequest.of(2, 5), 0));
 
                 mockMvc.perform(get("/api/events")
@@ -231,7 +234,8 @@ public class EventControllerTests {
 
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture(), nullable(Integer.class)))
+                when(eventService.getAll(specCaptor.capture(), nullable(List.class), pageableCaptor.capture(),
+                                nullable(Integer.class)))
                                 .thenReturn(page);
 
                 mockMvc.perform(get("/api/events"))
@@ -251,7 +255,8 @@ public class EventControllerTests {
 
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture(), nullable(Integer.class)))
+                when(eventService.getAll(specCaptor.capture(), nullable(List.class), pageableCaptor.capture(),
+                                nullable(Integer.class)))
                                 .thenReturn(page);
 
                 mockMvc.perform(get("/api/events")
@@ -268,7 +273,8 @@ public class EventControllerTests {
         void getEvents_WhenServiceThrowsUnexpectedException_ReturnsInternalServerError() throws Exception {
                 ArgumentCaptor<EventSpec> specCaptor = ArgumentCaptor.forClass(EventSpec.class);
                 ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-                when(eventService.getAll(specCaptor.capture(), pageableCaptor.capture(), nullable(Integer.class)))
+                when(eventService.getAll(specCaptor.capture(), nullable(List.class), pageableCaptor.capture(),
+                                nullable(Integer.class)))
                                 .thenThrow(new RuntimeException("Database unavailable"));
 
                 mockMvc.perform(get("/api/events"))
@@ -282,7 +288,8 @@ public class EventControllerTests {
         @Test
         void getEvents_whenUserIdProvided_forwardsUserIdToService() throws Exception {
                 ArgumentCaptor<Integer> userIdCaptor = ArgumentCaptor.forClass(Integer.class);
-                when(eventService.getAll(any(EventSpec.class), any(Pageable.class), userIdCaptor.capture()))
+                when(eventService.getAll(any(EventSpec.class), nullable(List.class), any(Pageable.class),
+                                userIdCaptor.capture()))
                                 .thenReturn(new PageImpl<>(List.of(buildViewResponse()), PageRequest.of(0, 20), 1));
 
                 mockMvc.perform(get("/api/events").param("userId", "42"))
@@ -295,7 +302,8 @@ public class EventControllerTests {
         @Test
         void getEvents_whenUserIdMissing_forwardsNullUserIdToService() throws Exception {
                 ArgumentCaptor<Integer> userIdCaptor = ArgumentCaptor.forClass(Integer.class);
-                when(eventService.getAll(any(EventSpec.class), any(Pageable.class), userIdCaptor.capture()))
+                when(eventService.getAll(any(EventSpec.class), nullable(List.class), any(Pageable.class),
+                                userIdCaptor.capture()))
                                 .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
                 mockMvc.perform(get("/api/events"))

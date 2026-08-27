@@ -7,6 +7,7 @@ import { UserFilterParams } from '../models/user-filters.model';
 import { environment } from '../../../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { USER_ROLE_DISPLAY_VALUES, UserRole } from '../constants/role.constant';
+import { USER_LOCATION_PARAM_VALUES } from '../constants/location.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,7 @@ export class AdminService {
     });
 
     filters.locations.forEach((location) => {
-      params = params.append('location', location);
+      params = params.append('location',USER_LOCATION_PARAM_VALUES[location]);
     });
 
     filters.statuses.forEach((status) => {

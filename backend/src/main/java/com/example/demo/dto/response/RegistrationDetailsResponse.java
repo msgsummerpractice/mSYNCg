@@ -1,6 +1,6 @@
 package com.example.demo.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.example.demo.model.FoodPreference;
 
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class RegistrationDetailsResponse {
 
-    private LocalDateTime date;
+    private Instant date;
 
     private FoodPreference foodPreference;
 

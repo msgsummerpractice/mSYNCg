@@ -38,6 +38,7 @@ import { Observable } from 'rxjs/internal/Observable';
     PublishEventContainer,
   ],
   templateUrl: './event-list.container.html',
+  host: { class: 'flex flex-1 flex-col' },
 })
 export class EventListContainer implements OnInit {
   private readonly eventService = inject(EventService);

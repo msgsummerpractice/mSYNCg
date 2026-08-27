@@ -167,6 +167,22 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
 
+	@ExceptionHandler(EventNotStartedException.class)
+	public ResponseEntity<ErrorResponse> handleEventNotStartedException(
+			EventNotStartedException exception,
+			HttpServletRequest request) {
+
+		ErrorResponse response = new ErrorResponse(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				exception.getMessage(),
+				request.getRequestURI(),
+				List.of());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
 	@ExceptionHandler(AlreadyCheckedInException.class)
 	public ResponseEntity<ErrorResponse> handleAlreadyCheckedInException(
 			AlreadyCheckedInException exception,

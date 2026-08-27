@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
@@ -25,8 +25,8 @@ public class AttendanceRecord {
     private Integer id;
 
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    private LocalDateTime createdAt; 
-    
+    private Instant createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "check_in_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -39,11 +39,13 @@ public class AttendanceRecord {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AttendanceRecord that = (AttendanceRecord) o;
-        return Objects.equals(id, that.id) && 
-               Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
@@ -58,5 +60,5 @@ public class AttendanceRecord {
                 ", createdAt=" + createdAt +
                 '}';
     }
-    
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Location {
@@ -14,8 +15,18 @@ public enum Location {
         this.displayValue = displayValue;
     }
 
-    @JsonValue 
+    @JsonValue
     public String getDisplayValue() {
         return displayValue;
+    }
+
+    @JsonCreator
+    public static Location fromValue(String value) {
+        for (Location location : values()) {
+            if (location.displayValue.equalsIgnoreCase(value) || location.name().equalsIgnoreCase(value)) {
+                return location;
+            }
+        }
+        throw new IllegalArgumentException("Unknown location: " + value);
     }
 }
