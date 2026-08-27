@@ -104,18 +104,17 @@ export const routes: Routes = [
             ({ EventUpdatePage }) => EventUpdatePage
           ),
       },
-        {
-          path: 'user-profile',
-          component: UserProfileContainer,
-          canActivate: [authGuard],
-        },
-
+      {
+        path: 'user-profile',
+        component: UserProfileContainer,
+        canActivate: [authGuard],
+      },
     ],
   },
 
   // Fallback
   {
     path: '**',
-    redirectTo: '/events',
+    redirectTo: '/home',
   },
 ];

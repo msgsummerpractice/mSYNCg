@@ -14,7 +14,6 @@ export function formatDateTime(value: Date | null): string {
     return '';
   }
 
-  // Convert to UTC ISO 8601 string
   return new Date(value).toISOString();
 }
 

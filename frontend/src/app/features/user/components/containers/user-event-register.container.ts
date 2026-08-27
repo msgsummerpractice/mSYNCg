@@ -14,6 +14,7 @@ import { EventService } from '../../../../core/services/event.service';
 import { Event } from '../../../../core/models/event.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { formatDateTime } from '../../../../core/utils/date.util';
 @Component({
   selector: 'app-user-event-register-container',
   standalone: true,
@@ -129,7 +130,7 @@ export class UserEventRegisterContainer implements OnInit {
     const req = {
       userId,
       eventId,
-      date: new Date().toISOString(),
+      date: formatDateTime(new Date()),
       gdpr: form.GDPRConsent,
       photoConsent: form.photoConsent,
       foodPreference: form.foodType,

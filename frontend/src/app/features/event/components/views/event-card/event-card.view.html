@@ -27,16 +27,61 @@
       <img [src]="posterSrc()" [alt]="ev.name" class="relative h-full w-full object-contain" />
     </div>
 
-    <div class="min-h-0 min-w-0 flex-1 overflow-y-auto lg:pt-14">
-      <mat-card-header class="!block !px-6 !pb-2 lg:!pb-6">
-        <mat-card-title class="font-ui !text-2xl lg:!text-3xl !font-semibold text-brand-on-surface">
-          {{ ev.name }}
-        </mat-card-title>
-        <mat-card-subtitle class="mt-1 !flex items-center gap-2 text-brand-on-muted">
-          <mat-icon class="!h-5 !w-5 !text-xl !leading-5">place</mat-icon>
-          <span class="font-base text-sm">{{ ev.location }}</span>
-        </mat-card-subtitle>
-      </mat-card-header>
+    <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
+      <div class="flex flex-wrap items-start justify-between gap-4 px-6 pt-6 lg:pt-8">
+        <mat-card-header class="!block !p-0">
+          <mat-card-title
+            class="font-ui !text-2xl lg:!text-3xl !font-semibold text-brand-on-surface"
+          >
+            {{ ev.name }}
+          </mat-card-title>
+          <mat-card-subtitle class="mt-1 !flex items-center gap-2 text-brand-on-muted">
+            <mat-icon class="!h-5 !w-5 !text-xl !leading-5">place</mat-icon>
+            <span class="font-base text-sm">{{ ev.location }}</span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <div class="flex shrink-0 flex-wrap items-center justify-end gap-3">
+          @if (isCheckedIn()) {
+          <span
+            class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700"
+          >
+            <mat-icon class="!h-5 !w-5 !text-xl !leading-5">check_circle</mat-icon>
+            {{ 'EVENT.CARD.CHECKED_IN' | translate }}
+          </span>
+          } @else if (isRegistered()) { @if (canUpdateRegistration()) {
+          <app-button-container
+            [label]="'REGISTER_FOR_EVENT.BUTTON.UPDATE_LABEL' | translate"
+            (clickEvent)="handleUpdateRegistrationClick()"
+            variant="primary"
+            size="lg"
+            [disabled]="isRegistrationClosed(ev)"
+          ></app-button-container>
+          } @if (showCheckIn()) {
+          <app-button-container
+            [label]="'EVENT.CARD.CHECK_IN' | translate"
+            (clickEvent)="checkIn.emit()"
+            variant="primary"
+            size="lg"
+            [disabled]="!canCheckIn()"
+          ></app-button-container>
+          } } @else { @if(!isRegistrationClosed(ev)) { @if (canRegister()) {
+          <app-button-container
+            [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
+            (clickEvent)="handleEventClick()"
+            variant="primary"
+            size="lg"
+          ></app-button-container>
+          } } @else {
+          <span
+            class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700"
+          >
+            <mat-icon class="!h-5 !w-5 !text-xl !leading-5">error</mat-icon>
+            {{ 'EVENT.CARD.REGISTRATION_CLOSED' | translate }}
+          </span>
+          } }
+        </div>
+      </div>
 
       <mat-card-content class="!px-6 !pb-6">
         <div class="mb-4 flex flex-wrap gap-2">
@@ -88,51 +133,12 @@
           {{ ev.description }}
         </p>
       </mat-card-content>
-
-      <div class="flex w-full justify-end px-6 pb-6">
-        @if (isCheckedIn()) {
-        <span
-          class="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700"
-        >
-          <mat-icon class="!h-5 !w-5 !text-xl !leading-5">check_circle</mat-icon>
-          {{ 'EVENT.CARD.CHECKED_IN' | translate }}
-        </span>
-        } @else if (isRegistered()) {
-        <div class="flex flex-wrap items-center justify-end gap-3">
-          <app-button-container
-            [label]="'REGISTER_FOR_EVENT.BUTTON.UPDATE_LABEL' | translate"
-            (clickEvent)="handleUpdateRegistrationClick()"
-            variant="primary"
-            [disabled]="isRegistrationClosed(ev.registrationEnd)"
-          ></app-button-container>
-          @if (showCheckIn()) {
-          <app-button-container
-            [label]="'EVENT.CARD.CHECK_IN' | translate"
-            (clickEvent)="checkIn.emit()"
-            variant="primary"
-            [disabled]="!canCheckIn()"
-          ></app-button-container>
-          }
-        </div>
-        } @else { @if(!isRegistrationClosed(ev.registrationEnd)) {
-        <app-button-container
-          [label]="'REGISTER_FOR_EVENT.BUTTON.LABEL' | translate"
-          (clickEvent)="handleEventClick()"
-          variant="primary"
-        ></app-button-container>
-        } @else {
-        <span
-          class="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700"
-        >
-          <mat-icon class="!h-5 !w-5 !text-xl !leading-5">error</mat-icon>
-          {{ 'EVENT.CARD.REGISTRATION_CLOSED' | translate }}
-        </span>
-        } }
-      </div>
     </div>
 
     @if (hasCodes() || canGenerateCodes()) {
-    <mat-card-actions class="!flex shrink-0 !justify-start border-t border-brand-muted !px-6 !py-4">
+    <mat-card-actions
+      class="!flex !min-h-32 shrink-0 !items-center !justify-start border-t border-brand-muted !px-6 !py-4"
+    >
       @if (hasCodes()) {
       <div class="flex items-center gap-4">
         <img
@@ -155,11 +161,12 @@
         type="button"
         [disabled]="isGeneratingCodes()"
         (click)="generateCodes.emit()"
+        class="!h-14 !rounded-xl !px-8 !text-lg !font-semibold"
       >
         @if (isGeneratingCodes()) {
-        <mat-spinner diameter="18"></mat-spinner>
+        <mat-spinner diameter="24"></mat-spinner>
         } @else {
-        <mat-icon>qr_code_2</mat-icon>
+        <mat-icon class="!h-7 !w-7 !text-[28px] !leading-7">qr_code_2</mat-icon>
         } {{ 'EVENT.CARD.GENERATE_CODES' | translate }}
       </button>
       }
