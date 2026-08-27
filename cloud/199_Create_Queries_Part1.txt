@@ -11,10 +11,8 @@ ContainerAppConsoleLogs_CL
 Create query: exception count by type
 ContainerAppConsoleLogs_CL
 | where TimeGenerated > ago(24h)
-| where Log_s has "Exception" or Log_s has "Error"
-| extend ExceptionType = extract(@"(\w+(?:Exception|Error))", 1, Log_s)
-| where isnotempty(ExceptionType)
-| summarize Count = count() by ExceptionType, ContainerAppName_s
+| where Log_s has "exception" or Log_s has "error" or Log_s has "ERROR" or Log_s has "Error" or Log_s has "Exception" or Log_s  has "EXCEPTION"
+| summarize Count = count() by ContainerAppName_s
 | order by Count desc
 | take 25
 
