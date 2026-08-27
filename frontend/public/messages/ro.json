@@ -157,7 +157,7 @@
       }
     },
     "EVENT": {
-      "TITLE": "Creează/Actualizează ciornă eveniment",
+      "TITLE": "Ciornă eveniment",
       "EVENT_TITLE": {
         "LABEL": "Titlu",
         "REQUIRED": "Titlul este obligatoriu"
@@ -186,8 +186,7 @@
       },
       "REGISTRATION_START_DATE": {
         "LABEL": "Start înscriere",
-        "REQUIRED": "Data de început a înregistrării este obligatorie",
-        "IN_PAST": "Data de început a înscrierii nu poate fi în trecut"
+        "REQUIRED": "Data de început a înregistrării este obligatorie"
       },
       "REGISTRATION_START_TIME": {
         "LABEL": "Ora de start",
