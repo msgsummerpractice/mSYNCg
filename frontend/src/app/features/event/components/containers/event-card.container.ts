@@ -26,6 +26,17 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { EventService } from '../../../../core/services/event.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
+import { LocationEnum } from '../../../../core/models/location.model';
+
+// Event and user locations may arrive as display values or enum keys, so compare them normalized
+function normalizeLocation(location: string): string {
+  return location
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z]+/g, '_')
+    .toLowerCase();
+}
+
 @Component({
   selector: 'app-event-card-container',
   standalone: true,
@@ -41,6 +52,9 @@ import { ToastService } from '../../../../core/services/toast.service';
         [isRegistered]="isRegistered()"
         [isCheckedIn]="isCheckedIn()"
         [canCheckIn]="canCheckIn()"
+        [showCheckIn]="showCheckIn()"
+        [canRegister]="canRegister()"
+        [canUpdateRegistration]="canUpdateRegistration()"
         (generateCodes)="onGenerateCodes()"
         (checkIn)="onCheckIn()"
         (navigate)="navigate($event)"
@@ -75,7 +89,11 @@ export class EventCardContainer {
     () => this.participationStatus() === EventParticipationStatus.CHECKED_IN
   );
 
-  readonly canCheckIn = computed(() => {
+  readonly canUpdateRegistration = computed(
+    () => this.isRegistered() && this.event()?.status === EventStatusEnum.PUBLISHED
+  );
+
+  readonly showCheckIn = computed(() => {
     const event = this.event();
     const endTime = event?.endTime ? new Date(event.endTime).getTime() : NaN;
 
@@ -88,9 +106,38 @@ export class EventCardContainer {
     );
   });
 
+  readonly canCheckIn = computed(() => {
+    const event = this.event();
+    const startTime = event?.startTime ? new Date(event.startTime).getTime() : NaN;
+
+    return this.showCheckIn() && Number.isFinite(startTime) && startTime <= Date.now();
+  });
+
   onCheckIn(): void {
     this.checkIn.emit(this.eventId());
   }
+
+  readonly canRegister = computed(() => {
+    const event = this.event();
+
+    if (event?.status !== EventStatusEnum.PUBLISHED) {
+      return false;
+    }
+
+    const eventLocation = event.location;
+
+    if (!eventLocation) {
+      return false;
+    }
+
+    if (normalizeLocation(eventLocation) === normalizeLocation(LocationEnum.ALL)) {
+      return true;
+    }
+
+    const userLocation = this.authService.currentUser()?.location;
+
+    return !!userLocation && normalizeLocation(userLocation) === normalizeLocation(eventLocation);
+  });
 
   readonly canGenerateCodes = computed(() => {
     const event = this.event();

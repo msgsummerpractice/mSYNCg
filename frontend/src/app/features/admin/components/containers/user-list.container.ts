@@ -8,7 +8,11 @@ import { TableColumn } from '../../../../core/models/table.column.model';
 import { AdminService } from '../../../../core/services/admin-service';
 import { User } from '../../../../core/models/user.model';
 import { UserFilterParams } from '../../../../core/models/user-filters.model';
-import { UserRole, USER_ROLE_DISPLAY_VALUES, USER_ROLE_TRANSLATION_KEYS } from '../../../../core/constants/role.constant';
+import {
+  UserRole,
+  USER_ROLE_DISPLAY_VALUES,
+  USER_ROLE_TRANSLATION_KEYS,
+} from '../../../../core/constants/role.constant';
 import { UserLocation } from '../../../../core/constants/location.constant';
 import { ToastService } from '../../../../core/services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,6 +27,7 @@ import { TableSelectOption } from '../../../../core/models/layout.model';
   selector: 'app-user-list-container',
   imports: [UserListView, ToastContainer],
   templateUrl: 'user-list.container.html',
+  host: { class: 'flex flex-1 flex-col' },
 })
 export class UserListContainer {
   private adminService = inject(AdminService);
@@ -53,9 +58,9 @@ export class UserListContainer {
       label: 'USER_LIST.TABLE.USER_ROLE',
       type: 'dropdown',
       valueGetter: (row) =>
-      (Object.entries(USER_ROLE_DISPLAY_VALUES).find(
-        ([, display]) => display === row.role,
-      )?.[0] as UserRole) ?? row.role,
+        (Object.entries(USER_ROLE_DISPLAY_VALUES).find(
+          ([, display]) => display === row.role
+        )?.[0] as UserRole) ?? row.role,
       options: Object.values(UserRole).map((role) => ({
         value: role,
         label: USER_ROLE_DISPLAY_VALUES[role],
@@ -271,6 +276,8 @@ export class UserListContainer {
       this.toastService.showError(errorMsg);
       if (event.key === 'role') {
         this.updateUserRole(event.row.id!, event.oldValue);
+      } else if (event.key === 'status') {
+        this.updateUserStatus(event.row.id!, event.oldValue);
       }
       return;
     } else {

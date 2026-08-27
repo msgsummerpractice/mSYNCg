@@ -8,7 +8,7 @@ import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.model.Registration;
 import com.example.demo.model.RegistrationStatus;
 import com.example.demo.validator.RegistrationValidator;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ public class RegistrationService implements RegistrationServiceInterface {
             registration.setGdpr(false);
         }
 
-        registrationValidator.validate(registration, LocalDateTime.now());
+        registrationValidator.validate(registration, Instant.now());
 
         registration.setStatus(RegistrationStatus.REGISTERED);
         registrationRepository.save(registration);
@@ -45,7 +45,7 @@ public class RegistrationService implements RegistrationServiceInterface {
     @Transactional(readOnly = true)
     public RegistrationDetailsResponse getRegistration(Integer eventId, Integer userId) {
         Registration registration = findRegistration(eventId, userId);
-        return toDetailsResponse(registration, LocalDateTime.now());
+        return toDetailsResponse(registration, Instant.now());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class RegistrationService implements RegistrationServiceInterface {
         registration.setDriverName(request.getDriverName());
         registration.setDriverPhone(request.getDriverPhone());
 
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         registrationValidator.validateUpdate(registration, now);
 
         registrationRepository.save(registration);
@@ -84,7 +84,7 @@ public class RegistrationService implements RegistrationServiceInterface {
                         "Registration for user " + userId + " and event " + eventId + " not found"));
     }
 
-    private RegistrationDetailsResponse toDetailsResponse(Registration registration, LocalDateTime referenceTime) {
+    private RegistrationDetailsResponse toDetailsResponse(Registration registration, Instant referenceTime) {
         RegistrationDetailsResponse response = new RegistrationDetailsResponse();
         response.setDate(registration.getDate());
         response.setFoodPreference(registration.getFoodPreference());

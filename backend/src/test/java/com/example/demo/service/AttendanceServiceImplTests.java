@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.exceptions.AlreadyCheckedInException;
 import com.example.demo.exceptions.EventAlreadyCompletedException;
 import com.example.demo.exceptions.EventCheckInExpiredException;
+import com.example.demo.exceptions.EventNotStartedException;
 import com.example.demo.exceptions.InvalidCheckInException;
 import com.example.demo.exceptions.UserNotRegisteredException;
 import com.example.demo.model.AttendanceRecord;
@@ -25,7 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,7 +62,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenValidQrCode_createsAttendanceRecord() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -88,7 +89,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenValidSixDigitCode_createsAttendanceRecord() {
         String code = "123456";
         CheckIn checkIn = createCheckIn(1, "Event:Test Event|ID:1", 123456L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -133,7 +134,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenUserNotFound_throwsInvalidCheckInException() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
         checkIn.setEvent(event);
 
         mockAuthentication("test@example.com");
@@ -149,7 +150,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenUserNotRegistered_throwsUserNotRegisteredException() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -168,7 +169,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenEventCompleted_throwsEventAlreadyCompletedException() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
-        Event event = createEvent(1, EventStatus.COMPLETED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.COMPLETED, Instant.now().plusSeconds(7200));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -184,10 +185,30 @@ public class AttendanceServiceImplTests {
     }
 
     @Test
+    void checkIn_whenEventNotStarted_throwsEventNotStartedException() {
+        String qrCode = "Event:Test Event|ID:1";
+        CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
+        event.setStartTime(Instant.now().plusSeconds(3600));
+        User user = createUser(1, "test@example.com");
+        checkIn.setEvent(event);
+
+        mockAuthentication(user.getEmail());
+        when(checkInRepository.findByQrCode(qrCode)).thenReturn(Optional.of(checkIn));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+        when(registrationRepository.existsByUserIdAndEventIdAndStatus(
+                user.getId(), event.getId(), RegistrationStatus.REGISTERED)).thenReturn(true);
+
+        assertThrows(EventNotStartedException.class, () -> attendanceService.checkIn(qrCode));
+
+        verify(attendanceRecordRepository, never()).save(any(AttendanceRecord.class));
+    }
+
+    @Test
     void checkIn_whenEventExpired_throwsEventCheckInExpiredException() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().minusHours(1));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().minusSeconds(3600));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -206,7 +227,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenAlreadyCheckedIn_throwsAlreadyCheckedInException() {
         String qrCode = "Event:Test Event|ID:1";
         CheckIn checkIn = createCheckIn(1, qrCode, 123456L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -227,7 +248,7 @@ public class AttendanceServiceImplTests {
     void checkIn_whenCodeHasLeadingZeros_parsesCorrectly() {
         String code = "000123";
         CheckIn checkIn = createCheckIn(1, "Event:Test Event|ID:1", 123L);
-        Event event = createEvent(1, EventStatus.PUBLISHED, LocalDateTime.now().plusHours(2));
+        Event event = createEvent(1, EventStatus.PUBLISHED, Instant.now().plusSeconds(7200));
         User user = createUser(1, "test@example.com");
         checkIn.setEvent(event);
 
@@ -262,10 +283,11 @@ public class AttendanceServiceImplTests {
         return checkIn;
     }
 
-    private Event createEvent(Integer id, EventStatus status, LocalDateTime endTime) {
+    private Event createEvent(Integer id, EventStatus status, Instant endTime) {
         Event event = new Event();
         event.setId(id);
         event.setStatus(status);
+        event.setStartTime(Instant.now().minusSeconds(3600));
         event.setEndTime(endTime);
         return event;
     }

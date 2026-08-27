@@ -1,5 +1,5 @@
 import { DestroyRef, inject, signal } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -26,8 +26,6 @@ export abstract class EventDraftContainer {
 
   protected eventId: number | null = null;
   protected posterBase64: string | null = null;
-  private readonly booleanRequiredValidator: ValidatorFn = (control) =>
-    control.value === null || control.value === undefined ? { required: true } : null;
 
   protected readonly eventFormGroup = this.fb.group<EventForm>(
     {
@@ -178,7 +176,10 @@ export abstract class EventDraftContainer {
     location.setValue(LocationEnum.ALL, { emitEvent: false });
     location.disable({ emitEvent: false });
     isFoodProvided.enable({ emitEvent: false });
-    isFoodProvided.setValidators(this.booleanRequiredValidator);
+
+    if (isFoodProvided.value === null) {
+      isFoodProvided.setValue(false, { emitEvent: false });
+    }
   }
 
   private configureLocalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
@@ -190,7 +191,10 @@ export abstract class EventDraftContainer {
 
     location.setValidators(Validators.required);
     isFoodProvided.enable({ emitEvent: false });
-    isFoodProvided.setValidators(this.booleanRequiredValidator);
+
+    if (isFoodProvided.value === null) {
+      isFoodProvided.setValue(false, { emitEvent: false });
+    }
   }
 
   private configureExternalType(location: AbstractControl, isFoodProvided: AbstractControl): void {
@@ -253,7 +257,6 @@ export abstract class EventDraftContainer {
       registrationEndTime: 'REGISTER.EVENT.REGISTRATION_END_TIME.REQUIRED',
       type: 'REGISTER.EVENT.TYPE.REQUIRED',
       location: 'REGISTER.EVENT.LOCATION.REQUIRED',
-      isFoodProvided: 'REGISTER.EVENT.FOOD_PROVIDED.REQUIRED',
     };
 
     for (const controlName of Object.keys(requiredErrorKeys)) {

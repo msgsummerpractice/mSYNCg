@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.exceptions.AlreadyCheckedInException;
 import com.example.demo.exceptions.EventAlreadyCompletedException;
 import com.example.demo.exceptions.EventCheckInExpiredException;
+import com.example.demo.exceptions.EventNotStartedException;
 import com.example.demo.exceptions.InvalidCheckInException;
 import com.example.demo.exceptions.UserNotRegisteredException;
 import com.example.demo.model.AttendanceRecord;
@@ -46,6 +47,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         validateRegistration(user, event);
         validateEventStatus(event);
+        validateEventStartTime(event);
         validateEventEndTime(event);
         validateNoExistingAttendance(user, checkIn);
 
@@ -53,7 +55,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         attendanceRecord.setCheckIn(checkIn);
         attendanceRecord.setUser(user);
-        
+
         attendanceRecordRepository.save(attendanceRecord);
     }
 
@@ -87,8 +89,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     private User getCurrentUser() {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String email = authentication.getName();
 
@@ -103,12 +104,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     private void validateRegistration(User user, Event event) {
 
-        Boolean isRegistered =
-                registrationRepository.existsByUserIdAndEventIdAndStatus(
-                        user.getId(),
-                        event.getId(),
-                        RegistrationStatus.REGISTERED
-                );
+        Boolean isRegistered = registrationRepository.existsByUserIdAndEventIdAndStatus(
+                user.getId(),
+                event.getId(),
+                RegistrationStatus.REGISTERED);
 
         if (!isRegistered) {
             throw new UserNotRegisteredException();
@@ -122,23 +121,28 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
     }
 
+    private void validateEventStartTime(Event event) {
+
+        if (event.getStartTime().isAfter(Instant.now())) {
+            throw new EventNotStartedException();
+        }
+    }
+
     private void validateEventEndTime(Event event) {
 
-        if (event.getEndTime().isBefore(LocalDateTime.now())) {
+        if (event.getEndTime().isBefore(Instant.now())) {
             throw new EventCheckInExpiredException();
         }
     }
 
     private void validateNoExistingAttendance(User user, CheckIn checkIn) {
 
-        boolean alreadyCheckedIn =
-            attendanceRecordRepository.existsByUserIdAndCheckInId(
-                    user.getId(),
-                    checkIn.getId()
-            );
+        boolean alreadyCheckedIn = attendanceRecordRepository.existsByUserIdAndCheckInId(
+                user.getId(),
+                checkIn.getId());
 
-            if (alreadyCheckedIn) {
-                throw new AlreadyCheckedInException();
-            }
+        if (alreadyCheckedIn) {
+            throw new AlreadyCheckedInException();
         }
+    }
 }

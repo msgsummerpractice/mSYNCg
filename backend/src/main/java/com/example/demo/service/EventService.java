@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate;
 
 import org.modelmapper.ModelMapper;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
@@ -78,20 +78,25 @@ public class EventService implements EventServiceInterface {
         event.setStatus(EventStatus.DRAFT);
         event.setCreatedBy(user);
         event.setImage(poster);
-        event.setCreatedAt(LocalDateTime.now());
+        event.setCreatedAt(Instant.now());
         eventRepository.save(event);
         return modelMapper.map(event, EventResponse.class);
     }
 
     @Override
-    public Page<EventViewResponse> getAll(EventSpec spec, Pageable pageable, Integer userId) {
+    public Page<EventViewResponse> getAll(EventSpec spec, List<Location> locations, Pageable pageable, Integer userId) {
         Specification<Event> effectiveSpec = spec;
+
+        Specification<Event> locationFilter = locationInOrAll(locations);
+        if (locationFilter != null) {
+            effectiveSpec = effectiveSpec == null ? locationFilter : effectiveSpec.and(locationFilter);
+        }
 
         if (userId != null) {
             User user = userService.findById(userId);
             if (user.getRole() == UserRole.PARTICIPANT) {
                 Specification<Event> eligibility = eligibleForParticipant(user.getLocation());
-                effectiveSpec = spec == null ? eligibility : spec.and(eligibility);
+                effectiveSpec = effectiveSpec == null ? eligibility : effectiveSpec.and(eligibility);
             }
         }
 
@@ -99,35 +104,41 @@ public class EventService implements EventServiceInterface {
 
         return eventsPage.map(event -> {
             EventViewResponse response = modelMapper.map(event, EventViewResponse.class);
-            
+
             if (userId != null) {
                 response.setParticipationStatus(
-                    getParticipationStatus(userId, event.getId())
-                );
+                        getParticipationStatus(userId, event.getId()));
             }
-            
+
             return response;
         });
     }
 
     private EventParticipationStatus getParticipationStatus(Integer userId, Integer eventId) {
-    
+
         boolean hasCheckedIn = attendanceRecordRepository.existsByUserIdAndEventId(userId, eventId);
         if (hasCheckedIn) {
             return EventParticipationStatus.CHECKED_IN;
         }
-        
-        
+
         boolean isRegistered = registrationRepository.existsByUserIdAndEventIdAndStatus(
-            userId, 
-            eventId, 
-            RegistrationStatus.REGISTERED
-        );
+                userId,
+                eventId,
+                RegistrationStatus.REGISTERED);
         if (isRegistered) {
             return EventParticipationStatus.REGISTERED;
         }
-        
-        return null;  
+
+        return null;
+    }
+
+    private Specification<Event> locationInOrAll(List<Location> locations) {
+        if (locations == null || locations.isEmpty()) {
+            return null;
+        }
+        return (root, query, criteriaBuilder) -> criteriaBuilder.or(
+                root.get("location").in(locations),
+                criteriaBuilder.equal(root.get("location"), Location.ALL));
     }
 
     private Specification<Event> eligibleForParticipant(Location participantLocation) {
@@ -135,7 +146,7 @@ public class EventService implements EventServiceInterface {
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(criteriaBuilder.equal(root.get("status"), EventStatus.PUBLISHED));
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("registrationEnd"), LocalDateTime.now()));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), Instant.now()));
 
             if (participantLocation != null) {
                 predicates.add(root.get("location").in(participantLocation, Location.ALL));
@@ -191,7 +202,7 @@ public class EventService implements EventServiceInterface {
                     "Event is already completed.");
         }
 
-        if (event.getEndTime().isAfter(LocalDateTime.now())) {
+        if (event.getEndTime().isAfter(Instant.now())) {
             throw new EventCannotBeCompletedException(
                     "Event cannot be completed before its end time.");
         }

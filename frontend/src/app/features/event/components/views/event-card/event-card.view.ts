@@ -63,6 +63,9 @@ export class EventCardView {
   readonly isRegistered = input(false);
   readonly isCheckedIn = input(false);
   readonly canCheckIn = input(false);
+  readonly showCheckIn = input(false);
+  readonly canRegister = input(true);
+  readonly canUpdateRegistration = input(false);
   readonly now = signal(new Date());
 
   readonly close = output<void>();
@@ -94,8 +97,12 @@ export class EventCardView {
     this.navigate.emit(this.updateRoute());
   }
 
-  isRegistrationClosed(registrationEnd: Date | null): boolean {
-    return registrationEnd !== null && new Date(registrationEnd).getTime() < this.now().getTime();
+  isRegistrationClosed(event: AppEvent): boolean {
+    const now = this.now().getTime();
+    const start = event.registrationStart ? new Date(event.registrationStart).getTime() : null;
+    const end = event.registrationEnd ? new Date(event.registrationEnd).getTime() : null;
+
+    return (start !== null && now < start) || (end !== null && now > end);
   }
   readonly hasCodes = computed(() => !!this.qrCodeSrc() && !!this.accessCode());
 }

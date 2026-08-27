@@ -9,7 +9,7 @@ import com.example.demo.model.EventType;
 import com.example.demo.model.Location;
 import com.example.demo.model.Registration;
 import com.example.demo.repository.RegistrationRepository;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class RegistrationValidator {
 
     private final RegistrationRepository registrationRepository;
 
-    public void validate(Registration registration, LocalDateTime registrationTime) {
+    public void validate(Registration registration, Instant registrationTime) {
         Event event = registration.getEvent();
 
         validateDuplicateRegistration(registration);
@@ -32,7 +32,7 @@ public class RegistrationValidator {
         validateInternalEventDetails(registration);
     }
 
-    public void validateUpdate(Registration registration, LocalDateTime updateTime) {
+    public void validateUpdate(Registration registration, Instant updateTime) {
         Event event = registration.getEvent();
 
         validateLocation(registration);
@@ -44,7 +44,7 @@ public class RegistrationValidator {
         validateInternalEventDetails(registration);
     }
 
-    private void validateRegistrationStillOpen(Event event, LocalDateTime updateTime) {
+    private void validateRegistrationStillOpen(Event event, Instant updateTime) {
         if (updateTime.isAfter(event.getRegistrationEnd())) {
             throw new RegistrationClosedException(
                     "Registration period has ended. The registration can only be deleted.");
@@ -73,7 +73,7 @@ public class RegistrationValidator {
         }
     }
 
-    private void validateRegistrationPeriod(Event event, LocalDateTime registrationTime) {
+    private void validateRegistrationPeriod(Event event, Instant registrationTime) {
         if (registrationTime.isBefore(event.getRegistrationStart())
                 || registrationTime.isAfter(event.getRegistrationEnd())) {
             throw new ValidationException("date", "Registration is not open for this event.");

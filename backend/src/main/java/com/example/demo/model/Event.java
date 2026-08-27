@@ -3,7 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 import org.hibernate.annotations.OnDelete;
@@ -43,25 +43,25 @@ public class Event {
     private byte[] image;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     @Column(name = "food_provided", nullable = false)
     private Boolean foodProvided;
 
     @Column(name = "registration_start", nullable = false)
-    private LocalDateTime registrationStart;
+    private Instant registrationStart;
 
     @Column(name = "registration_end", nullable = false)
-    private LocalDateTime registrationEnd;
+    private Instant registrationEnd;
 
     @Column(length = 255)
     private String description;
 
     @Column(name = "created_at", insertable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
