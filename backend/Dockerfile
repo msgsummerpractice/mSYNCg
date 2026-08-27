@@ -2,7 +2,7 @@ ARG RUNTIME_PLATFORM=linux/amd64
 
 # Build stage
 
-FROM --platform=$BUILDPLATFORM maven:3.9-eclipse-temurin-25 AS build
+FROM --platform=$BUILDPLATFORM maven:3.9-eclipse-temurin-25-alpine AS build
 WORKDIR /build
 
 COPY pom.xml .
@@ -20,8 +20,6 @@ LABEL org.opencontainers.image.title="msyncg-backend" \
       org.opencontainers.image.licenses="UNLICENSED"
 
 RUN addgroup -S spring && adduser -S spring -G spring
-
-RUN apk add --no-cache --no-check-certificate stress-ng 
 
 WORKDIR /app
 COPY --from=build --chown=spring:spring /build/app.jar app.jar
